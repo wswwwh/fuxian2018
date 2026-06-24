@@ -1,0 +1,15 @@
+name: mccarthy2018-reproduction
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy
+  - scipy
+  - pandas
+  - matplotlib
+  - pillow
+  - pip
+  - pip:
+      - pypdf
+      - pymupdf
+      - skyfield

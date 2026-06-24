@@ -1,0 +1,55 @@
+figure_id,source_page,pdf_page,figure_type,dependency_stage,dependency_label,title,script,status,repro_level
+2.1,8,24,schematic,0,reference/schematic,Geometry in the three-body system and reference frames,figures/fig_2_01.py,implemented,shape-match
+2.2,14,30,schematic,0,reference/schematic,Collinear libration point geometry,figures/fig_2_02.py,implemented,shape-match
+2.3,14,30,numeric,1,cr3bp-basics,Relative locations of the five libration points,figures/fig_2_03.py,implemented,physical-consistency
+2.4,16,32,numeric,1,cr3bp-basics,Earth-Moon zero-velocity curves for JC=3.16 and JC=3.18,figures/fig_2_04.py,implemented,physical-consistency
+2.5,17,33,numeric,1,cr3bp-basics,Earth-Moon rotating frame,figures/fig_2_05.py,implemented,shape-match
+2.6,18,34,numeric,1,cr3bp-basics,"ZVC comparison for Earth-Moon, Saturn-Titan, and Sun-Earth",figures/fig_2_06.py,implemented,physical-consistency
+2.7,24,40,numeric,1,cr3bp-basics,Linearized in-plane and out-of-plane variations at Earth-Moon L1,figures/fig_2_07.py,implemented,physical-consistency
+2.8,24,40,numeric,1,cr3bp-basics,Linearized Lissajous motion around Earth-Moon L1,figures/fig_2_08.py,implemented,physical-consistency
+2.9,29,45,schematic,2,periodic-orbits,Single-shooting differential corrections targeting,figures/fig_2_09.py,implemented,shape-match
+2.10,31,47,schematic,2,periodic-orbits,Multiple-shooting trajectory arcs,figures/fig_2_10.py,implemented,shape-match
+2.11,34,50,numeric,2,periodic-orbits,L2 Lyapunov initial guess and corrected solution,figures/fig_2_11.py,implemented,physical-consistency
+2.12,39,55,schematic,2,periodic-orbits,Natural and pseudo-arclength continuation,figures/fig_2_12.py,implemented,shape-match
+2.13,40,56,numeric,2,periodic-orbits,"Jupiter-Europa L2 Lyapunov, halo, and vertical families",figures/fig_2_13.py,implemented,shape-match + local numerical
+2.14,43,59,numeric,2,periodic-orbits,Stable and unstable manifolds from an L1 Lyapunov orbit,figures/fig_2_14.py,implemented,physical-consistency
+2.15,45,61,numeric,2,periodic-orbits,Stability index for Earth-Moon L2 halo family,figures/fig_2_15.py,implemented,physical-consistency
+3.1,48,64,schematic,3,quasi-periodic-tori,Two-dimensional torus as product of two circles,figures/fig_3_01.py,implemented,shape-match
+3.2,49,65,schematic,3,quasi-periodic-tori,"Invariant curve, rotation angle, and return trajectory",figures/fig_3_02.py,implemented,shape-match
+3.3,49,65,schematic,3,quasi-periodic-tori,Seven-point discretized invariant curve mapping,figures/fig_3_03.py,implemented,shape-match
+3.4,62,78,schematic,3,quasi-periodic-tori,Patch curves for multiple-shooting torus correction,figures/fig_3_04.py,implemented,shape-match
+3.5,68,84,numeric,3,quasi-periodic-tori,"Constant-energy quasi-halo tori, JC=3.1389",figures/fig_3_05.py,implemented,physical-consistency
+3.6,69,85,numeric,3,quasi-periodic-tori,Constant-energy quasi-halo amplitudes,figures/fig_3_06.py,implemented,physical-consistency
+3.7,70,86,numeric,3,quasi-periodic-tori,"Constant-energy quasi-vertical tori, JC=3.1389",figures/fig_3_07.py,implemented,physical-consistency
+3.8,71,87,numeric,3,quasi-periodic-tori,Constant-energy quasi-vertical amplitudes,figures/fig_3_08.py,implemented,physical-consistency
+3.9,71,87,numeric,3,quasi-periodic-tori,Frequency ratio versus mapping time,figures/fig_3_09.py,implemented,shape-match + local numerical
+3.10,72,88,numeric,3,quasi-periodic-tori,"Period-2, period-3, and period-8 halo examples",figures/fig_3_10.py,implemented,shape-match + local numerical
+3.11,73,89,numeric,3,quasi-periodic-tori,Poincare map and central periodic orbits,figures/fig_3_11.py,implemented,shape-match
+3.12,76,92,numeric,3,quasi-periodic-tori,Constant-frequency quasi-halo tori,figures/fig_3_12.py,implemented,physical-consistency
+3.13,77,93,numeric,3,quasi-periodic-tori,Constant-frequency quasi-halo amplitudes and Jacobi constant,figures/fig_3_13.py,implemented,physical-consistency
+3.14,78,94,numeric,3,quasi-periodic-tori,Constant-frequency quasi-vertical tori,figures/fig_3_14.py,implemented,physical-consistency
+3.15,79,95,numeric,3,quasi-periodic-tori,Constant-frequency quasi-vertical Jacobi constant and mapping time,figures/fig_3_15.py,implemented,physical-consistency
+3.16,82,98,numeric,3,quasi-periodic-tori,Constant-mapping-time quasi-DRO tori,figures/fig_3_16.py,implemented,shape-match + local numerical
+3.17,83,99,numeric,3,quasi-periodic-tori,Quasi-DRO amplitude and Jacobi constant versus rotation angle,figures/fig_3_17.py,implemented,shape-match + local numerical
+4.1,86,102,numeric,4,torus-stability-manifolds,Earth-Moon L2 quasi-halo orbit and DG eigenstructure,figures/fig_4_01.py,implemented,shape-match + local numerical
+4.2,87,103,numeric,4,torus-stability-manifolds,Quasi-halo stability index versus mapping time,figures/fig_4_02.py,implemented,shape-match + local numerical
+4.3,89,105,numeric,4,torus-stability-manifolds,Quasi-halo unstable manifold in +x direction,figures/fig_4_03.py,implemented,shape-match + local numerical
+4.4,90,106,numeric,4,torus-stability-manifolds,Quasi-halo unstable manifold in -x direction,figures/fig_4_04.py,implemented,shape-match + local numerical
+4.5,91,107,numeric,4,torus-stability-manifolds,Quasi-vertical unstable manifold in +x direction,figures/fig_4_05.py,implemented,shape-match + local numerical
+4.6,92,108,numeric,4,torus-stability-manifolds,Quasi-vertical unstable manifold in -x direction,figures/fig_4_06.py,implemented,shape-match + local numerical
+4.7,93,109,numeric,4,torus-stability-manifolds,Quasi-halo and periodic halo manifold comparison,figures/fig_4_07.py,implemented,shape-match + local numerical
+4.8,93,109,numeric,4,torus-stability-manifolds,Quasi-vertical and periodic halo manifold comparison,figures/fig_4_08.py,implemented,shape-match + local numerical
+5.1,96,112,application,5,applications,Sun-Earth L1 quasi-vertical long propagation,figures/fig_5_01.py,implemented,shape-match + local numerical
+5.2,98,114,schematic,5,applications,Sun-Moon eclipsing geometry,figures/fig_5_02.py,implemented,shape-match
+5.3,100,116,schematic,5,applications,Earth-Moon-spacecraft line-of-sight geometry,figures/fig_5_03.py,implemented,shape-match
+5.4,101,117,schematic,5,applications,Sun-Earth-Moon synodic geometry,figures/fig_5_04.py,implemented,shape-match
+5.5,102,118,application,5,applications,Quasi-DRO and associated planar periodic DRO,figures/fig_5_05.py,implemented,shape-match + local numerical
+5.6,103,119,application,5,applications,Quasi-DRO ephemeris trajectories by phase,figures/fig_5_06.py,implemented,shape-match + local numerical
+5.7,104,120,application,5,applications,Quasi-DRO ephemeris trajectories by insertion epoch,figures/fig_5_07.py,implemented,shape-match + local numerical
+5.8,106,122,application,5,applications,Halo-to-Lyapunov transfer initial guess and converged transfer,figures/fig_5_08.py,implemented,shape-match + local numerical
+5.9,107,123,application,5,applications,NRHOs and potential departure locations,figures/fig_5_09.py,implemented,shape-match + local numerical
+5.10,108,124,application,5,applications,Converged transfer trajectories for two departure locations,figures/fig_5_10.py,implemented,shape-match + local numerical
+5.11,109,125,application,5,applications,Converged transfer between two NRHOs,figures/fig_5_11.py,implemented,shape-match + local numerical
+5.12,109,125,application,5,applications,Rendezvous maneuver versus arrival time,figures/fig_5_12.py,implemented,shape-match + local numerical
+5.13,111,127,application,5,applications,Periapsis heat map from Sun-Earth L1 stable manifolds,figures/fig_5_13.py,implemented,shape-match + local numerical
+5.14,112,128,application,5,applications,LEO to quasi-periodic Sun-Earth L1 Lissajous transfer,figures/fig_5_14.py,implemented,shape-match + local numerical

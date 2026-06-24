@@ -1,0 +1,18 @@
+paper:
+  title: "Characterization of Quasi-Periodic Orbits for Applications in the Sun-Earth and Earth-Moon Systems"
+  author: "Brian P. McCarthy"
+  year: 2018
+
+defaults:
+  system: earth_moon
+  output_dpi: 300
+  integrator: DOP853
+  rtol: 1.0e-11
+  atol: 1.0e-13
+
+paths:
+  figure_index: data/figure_index.csv
+  computed_data: data/computed
+  figures_png: outputs/figures_png
+  figures_pdf: outputs/figures_pdf
+  reference_pages: outputs/reference_pages

@@ -1,0 +1,17 @@
+[project]
+name = "mccarthy2018-reproduction"
+version = "0.1.0"
+description = "Reproduction code for McCarthy 2018 quasi-periodic orbit thesis."
+requires-python = ">=3.11"
+dependencies = [
+  "numpy",
+  "scipy",
+  "pandas",
+  "matplotlib",
+  "pillow",
+  "pypdf",
+  "pymupdf",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

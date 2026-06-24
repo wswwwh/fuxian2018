@@ -1,0 +1,2 @@
+system,point,x0_guess,ydot0_guess,half_period_guess,x0_corrected,ydot0_corrected,half_period_corrected,period_corrected,jacobi_corrected,iterations,final_residual_norm
+earth_moon,L2,1.154532165444886,0.006238922519982868,1.686629067491592,1.154527775914318,0.006236911381583908,1.686656462859169,3.373312925718339,3.172131446817266,3,3.716723087028077e-12
