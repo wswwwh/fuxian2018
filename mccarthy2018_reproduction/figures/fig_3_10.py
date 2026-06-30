@@ -23,18 +23,22 @@ def style_axis(ax, label: str) -> None:
     moon_x = 1.0 - SYSTEMS["earth_moon"].mu
     ax.scatter([points["L1"].x], [0.0], [0.0], color="#cc4c25", s=10)
     ax.scatter([moon_x], [0.0], [0.0], color="black", s=10)
-    ax.text(points["L1"].x + 0.010, 0.004, 0.0, r"$L_1$", fontsize=9)
-    ax.text(moon_x - 0.020, -0.012, -0.020, "Moon", fontsize=8)
+    ax.text(points["L1"].x + 0.008, 0.003, 0.0, r"$L_1$", fontsize=8)
+    ax.text(moon_x - 0.018, -0.012, -0.018, "Moon", fontsize=8)
     ax.set_xlim(0.70, 1.18)
     ax.set_ylim(-0.16, 0.16)
     ax.set_zlim(-0.20, 0.20)
-    ax.set_xlabel("X [nd]", labelpad=-5)
-    ax.set_ylabel("Y [nd]", labelpad=-5)
-    ax.set_zlabel("Z [nd]", labelpad=-5)
-    ax.tick_params(labelsize=8, pad=-2)
-    ax.view_init(elev=22, azim=-48)
-    ax.set_box_aspect((1.4, 0.9, 1.2))
-    ax.text2D(0.48, -0.12, label, transform=ax.transAxes, fontsize=12)
+    ax.set_xlabel("X [nd]", labelpad=-8)
+    ax.set_ylabel("Y [nd]", labelpad=-7)
+    ax.set_zlabel("Z [nd]", labelpad=-7)
+    ax.tick_params(labelsize=7, pad=-3)
+    ax.view_init(elev=18, azim=-60)
+    ax.set_box_aspect((1.25, 0.92, 1.10))
+    for axis in (ax.xaxis, ax.yaxis, ax.zaxis):
+        axis.pane.set_facecolor((1.0, 1.0, 1.0, 0.0))
+        axis._axinfo["grid"]["color"] = (0.86, 0.86, 0.86, 0.55)
+        axis._axinfo["grid"]["linewidth"] = 0.35
+    ax.text2D(0.48, -0.10, label, transform=ax.transAxes, fontsize=11)
 
 
 def main() -> None:
@@ -43,12 +47,15 @@ def main() -> None:
         example.resonance: example
         for example in period_q_halo_examples(SYSTEMS["earth_moon"].mu)
     }
-    fig = plt.figure(figsize=(8.2, 7.0), constrained_layout=True)
-    axes = [fig.add_subplot(2, 2, 1, projection="3d"), fig.add_subplot(2, 2, 2, projection="3d")]
-    axes.append(fig.add_subplot(2, 2, 3, projection="3d"))
+    fig = plt.figure(figsize=(7.4, 6.2))
+    axes = [
+        fig.add_axes([0.05, 0.54, 0.40, 0.40], projection="3d"),
+        fig.add_axes([0.54, 0.54, 0.40, 0.40], projection="3d"),
+        fig.add_axes([0.18, 0.08, 0.43, 0.40], projection="3d"),
+    ]
     for ax, resonance, label in zip(axes, [2, 3, 8], ["(a)", "(b)", "(c)"]):
         path = examples[resonance].trajectory
-        ax.plot(path[:, 0], path[:, 1], path[:, 2], color="#168bd2", linewidth=1.4)
+        ax.plot(path[:, 0], path[:, 1], path[:, 2], color="#168bd2", linewidth=1.05)
         style_axis(ax, label)
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)

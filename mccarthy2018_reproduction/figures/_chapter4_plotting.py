@@ -43,6 +43,47 @@ def plot_sheet(ax, sheet, color: str = "#c9253d", alpha: float = 0.42) -> None:
     )
 
 
+def plot_sheet_wire(
+    ax,
+    sheet,
+    *,
+    color: str = "#b2182b",
+    alpha: float = 0.82,
+    linewidth: float = 0.34,
+    curve_stride: int = 2,
+    time_stride: int = 4,
+) -> None:
+    surface = sheet.surface
+    ax.plot_wireframe(
+        surface[:, :, 0],
+        surface[:, :, 1],
+        surface[:, :, 2],
+        rstride=max(1, time_stride),
+        cstride=max(1, curve_stride),
+        color=color,
+        linewidth=linewidth,
+        alpha=0.45,
+    )
+    for curve_idx in range(0, surface.shape[1], max(1, curve_stride)):
+        ax.plot(
+            surface[:, curve_idx, 0],
+            surface[:, curve_idx, 1],
+            surface[:, curve_idx, 2],
+            color=color,
+            linewidth=linewidth,
+            alpha=alpha,
+        )
+    for time_idx in range(0, surface.shape[0], max(1, time_stride)):
+        ax.plot(
+            surface[time_idx, :, 0],
+            surface[time_idx, :, 1],
+            surface[time_idx, :, 2],
+            color=color,
+            linewidth=0.24,
+            alpha=0.52,
+        )
+
+
 def plot_corrected_manifold_stage(
     ax,
     sheet,
@@ -193,6 +234,10 @@ def style_long_axis(ax, *, vertical: bool = False) -> None:
     ax.set_ylabel("Y [nd]", labelpad=-5)
     ax.set_zlabel("Z [nd]", labelpad=-6)
     ax.tick_params(labelsize=8, pad=-2)
+    for axis in (ax.xaxis, ax.yaxis, ax.zaxis):
+        axis.pane.set_facecolor((1.0, 1.0, 1.0, 0.0))
+        axis._axinfo["grid"]["color"] = (0.88, 0.88, 0.88, 0.42)
+        axis._axinfo["grid"]["linewidth"] = 0.35
     ax.annotate(
         "",
         xy=(0.26, 0.28),
@@ -200,3 +245,4 @@ def style_long_axis(ax, *, vertical: bool = False) -> None:
         xycoords="axes fraction",
         arrowprops={"arrowstyle": "-|>", "lw": 1.4, "color": "black"},
     )
+    ax.text2D(0.24, 0.25, "To Earth", transform=ax.transAxes, fontsize=9, rotation=-24)

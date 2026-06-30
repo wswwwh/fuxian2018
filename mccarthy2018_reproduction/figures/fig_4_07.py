@@ -5,7 +5,7 @@ from __future__ import annotations
 import matplotlib.pyplot as plt
 
 from _figure_paths import PROJECT_ROOT
-from _chapter4_plotting import add_earth_moon_labels, plot_sheet, plot_torus_wire, style_long_axis
+from _chapter4_plotting import add_earth_moon_labels, plot_sheet_wire, plot_torus_wire, style_long_axis
 from qp_orbits.constants import SYSTEMS
 from qp_orbits.manifolds import periodic_halo_manifold_sample
 from qp_orbits.plot_style import apply_style, save_figure
@@ -39,8 +39,8 @@ def main() -> None:
 
     fig = plt.figure(figsize=(8.1, 4.2), constrained_layout=True)
     ax = fig.add_subplot(111, projection="3d")
-    plot_sheet(ax, sheet, alpha=0.34)
-    plot_torus_wire(ax, torus, color="black", alpha=0.45, linewidth=0.38)
+    plot_sheet_wire(ax, sheet, alpha=0.88, linewidth=0.32, curve_stride=2, time_stride=3)
+    plot_torus_wire(ax, torus, color="black", alpha=0.42, linewidth=0.30)
     ax.plot(
         periodic_manifold.orbit_curve[:, 0],
         periodic_manifold.orbit_curve[:, 1],
@@ -54,9 +54,9 @@ def main() -> None:
             curve[:, 0],
             curve[:, 1],
             curve[:, 2],
-            color="#165a9f",
-            linewidth=1.05,
-            alpha=0.82,
+            color="#b2182b",
+            linewidth=0.62,
+            alpha=0.72,
         )
     add_earth_moon_labels(ax, include_l1=False)
     style_long_axis(ax, vertical=False)

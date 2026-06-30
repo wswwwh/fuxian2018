@@ -147,6 +147,10 @@ def style_nrho_axis(ax, *, label: str | None = None, wide: bool = False) -> None
     ax.tick_params(labelsize=8, pad=-3)
     ax.view_init(elev=20, azim=-58)
     ax.set_box_aspect((0.80, 1.0, 1.45))
+    for axis in (ax.xaxis, ax.yaxis, ax.zaxis):
+        axis.pane.set_facecolor((1.0, 1.0, 1.0, 0.0))
+        axis._axinfo["grid"]["color"] = (0.88, 0.88, 0.88, 0.48)
+        axis._axinfo["grid"]["linewidth"] = 0.38
     add_axis_arrow(ax, "To Earth", xy=(0.44, 0.12), xytext=(0.60, 0.19), rotation=-22)
     if label is not None:
         ax.text2D(0.48, -0.10, label, transform=ax.transAxes, fontsize=12)
