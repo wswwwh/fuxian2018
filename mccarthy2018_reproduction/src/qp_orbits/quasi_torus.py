@@ -393,6 +393,38 @@ class FreeEnergyCurveCorrection:
 
 
 @dataclass(frozen=True)
+class FixedJacobiFreeTimeRotationCurveCorrection:
+    """Experimental Route B curve correction with fixed mean Jacobi and free time/rho."""
+
+    seed: StroboscopicInvariantCurveSeed
+    corrected_states: np.ndarray
+    corrected_mapped_states: np.ndarray
+    corrected_target_states: np.ndarray
+    corrected_points: np.ndarray
+    corrected_mapped_points: np.ndarray
+    corrected_target_points: np.ndarray
+    interpolation_matrix: np.ndarray
+    rotation_angle_rad: float
+    mapping_time: float
+    target_jacobi: float
+    residual_history: np.ndarray
+    energy_residual_history: np.ndarray
+    phase_residual_history: np.ndarray
+    correction_norm_history: np.ndarray
+    mapping_time_history: np.ndarray
+    rotation_history: np.ndarray
+    jacobian_condition_history: np.ndarray
+
+    @property
+    def initial_residual_norms(self) -> np.ndarray:
+        return self.residual_history[0]
+
+    @property
+    def final_residual_norms(self) -> np.ndarray:
+        return self.residual_history[-1]
+
+
+@dataclass(frozen=True)
 class PseudoArclengthCurveCorrection:
     """Fixed-energy invariant curve corrected on a pseudo-arclength plane."""
 
@@ -1956,6 +1988,235 @@ def stroboscopic_curve_free_energy_correction(
         mapping_time_history=np.array(mapping_time_history, dtype=float),
         rotation_history=np.array(rotation_history, dtype=float),
         jacobian_condition_history=np.array(condition_history, dtype=float),
+    )
+
+
+def stroboscopic_curve_fixed_jacobi_free_time_rotation_correction(
+    seed: StroboscopicInvariantCurveSeed,
+    *,
+    target_jacobi: float,
+    initial_states: np.ndarray | None = None,
+    initial_mapping_time: float | None = None,
+    initial_rotation_angle_rad: float | None = None,
+    phase_reference_states: np.ndarray | None = None,
+    max_iterations: int = 16,
+    tolerance: float = 1e-10,
+    jacobi_tolerance: float = 1e-10,
+    phase_tolerance: float = 1e-10,
+    max_step: float = 0.01,
+    max_state_step: float = 2e-3,
+    max_mapping_time_step: float = 0.05,
+    max_rotation_step: float = 0.01,
+    rcond: float = 1e-11,
+) -> FixedJacobiFreeTimeRotationCurveCorrection:
+    """Correct a stroboscopic curve at fixed mean Jacobi with free time and rho.
+
+    This is the minimal Route B square system. The unknown vector is the full
+    curve state block plus mapping time and rotation angle. The residual blocks
+    are map invariance, curve-average Jacobi, and one curve-tangent phase
+    condition. Amplitude is intentionally not a hard equation.
+    """
+
+    states = seed.initial_states.copy() if initial_states is None else np.array(initial_states, dtype=float, copy=True)
+    if states.shape != seed.initial_states.shape:
+        raise ValueError("initial_states must match the seed curve shape")
+    reference = states.copy() if phase_reference_states is None else np.array(
+        phase_reference_states,
+        dtype=float,
+        copy=True,
+    )
+    if reference.shape != states.shape:
+        raise ValueError("phase_reference_states must match the seed curve shape")
+
+    target_energy = float(target_jacobi)
+    mapping_time = seed.orbit_period if initial_mapping_time is None else float(initial_mapping_time)
+    if mapping_time <= 0.0:
+        raise ValueError("initial_mapping_time must be positive")
+    rotation = (
+        seed.rotation_angle_rad
+        if initial_rotation_angle_rad is None
+        else float(initial_rotation_angle_rad)
+    ) % (2.0 * np.pi)
+
+    tangent = np.roll(reference, -1, axis=0) - np.roll(reference, 1, axis=0)
+    tangent_norm = float(np.linalg.norm(tangent))
+    if tangent_norm <= 1e-14:
+        raise RuntimeError("Phase reference has a degenerate curve tangent")
+    tangent /= tangent_norm
+
+    residual_history: list[np.ndarray] = []
+    energy_history: list[float] = []
+    phase_history: list[float] = []
+    correction_history: list[np.ndarray] = []
+    mapping_time_history: list[float] = []
+    rotation_history: list[float] = []
+    condition_history: list[float] = []
+
+    best_metric = np.inf
+    best_states = states.copy()
+    best_mapped = np.empty_like(states)
+    best_targets = np.empty_like(states)
+    best_interpolation = np.empty((states.shape[0], states.shape[0]), dtype=float)
+    best_mapping_time = mapping_time
+    best_rotation = rotation
+    best_norms: np.ndarray | None = None
+    best_energy_residual = np.inf
+    best_phase_residual = np.inf
+
+    def constraints(values: np.ndarray) -> tuple[float, np.ndarray, float]:
+        energy_values = jacobi_constant(values, seed.mu)
+        energy_residual = float(np.mean(energy_values) - target_energy)
+        energy_gradient = _jacobi_gradient(values, seed.mu) / values.shape[0]
+        phase_residual = float(np.sum((values - reference) * tangent))
+        return energy_residual, energy_gradient, phase_residual
+
+    for _ in range(max_iterations):
+        interpolation = _trigonometric_interpolation_matrix(seed.phases, seed.phases + rotation)
+        interpolation_derivative = _trigonometric_interpolation_derivative_matrix(
+            seed.phases,
+            seed.phases + rotation,
+        )
+        mapped, stms = _stroboscopic_map_and_stms(
+            states,
+            period=mapping_time,
+            mu=seed.mu,
+            max_step=max_step,
+        )
+        targets = interpolation @ states
+        residuals = mapped - targets
+        residual_norms = np.linalg.norm(residuals, axis=1)
+        energy_residual, energy_gradient, phase_residual = constraints(states)
+        metric = max(float(residual_norms.max()), abs(energy_residual), abs(phase_residual))
+        residual_history.append(residual_norms)
+        energy_history.append(energy_residual)
+        phase_history.append(phase_residual)
+        mapping_time_history.append(mapping_time)
+        rotation_history.append(rotation)
+        if metric < best_metric:
+            best_metric = metric
+            best_states = states.copy()
+            best_mapped = mapped.copy()
+            best_targets = targets.copy()
+            best_interpolation = interpolation.copy()
+            best_mapping_time = mapping_time
+            best_rotation = rotation
+            best_norms = residual_norms.copy()
+            best_energy_residual = energy_residual
+            best_phase_residual = phase_residual
+        if (
+            residual_norms.max() < tolerance
+            and abs(energy_residual) < jacobi_tolerance
+            and abs(phase_residual) < phase_tolerance
+        ):
+            break
+
+        sample_count = states.shape[0]
+        state_size = 6 * sample_count
+        jacobian = np.zeros((state_size + 2, state_size + 2), dtype=float)
+        for row in range(sample_count):
+            for col in range(sample_count):
+                block = -interpolation[row, col] * np.eye(6)
+                if row == col:
+                    block = block + stms[row]
+                jacobian[6 * row : 6 * row + 6, 6 * col : 6 * col + 6] = block
+            jacobian[6 * row : 6 * row + 6, state_size] = cr3bp_rhs(
+                mapping_time,
+                mapped[row],
+                seed.mu,
+            )
+        jacobian[:state_size, state_size + 1] = -(interpolation_derivative @ states).reshape(-1)
+        jacobian[state_size, :state_size] = energy_gradient.reshape(-1)
+        jacobian[state_size + 1, :state_size] = tangent.reshape(-1)
+
+        right_hand_side = -np.concatenate(
+            [residuals.reshape(-1), np.array([energy_residual, phase_residual])]
+        )
+        delta, _, _, singular_values = np.linalg.lstsq(
+            jacobian,
+            right_hand_side,
+            rcond=rcond,
+        )
+        condition_history.append(
+            float(singular_values[0] / singular_values[-1])
+            if singular_values.size and singular_values[-1] > 0.0
+            else np.inf
+        )
+        state_delta = delta[:state_size].reshape(sample_count, 6)
+        mapping_time_delta = float(delta[state_size])
+        rotation_delta = float(delta[state_size + 1])
+        block_norms = np.linalg.norm(state_delta, axis=1)
+        scale = 1.0
+        if block_norms.max() > max_state_step:
+            scale = min(scale, max_state_step / float(block_norms.max()))
+        if abs(mapping_time_delta) > max_mapping_time_step:
+            scale = min(scale, max_mapping_time_step / abs(mapping_time_delta))
+        if abs(rotation_delta) > max_rotation_step:
+            scale = min(scale, max_rotation_step / abs(rotation_delta))
+        state_delta *= scale
+        mapping_time_delta *= scale
+        rotation_delta *= scale
+        correction_history.append(np.linalg.norm(state_delta, axis=1))
+        states += state_delta
+        mapping_time += mapping_time_delta
+        rotation = float((rotation + rotation_delta) % (2.0 * np.pi))
+        if mapping_time <= 0.0:
+            raise RuntimeError("Fixed-Jacobi free-time correction produced a non-positive mapping time")
+
+    interpolation = _trigonometric_interpolation_matrix(seed.phases, seed.phases + rotation)
+    mapped, _ = _stroboscopic_map_and_stms(
+        states,
+        period=mapping_time,
+        mu=seed.mu,
+        max_step=max_step,
+    )
+    targets = interpolation @ states
+    residual_norms = np.linalg.norm(mapped - targets, axis=1)
+    energy_residual, _, phase_residual = constraints(states)
+    metric = max(float(residual_norms.max()), abs(energy_residual), abs(phase_residual))
+    residual_history.append(residual_norms)
+    energy_history.append(energy_residual)
+    phase_history.append(phase_residual)
+    mapping_time_history.append(mapping_time)
+    rotation_history.append(rotation)
+    if metric < best_metric:
+        best_states = states.copy()
+        best_mapped = mapped.copy()
+        best_targets = targets.copy()
+        best_interpolation = interpolation.copy()
+        best_mapping_time = mapping_time
+        best_rotation = rotation
+        best_norms = residual_norms.copy()
+        best_energy_residual = energy_residual
+        best_phase_residual = phase_residual
+
+    if best_norms is None:
+        raise RuntimeError("Fixed-Jacobi free-time correction did not evaluate a candidate")
+    if not np.array_equal(residual_history[-1], best_norms):
+        residual_history.append(best_norms)
+        energy_history.append(best_energy_residual)
+        phase_history.append(best_phase_residual)
+        mapping_time_history.append(best_mapping_time)
+        rotation_history.append(best_rotation)
+
+    return FixedJacobiFreeTimeRotationCurveCorrection(
+        seed=seed,
+        corrected_states=best_states,
+        corrected_mapped_states=best_mapped,
+        corrected_target_states=best_targets,
+        corrected_points=_project_to_mode_plane(best_states, seed.orbit_state, seed.mode_basis),
+        corrected_mapped_points=_project_to_mode_plane(best_mapped, seed.orbit_state, seed.mode_basis),
+        corrected_target_points=_project_to_mode_plane(best_targets, seed.orbit_state, seed.mode_basis),
+        interpolation_matrix=best_interpolation,
+        rotation_angle_rad=float(best_rotation),
+        mapping_time=float(best_mapping_time),
+        target_jacobi=target_energy,
+        residual_history=np.asarray(residual_history),
+        energy_residual_history=np.asarray(energy_history),
+        phase_residual_history=np.asarray(phase_history),
+        correction_norm_history=np.asarray(correction_history),
+        mapping_time_history=np.asarray(mapping_time_history),
+        rotation_history=np.asarray(rotation_history),
+        jacobian_condition_history=np.asarray(condition_history),
     )
 
 
