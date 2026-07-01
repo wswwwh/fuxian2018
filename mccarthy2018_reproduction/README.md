@@ -235,7 +235,10 @@ Figures 3.16-3.17 now have a dedicated quasi-DRO audit table at
 fixed-mapping pseudo-arclength diagnostic is also recorded in
 `data/computed/chapter3_quasi_dro_palc_family.csv`,
 `data/computed/chapter3_quasi_dro_palc_validation.csv`, and
-`data/computed/chapter3_quasi_dro_palc_log.csv`. The corrected
+`data/computed/chapter3_quasi_dro_palc_log.csv`. The 10,000-11,000 km
+bottleneck is diagnosed in
+`data/computed/chapter3_quasi_dro_bottleneck_diagnostics.csv` and
+`data/computed/chapter3_quasi_dro_bottleneck_experiments.csv`. The corrected
 fixed-mapping-time CR3BP branch preserves the original five `N=21` local
 members and adds four accepted `N=41` members through a 10,000 km vertical
 amplitude target. The extended accepted range is mapping time
@@ -251,7 +254,12 @@ one accepted lifted `N=61` member, but only reaches rho 1.443877875293695 rad
 and max abs z 10164.02309965055 km; fixed-rotation fallback candidates at rho
 1.4445-1.4500 cross the 11,000 km amplitude range but fail residual/Jacobi
 audits, so the figures remain partial physical-consistency baselines rather
-than full numerical reproductions.
+than full numerical reproductions. The bottleneck diagnosis finds that `N=61`
+reduces Fourier tail energy but does not advance the accepted branch past
+10,164.02309965055 km; fixed-rotation and fixed-mean-Jacobi/free-rho local
+experiments do not produce an accepted member beyond 10,500 km. The most likely
+blocker is fixed-mapping-time parameterization/Newton-basin failure near rho
+1.44388, not a pure spectral-resolution limit.
 
 The next upgrades should focus on Figures 4.3-4.8 continued torus-scale DG
 manifold propagation, the remaining Figure 3.9 quasi-halo proxy tail, and the
@@ -327,6 +335,8 @@ Generated files are written under `data/` and `outputs/`.
 - `data/computed/chapter3_quasi_dro_palc_family.csv`
 - `data/computed/chapter3_quasi_dro_palc_validation.csv`
 - `data/computed/chapter3_quasi_dro_palc_log.csv`
+- `data/computed/chapter3_quasi_dro_bottleneck_diagnostics.csv`
+- `data/computed/chapter3_quasi_dro_bottleneck_experiments.csv`
 - `data/computed/quasi_dro_family.csv`
 - `data/computed/chapter4_torus_stability_proxy.csv`
 - `data/computed/chapter4_corrected_curve_dg.csv`

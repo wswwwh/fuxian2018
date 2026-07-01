@@ -146,6 +146,74 @@ continuation bottleneck near rho 1.44388 and max abs z 10.16e3 km. Chapter 3
 should continue here with a better-conditioned continuation strategy before
 Chapter 5 quasi-DRO application scenes are upgraded.
 
+## 10,000-11,000 km bottleneck diagnosis
+
+This round adds two bounded diagnostic tables without overwriting the accepted
+family or figure-generation interfaces:
+
+- `data/computed/chapter3_quasi_dro_bottleneck_diagnostics.csv`
+- `data/computed/chapter3_quasi_dro_bottleneck_experiments.csv`
+
+The diagnostics cover the accepted 10,000 km amplitude-stepping member, the
+accepted 10,164.02309965055 km PALC member, the rejected 11,000, 12,000, and
+14,000 km amplitude-stepping candidates, and the rejected fixed-rotation
+candidates at rho 1.4445, 1.4455, 1.4465, 1.4480, and 1.4500. The slow
+amplitude-stepping rejected states are not persisted in the production CSV, so
+their rows use the existing continuation log metrics; the accepted members and
+fixed-rotation fallback candidates include pointwise residual, Jacobi, Fourier
+tail, and singular-value diagnostics.
+
+The accepted 10,000 km member remains tight: pointwise map residual
+4.147166287852223e-14, Jacobi span 1.615654277031808e-10, and state Fourier
+tail ratio 2.501018355914203e-12. The accepted `N=61` PALC member reaches only
+10,164.02309965055 km, with pointwise map residual
+7.890714644108212e-10, Jacobi span 1.794120407794253e-11, and state Fourier
+tail ratio 1.80077333522803e-17. Thus the `N=61` lift improves spectral tail
+and Jacobi consistency, but it does not materially move the branch toward
+10,500 km or 11,000 km.
+
+The rejected amplitude-stepping candidates show a rapid global audit failure:
+the 11,000 km target has map residual 4.227040797634044e-04 and Jacobi span
+1.95390551757324e-04; the 12,000 km target has residual
+1.025722315499319e-02 and Jacobi span 8.085234362318339e-04; the 14,000 km
+target has residual 2.368746795354498e-02 and Jacobi span
+1.547418108960308e-03. These values are far above the audit threshold before
+any figure coverage can be promoted.
+
+The fixed-rotation fallback explains why high-amplitude candidates are
+misleading. It can force rho beyond the accepted PALC endpoint and reaches
+10,405.93030301344 km to 12,508.77229257674 km, but the residual/Jacobi audit
+collapses: at rho 1.4465, max abs z is 11,188.08244697768 km while map residual
+is 7.841846983001098e-02 and Jacobi span is 1.814140488309413e-03. The
+pointwise residual peaks repeatedly near phase 2.987 rad, not at the 0/2pi
+phase wrap, and the high-mode tail is small compared with the residual growth.
+This argues against phase wrapping or Fourier ringing as the primary failure
+mode. It is more consistent with a bad local parameterization/Newton basin for
+the fixed-mapping-time formulation, possibly near a fold or a nearby remote
+branch.
+
+The bounded experiment table compares three local parameterizations:
+
+| Method | Best result | Accepted beyond 10,500 km? | Interpretation |
+| --- | ---: | --- | --- |
+| Fixed-mapping PALC smaller trust region | 10,164.02309965055 km | No | Only very small steps pass the full audit. |
+| Fixed-rotation fallback | 11,188.08244701441 km at rho 1.4465 | No | Higher amplitude is reachable only as a failed invariant-curve candidate. |
+| Fixed-mean-Jacobi free-rho/free-time local correction | 10,210.30431232785 km | No | Freeing rho/time improves the target form but still leaves residual 7.300106125062243e-05 and Jacobi span 1.957537848262803e-06. |
+
+The most credible bottleneck is therefore not a pure spectral-resolution
+problem. `N=61` reduces tail energy, but the accepted branch hardly advances;
+fixed-rotation candidates have modest tail ratios yet residuals and Jacobi
+spans explode. The problem is better described as a local continuation
+parameterization failure in the fixed-mapping-time quasi-DRO formulation, with
+ill-conditioned or remote-branch Newton behavior beyond rho about 1.44388.
+
+The next Chapter 3 step should switch continuation constraints before raising
+the spectral order alone. A higher `N` may still be useful after the
+parameterization changes, but the current evidence says that simply increasing
+from `N=41` to `N=61` is not enough. Chapter 5 should not be upgraded from this
+branch yet: no accepted member exceeds 10,500 km or 11,000 km, and Fig. 3.16
+and Fig. 3.17 remain partial physical-consistency baselines.
+
 ## Figure source split
 
 Fig. 3.16:
