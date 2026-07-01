@@ -300,6 +300,18 @@ The current recommended reading path is the formal report package in
 - `docs/reproduction_report/future_work_plan.md` - Route A / Route B / Route C
   execution plan with inputs, success criteria, risks, and stop conditions.
 
+### Presentation and review materials
+
+For group-meeting or proposal-review preparation, the report package also
+includes:
+
+- `docs/reproduction_report/presentation_outline.md` - Chinese 15-slide outline
+  for a restrained stage report.
+- `docs/reproduction_report/qa_for_group_meeting.md` - adviser / group-meeting
+  Q&A script with conservative wording.
+- `docs/reproduction_report/original_data_search_log.md` - Route A original-data
+  search template and initial bounded-search entries.
+
 ## Environment
 
 The working machine already has a validated conda environment:
