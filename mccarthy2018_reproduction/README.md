@@ -335,6 +335,27 @@ includes:
 - `docs/reproduction_report/original_data_search_log.md` - Route A original-data
   search template and initial bounded-search entries.
 
+### Project organization and teacher package
+
+The organization and teacher-facing materials are indexed in:
+
+- `docs/project_index.md` - recommended reading order, file classes, reporting
+  guardrails, and canonical source-of-truth map.
+- `docs/artifact_manifest.md` - artifact table covering core code, computed
+  data, digitized reference data, figure outputs, diagnostics, reports, and
+  presentation assets.
+- `docs/reproduction_report/teacher_package/README.md` - teacher package entry
+  point and recommended presentation order.
+- `docs/reproduction_report/teacher_package/one_page_summary.md` - Chinese
+  one-page summary of goals, results, audits, bottlenecks, Route A status, and
+  next steps.
+- `docs/reproduction_report/teacher_package/key_results_table.md` - compact
+  table of the current key numerical and reporting results.
+- `docs/reproduction_report/teacher_package/presentation_asset_index.md` -
+  index of slide-ready figures, tables, messages, and status.
+- `outputs/presentation/README.md` - selected copied image assets for PPT use
+  and a record of missing presentation assets.
+
 ## Environment
 
 The working machine already has a validated conda environment:
