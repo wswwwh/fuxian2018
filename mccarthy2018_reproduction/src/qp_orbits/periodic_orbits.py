@@ -172,6 +172,31 @@ class ResonantHaloExample:
     trajectory: np.ndarray
 
 
+@dataclass(frozen=True)
+class SpatialMultipleShootingClosureAudit:
+    """Independent closure diagnostics for a half-period multiple-shooting orbit."""
+
+    patch_to_patch_continuity_vectors: np.ndarray
+    patch_to_patch_continuity_errors: np.ndarray
+    terminal_symmetry_error: np.ndarray
+    per_segment_endpoint_errors: np.ndarray
+    multiple_shooting_residual_norm: float
+    patch_to_patch_continuity_norm: float
+    patch_to_patch_continuity_max: float
+    terminal_symmetry_residual_norm: float
+    full_period_terminal_state: np.ndarray
+    full_period_single_shoot_closure_error: float
+    half_period_terminal_state: np.ndarray
+    half_period_single_shoot_symmetry_error: float
+    trajectory_sampling_closure_error: float
+    trajectory_jacobi_drift: float
+    full_period_single_shoot_jacobi_drift: float
+    monodromy_matrix: np.ndarray
+    monodromy_multipliers: np.ndarray
+    monodromy_multiplier_magnitudes: np.ndarray
+    segment_duration_consistency_error: float
+
+
 def _planar_center_mode(position: np.ndarray, mu: float) -> tuple[complex, np.ndarray]:
     eigenvalues, eigenvectors = eigensystem_at(position, mu)
     candidates = [
@@ -961,6 +986,102 @@ def sample_spatial_multiple_shooting_orbit(
     return np.concatenate([first_half, second_half], axis=0)
 
 
+def audit_spatial_multiple_shooting_orbit(
+    corrected: SpatialMultipleShootingOrbit,
+    *,
+    trajectory: np.ndarray | None = None,
+    samples_per_segment: int = 80,
+) -> SpatialMultipleShootingClosureAudit:
+    """Compute closure diagnostics without reusing stored residual summaries."""
+
+    if trajectory is None:
+        trajectory = sample_spatial_multiple_shooting_orbit(
+            corrected,
+            samples_per_segment=samples_per_segment,
+        )
+    trajectory = np.asarray(trajectory, dtype=float)
+    terminal_indices = np.array([1, 3, 5], dtype=int)
+    terminal_states = np.empty_like(corrected.patch_states)
+    for segment, state in enumerate(corrected.patch_states):
+        solution = integrate_cr3bp(
+            state,
+            (0.0, corrected.segment_duration),
+            corrected.orbit.mu,
+            t_eval=np.array([corrected.segment_duration]),
+            max_step=0.01,
+        )
+        if not solution.success:
+            raise RuntimeError(solution.message)
+        terminal_states[segment] = solution.y[:, -1]
+
+    continuity_vectors = terminal_states[:-1] - corrected.patch_states[1:]
+    continuity_errors = np.linalg.norm(continuity_vectors, axis=1)
+    terminal_symmetry_error = terminal_states[-1, terminal_indices]
+    per_segment_endpoint_errors = np.r_[
+        continuity_errors,
+        np.linalg.norm(terminal_symmetry_error),
+    ]
+    residual = np.r_[continuity_vectors.reshape(-1), terminal_symmetry_error]
+
+    half_solution = integrate_cr3bp(
+        corrected.orbit.initial_state,
+        (0.0, corrected.orbit.half_period),
+        corrected.orbit.mu,
+        t_eval=np.array([corrected.orbit.half_period]),
+        max_step=0.01,
+    )
+    if not half_solution.success:
+        raise RuntimeError(half_solution.message)
+    half_terminal = half_solution.y[:, -1]
+
+    full_solution = integrate_state_and_stm(
+        corrected.orbit.initial_state,
+        (0.0, corrected.orbit.period),
+        corrected.orbit.mu,
+        max_step=0.01,
+    )
+    if not full_solution.success:
+        raise RuntimeError(full_solution.message)
+    full_terminal, monodromy_matrix = unpack_augmented(full_solution.y[:, -1])
+    monodromy_multipliers = np.linalg.eigvals(monodromy_matrix)
+
+    full_state_solution = integrate_cr3bp(
+        corrected.orbit.initial_state,
+        (0.0, corrected.orbit.period),
+        corrected.orbit.mu,
+        t_eval=np.linspace(0.0, corrected.orbit.period, max(200, corrected.patch_states.shape[0] * 20)),
+        max_step=0.01,
+    )
+    if not full_state_solution.success:
+        raise RuntimeError(full_state_solution.message)
+
+    trajectory_jacobi = jacobi_constant(trajectory, corrected.orbit.mu)
+    full_jacobi = jacobi_constant(full_state_solution.y.T, corrected.orbit.mu)
+    return SpatialMultipleShootingClosureAudit(
+        patch_to_patch_continuity_vectors=continuity_vectors,
+        patch_to_patch_continuity_errors=continuity_errors,
+        terminal_symmetry_error=terminal_symmetry_error,
+        per_segment_endpoint_errors=per_segment_endpoint_errors,
+        multiple_shooting_residual_norm=float(np.linalg.norm(residual)),
+        patch_to_patch_continuity_norm=float(np.linalg.norm(continuity_errors)),
+        patch_to_patch_continuity_max=float(np.max(continuity_errors)) if continuity_errors.size else 0.0,
+        terminal_symmetry_residual_norm=float(np.linalg.norm(terminal_symmetry_error)),
+        full_period_terminal_state=full_terminal,
+        full_period_single_shoot_closure_error=float(np.linalg.norm(full_terminal - corrected.orbit.initial_state)),
+        half_period_terminal_state=half_terminal,
+        half_period_single_shoot_symmetry_error=float(np.linalg.norm(half_terminal[terminal_indices])),
+        trajectory_sampling_closure_error=float(np.linalg.norm(trajectory[-1] - trajectory[0])),
+        trajectory_jacobi_drift=float(np.ptp(trajectory_jacobi)),
+        full_period_single_shoot_jacobi_drift=float(np.ptp(full_jacobi)),
+        monodromy_matrix=monodromy_matrix,
+        monodromy_multipliers=monodromy_multipliers,
+        monodromy_multiplier_magnitudes=np.abs(monodromy_multipliers),
+        segment_duration_consistency_error=float(
+            abs(corrected.segment_duration * corrected.patch_states.shape[0] - corrected.orbit.half_period)
+        ),
+    )
+
+
 def continue_spatial_multiple_shooting_fixed_z(
     seed: SpatialMultipleShootingOrbit,
     z_values: list[float] | np.ndarray,
@@ -1333,6 +1454,167 @@ def _halo_transverse_floquet_pair(
     return eigenvalue, eigenvectors[:, index], angle, periodicity_error
 
 
+def _spatial_symmetric_variables(orbit: SpatialSymmetricOrbit) -> np.ndarray:
+    return np.array(
+        [
+            orbit.initial_state[0],
+            orbit.fixed_z0,
+            orbit.initial_state[4],
+            orbit.half_period,
+        ],
+        dtype=float,
+    )
+
+
+def _period_doubling_floquet_data(
+    orbit: SpatialSymmetricOrbit,
+) -> tuple[float, complex, np.ndarray, float, float, float]:
+    """Return the Floquet multiplier data nearest the period-doubling crossing."""
+
+    sol = integrate_state_and_stm(orbit.initial_state, (0.0, orbit.period), orbit.mu, max_step=0.01)
+    if not sol.success:
+        raise RuntimeError(sol.message)
+    terminal_state, matrix = unpack_augmented(sol.y[:, -1])
+    eigenvalues, eigenvectors = np.linalg.eig(matrix)
+    candidates = [
+        idx
+        for idx, value in enumerate(eigenvalues)
+        if value.real < 0.0 or abs(abs(np.angle(value)) - np.pi) < 0.5
+    ]
+    if not candidates:
+        candidates = list(range(len(eigenvalues)))
+    index = min(candidates, key=lambda idx: abs(eigenvalues[idx] + 1.0))
+    eigenvalue = complex(eigenvalues[index])
+    indicator = float(np.real(eigenvalue + 1.0 / eigenvalue) + 2.0)
+    angle = float(abs(np.angle(eigenvalue)))
+    distance_to_minus_one = float(abs(eigenvalue + 1.0))
+    periodicity_error = float(np.linalg.norm(terminal_state - orbit.initial_state))
+    return (
+        indicator,
+        eigenvalue,
+        eigenvectors[:, index],
+        angle,
+        distance_to_minus_one,
+        periodicity_error,
+    )
+
+
+def _correct_spatial_symmetric_between(
+    lower: SpatialSymmetricOrbit,
+    upper: SpatialSymmetricOrbit,
+    fraction: float,
+    *,
+    tolerance: float,
+) -> SpatialSymmetricOrbit:
+    lower_variables = _spatial_symmetric_variables(lower)
+    upper_variables = _spatial_symmetric_variables(upper)
+    tangent = upper_variables - lower_variables
+    tangent /= np.linalg.norm(tangent)
+    predictor = (1.0 - fraction) * lower_variables + fraction * upper_variables
+    return _spatial_symmetric_arclength_correction(
+        lower.mu,
+        predictor=predictor,
+        tangent=tangent,
+        point=lower.point,
+        family_label=lower.family_label,
+        seed_x_amplitude=lower.seed_x_amplitude,
+        tolerance=tolerance,
+        max_iterations=64,
+        max_delta_norm=0.03,
+    )
+
+
+def _target_halo_period_doubling_resonance(
+    mu: float,
+    *,
+    z_bracket: tuple[float, float],
+    point: str,
+    seed_x_amplitude: float,
+    angle_tolerance: float,
+    max_refinements: int,
+) -> HaloFloquetResonance:
+    lower_z, upper_z = map(float, z_bracket)
+    prefix = np.arange(0.005, lower_z, 0.005)
+    local_step = min(0.0005, max((upper_z - lower_z) / 10.0, 1.0e-4))
+    local = np.arange(lower_z, upper_z + 0.5 * local_step, local_step)
+    amplitudes = np.unique(np.r_[prefix, local])
+    natural = spatial_symmetric_family(
+        mu,
+        amplitudes,
+        point=point,
+        seed_x_amplitude=seed_x_amplitude,
+        family_label="halo",
+        max_iterations=48,
+    )
+    folded = spatial_symmetric_pseudo_arclength_family(
+        natural[-2:],
+        members=max(36, max_refinements + 9),
+        step_size=0.003,
+        max_iterations=48,
+        max_delta_norm=0.05,
+    )
+    data = [_period_doubling_floquet_data(orbit) for orbit in folded]
+
+    bracket: tuple[SpatialSymmetricOrbit, SpatialSymmetricOrbit] | None = None
+    bracket_data: tuple[tuple[float, complex, np.ndarray, float, float, float], tuple[float, complex, np.ndarray, float, float, float]] | None = None
+    for left, right, left_data, right_data in zip(folded[:-1], folded[1:], data[:-1], data[1:]):
+        if left_data[0] * right_data[0] <= 0.0:
+            bracket = (left, right)
+            bracket_data = (left_data, right_data)
+            break
+    if bracket is None or bracket_data is None:
+        best_index = min(range(len(folded)), key=lambda idx: data[idx][4])
+        best_data = data[best_index]
+        raise RuntimeError(
+            "q=2 period-doubling targeting did not bracket a -1 Floquet crossing; "
+            f"best |lambda+1|={best_data[4]:.3e}"
+        )
+
+    lower, upper = bracket
+    lower_data, upper_data = bracket_data
+    candidates: list[tuple[float, SpatialSymmetricOrbit, tuple[float, complex, np.ndarray, float, float, float]]] = [
+        (lower_data[4], lower, lower_data),
+        (upper_data[4], upper, upper_data),
+    ]
+    for _ in range(max_refinements):
+        trial = _correct_spatial_symmetric_between(
+            lower,
+            upper,
+            0.5,
+            tolerance=min(1.0e-11, angle_tolerance),
+        )
+        trial_data = _period_doubling_floquet_data(trial)
+        candidates.append((trial_data[4], trial, trial_data))
+        if trial_data[4] <= max(angle_tolerance, 1.0e-10) and abs(trial_data[1].imag) > 1.0e-10:
+            break
+        if lower_data[0] * trial_data[0] <= 0.0:
+            upper, upper_data = trial, trial_data
+        else:
+            lower, lower_data = trial, trial_data
+
+    complex_candidates = [
+        item
+        for item in candidates
+        if abs(item[2][1].imag) > 1.0e-10 and abs(item[2][3] - np.pi) <= 1.0e-6
+    ]
+    _, best_orbit, best_data = min(complex_candidates or candidates, key=lambda item: item[0])
+    _, eigenvalue, eigenvector, angle, distance_to_minus_one, periodicity_error = best_data
+    if distance_to_minus_one > max(5.0e-6, 10.0 * angle_tolerance):
+        raise RuntimeError(
+            "q=2 period-doubling targeting did not converge close enough to lambda=-1; "
+            f"|lambda+1|={distance_to_minus_one:.3e}"
+        )
+    return HaloFloquetResonance(
+        resonance=2,
+        orbit=best_orbit,
+        eigenvalue=eigenvalue,
+        eigenvector=eigenvector,
+        rotation_angle_rad=angle,
+        frequency_ratio=float(2.0 * np.pi / angle),
+        periodicity_error=periodicity_error,
+    )
+
+
 def target_halo_floquet_resonance(
     mu: float,
     *,
@@ -1345,11 +1627,20 @@ def target_halo_floquet_resonance(
 ) -> HaloFloquetResonance:
     """Target a transverse q:1 Floquet resonance on a corrected halo family."""
 
-    if resonance < 3:
-        raise ValueError("This elliptic-angle target requires resonance >= 3")
     lower_z, upper_z = map(float, z_bracket)
     if not 0.0 < lower_z < upper_z:
         raise ValueError("z_bracket must be positive and increasing")
+    if resonance == 2:
+        return _target_halo_period_doubling_resonance(
+            mu,
+            z_bracket=(lower_z, upper_z),
+            point=point,
+            seed_x_amplitude=seed_x_amplitude,
+            angle_tolerance=angle_tolerance,
+            max_refinements=max_refinements,
+        )
+    if resonance < 2:
+        raise ValueError("resonance must be at least 2")
 
     prefix = np.arange(0.005, lower_z, 0.005)
     amplitudes = np.unique(np.r_[prefix, lower_z, upper_z])
@@ -1534,32 +1825,12 @@ def resonant_halo_linear_seed(
 def period_q_halo_examples(mu: float) -> tuple[ResonantHaloExample, ...]:
     """Compute corrected period-2, period-3, and period-8 Earth-Moon halo examples."""
 
-    natural = spatial_symmetric_family(
+    period_two_resonance = target_halo_floquet_resonance(
         mu,
-        np.r_[np.arange(0.005, 0.0801, 0.005), np.arange(0.0805, 0.0851, 0.0005)],
-        point="L1",
-        seed_x_amplitude=0.002,
-        max_iterations=48,
-    )
-    folded = spatial_symmetric_pseudo_arclength_family(
-        natural[-2:],
-        members=33,
-        step_size=0.003,
-        max_iterations=32,
-    )
-    period_two_base = folded[-1]
-    eigenvalue, eigenvector, angle, periodicity_error = _halo_transverse_floquet_pair(
-        period_two_base,
-        target_angle=np.pi,
-    )
-    period_two_resonance = HaloFloquetResonance(
         resonance=2,
-        orbit=period_two_base,
-        eigenvalue=eigenvalue,
-        eigenvector=eigenvector,
-        rotation_angle_rad=angle,
-        frequency_ratio=float(2.0 * np.pi / angle),
-        periodicity_error=periodicity_error,
+        z_bracket=(0.0805, 0.0850),
+        angle_tolerance=1.0e-8,
+        max_refinements=44,
     )
     seed_two, patches_two = resonant_halo_multiple_shooting_guess(
         period_two_resonance,

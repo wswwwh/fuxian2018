@@ -113,10 +113,15 @@ The current implementation is the first verified layer of the reproduction plan:
   Figure 3.11 now uses corrected CR3BP central periodic orbits and
   section-anchored halo islands.
   Figure 3.10 now replaces all hand-written curves with corrected CR3BP
-  period-q trajectories. The q=2 branch is seeded immediately before the
-  Floquet pair crosses `-1`; q=3 and q=8 are targeted to their unit-circle
-  resonance angles and continued to finite amplitude with patch continuity
-  and terminal symmetry residuals below the validation threshold.
+  period-q trajectories. The q=2 branch now brackets the period-doubling
+  `-1` Floquet crossing and uses the nearest unit-circle-side multiplier,
+  reducing the resonance angle error to `8.11e-08` rad. q=3 and q=8 are
+  targeted to their unit-circle resonance angles and continued to finite
+  amplitude with patch continuity and terminal symmetry residuals below the
+  validation threshold. The q=8 audit shows that the patch-local
+  multiple-shooting solution is internally consistent, but the full-period
+  single-shoot closure remains unreliable on a highly unstable orbit, so
+  Figure 3.10 remains a shape-match figure with local numerical overlay.
   Figures 3.12-3.15 now use corrected L2 constant-frequency families without
   proxy surfaces or trend curves. The quasi-halo branch contains 30
   pointwise-Jacobi-corrected members over `JC=3.1182..3.0011` and
@@ -209,8 +214,9 @@ Status C - shape-match with local numerical overlay:
 Status D - proxy/schematic only:
 2.1, 2.2, 2.5, 2.9, 2.10, 2.12, 3.1, 3.2, 3.3, 3.4, 5.2, 5.3, 5.4.
 
-The next upgrades should focus on Figure 3.10 q=2/q=8 validation, Figures
-4.3-4.8 continued torus-scale DG manifold propagation, the remaining Figure
+The next upgrades should focus on robust Figure 3.10 q=8 single-arc or
+continued-branch validation, Figures 4.3-4.8 continued torus-scale DG
+manifold propagation, the remaining Figure
 3.9 quasi-halo proxy tail, and Chapter 5's ephemeris-corrected or optimized
 transfer gaps. Chapter 5 entries are intentionally labelled as CR3BP baseline,
 DE421-oriented baseline, local direct-shooting solution, or geometric proxy

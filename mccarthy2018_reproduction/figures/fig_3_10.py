@@ -9,9 +9,11 @@ import numpy as np
 
 from _figure_paths import PROJECT_ROOT
 from qp_orbits.constants import SYSTEMS
-from qp_orbits.cr3bp import jacobi_constant
 from qp_orbits.libration_points import compute_libration_points
-from qp_orbits.periodic_orbits import period_q_halo_examples
+from qp_orbits.periodic_orbits import (
+    audit_spatial_multiple_shooting_orbit,
+    period_q_halo_examples,
+)
 from qp_orbits.plot_style import apply_style, save_figure
 from qp_orbits.variational import integrate_state_and_stm, unpack_augmented
 
@@ -25,6 +27,10 @@ NOTES = "Floquet-seeded period-q branches corrected by STM multiple shooting."
 
 def _complex_values(values: np.ndarray) -> str:
     return ";".join(f"{value.real:.16g}{value.imag:+.16g}j" for value in values)
+
+
+def _float_values(values: np.ndarray) -> str:
+    return ";".join(f"{float(value):.16g}" for value in values)
 
 
 def _monodromy_for_orbit(orbit):
@@ -46,6 +52,7 @@ def write_period_q_validation(examples) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     csv_path = output_dir / "period_q_halo_examples.csv"
     npz_path = output_dir / "period_q_halo_examples.npz"
+    audit_csv_path = output_dir / "period_q_halo_closure_audit.csv"
     system = SYSTEMS["earth_moon"]
 
     fieldnames = [
@@ -89,6 +96,28 @@ def write_period_q_validation(examples) -> None:
         "segments",
         "segment_duration_nd",
     ]
+    audit_fieldnames = [
+        "resonance",
+        "period_nd",
+        "half_period_nd",
+        "segments",
+        "segment_duration_nd",
+        "segment_duration_consistency_error",
+        "patch_to_patch_continuity_residual_norm",
+        "max_patch_to_patch_continuity_residual",
+        "terminal_symmetry_residual_norm",
+        "multiple_shooting_residual_norm",
+        "full_period_single_shoot_closure_error",
+        "half_period_single_shoot_symmetry_error",
+        "trajectory_sampling_closure_error",
+        "trajectory_jacobi_drift",
+        "full_period_single_shoot_jacobi_drift",
+        "monodromy_multiplier_magnitudes",
+        "max_monodromy_multiplier_abs",
+        "min_monodromy_multiplier_abs",
+        "per_segment_endpoint_errors",
+        "diagnosis",
+    ]
 
     npz_payload: dict[str, np.ndarray] = {
         "resonance": np.array([example.resonance for example in examples], dtype=int),
@@ -109,27 +138,42 @@ def write_period_q_validation(examples) -> None:
     }
 
     rows = []
+    audit_rows = []
     for example in examples:
         corrected = example.corrected
         bifurcation = example.bifurcation
-        terminal_state, monodromy_matrix, monodromy_eigenvalues = _monodromy_for_orbit(
-            corrected.orbit
+        audit = audit_spatial_multiple_shooting_orbit(
+            corrected,
+            trajectory=example.trajectory,
         )
+        terminal_state = audit.full_period_terminal_state
+        monodromy_matrix = audit.monodromy_matrix
+        monodromy_eigenvalues = audit.monodromy_multipliers
         _, base_monodromy_matrix, base_monodromy_eigenvalues = _monodromy_for_orbit(
             bifurcation.orbit
         )
-        jacobi_values = jacobi_constant(example.trajectory, system.mu)
         target_angle = 2.0 * np.pi / example.resonance
-        continuity_norm = float(np.linalg.norm(corrected.continuity_errors))
-        terminal_symmetry_norm = float(np.linalg.norm(corrected.terminal_symmetry_error))
-        closure_error = float(np.linalg.norm(terminal_state - corrected.orbit.initial_state))
-        trajectory_closure = float(np.linalg.norm(example.trajectory[-1] - example.trajectory[0]))
+        continuity_norm = audit.patch_to_patch_continuity_norm
+        terminal_symmetry_norm = audit.terminal_symmetry_residual_norm
+        closure_error = audit.full_period_single_shoot_closure_error
+        trajectory_closure = audit.trajectory_sampling_closure_error
+
+        if example.resonance == 8 and closure_error > 1.0:
+            diagnosis = (
+                "B: single-arc divergence on a highly unstable corrected half-period "
+                "multiple-shooting orbit; period and reflection definitions are consistent"
+            )
+        elif closure_error < 1.0e-6:
+            diagnosis = "single-shoot and multiple-shooting closure agree at validation scale"
+        else:
+            diagnosis = "single-shoot closure is weaker than patch-local closure"
 
         prefix = f"q{example.resonance}"
         npz_payload[f"{prefix}_trajectory"] = example.trajectory
         npz_payload[f"{prefix}_patch_states"] = corrected.patch_states
         npz_payload[f"{prefix}_continuity_errors"] = corrected.continuity_errors
         npz_payload[f"{prefix}_terminal_symmetry_error"] = corrected.terminal_symmetry_error
+        npz_payload[f"{prefix}_per_segment_endpoint_errors"] = audit.per_segment_endpoint_errors
         npz_payload[f"{prefix}_monodromy_matrix"] = monodromy_matrix
         npz_payload[f"{prefix}_monodromy_multipliers"] = monodromy_eigenvalues
         npz_payload[f"{prefix}_bifurcation_monodromy_matrix"] = base_monodromy_matrix
@@ -172,11 +216,35 @@ def write_period_q_validation(examples) -> None:
             "terminal_symmetry_residual_norm": terminal_symmetry_norm,
             "orbit_closure_error": closure_error,
             "trajectory_closure_error": trajectory_closure,
-            "trajectory_jacobi_drift": float(np.ptp(jacobi_values)),
+            "trajectory_jacobi_drift": audit.trajectory_jacobi_drift,
             "segments": corrected.patch_states.shape[0],
             "segment_duration_nd": corrected.segment_duration,
         }
         rows.append(row)
+        audit_rows.append(
+            {
+                "resonance": example.resonance,
+                "period_nd": corrected.orbit.period,
+                "half_period_nd": corrected.orbit.half_period,
+                "segments": corrected.patch_states.shape[0],
+                "segment_duration_nd": corrected.segment_duration,
+                "segment_duration_consistency_error": audit.segment_duration_consistency_error,
+                "patch_to_patch_continuity_residual_norm": audit.patch_to_patch_continuity_norm,
+                "max_patch_to_patch_continuity_residual": audit.patch_to_patch_continuity_max,
+                "terminal_symmetry_residual_norm": audit.terminal_symmetry_residual_norm,
+                "multiple_shooting_residual_norm": audit.multiple_shooting_residual_norm,
+                "full_period_single_shoot_closure_error": audit.full_period_single_shoot_closure_error,
+                "half_period_single_shoot_symmetry_error": audit.half_period_single_shoot_symmetry_error,
+                "trajectory_sampling_closure_error": audit.trajectory_sampling_closure_error,
+                "trajectory_jacobi_drift": audit.trajectory_jacobi_drift,
+                "full_period_single_shoot_jacobi_drift": audit.full_period_single_shoot_jacobi_drift,
+                "monodromy_multiplier_magnitudes": _float_values(audit.monodromy_multiplier_magnitudes),
+                "max_monodromy_multiplier_abs": float(np.max(audit.monodromy_multiplier_magnitudes)),
+                "min_monodromy_multiplier_abs": float(np.min(audit.monodromy_multiplier_magnitudes)),
+                "per_segment_endpoint_errors": _float_values(audit.per_segment_endpoint_errors),
+                "diagnosis": diagnosis,
+            }
+        )
 
     with csv_path.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=fieldnames)
@@ -188,8 +256,19 @@ def write_period_q_validation(examples) -> None:
                     for key, value in row.items()
                 }
             )
+    with audit_csv_path.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(stream, fieldnames=audit_fieldnames)
+        writer.writeheader()
+        for row in audit_rows:
+            writer.writerow(
+                {
+                    key: f"{value:.16g}" if isinstance(value, (float, np.floating)) else value
+                    for key, value in row.items()
+                }
+            )
     np.savez_compressed(npz_path, **npz_payload)
     print(f"Wrote {csv_path}")
+    print(f"Wrote {audit_csv_path}")
     print(f"Wrote {npz_path}")
 
 
