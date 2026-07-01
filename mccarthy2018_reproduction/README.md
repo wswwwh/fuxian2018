@@ -283,6 +283,23 @@ summarize the current reproduction status for reporting; and separate the next
 phase into original-data search, quasi-DRO formulation replacement, and
 paper-level reproduction-report routes.
 
+### Reproduction report package
+
+The current recommended reading path is the formal report package in
+`docs/reproduction_report/`:
+
+- `docs/reproduction_report/main_report.md` - Chinese main report for the
+  current paper-level reproduction status.
+- `docs/reproduction_report/figure_status_appendix.md` - readable Markdown
+  rendering of all 54 rows in `data/computed/figure_validation_table.csv`.
+- `docs/reproduction_report/numerical_audit_appendix.md` - focused audit
+  summary for Fig. 3.10, Chapter 4 DG manifolds, and Chapter 3 quasi-DRO
+  continuation/bottleneck evidence.
+- `docs/reproduction_report/proxy_usage_appendix.md` - chapter-level list of
+  proxy, schematic, local-overlay, grey-reference, and baseline figures.
+- `docs/reproduction_report/future_work_plan.md` - Route A / Route B / Route C
+  execution plan with inputs, success criteria, risks, and stop conditions.
+
 ## Environment
 
 The working machine already has a validated conda environment:
