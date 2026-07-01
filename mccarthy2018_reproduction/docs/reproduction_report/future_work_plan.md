@@ -74,6 +74,13 @@ or controlled digitization refinement.
 Replace or augment the current fixed-mapping-time invariant-curve formulation
 so the quasi-DRO continuation can handle the 10,000-11,000 km bottleneck.
 
+Route B formulation design is now recorded in
+`docs/route_b_formulation_note.md`. Any next coding round should use that note
+as the controlling method brief: start with the fixed-Jacobi/free-time/free-rho
+minimal prototype, keep current accepted branch data frozen, and require the
+documented residual/Jacobi/phase audit gates before updating figures or report
+packages.
+
 ### required inputs
 
 - Current accepted quasi-DRO branch and bottleneck diagnostics.

@@ -299,6 +299,8 @@ The current recommended reading path is the formal report package in
   proxy, schematic, local-overlay, grey-reference, and baseline figures.
 - `docs/reproduction_report/future_work_plan.md` - Route A / Route B / Route C
   execution plan with inputs, success criteria, risks, and stop conditions.
+- `docs/route_b_formulation_note.md` - formulation replacement design for the
+  Chapter 3 quasi-DRO bottleneck.
 
 ### Route A data search and digitization
 
