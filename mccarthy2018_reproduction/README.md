@@ -229,26 +229,31 @@ sheet only as a proxy reference. These corrected sheets are physical-consistency
 baselines, not full high-amplitude torus-scale global manifold reproductions.
 
 Figures 3.16-3.17 now have a dedicated quasi-DRO audit table at
-`data/computed/chapter3_quasi_dro_validation.csv`. The corrected
-fixed-mapping-time CR3BP branch has five members with 21 curve samples each,
-mapping time 14.74932760227518 days, rho 1.431231722670483-1.438667729871837
-rad, max abs z 383.3341592553633-7739.933127483348 km, and mean Jacobi
-2.922375587243285-2.922496961073728. The largest stored map residual is
-1.94e-11, the largest one-map Jacobi drift is 2.36e-09, and the ten-return
-Jacobi span stays below 4.00e-15. This validates the local corrected branch,
-but Fig. 3.16 still retains grey thesis-scale proxy surfaces and Fig. 3.17
-still retains grey proxy trends because the corrected branch only reaches the
-low end of the thesis-scale amplitude and rotation-angle range.
+`data/computed/chapter3_quasi_dro_validation.csv`, plus an extended attempt in
+`data/computed/chapter3_quasi_dro_extended_validation.csv` and
+`data/computed/chapter3_quasi_dro_continuation_log.csv`. The corrected
+fixed-mapping-time CR3BP branch preserves the original five `N=21` local
+members and adds four accepted `N=41` members through a 10,000 km vertical
+amplitude target. The extended accepted range is mapping time
+14.74932760227518 days, rho 1.431231722670483-1.443804463949337 rad, max abs z
+383.3341592553633-10134.48630541837 km, and mean Jacobi
+2.922289662015089-2.922496961073728. The largest stored map residual is
+8.44e-11, the largest one-map Jacobi drift is 2.36e-09, and the ten-return
+Jacobi span stays below 4.89e-15. Fig. 3.16 still retains grey thesis-scale
+proxy surfaces and Fig. 3.17 still retains grey proxy trends as references,
+because 11,000 km, 12,000 km, and the Stage 2 14,000 km attempt failed the
+residual/Jacobi audit.
 
 The next upgrades should focus on Figures 4.3-4.8 continued torus-scale DG
-manifold propagation, the remaining Figure 3.9 quasi-halo proxy tail, and a
-larger-amplitude Chapter 3 corrected quasi-DRO continuation for Figures
-3.16-3.17. The quasi-DRO continuation should be expanded before treating the
-Chapter 5 quasi-DRO application scenes as the next source of stronger numerical
-evidence. Figure 3.10's q=2 and q=8 period-q audit is already documented and is
-not the current priority. Chapter 5 entries are intentionally labelled as CR3BP
-baseline, DE421-oriented baseline, local direct-shooting solution, or geometric
-proxy instead of complete BCR4BP or optimized transfer reproductions.
+manifold propagation, the remaining Figure 3.9 quasi-halo proxy tail, and the
+10,000-14,000 km Chapter 3 quasi-DRO continuation bottleneck. The quasi-DRO
+work should continue with pseudo-arclength or fixed-rotation continuation
+before Chapter 5 quasi-DRO application scenes are treated as the next source of
+stronger numerical evidence. Figure 3.10's q=2 and q=8 period-q audit is
+already documented and is not the current priority. Chapter 5 entries are
+intentionally labelled as CR3BP baseline, DE421-oriented baseline, local
+direct-shooting solution, or geometric proxy instead of complete BCR4BP or
+optimized transfer reproductions.
 
 ## Environment
 

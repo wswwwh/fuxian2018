@@ -8,7 +8,7 @@ from matplotlib.ticker import ScalarFormatter
 from _figure_paths import PROJECT_ROOT
 from qp_orbits.constants import SYSTEMS
 from qp_orbits.corrected_dro_family import (
-    load_or_compute_corrected_dro_family,
+    load_or_compute_extended_corrected_dro_family,
     write_chapter3_quasi_dro_validation,
 )
 from qp_orbits.plot_style import apply_style, save_figure
@@ -19,9 +19,13 @@ FIGURE_ID = "3.17"
 SOURCE_PAGE = 83
 REPRO_LEVEL = "shape-match + local numerical"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Proxy trends retained as reference with an audited local fixed-mapping-time CR3BP quasi-DRO family."
+NOTES = "Proxy trends retained as reference with an expanded corrected fixed-mapping-time CR3BP quasi-DRO family."
 FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family.csv"
-VALIDATION_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_validation.csv"
+EXTENDED_FAMILY_PATH = (
+    PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family_extended.csv"
+)
+VALIDATION_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_extended_validation.csv"
+CONTINUATION_LOG_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_continuation_log.csv"
 
 
 def max_audit_metric(rows, field: str) -> float | None:
@@ -40,7 +44,12 @@ def main() -> None:
     rho = [row["rotation_angle_rad"] for row in rows]
     z_amp = [row["z_amplitude_km"] for row in rows]
     jacobi = [row["jacobi"] for row in rows]
-    corrected = load_or_compute_corrected_dro_family(FAMILY_PATH, system)
+    corrected = load_or_compute_extended_corrected_dro_family(
+        FAMILY_PATH,
+        EXTENDED_FAMILY_PATH,
+        CONTINUATION_LOG_PATH,
+        system,
+    )
     audit_rows = write_chapter3_quasi_dro_validation(VALIDATION_PATH, corrected, system)
     corrected_rho = [member.rotation_angle_rad for member in corrected]
     corrected_z_amp = [member.max_abs_z_km for member in corrected]
@@ -64,7 +73,7 @@ def main() -> None:
         marker="o",
         markersize=4,
         linewidth=1.7,
-        label="corrected local CR3BP",
+        label="corrected CR3BP",
     )
     axes[0].set_xlabel(r"Rotation Angle, $\rho$ [rad]")
     axes[0].set_ylabel("Z-Amplitude [km]")
@@ -77,12 +86,12 @@ def main() -> None:
 
     inset = axes[0].inset_axes([0.54, 0.08, 0.42, 0.40])
     inset.plot(corrected_rho, corrected_z_amp, color="#16856b", marker="o", markersize=3)
-    inset.set_xlim(1.4295, 1.4402)
-    inset.set_ylim(0.0, 8200.0)
-    inset.set_xticks([1.431, 1.438])
-    inset.set_yticks([0.0, 4000.0, 8000.0])
+    inset.set_xlim(min(corrected_rho) - 0.001, max(corrected_rho) + 0.001)
+    inset.set_ylim(0.0, max(corrected_z_amp) * 1.08)
+    inset.set_xticks([round(min(corrected_rho), 3), round(max(corrected_rho), 3)])
+    inset.set_yticks([0.0, 5000.0, 10000.0])
     inset.tick_params(labelsize=6, pad=1)
-    inset.set_title("corrected local branch", fontsize=6, pad=2)
+    inset.set_title("extended corrected branch", fontsize=6, pad=2)
 
     axes[1].plot(
         rho,
@@ -99,7 +108,7 @@ def main() -> None:
         marker="o",
         markersize=4,
         linewidth=1.7,
-        label="corrected local CR3BP",
+        label="corrected CR3BP",
     )
     axes[1].set_xlabel(r"Rotation Angle, $\rho$ [rad]")
     axes[1].set_ylabel("Jacobi Constant")
@@ -110,7 +119,7 @@ def main() -> None:
         0.98,
         0.96,
         (
-            f"audited local branch: rho={min(corrected_rho):.4f}-{max(corrected_rho):.4f}"
+            f"expanded corrected branch: rho={min(corrected_rho):.4f}-{max(corrected_rho):.4f}"
             "\n"
             rf"max residual {metric_text(max_map_residual)}, "
             rf"one-map $\Delta C$ {metric_text(max_jacobi_drift)}"

@@ -12,6 +12,7 @@ from .constants import CR3BPSystem
 from .cr3bp import integrate_cr3bp, jacobi_constant
 from .quasi_torus import (
     FreeRotationCurveCorrection,
+    corrected_dro_fixed_mapping_family,
     corrected_dro_fixed_mapping_full_corrections,
 )
 
@@ -83,6 +84,28 @@ _SCALAR_FIELDS = (
     "curve_jacobi_span",
 )
 
+CORRECTED_DRO_FAMILY_FIELDS = (
+    "member",
+    "curve_index",
+    "phase_rad",
+    "x",
+    "y",
+    "z",
+    "xdot",
+    "ydot",
+    "zdot",
+    "jacobi",
+    "target_vertical_amplitude_nd",
+    "target_vertical_amplitude_km",
+    "max_abs_z_km",
+    "rotation_angle_rad",
+    "mapping_time_days",
+    "map_residual_norm",
+    "amplitude_residual",
+    "phase_residual",
+    "curve_jacobi_span",
+)
+
 CHAPTER3_QUASI_DRO_VALIDATION_FIELDS = (
     "member",
     "curve_samples",
@@ -102,6 +125,29 @@ CHAPTER3_QUASI_DRO_VALIDATION_FIELDS = (
     "ten_return_jacobi_span",
     "ten_return_final_distance_from_initial",
     "validation_status",
+    "next_action",
+)
+
+CHAPTER3_QUASI_DRO_CONTINUATION_LOG_FIELDS = (
+    "attempt_id",
+    "source_member",
+    "target_max_abs_z_km",
+    "target_amplitude_km",
+    "curve_samples",
+    "initial_step",
+    "final_step",
+    "converged",
+    "rotation_angle_rad",
+    "mapping_time_days",
+    "max_abs_z_km",
+    "mean_jacobi",
+    "map_residual_norm",
+    "curve_jacobi_span",
+    "one_map_jacobi_drift",
+    "phase_return_error",
+    "newton_iterations",
+    "condition_estimate",
+    "failure_reason",
     "next_action",
 )
 
@@ -200,6 +246,48 @@ def load_corrected_dro_family_csv(path: str | Path) -> tuple[CorrectedDROFamilyM
     return tuple(family)
 
 
+def write_corrected_dro_family_csv(
+    path: str | Path,
+    family: tuple[CorrectedDROFamilyMember, ...],
+) -> None:
+    """Write a corrected fixed-time quasi-DRO family without changing member data."""
+
+    output = Path(path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(stream, fieldnames=CORRECTED_DRO_FAMILY_FIELDS)
+        writer.writeheader()
+        for member in family:
+            for curve_index, state in enumerate(member.states):
+                writer.writerow(
+                    {
+                        "member": member.member,
+                        "curve_index": curve_index,
+                        "phase_rad": f"{member.phases_rad[curve_index]:.16g}",
+                        "x": f"{state[0]:.16g}",
+                        "y": f"{state[1]:.16g}",
+                        "z": f"{state[2]:.16g}",
+                        "xdot": f"{state[3]:.16g}",
+                        "ydot": f"{state[4]:.16g}",
+                        "zdot": f"{state[5]:.16g}",
+                        "jacobi": f"{member.jacobi_values[curve_index]:.16g}",
+                        "target_vertical_amplitude_nd": (
+                            f"{member.target_vertical_amplitude_nd:.16g}"
+                        ),
+                        "target_vertical_amplitude_km": (
+                            f"{member.target_vertical_amplitude_km:.16g}"
+                        ),
+                        "max_abs_z_km": f"{member.max_abs_z_km:.16g}",
+                        "rotation_angle_rad": f"{member.rotation_angle_rad:.16g}",
+                        "mapping_time_days": f"{member.mapping_time_days:.16g}",
+                        "map_residual_norm": f"{member.map_residual_norm:.16g}",
+                        "amplitude_residual": f"{member.amplitude_residual:.16g}",
+                        "phase_residual": f"{member.phase_residual:.16g}",
+                        "curve_jacobi_span": f"{member.curve_jacobi_span:.16g}",
+                    }
+                )
+
+
 def _member_from_correction(
     member_id: int,
     correction: FreeRotationCurveCorrection,
@@ -226,6 +314,253 @@ def _member_from_correction(
         phase_residual=float(correction.phase_residual_history[-1]),
         curve_jacobi_span=float(np.ptp(jacobi)),
     )
+
+
+def _correction_condition_estimate(correction: FreeRotationCurveCorrection) -> float | None:
+    if correction.jacobian_condition_history.size == 0:
+        return None
+    return float(np.max(correction.jacobian_condition_history))
+
+
+def _is_tight_fixed_mapping_correction(
+    correction: FreeRotationCurveCorrection,
+    system: CR3BPSystem,
+    *,
+    map_tolerance: float = 1.0e-8,
+    jacobi_span_tolerance: float = 1.0e-8,
+    constraint_tolerance: float = 1.0e-10,
+) -> bool:
+    jacobi_span = float(np.ptp(jacobi_constant(correction.corrected_states, system.mu)))
+    return bool(
+        correction.final_residual_norms.max() < map_tolerance
+        and jacobi_span < jacobi_span_tolerance
+        and abs(correction.amplitude_residual_history[-1]) < constraint_tolerance
+        and abs(correction.phase_residual_history[-1]) < constraint_tolerance
+    )
+
+
+def _continuation_log_row(
+    *,
+    attempt_id: str,
+    source_member: int | str,
+    target_max_abs_z_km: float,
+    target_amplitude_km: float,
+    curve_samples: int,
+    initial_step: float,
+    final_step: float,
+    correction: FreeRotationCurveCorrection | None,
+    system: CR3BPSystem,
+    converged: bool,
+    failure_reason: str,
+    next_action: str,
+) -> dict[str, str]:
+    one_map_jacobi_drift: float | None = None
+    phase_return_error: float | None = None
+    if correction is not None:
+        provisional = _member_from_correction(-1, correction, system)
+        try:
+            row = chapter3_quasi_dro_validation_row(
+                provisional,
+                system,
+                returns=1,
+                one_map_time_samples=5,
+                ten_return_samples=11,
+            )
+            one_map_jacobi_drift = (
+                None
+                if row["one_map_sweep_jacobi_drift"] == "N/A"
+                else float(row["one_map_sweep_jacobi_drift"])
+            )
+            phase_return_error = (
+                None
+                if row["one_map_phase_return_error"] == "N/A"
+                else float(row["one_map_phase_return_error"])
+            )
+        except (RuntimeError, ValueError, FloatingPointError):
+            pass
+        values: dict[str, float | int | str | None] = {
+            "attempt_id": attempt_id,
+            "source_member": source_member,
+            "target_max_abs_z_km": target_max_abs_z_km,
+            "target_amplitude_km": target_amplitude_km,
+            "curve_samples": curve_samples,
+            "initial_step": initial_step,
+            "final_step": final_step,
+            "converged": str(bool(converged)),
+            "rotation_angle_rad": correction.rotation_angle_rad,
+            "mapping_time_days": correction.seed.orbit_period * (system.time_unit_days or 1.0),
+            "max_abs_z_km": provisional.max_abs_z_km,
+            "mean_jacobi": provisional.mean_jacobi,
+            "map_residual_norm": provisional.map_residual_norm,
+            "curve_jacobi_span": provisional.curve_jacobi_span,
+            "one_map_jacobi_drift": one_map_jacobi_drift,
+            "phase_return_error": phase_return_error,
+            "newton_iterations": int(correction.correction_norm_history.shape[0]),
+            "condition_estimate": _correction_condition_estimate(correction),
+            "failure_reason": failure_reason,
+            "next_action": next_action,
+        }
+    else:
+        values = {
+            "attempt_id": attempt_id,
+            "source_member": source_member,
+            "target_max_abs_z_km": target_max_abs_z_km,
+            "target_amplitude_km": target_amplitude_km,
+            "curve_samples": curve_samples,
+            "initial_step": initial_step,
+            "final_step": final_step,
+            "converged": str(bool(converged)),
+            "rotation_angle_rad": None,
+            "mapping_time_days": None,
+            "max_abs_z_km": None,
+            "mean_jacobi": None,
+            "map_residual_norm": None,
+            "curve_jacobi_span": None,
+            "one_map_jacobi_drift": None,
+            "phase_return_error": None,
+            "newton_iterations": None,
+            "condition_estimate": None,
+            "failure_reason": failure_reason,
+            "next_action": next_action,
+        }
+    return {
+        field: _validation_value(values[field])
+        for field in CHAPTER3_QUASI_DRO_CONTINUATION_LOG_FIELDS
+    }
+
+
+def write_chapter3_quasi_dro_continuation_log(
+    path: str | Path,
+    rows: tuple[dict[str, str], ...],
+) -> None:
+    """Write the quasi-DRO continuation attempt log."""
+
+    output = Path(path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(
+            stream,
+            fieldnames=CHAPTER3_QUASI_DRO_CONTINUATION_LOG_FIELDS,
+        )
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def compute_chapter3_extended_corrected_dro_family(
+    base_family: tuple[CorrectedDROFamilyMember, ...],
+    system: CR3BPSystem,
+    *,
+    curve_samples: int = 41,
+) -> tuple[tuple[CorrectedDROFamilyMember, ...], tuple[dict[str, str], ...]]:
+    """Attempt a larger fixed-mapping-time quasi-DRO branch for Chapter 3.
+
+    The original five `N=21` members are preserved, while new candidates are
+    accepted only if they pass the same map residual, constraint, and Jacobi
+    span thresholds used by the validation table.
+    """
+
+    if not base_family:
+        raise ValueError("base_family must contain the audited local branch")
+    length_unit = system.length_unit_km or 1.0
+    time_unit = system.time_unit_days or 1.0
+    x0 = 1.0 - system.mu - 73800.0 / length_unit
+    base_amplitudes = tuple(member.target_vertical_amplitude_nd for member in base_family)
+    stage_targets_km = (8500.0, 9000.0, 9500.0, 10000.0, 11000.0, 12000.0, 14000.0)
+    target_amplitudes = tuple(value / length_unit for value in stage_targets_km)
+    all_amplitudes = base_amplitudes + target_amplitudes
+    corrections = corrected_dro_fixed_mapping_family(
+        system.mu,
+        x0=x0,
+        vertical_amplitudes=all_amplitudes,
+        samples=curve_samples,
+        initial_half_period=14.75 / (2.0 * time_unit),
+        max_iterations=32,
+    )
+
+    accepted: list[CorrectedDROFamilyMember] = [
+        member for member in base_family
+    ]
+    log_rows: list[dict[str, str]] = []
+    source_member = base_family[-1].member
+    source_amplitude_km = base_family[-1].target_vertical_amplitude_km
+    for offset, target_km in enumerate(stage_targets_km, start=len(base_family)):
+        correction = corrections[offset]
+        converged = _is_tight_fixed_mapping_correction(correction, system)
+        attempt_source_member = source_member
+        attempt_source_amplitude_km = source_amplitude_km
+        stage = (
+            "stage1" if target_km <= 12000.0 else
+            "stage2" if target_km <= 18000.0 else
+            "stage3" if target_km <= 25000.0 else
+            "stage4"
+        )
+        if converged:
+            new_member = _member_from_correction(len(accepted), correction, system)
+            accepted.append(new_member)
+            source_member = new_member.member
+            source_amplitude_km = new_member.target_vertical_amplitude_km
+            failure_reason = ""
+            next_action = "accepted into extended corrected family"
+        else:
+            failure_reason = "failed residual/Jacobi audit thresholds"
+            next_action = (
+                "increase curve samples or switch to pseudo-arclength/rotation continuation"
+            )
+        log_rows.append(
+            _continuation_log_row(
+                attempt_id=f"{stage}_target_{int(target_km)}km_N{curve_samples}",
+                source_member=attempt_source_member,
+                target_max_abs_z_km=target_km,
+                target_amplitude_km=target_km,
+                curve_samples=curve_samples,
+                initial_step=target_km - attempt_source_amplitude_km,
+                final_step=target_km - attempt_source_amplitude_km,
+                correction=correction,
+                system=system,
+                converged=converged,
+                failure_reason=failure_reason,
+                next_action=next_action,
+            )
+        )
+        if not converged and target_km >= 14000.0:
+            break
+
+    for target_km, stage in ((20000.0, "stage3"), (31000.0, "stage4")):
+        log_rows.append(
+            _continuation_log_row(
+                attempt_id=f"{stage}_skipped_after_stage2_failure",
+                source_member=accepted[-1].member,
+                target_max_abs_z_km=target_km,
+                target_amplitude_km=target_km,
+                curve_samples=curve_samples,
+                initial_step=target_km - source_amplitude_km,
+                final_step=0.0,
+                correction=None,
+                system=system,
+                converged=False,
+                failure_reason="skipped because Stage 2 lower-bound correction failed",
+                next_action="resolve the 11,000-14,000 km bottleneck before Stage 3/4",
+            )
+        )
+    return tuple(accepted), tuple(log_rows)
+
+
+def load_or_compute_extended_corrected_dro_family(
+    base_path: str | Path,
+    extended_path: str | Path,
+    log_path: str | Path,
+    system: CR3BPSystem,
+) -> tuple[CorrectedDROFamilyMember, ...]:
+    """Load or compute the Chapter 3 extended quasi-DRO family and log."""
+
+    extended = Path(extended_path)
+    if extended.exists():
+        return load_corrected_dro_family_csv(extended)
+    base_family = load_or_compute_corrected_dro_family(base_path, system)
+    family, log_rows = compute_chapter3_extended_corrected_dro_family(base_family, system)
+    write_corrected_dro_family_csv(extended, family)
+    write_chapter3_quasi_dro_continuation_log(log_path, log_rows)
+    return family
 
 
 def load_or_compute_corrected_dro_family(
@@ -438,13 +773,18 @@ def chapter3_quasi_dro_validation_row(
         and (one_map_phase_return_error or 0.0) < 1.0e-8
         and (ten_return_jacobi_span or 0.0) < 1.0e-8
     )
+    extended_member = member.max_abs_z_km > 8000.0
     validation_status = (
-        "validated local CR3BP member"
+        ("validated extended CR3BP member" if extended_member else "validated local CR3BP member")
         if numerically_tight
-        else "incomplete or failed local member audit"
+        else "incomplete or failed member audit"
     )
     next_action = (
-        "Use as local corrected branch only; extend fixed-mapping continuation before replacing proxy trend"
+        (
+            "Use as extended corrected branch; retain proxy reference until Stage 2 continuation succeeds"
+            if extended_member
+            else "Use as local corrected branch only; extend fixed-mapping continuation before replacing proxy trend"
+        )
         if numerically_tight
         else "Re-run the corrected quasi-DRO propagation and inspect failed audit metric"
     )

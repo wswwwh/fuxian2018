@@ -8,7 +8,7 @@ import numpy as np
 from _figure_paths import PROJECT_ROOT
 from qp_orbits.constants import SYSTEMS
 from qp_orbits.corrected_dro_family import (
-    load_or_compute_corrected_dro_family,
+    load_or_compute_extended_corrected_dro_family,
     sweep_corrected_dro_member,
     write_chapter3_quasi_dro_validation,
 )
@@ -21,9 +21,13 @@ FIGURE_ID = "3.16"
 SOURCE_PAGE = 82
 REPRO_LEVEL = "shape-match + local numerical"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Proxy surfaces retained with audited local fixed-mapping-time CR3BP quasi-DRO wireframes."
+NOTES = "Proxy surfaces retained as references with expanded corrected fixed-mapping-time CR3BP quasi-DRO wireframes."
 FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family.csv"
-VALIDATION_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_validation.csv"
+EXTENDED_FAMILY_PATH = (
+    PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family_extended.csv"
+)
+VALIDATION_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_extended_validation.csv"
+CONTINUATION_LOG_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_continuation_log.csv"
 
 
 def plot_corrected_torus(ax, member) -> None:
@@ -45,7 +49,7 @@ def plot_corrected_torus(ax, member) -> None:
     ax.text2D(
         0.02,
         0.96,
-        rf"corrected local: $|z|_{{max}}={member.max_abs_z_km:.0f}$ km, $\rho={member.rotation_angle_rad:.3f}$",
+        rf"corrected: $|z|_{{max}}={member.max_abs_z_km:.0f}$ km, $\rho={member.rotation_angle_rad:.3f}$",
         transform=ax.transAxes,
         fontsize=7,
         color="#075b4d",
@@ -78,9 +82,15 @@ def main() -> None:
     apply_style()
     system = SYSTEMS["earth_moon"]
     family = quasi_dro_family(system, samples=4, n_major=128, n_minor=28)
-    corrected_family = load_or_compute_corrected_dro_family(FAMILY_PATH, system)
+    corrected_family = load_or_compute_extended_corrected_dro_family(
+        FAMILY_PATH,
+        EXTENDED_FAMILY_PATH,
+        CONTINUATION_LOG_PATH,
+        system,
+    )
     write_chapter3_quasi_dro_validation(VALIDATION_PATH, corrected_family, system)
-    selected_corrected = [corrected_family[index] for index in (0, 2, 3, 4)]
+    selected_indices = np.linspace(0, len(corrected_family) - 1, 4, dtype=int)
+    selected_corrected = [corrected_family[index] for index in selected_indices]
     fig = plt.figure(figsize=(8.3, 7.4), constrained_layout=True)
     panels = zip(family, selected_corrected, ["(a)", "(b)", "(c)", "(d)"])
     for idx, (member, corrected_member, label) in enumerate(panels, start=1):
@@ -96,7 +106,7 @@ def main() -> None:
     z_values = [member.max_abs_z_km for member in corrected_family]
     fig.suptitle(
         (
-            "Audited local corrected branch: "
+            "Expanded corrected branch: "
             f"rho={min(rho_values):.4f}-{max(rho_values):.4f} rad, "
             f"|z|max={min(z_values):.0f}-{max(z_values):.0f} km; "
             "grey surfaces are thesis-scale proxy references"
