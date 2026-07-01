@@ -414,6 +414,8 @@ class FixedJacobiFreeTimeRotationCurveCorrection:
     mapping_time_history: np.ndarray
     rotation_history: np.ndarray
     jacobian_condition_history: np.ndarray
+    jacobian_min_singular_history: np.ndarray
+    jacobian_max_singular_history: np.ndarray
 
     @property
     def initial_residual_norms(self) -> np.ndarray:
@@ -2008,6 +2010,13 @@ def stroboscopic_curve_fixed_jacobi_free_time_rotation_correction(
     max_mapping_time_step: float = 0.05,
     max_rotation_step: float = 0.01,
     rcond: float = 1e-11,
+    state_variable_scale: float = 1.0,
+    mapping_time_variable_scale: float = 1.0,
+    rotation_variable_scale: float = 1.0,
+    map_residual_scale: float = 1.0,
+    jacobi_residual_scale: float = 1.0,
+    phase_residual_scale: float = 1.0,
+    phase_condition: str = "curve_tangent",
 ) -> FixedJacobiFreeTimeRotationCurveCorrection:
     """Correct a stroboscopic curve at fixed mean Jacobi with free time and rho.
 
@@ -2038,11 +2047,42 @@ def stroboscopic_curve_fixed_jacobi_free_time_rotation_correction(
         else float(initial_rotation_angle_rad)
     ) % (2.0 * np.pi)
 
-    tangent = np.roll(reference, -1, axis=0) - np.roll(reference, 1, axis=0)
-    tangent_norm = float(np.linalg.norm(tangent))
-    if tangent_norm <= 1e-14:
-        raise RuntimeError("Phase reference has a degenerate curve tangent")
-    tangent /= tangent_norm
+    scales = (
+        state_variable_scale,
+        mapping_time_variable_scale,
+        rotation_variable_scale,
+        map_residual_scale,
+        jacobi_residual_scale,
+        phase_residual_scale,
+    )
+    if any(scale <= 0.0 or not np.isfinite(scale) for scale in scales):
+        raise ValueError("Route B variable and residual scales must be positive finite values")
+
+    if phase_condition == "curve_tangent":
+        phase_directions = [np.roll(reference, -1, axis=0) - np.roll(reference, 1, axis=0)]
+    elif phase_condition == "reference_section_z":
+        section = np.zeros_like(reference)
+        section[0, 2] = 1.0
+        phase_directions = [section]
+    elif phase_condition == "two_orthogonality":
+        longitudinal, latitudinal = _curve_phase_directions(
+            seed,
+            reference,
+            mapping_time=mapping_time,
+            rotation_angle_rad=rotation,
+        )
+        phase_directions = [longitudinal, latitudinal]
+    else:
+        raise ValueError(
+            "phase_condition must be 'curve_tangent', 'reference_section_z', or 'two_orthogonality'"
+        )
+    normalized_phase_directions = []
+    for direction in phase_directions:
+        direction_norm = float(np.linalg.norm(direction))
+        if direction_norm <= 1e-14:
+            raise RuntimeError("Phase reference has a degenerate phase direction")
+        normalized_phase_directions.append(direction / direction_norm)
+    phase_directions = normalized_phase_directions
 
     residual_history: list[np.ndarray] = []
     energy_history: list[float] = []
@@ -2051,6 +2091,8 @@ def stroboscopic_curve_fixed_jacobi_free_time_rotation_correction(
     mapping_time_history: list[float] = []
     rotation_history: list[float] = []
     condition_history: list[float] = []
+    min_singular_history: list[float] = []
+    max_singular_history: list[float] = []
 
     best_metric = np.inf
     best_states = states.copy()
@@ -2063,12 +2105,15 @@ def stroboscopic_curve_fixed_jacobi_free_time_rotation_correction(
     best_energy_residual = np.inf
     best_phase_residual = np.inf
 
-    def constraints(values: np.ndarray) -> tuple[float, np.ndarray, float]:
+    def constraints(values: np.ndarray) -> tuple[float, np.ndarray, np.ndarray]:
         energy_values = jacobi_constant(values, seed.mu)
         energy_residual = float(np.mean(energy_values) - target_energy)
         energy_gradient = _jacobi_gradient(values, seed.mu) / values.shape[0]
-        phase_residual = float(np.sum((values - reference) * tangent))
-        return energy_residual, energy_gradient, phase_residual
+        phase_residuals = np.asarray(
+            [float(np.sum((values - reference) * direction)) for direction in phase_directions],
+            dtype=float,
+        )
+        return energy_residual, energy_gradient, phase_residuals
 
     for _ in range(max_iterations):
         interpolation = _trigonometric_interpolation_matrix(seed.phases, seed.phases + rotation)
@@ -2085,11 +2130,12 @@ def stroboscopic_curve_fixed_jacobi_free_time_rotation_correction(
         targets = interpolation @ states
         residuals = mapped - targets
         residual_norms = np.linalg.norm(residuals, axis=1)
-        energy_residual, energy_gradient, phase_residual = constraints(states)
-        metric = max(float(residual_norms.max()), abs(energy_residual), abs(phase_residual))
+        energy_residual, energy_gradient, phase_residuals = constraints(states)
+        phase_residual_norm = float(np.linalg.norm(phase_residuals, ord=np.inf))
+        metric = max(float(residual_norms.max()), abs(energy_residual), phase_residual_norm)
         residual_history.append(residual_norms)
         energy_history.append(energy_residual)
-        phase_history.append(phase_residual)
+        phase_history.append(phase_residual_norm)
         mapping_time_history.append(mapping_time)
         rotation_history.append(rotation)
         if metric < best_metric:
@@ -2102,17 +2148,18 @@ def stroboscopic_curve_fixed_jacobi_free_time_rotation_correction(
             best_rotation = rotation
             best_norms = residual_norms.copy()
             best_energy_residual = energy_residual
-            best_phase_residual = phase_residual
+            best_phase_residual = phase_residual_norm
         if (
             residual_norms.max() < tolerance
             and abs(energy_residual) < jacobi_tolerance
-            and abs(phase_residual) < phase_tolerance
+            and phase_residual_norm < phase_tolerance
         ):
             break
 
         sample_count = states.shape[0]
         state_size = 6 * sample_count
-        jacobian = np.zeros((state_size + 2, state_size + 2), dtype=float)
+        phase_count = len(phase_directions)
+        jacobian = np.zeros((state_size + 1 + phase_count, state_size + 2), dtype=float)
         for row in range(sample_count):
             for col in range(sample_count):
                 block = -interpolation[row, col] * np.eye(6)
@@ -2126,21 +2173,40 @@ def stroboscopic_curve_fixed_jacobi_free_time_rotation_correction(
             )
         jacobian[:state_size, state_size + 1] = -(interpolation_derivative @ states).reshape(-1)
         jacobian[state_size, :state_size] = energy_gradient.reshape(-1)
-        jacobian[state_size + 1, :state_size] = tangent.reshape(-1)
+        for phase_idx, direction in enumerate(phase_directions):
+            jacobian[state_size + 1 + phase_idx, :state_size] = direction.reshape(-1)
 
         right_hand_side = -np.concatenate(
-            [residuals.reshape(-1), np.array([energy_residual, phase_residual])]
+            [residuals.reshape(-1), np.array([energy_residual]), phase_residuals]
         )
-        delta, _, _, singular_values = np.linalg.lstsq(
-            jacobian,
-            right_hand_side,
+        row_scales = np.concatenate(
+            [
+                np.full(state_size, map_residual_scale, dtype=float),
+                np.array([jacobi_residual_scale], dtype=float),
+                np.full(phase_count, phase_residual_scale, dtype=float),
+            ]
+        )
+        column_scales = np.concatenate(
+            [
+                np.full(state_size, state_variable_scale, dtype=float),
+                np.array([mapping_time_variable_scale, rotation_variable_scale], dtype=float),
+            ]
+        )
+        scaled_jacobian = row_scales[:, None] * jacobian * column_scales[None, :]
+        scaled_right_hand_side = row_scales * right_hand_side
+        scaled_delta, _, _, singular_values = np.linalg.lstsq(
+            scaled_jacobian,
+            scaled_right_hand_side,
             rcond=rcond,
         )
+        delta = column_scales * scaled_delta
         condition_history.append(
             float(singular_values[0] / singular_values[-1])
             if singular_values.size and singular_values[-1] > 0.0
             else np.inf
         )
+        max_singular_history.append(float(singular_values[0]) if singular_values.size else np.nan)
+        min_singular_history.append(float(singular_values[-1]) if singular_values.size else np.nan)
         state_delta = delta[:state_size].reshape(sample_count, 6)
         mapping_time_delta = float(delta[state_size])
         rotation_delta = float(delta[state_size + 1])
@@ -2171,11 +2237,12 @@ def stroboscopic_curve_fixed_jacobi_free_time_rotation_correction(
     )
     targets = interpolation @ states
     residual_norms = np.linalg.norm(mapped - targets, axis=1)
-    energy_residual, _, phase_residual = constraints(states)
-    metric = max(float(residual_norms.max()), abs(energy_residual), abs(phase_residual))
+    energy_residual, _, phase_residuals = constraints(states)
+    phase_residual_norm = float(np.linalg.norm(phase_residuals, ord=np.inf))
+    metric = max(float(residual_norms.max()), abs(energy_residual), phase_residual_norm)
     residual_history.append(residual_norms)
     energy_history.append(energy_residual)
-    phase_history.append(phase_residual)
+    phase_history.append(phase_residual_norm)
     mapping_time_history.append(mapping_time)
     rotation_history.append(rotation)
     if metric < best_metric:
@@ -2187,7 +2254,7 @@ def stroboscopic_curve_fixed_jacobi_free_time_rotation_correction(
         best_rotation = rotation
         best_norms = residual_norms.copy()
         best_energy_residual = energy_residual
-        best_phase_residual = phase_residual
+        best_phase_residual = phase_residual_norm
 
     if best_norms is None:
         raise RuntimeError("Fixed-Jacobi free-time correction did not evaluate a candidate")
@@ -2217,6 +2284,8 @@ def stroboscopic_curve_fixed_jacobi_free_time_rotation_correction(
         mapping_time_history=np.asarray(mapping_time_history),
         rotation_history=np.asarray(rotation_history),
         jacobian_condition_history=np.asarray(condition_history),
+        jacobian_min_singular_history=np.asarray(min_singular_history),
+        jacobian_max_singular_history=np.asarray(max_singular_history),
     )
 
 

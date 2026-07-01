@@ -81,6 +81,12 @@ minimal prototype, keep current accepted branch data frozen, and require the
 documented residual/Jacobi/phase audit gates before updating figures or report
 packages.
 
+The first Route B refinement pass is recorded in
+`docs/chapter3_route_b_refinement.md`. It found that scaling and phase-anchor
+changes did not resolve the poor conditioning, while a bounded diagnostic
+free-time continuation exceeded 11,000 km under the audit gates; the next Route
+B task is branch-consistency and phase-gauge robustness before any figure update.
+
 ### required inputs
 
 - Current accepted quasi-DRO branch and bottleneck diagnostics.

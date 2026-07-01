@@ -301,6 +301,9 @@ The current recommended reading path is the formal report package in
   execution plan with inputs, success criteria, risks, and stop conditions.
 - `docs/route_b_formulation_note.md` - formulation replacement design for the
   Chapter 3 quasi-DRO bottleneck.
+- `docs/chapter3_route_b_refinement.md` - Route B free-time scaling and
+  phase-condition refinement; bounded diagnostic continuation reaches beyond
+  11,000 km but remains a free-time branch requiring consistency checks.
 
 ### Route A data search and digitization
 
