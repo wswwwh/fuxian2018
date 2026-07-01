@@ -76,6 +76,10 @@ The current implementation is the first verified layer of the reproduction plan:
 - fixed-x Sun-Earth L1 planar Lyapunov correction, stable-manifold phase scan,
   periapsis-event detection, and 6,563 km Earth-radius targeting as a local
   numerical baseline for Figures 5.13-5.14
+- Route B Fourier/collocation BVP residual prototype for the current accepted
+  `N=61` quasi-DRO endpoint, recorded in
+  `docs/chapter3_route_b_bvp_residual_prototype.md`, without updating Figure
+  3.16, Figure 3.17, or the fixed-mapping accepted branch CSV
 - pseudo-arclength branch anchors and fixed-perilune STM correction for the
   4,800 km and 12,610 km northern Earth-Moon L2 NRHOs in Figure 5.9
 - fixed-time STM direct shooting for the 23-day and 12.4-day NRHO transfers,

@@ -93,6 +93,12 @@ phase-gauge robust diagnostic free-time branch, but fixed-time projection did
 not produce an accepted >10,500 km fixed-time candidate, so no figure-source
 replacement is justified.
 
+The Route B BVP residual prototype is recorded in
+`docs/chapter3_route_b_bvp_residual_prototype.md`. It is limited to residual
+design and endpoint reproduction for the current accepted `N=61` endpoint; it
+does not implement PALC, high-amplitude continuation, or any Figure 3.16/3.17
+source update.
+
 ### required inputs
 
 - Current accepted quasi-DRO branch and bottleneck diagnostics.
