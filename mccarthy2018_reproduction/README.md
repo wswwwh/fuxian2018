@@ -187,6 +187,35 @@ manifold propagation, BCR4BP/ephemeris validation, and transfer optimization
 layers are not final yet. They should replace the explicit proxy data sources
 while preserving the current figure-script interfaces.
 
+## Numerical validation status
+
+The current validation snapshot is tracked in
+`data/computed/figure_validation_table.csv`. The table records the source page,
+script, reproduction level, proxy usage, main data source, key physical
+quantities, residual fields when available, visual status, and next action for
+all 54 implemented figures.
+
+Status A - numerical reproduction:
+2.3, 2.4, 2.6, 2.7, 2.8, 2.11, 2.14, 2.15, 3.5, 3.6, 3.7, 3.8, 3.12,
+3.13, 3.14, 3.15.
+
+Status B - physical-consistency baseline:
+2.13, 5.5, 5.6, 5.7, 5.10, 5.11.
+
+Status C - shape-match with local numerical overlay:
+3.9, 3.10, 3.11, 3.16, 3.17, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8,
+5.1, 5.8, 5.9, 5.12, 5.13, 5.14.
+
+Status D - proxy/schematic only:
+2.1, 2.2, 2.5, 2.9, 2.10, 2.12, 3.1, 3.2, 3.3, 3.4, 5.2, 5.3, 5.4.
+
+The next upgrades should focus on Figure 3.10 q=2/q=8 validation, Figures
+4.3-4.8 continued torus-scale DG manifold propagation, the remaining Figure
+3.9 quasi-halo proxy tail, and Chapter 5's ephemeris-corrected or optimized
+transfer gaps. Chapter 5 entries are intentionally labelled as CR3BP baseline,
+DE421-oriented baseline, local direct-shooting solution, or geometric proxy
+instead of complete BCR4BP or optimized transfer reproductions.
+
 ## Environment
 
 The working machine already has a validated conda environment:

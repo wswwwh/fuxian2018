@@ -20,14 +20,24 @@ FIGURE_ID = "4.8"
 SOURCE_PAGE = 93
 REPRO_LEVEL = "shape-match + local numerical"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Proxy global sheet with corrected quasi-vertical and periodic-halo CR3BP manifold overlays."
+NOTES = (
+    "Main red sheet is propagated from the corrected quasi-vertical DG unstable "
+    "eigenvector; grey sheet is retained only as a thesis-scale proxy reference."
+)
 
 
 def main() -> None:
     apply_style()
     system = SYSTEMS["earth_moon"]
     torus = base_torus(system, "vertical", n_major=84, n_minor=18)
-    sheet = manifold_sheet(system, family="vertical", direction="minus", stage_fraction=1.22, n_curve=96, n_steps=48)
+    proxy_sheet = manifold_sheet(
+        system,
+        family="vertical",
+        direction="minus",
+        stage_fraction=1.22,
+        n_curve=96,
+        n_steps=48,
+    )
     periodic_manifold = periodic_halo_manifold_sample(
         system.mu,
         point="L1",
@@ -45,18 +55,25 @@ def main() -> None:
 
     fig = plt.figure(figsize=(8.1, 4.2), constrained_layout=True)
     ax = fig.add_subplot(111, projection="3d")
-    plot_sheet_wire(ax, sheet, alpha=0.84, linewidth=0.32, curve_stride=2, time_stride=3)
+    plot_sheet_wire(
+        ax,
+        proxy_sheet,
+        color="#bdbdbd",
+        alpha=0.18,
+        linewidth=0.22,
+        curve_stride=4,
+        time_stride=6,
+    )
     plot_torus_wire(ax, torus, color="black", alpha=0.42, linewidth=0.30)
-    surface = corrected_vertical.surface
-    for curve_idx in range(0, surface.shape[1], 1):
-        ax.plot(
-            surface[:, curve_idx, 0],
-            surface[:, curve_idx, 1],
-            surface[:, curve_idx, 2],
-            color="#b2182b",
-            linewidth=0.42,
-            alpha=0.48,
-        )
+    plot_sheet_wire(
+        ax,
+        corrected_vertical,
+        color="#b2182b",
+        alpha=0.76,
+        linewidth=0.36,
+        curve_stride=1,
+        time_stride=18,
+    )
     ax.plot(
         periodic_manifold.orbit_curve[:, 0],
         periodic_manifold.orbit_curve[:, 1],

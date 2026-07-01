@@ -9,20 +9,39 @@ from _chapter4_plotting import add_earth_moon_labels, plot_sheet_wire, plot_toru
 from qp_orbits.constants import SYSTEMS
 from qp_orbits.manifolds import periodic_halo_manifold_sample
 from qp_orbits.plot_style import apply_style, save_figure
-from qp_orbits.torus_stability import base_torus, manifold_sheet
+from qp_orbits.torus_stability import (
+    base_torus,
+    corrected_l1_constant_energy_halo_unstable_manifolds,
+    manifold_sheet,
+)
 
 
 FIGURE_ID = "4.7"
 SOURCE_PAGE = 93
-REPRO_LEVEL = "shape-match"
+REPRO_LEVEL = "shape-match + local numerical"
 SYSTEM = "Earth-Moon CR3BP"
+NOTES = (
+    "Main red sheet is propagated from the corrected quasi-halo DG unstable "
+    "eigenvector; grey sheet is retained only as a thesis-scale proxy reference."
+)
 
 
 def main() -> None:
     apply_style()
     system = SYSTEMS["earth_moon"]
     torus = base_torus(system, "halo", n_major=84, n_minor=18)
-    sheet = manifold_sheet(system, family="halo", direction="minus", stage_fraction=1.18, n_curve=96, n_steps=48)
+    proxy_sheet = manifold_sheet(
+        system,
+        family="halo",
+        direction="minus",
+        stage_fraction=1.18,
+        n_curve=96,
+        n_steps=48,
+    )
+    _, corrected_sheet = corrected_l1_constant_energy_halo_unstable_manifolds(
+        system.mu,
+        time_unit_days=system.time_unit_days,
+    )
     periodic_manifold = periodic_halo_manifold_sample(
         system.mu,
         point="L1",
@@ -39,7 +58,24 @@ def main() -> None:
 
     fig = plt.figure(figsize=(8.1, 4.2), constrained_layout=True)
     ax = fig.add_subplot(111, projection="3d")
-    plot_sheet_wire(ax, sheet, alpha=0.88, linewidth=0.32, curve_stride=2, time_stride=3)
+    plot_sheet_wire(
+        ax,
+        proxy_sheet,
+        color="#bdbdbd",
+        alpha=0.20,
+        linewidth=0.22,
+        curve_stride=4,
+        time_stride=6,
+    )
+    plot_sheet_wire(
+        ax,
+        corrected_sheet,
+        color="#b2182b",
+        alpha=0.82,
+        linewidth=0.34,
+        curve_stride=1,
+        time_stride=10,
+    )
     plot_torus_wire(ax, torus, color="black", alpha=0.42, linewidth=0.30)
     ax.plot(
         periodic_manifold.orbit_curve[:, 0],
