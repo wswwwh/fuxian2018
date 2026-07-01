@@ -83,6 +83,41 @@ _SCALAR_FIELDS = (
     "curve_jacobi_span",
 )
 
+CHAPTER3_QUASI_DRO_VALIDATION_FIELDS = (
+    "member",
+    "curve_samples",
+    "rotation_angle_rad",
+    "mapping_time_days",
+    "target_vertical_amplitude_km",
+    "max_abs_z_km",
+    "mean_jacobi",
+    "curve_jacobi_span",
+    "map_residual_norm",
+    "amplitude_residual",
+    "phase_residual",
+    "one_map_sweep_jacobi_drift",
+    "one_map_sweep_max_state_norm",
+    "one_map_phase_return_error",
+    "ten_return_phase",
+    "ten_return_jacobi_span",
+    "ten_return_final_distance_from_initial",
+    "validation_status",
+    "next_action",
+)
+
+
+def _validation_value(value: float | int | str | None) -> str:
+    if value is None:
+        return "N/A"
+    if isinstance(value, str):
+        return value
+    if isinstance(value, int):
+        return str(value)
+    number = float(value)
+    if not np.isfinite(number):
+        return "N/A"
+    return f"{number:.16g}"
+
 
 def _constant_column(rows: list[dict[str, str]], field: str) -> float:
     values = np.asarray([float(row[field]) for row in rows], dtype=float)
@@ -314,3 +349,159 @@ def propagate_corrected_dro_phase(
         states=states,
         jacobi_span=jacobi_span,
     )
+
+
+def chapter3_quasi_dro_validation_row(
+    member: CorrectedDROFamilyMember,
+    system: CR3BPSystem,
+    *,
+    phase_rad: float = 0.0,
+    returns: int = 10,
+    one_map_time_samples: int = 7,
+    ten_return_samples: int = 401,
+    max_step: float = 0.02,
+) -> dict[str, str]:
+    """Audit one corrected quasi-DRO member for the Chapter 3 figure records."""
+
+    one_map_jacobi_drift: float | None = None
+    one_map_max_state_norm: float | None = None
+    one_map_phase_return_error: float | None = None
+    ten_return_phase: float | None = None
+    ten_return_jacobi_span: float | None = None
+    ten_return_final_distance: float | None = None
+
+    try:
+        sweep = sweep_corrected_dro_member(
+            member,
+            system,
+            time_samples=one_map_time_samples,
+            max_step=max_step,
+        )
+        sweep_states = sweep.states.reshape(-1, 6)
+        one_map_jacobi_drift = float(np.ptp(jacobi_constant(sweep_states, system.mu)))
+        one_map_max_state_norm = float(np.max(np.linalg.norm(sweep_states, axis=1)))
+        target_state = interpolate_corrected_dro_state(
+            member,
+            phase_rad + member.rotation_angle_rad,
+        )
+        if np.isclose(np.mod(phase_rad, 2.0 * np.pi), 0.0, rtol=0.0, atol=1.0e-13):
+            one_map_final_state = sweep.states[-1, 0]
+        else:
+            one_map_trajectory = propagate_corrected_dro_phase(
+                member,
+                system,
+                phase_rad=phase_rad,
+                returns=1,
+                samples=2,
+                max_step=max_step,
+            )
+            one_map_final_state = one_map_trajectory.states[-1]
+        one_map_phase_return_error = float(np.linalg.norm(one_map_final_state - target_state))
+    except (RuntimeError, ValueError, FloatingPointError):
+        pass
+
+    try:
+        trajectory = propagate_corrected_dro_phase(
+            member,
+            system,
+            phase_rad=phase_rad,
+            returns=returns,
+            samples=ten_return_samples,
+            max_step=max_step,
+        )
+        ten_return_phase = float(
+            np.mod(phase_rad + returns * member.rotation_angle_rad, 2.0 * np.pi)
+        )
+        ten_return_jacobi_span = trajectory.jacobi_span
+        ten_return_final_distance = float(
+            np.linalg.norm(trajectory.states[-1] - trajectory.states[0])
+        )
+    except (RuntimeError, ValueError, FloatingPointError):
+        pass
+
+    audited = all(
+        value is not None
+        for value in (
+            one_map_jacobi_drift,
+            one_map_max_state_norm,
+            one_map_phase_return_error,
+            ten_return_phase,
+            ten_return_jacobi_span,
+            ten_return_final_distance,
+        )
+    )
+    numerically_tight = bool(
+        audited
+        and member.map_residual_norm < 1.0e-8
+        and member.curve_jacobi_span < 1.0e-8
+        and (one_map_jacobi_drift or 0.0) < 1.0e-8
+        and (one_map_phase_return_error or 0.0) < 1.0e-8
+        and (ten_return_jacobi_span or 0.0) < 1.0e-8
+    )
+    validation_status = (
+        "validated local CR3BP member"
+        if numerically_tight
+        else "incomplete or failed local member audit"
+    )
+    next_action = (
+        "Use as local corrected branch only; extend fixed-mapping continuation before replacing proxy trend"
+        if numerically_tight
+        else "Re-run the corrected quasi-DRO propagation and inspect failed audit metric"
+    )
+
+    values: dict[str, float | int | str | None] = {
+        "member": member.member,
+        "curve_samples": int(member.states.shape[0]),
+        "rotation_angle_rad": member.rotation_angle_rad,
+        "mapping_time_days": member.mapping_time_days,
+        "target_vertical_amplitude_km": member.target_vertical_amplitude_km,
+        "max_abs_z_km": member.max_abs_z_km,
+        "mean_jacobi": member.mean_jacobi,
+        "curve_jacobi_span": member.curve_jacobi_span,
+        "map_residual_norm": member.map_residual_norm,
+        "amplitude_residual": member.amplitude_residual,
+        "phase_residual": member.phase_residual,
+        "one_map_sweep_jacobi_drift": one_map_jacobi_drift,
+        "one_map_sweep_max_state_norm": one_map_max_state_norm,
+        "one_map_phase_return_error": one_map_phase_return_error,
+        "ten_return_phase": ten_return_phase,
+        "ten_return_jacobi_span": ten_return_jacobi_span,
+        "ten_return_final_distance_from_initial": ten_return_final_distance,
+        "validation_status": validation_status,
+        "next_action": next_action,
+    }
+    return {field: _validation_value(values[field]) for field in CHAPTER3_QUASI_DRO_VALIDATION_FIELDS}
+
+
+def write_chapter3_quasi_dro_validation(
+    path: str | Path,
+    family: tuple[CorrectedDROFamilyMember, ...],
+    system: CR3BPSystem,
+    *,
+    phase_rad: float = 0.0,
+    returns: int = 10,
+    one_map_time_samples: int = 7,
+    ten_return_samples: int = 401,
+    max_step: float = 0.02,
+) -> tuple[dict[str, str], ...]:
+    """Write the dedicated Chapter 3 quasi-DRO audit table."""
+
+    rows = tuple(
+        chapter3_quasi_dro_validation_row(
+            member,
+            system,
+            phase_rad=phase_rad,
+            returns=returns,
+            one_map_time_samples=one_map_time_samples,
+            ten_return_samples=ten_return_samples,
+            max_step=max_step,
+        )
+        for member in family
+    )
+    output = Path(path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(stream, fieldnames=CHAPTER3_QUASI_DRO_VALIDATION_FIELDS)
+        writer.writeheader()
+        writer.writerows(rows)
+    return rows

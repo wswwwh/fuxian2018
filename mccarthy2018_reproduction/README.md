@@ -228,13 +228,27 @@ backgrounds with audited corrected quasi-vertical local branches. Figures
 sheet only as a proxy reference. These corrected sheets are physical-consistency
 baselines, not full high-amplitude torus-scale global manifold reproductions.
 
+Figures 3.16-3.17 now have a dedicated quasi-DRO audit table at
+`data/computed/chapter3_quasi_dro_validation.csv`. The corrected
+fixed-mapping-time CR3BP branch has five members with 21 curve samples each,
+mapping time 14.74932760227518 days, rho 1.431231722670483-1.438667729871837
+rad, max abs z 383.3341592553633-7739.933127483348 km, and mean Jacobi
+2.922375587243285-2.922496961073728. The largest stored map residual is
+1.94e-11, the largest one-map Jacobi drift is 2.36e-09, and the ten-return
+Jacobi span stays below 4.00e-15. This validates the local corrected branch,
+but Fig. 3.16 still retains grey thesis-scale proxy surfaces and Fig. 3.17
+still retains grey proxy trends because the corrected branch only reaches the
+low end of the thesis-scale amplitude and rotation-angle range.
+
 The next upgrades should focus on Figures 4.3-4.8 continued torus-scale DG
-manifold propagation, the remaining Figure 3.9 quasi-halo proxy tail, and
-Chapter 5's ephemeris-corrected or optimized transfer gaps. Figure 3.10's q=2
-and q=8 period-q audit is already documented and is not the current priority.
-Chapter 5 entries are intentionally labelled as CR3BP baseline, DE421-oriented
-baseline, local direct-shooting solution, or geometric proxy instead of complete
-BCR4BP or optimized transfer reproductions.
+manifold propagation, the remaining Figure 3.9 quasi-halo proxy tail, and a
+larger-amplitude Chapter 3 corrected quasi-DRO continuation for Figures
+3.16-3.17. The quasi-DRO continuation should be expanded before treating the
+Chapter 5 quasi-DRO application scenes as the next source of stronger numerical
+evidence. Figure 3.10's q=2 and q=8 period-q audit is already documented and is
+not the current priority. Chapter 5 entries are intentionally labelled as CR3BP
+baseline, DE421-oriented baseline, local direct-shooting solution, or geometric
+proxy instead of complete BCR4BP or optimized transfer reproductions.
 
 ## Environment
 
@@ -295,6 +309,7 @@ Generated files are written under `data/` and `outputs/`.
 - `data/computed/chapter3_corrected_stroboscopic_torus_family.csv`
 - `data/computed/chapter3_corrected_vertical_stroboscopic_torus_family.csv`
 - `data/computed/chapter3_corrected_dro_fixed_mapping_family.csv`
+- `data/computed/chapter3_quasi_dro_validation.csv`
 - `data/computed/quasi_dro_family.csv`
 - `data/computed/chapter4_torus_stability_proxy.csv`
 - `data/computed/chapter4_corrected_curve_dg.csv`

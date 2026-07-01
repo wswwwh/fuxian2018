@@ -10,6 +10,7 @@ from qp_orbits.constants import SYSTEMS
 from qp_orbits.corrected_dro_family import (
     load_or_compute_corrected_dro_family,
     sweep_corrected_dro_member,
+    write_chapter3_quasi_dro_validation,
 )
 from qp_orbits.libration_points import compute_libration_points
 from qp_orbits.plot_style import apply_style, save_figure
@@ -20,7 +21,9 @@ FIGURE_ID = "3.16"
 SOURCE_PAGE = 82
 REPRO_LEVEL = "shape-match + local numerical"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Thesis-scale proxy surfaces with fixed-mapping-time corrected CR3BP quasi-DRO wireframes."
+NOTES = "Proxy surfaces retained with audited local fixed-mapping-time CR3BP quasi-DRO wireframes."
+FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family.csv"
+VALIDATION_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_validation.csv"
 
 
 def plot_corrected_torus(ax, member) -> None:
@@ -34,15 +37,15 @@ def plot_corrected_torus(ax, member) -> None:
         rstride=3,
         cstride=3,
         color="#16856b",
-        linewidth=0.55,
-        alpha=0.78,
+        linewidth=0.72,
+        alpha=0.92,
     )
     curve = np.vstack([member.points, member.points[0]])
-    ax.plot(curve[:, 0], curve[:, 1], curve[:, 2], color="#075b4d", linewidth=1.25)
+    ax.plot(curve[:, 0], curve[:, 1], curve[:, 2], color="#075b4d", linewidth=1.55)
     ax.text2D(
         0.02,
         0.96,
-        rf"corrected: $A_z={member.max_abs_z_km:.0f}$ km, $\rho={member.rotation_angle_rad:.3f}$",
+        rf"corrected local: $|z|_{{max}}={member.max_abs_z_km:.0f}$ km, $\rho={member.rotation_angle_rad:.3f}$",
         transform=ax.transAxes,
         fontsize=7,
         color="#075b4d",
@@ -75,10 +78,8 @@ def main() -> None:
     apply_style()
     system = SYSTEMS["earth_moon"]
     family = quasi_dro_family(system, samples=4, n_major=128, n_minor=28)
-    corrected_family = load_or_compute_corrected_dro_family(
-        PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family.csv",
-        system,
-    )
+    corrected_family = load_or_compute_corrected_dro_family(FAMILY_PATH, system)
+    write_chapter3_quasi_dro_validation(VALIDATION_PATH, corrected_family, system)
     selected_corrected = [corrected_family[index] for index in (0, 2, 3, 4)]
     fig = plt.figure(figsize=(8.3, 7.4), constrained_layout=True)
     panels = zip(family, selected_corrected, ["(a)", "(b)", "(c)", "(d)"])
@@ -86,11 +87,23 @@ def main() -> None:
         ax = fig.add_subplot(2, 2, idx, projection="3d")
         surface = member.surface
         ax.plot_surface(surface[:, :, 0], surface[:, :, 1], surface[:, :, 2], color="#b8b8b8",
-                        edgecolor="none", linewidth=0, antialiased=True, shade=True, alpha=0.58)
+                        edgecolor="none", linewidth=0, antialiased=True, shade=True, alpha=0.30)
         curve = member.invariant_curve
-        ax.plot(curve[:, 0], curve[:, 1], curve[:, 2], color="#1f77b4", linewidth=1.0)
+        ax.plot(curve[:, 0], curve[:, 1], curve[:, 2], color="#7f8c8d", linewidth=0.9, linestyle="--")
         plot_corrected_torus(ax, corrected_member)
         style_axis(ax, label)
+    rho_values = [member.rotation_angle_rad for member in corrected_family]
+    z_values = [member.max_abs_z_km for member in corrected_family]
+    fig.suptitle(
+        (
+            "Audited local corrected branch: "
+            f"rho={min(rho_values):.4f}-{max(rho_values):.4f} rad, "
+            f"|z|max={min(z_values):.0f}-{max(z_values):.0f} km; "
+            "grey surfaces are thesis-scale proxy references"
+        ),
+        fontsize=9,
+        color="#263238",
+    )
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)
 

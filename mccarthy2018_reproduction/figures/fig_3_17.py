@@ -7,7 +7,10 @@ from matplotlib.ticker import ScalarFormatter
 
 from _figure_paths import PROJECT_ROOT
 from qp_orbits.constants import SYSTEMS
-from qp_orbits.corrected_dro_family import load_or_compute_corrected_dro_family
+from qp_orbits.corrected_dro_family import (
+    load_or_compute_corrected_dro_family,
+    write_chapter3_quasi_dro_validation,
+)
 from qp_orbits.plot_style import apply_style, save_figure
 from qp_orbits.quasi_torus import dro_parameter_curve
 
@@ -16,7 +19,18 @@ FIGURE_ID = "3.17"
 SOURCE_PAGE = 83
 REPRO_LEVEL = "shape-match + local numerical"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Thesis-scale proxy trends with the corrected fixed-mapping-time CR3BP quasi-DRO family."
+NOTES = "Proxy trends retained as reference with an audited local fixed-mapping-time CR3BP quasi-DRO family."
+FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family.csv"
+VALIDATION_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_validation.csv"
+
+
+def max_audit_metric(rows, field: str) -> float | None:
+    values = [float(row[field]) for row in rows if row[field] != "N/A"]
+    return max(values) if values else None
+
+
+def metric_text(value: float | None) -> str:
+    return "N/A" if value is None else f"{value:.2e}"
 
 
 def main() -> None:
@@ -26,24 +40,31 @@ def main() -> None:
     rho = [row["rotation_angle_rad"] for row in rows]
     z_amp = [row["z_amplitude_km"] for row in rows]
     jacobi = [row["jacobi"] for row in rows]
-    corrected = load_or_compute_corrected_dro_family(
-        PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family.csv",
-        system,
-    )
+    corrected = load_or_compute_corrected_dro_family(FAMILY_PATH, system)
+    audit_rows = write_chapter3_quasi_dro_validation(VALIDATION_PATH, corrected, system)
     corrected_rho = [member.rotation_angle_rad for member in corrected]
     corrected_z_amp = [member.max_abs_z_km for member in corrected]
     corrected_jacobi = [member.mean_jacobi for member in corrected]
+    max_map_residual = max_audit_metric(audit_rows, "map_residual_norm")
+    max_jacobi_drift = max_audit_metric(audit_rows, "one_map_sweep_jacobi_drift")
 
     fig, axes = plt.subplots(1, 2, figsize=(8.0, 3.1), constrained_layout=True)
-    axes[0].plot(rho, z_amp, color="#d95319", label="thesis-scale proxy")
+    axes[0].plot(
+        rho,
+        z_amp,
+        color="#a9a9a9",
+        linestyle="--",
+        linewidth=1.1,
+        label="proxy reference",
+    )
     axes[0].plot(
         corrected_rho,
         corrected_z_amp,
         color="#16856b",
         marker="o",
         markersize=4,
-        linewidth=1.2,
-        label="corrected CR3BP",
+        linewidth=1.7,
+        label="corrected local CR3BP",
     )
     axes[0].set_xlabel(r"Rotation Angle, $\rho$ [rad]")
     axes[0].set_ylabel("Z-Amplitude [km]")
@@ -63,21 +84,43 @@ def main() -> None:
     inset.tick_params(labelsize=6, pad=1)
     inset.set_title("corrected local branch", fontsize=6, pad=2)
 
-    axes[1].plot(rho, jacobi, color="#1f77b4", label="thesis-scale proxy")
+    axes[1].plot(
+        rho,
+        jacobi,
+        color="#a9a9a9",
+        linestyle="--",
+        linewidth=1.1,
+        label="proxy reference",
+    )
     axes[1].plot(
         corrected_rho,
         corrected_jacobi,
         color="#16856b",
         marker="o",
         markersize=4,
-        linewidth=1.2,
-        label="corrected CR3BP",
+        linewidth=1.7,
+        label="corrected local CR3BP",
     )
     axes[1].set_xlabel(r"Rotation Angle, $\rho$ [rad]")
     axes[1].set_ylabel("Jacobi Constant")
     axes[1].set_xlim(1.42, 1.52)
     axes[1].set_ylim(2.921, 2.9225)
     axes[1].legend(loc="lower left", fontsize=7, frameon=False)
+    axes[1].text(
+        0.98,
+        0.96,
+        (
+            f"audited local branch: rho={min(corrected_rho):.4f}-{max(corrected_rho):.4f}"
+            "\n"
+            rf"max residual {metric_text(max_map_residual)}, "
+            rf"one-map $\Delta C$ {metric_text(max_jacobi_drift)}"
+        ),
+        transform=axes[1].transAxes,
+        ha="right",
+        va="top",
+        fontsize=7,
+        color="#263238",
+    )
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)
 
