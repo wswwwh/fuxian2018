@@ -304,6 +304,9 @@ The current recommended reading path is the formal report package in
 - `docs/chapter3_route_b_refinement.md` - Route B free-time scaling and
   phase-condition refinement; bounded diagnostic continuation reaches beyond
   11,000 km but remains a free-time branch requiring consistency checks.
+- `docs/chapter3_route_b_branch_consistency.md` - Route B diagnostic free-time
+  branch audit; the branch is continuous and phase-gauge robust, but fixed-time
+  projection did not produce an accepted >10,500 km fixed-time candidate.
 
 ### Route A data search and digitization
 

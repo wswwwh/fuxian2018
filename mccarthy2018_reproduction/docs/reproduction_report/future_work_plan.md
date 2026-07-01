@@ -87,6 +87,12 @@ changes did not resolve the poor conditioning, while a bounded diagnostic
 free-time continuation exceeded 11,000 km under the audit gates; the next Route
 B task is branch-consistency and phase-gauge robustness before any figure update.
 
+The Route B branch-consistency audit is recorded in
+`docs/chapter3_route_b_branch_consistency.md`. It found a continuous,
+phase-gauge robust diagnostic free-time branch, but fixed-time projection did
+not produce an accepted >10,500 km fixed-time candidate, so no figure-source
+replacement is justified.
+
 ### required inputs
 
 - Current accepted quasi-DRO branch and bottleneck diagnostics.

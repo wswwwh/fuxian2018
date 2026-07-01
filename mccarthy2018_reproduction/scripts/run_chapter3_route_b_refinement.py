@@ -95,6 +95,17 @@ EXPERIMENT_FIELDS = (
     "interpretation",
 )
 
+BRANCH_STATE_SCHEMA_VERSION = "1.0"
+BRANCH_STATE_AUDIT_METRICS = (
+    "map_residual_norm",
+    "curve_jacobi_span",
+    "one_map_phase_return_error",
+    "ten_return_jacobi_span",
+    "condition_estimate",
+    "max_correction_norm",
+    "mean_correction_norm",
+)
+
 AUDIT_MAP_RESIDUAL = 1.0e-8
 AUDIT_JACOBI_SPAN = 1.0e-8
 AUDIT_PHASE_RETURN = 1.0e-8
@@ -147,6 +158,73 @@ def _write_rows(path: Path, fields: tuple[str, ...], rows: list[dict[str, str]])
         writer = csv.DictWriter(stream, fieldnames=fields)
         writer.writeheader()
         writer.writerows(rows)
+
+
+def _branch_state_record(
+    *,
+    case_id: str,
+    source_case: str,
+    variant: str,
+    correction: FixedJacobiFreeTimeRotationCurveCorrection,
+    member: CorrectedDROFamilyMember,
+    audit_row: dict[str, str],
+    accepted: bool,
+) -> dict[str, object]:
+    max_norm, mean_norm = _correction_norms(correction)
+    one_map_phase = _float_from_audit(audit_row, "one_map_phase_return_error")
+    ten_return_span = _float_from_audit(audit_row, "ten_return_jacobi_span")
+    condition = _condition_estimate(correction)
+    return {
+        "case_id": case_id,
+        "states": correction.corrected_states.copy(),
+        "mapping_time_days": member.mapping_time_days,
+        "rho": correction.rotation_angle_rad,
+        "mean_jacobi": member.mean_jacobi,
+        "max_abs_z_km": member.max_abs_z_km,
+        "source_case": source_case,
+        "variant": variant,
+        "accepted": bool(accepted),
+        "audit_metrics": np.array(
+            [
+                member.map_residual_norm,
+                member.curve_jacobi_span,
+                np.nan if one_map_phase is None else one_map_phase,
+                np.nan if ten_return_span is None else ten_return_span,
+                np.nan if condition is None else condition,
+                np.nan if max_norm is None else max_norm,
+                np.nan if mean_norm is None else mean_norm,
+            ],
+            dtype=float,
+        ),
+    }
+
+
+def _write_branch_state_archive(
+    path: Path,
+    *,
+    records: list[dict[str, object]],
+    phase_grid: np.ndarray,
+) -> None:
+    if not records:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    np.savez(
+        path,
+        schema_version=np.array(BRANCH_STATE_SCHEMA_VERSION),
+        created_by_script=np.array(Path(__file__).name),
+        case_ids=np.asarray([record["case_id"] for record in records], dtype="U96"),
+        states=np.stack([np.asarray(record["states"], dtype=float) for record in records], axis=0),
+        phase_grid=np.asarray(phase_grid, dtype=float),
+        mapping_time_days=np.asarray([record["mapping_time_days"] for record in records], dtype=float),
+        rho=np.asarray([record["rho"] for record in records], dtype=float),
+        mean_jacobi=np.asarray([record["mean_jacobi"] for record in records], dtype=float),
+        max_abs_z_km=np.asarray([record["max_abs_z_km"] for record in records], dtype=float),
+        source_case=np.asarray([record["source_case"] for record in records], dtype="U96"),
+        variant=np.asarray([record["variant"] for record in records], dtype="U96"),
+        accepted=np.asarray([record["accepted"] for record in records], dtype=bool),
+        audit_metric_names=np.asarray(BRANCH_STATE_AUDIT_METRICS, dtype="U64"),
+        audit_metrics=np.stack([np.asarray(record["audit_metrics"], dtype=float) for record in records], axis=0),
+    )
 
 
 def _float(row: dict[str, str], field: str) -> float | None:
@@ -642,6 +720,7 @@ def main() -> None:
     family_path = computed / "chapter3_quasi_dro_palc_family.csv"
     diagnostics_path = computed / "chapter3_route_b_refinement_diagnostics.csv"
     experiments_path = computed / "chapter3_route_b_refinement_experiments.csv"
+    branch_states_path = computed / "chapter3_route_b_free_time_branch_states.npz"
     doc_path = PROJECT_ROOT / "docs" / "chapter3_route_b_refinement.md"
 
     local_rows = _read_rows(local_path)
@@ -663,6 +742,7 @@ def main() -> None:
     _write_rows(diagnostics_path, DIAGNOSTIC_FIELDS, diagnostics)
 
     experiment_rows: list[dict[str, str]] = []
+    branch_state_records: list[dict[str, object]] = []
     correction_cache: dict[str, tuple[VariantConfig, FixedJacobiFreeTimeRotationCurveCorrection, CorrectedDROFamilyMember]] = {}
 
     for idx, variant in enumerate(_variants(time_unit), start=1):
@@ -708,6 +788,18 @@ def main() -> None:
             )
             if accepted:
                 correction_cache[variant.variant] = (variant, correction, member)
+                if variant.variant == "E_amplitude_monitor_large_step":
+                    branch_state_records.append(
+                        _branch_state_record(
+                            case_id=f"{idx:02d}_{variant.variant}_correction",
+                            source_case="accepted_endpoint",
+                            variant=variant.variant,
+                            correction=correction,
+                            member=member,
+                            audit_row=audit_row,
+                            accepted=accepted,
+                        )
+                    )
         except Exception as exc:  # noqa: BLE001 - numerical experiment records failures verbatim.
             experiment_rows.append(
                 _experiment_row(
@@ -778,6 +870,18 @@ def main() -> None:
             )
             if accepted:
                 correction_cache[f"{variant.variant}_step"] = (variant, correction, member)
+                if variant.variant == "E_amplitude_monitor_large_step":
+                    branch_state_records.append(
+                        _branch_state_record(
+                            case_id=f"{idx:02d}_{variant.variant}_step",
+                            source_case=f"{variant.variant}_correction",
+                            variant=variant.variant,
+                            correction=correction,
+                            member=member,
+                            audit_row=audit_row,
+                            accepted=accepted,
+                        )
+                    )
         except Exception as exc:  # noqa: BLE001 - numerical experiment records failures verbatim.
             experiment_rows.append(
                 _experiment_row(
@@ -891,6 +995,17 @@ def main() -> None:
                 )
                 if not accepted:
                     break
+                branch_state_records.append(
+                    _branch_state_record(
+                        case_id=f"bounded_{attempt:02d}_{variant.variant}",
+                        source_case=f"bounded_previous_{attempt - 1}" if attempt > 1 else source_key,
+                        variant=variant.variant,
+                        correction=correction,
+                        member=member,
+                        audit_row=audit_row,
+                        accepted=accepted,
+                    )
+                )
                 current_correction = correction
                 current_member = member
                 if member.max_abs_z_km > 11000.0:
@@ -920,6 +1035,7 @@ def main() -> None:
                 break
 
     _write_rows(experiments_path, EXPERIMENT_FIELDS, experiment_rows)
+    _write_branch_state_archive(branch_states_path, records=branch_state_records, phase_grid=seed.phases)
     accepted_experiments = [
         row for row in experiment_rows
         if row["accepted"] == "True" and row["max_abs_z_km"] != "N/A"
