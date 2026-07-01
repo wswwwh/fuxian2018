@@ -272,6 +272,17 @@ intentionally labelled as CR3BP baseline, DE421-oriented baseline, local
 direct-shooting solution, or geometric proxy instead of complete BCR4BP or
 optimized transfer reproductions.
 
+### External resources and next reproduction roadmap
+
+The next documentation layer is now organized in
+`docs/external_reproduction_resources.md`,
+`docs/stage_report_reproduction_status.md`, and
+`docs/next_reproduction_roadmap.md`. These files collect external thesis,
+method, continuation-tool, CR3BP benchmark, and Chapter 5 application resources;
+summarize the current reproduction status for reporting; and separate the next
+phase into original-data search, quasi-DRO formulation replacement, and
+paper-level reproduction-report routes.
+
 ## Environment
 
 The working machine already has a validated conda environment:
