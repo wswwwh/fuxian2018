@@ -122,3 +122,39 @@ rho about `1.44388`, possibly associated with a fold or remote branch.
 Reporting consequence: Fig. 3.16 and Fig. 3.17 must not be upgraded to full
 numerical reproduction until an accepted high-amplitude quasi-DRO family passes
 the same audit gates beyond 10,500 km and 11,000 km.
+
+## D. Route A digitized Fig. 3.17 comparison
+
+Source files:
+
+- `docs/reproduction_report/original_data_search_log.md`
+- `docs/reproduction_report/digitization_method.md`
+- `data/digitized/fig_3_17_digitized_points.csv`
+- `data/digitized/fig_3_17_digitization_metadata.csv`
+- `data/digitized/fig_3_17_corrected_vs_digitized.csv`
+- `outputs/diagnostics/fig_3_17_digitized_comparison.png`
+
+The Route A search did not find McCarthy original quasi-DRO branch data,
+initial states, appendix tables, or official code. Fig. 3.17 was therefore
+digitized only as a lower-authority reference trend from
+`outputs/reference_pages/fig_3_17_reference.png`.
+
+The digitized Fig. 3.17 trend spans approximately:
+
+- rho `1.436..1.508 rad` for z-amplitude, with digitized amplitude increasing
+  from about `8489.8 km` to `30714.3 km`;
+- rho `1.436..1.510 rad` for Jacobi, with digitized Jacobi decreasing from
+  about `2.9224873` to `2.9212034`.
+
+The accepted corrected branch spans only rho
+`1.431231722670483..1.443877875293695 rad` and reaches
+`max_abs_z = 10164.02309965055 km`. Direct comparison is therefore limited to
+the left edge of the digitized trend. At the accepted endpoint, the digitized
+amplitude at nearly the same rho is about `13204.1 km`, roughly `3040.1 km`
+higher than the corrected endpoint. Points beyond rho `1.443878` are marked
+outside corrected range and are not matched by extrapolation.
+
+This comparison supports the current bottleneck interpretation: the accepted
+corrected branch does not yet reach the high-amplitude trend shown in the
+thesis reference figure. The digitized data document the gap, but they do not
+upgrade Fig. 3.17 to full numerical reproduction.

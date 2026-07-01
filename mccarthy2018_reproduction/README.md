@@ -300,6 +300,29 @@ The current recommended reading path is the formal report package in
 - `docs/reproduction_report/future_work_plan.md` - Route A / Route B / Route C
   execution plan with inputs, success criteria, risks, and stop conditions.
 
+### Route A data search and digitization
+
+The bounded Route A public search and first digitization package are now
+recorded in:
+
+- `docs/reproduction_report/original_data_search_log.md` - completed Route A
+  search records and negative evidence for raw branch data / official code.
+- `docs/reproduction_report/digitization_method.md` - digitization scope,
+  calibration, uncertainty, and reporting rules.
+- `data/digitized/fig_3_17_digitized_points.csv` - traceable Fig. 3.17
+  reference-trend points.
+- `data/digitized/fig_3_17_digitization_metadata.csv` - panel axis/pixel
+  calibration metadata.
+- `data/digitized/fig_3_17_corrected_vs_digitized.csv` - accepted corrected
+  branch versus digitized trend comparison without extrapolation.
+- `docs/reproduction_report/fig_3_16_digitization_feasibility.md` - explanation
+  for limiting Fig. 3.16 to feasibility and annotations.
+- `data/digitized/fig_3_16_reference_annotations.csv` - limited qualitative
+  Fig. 3.16 reference annotations.
+- `figures/diagnostics/plot_fig_3_17_digitized_comparison.py` and
+  `outputs/diagnostics/fig_3_17_digitized_comparison.png` - diagnostic plot
+  comparing the digitized Fig. 3.17 trend with the current corrected branch.
+
 ### Presentation and review materials
 
 For group-meeting or proposal-review preparation, the report package also

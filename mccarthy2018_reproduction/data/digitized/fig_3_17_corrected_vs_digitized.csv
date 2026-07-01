@@ -1,0 +1,16 @@
+comparison_id,rho_rad,corrected_max_abs_z_km,digitized_z_amplitude_km,z_difference_km,corrected_jacobi,digitized_jacobi,jacobi_difference,inside_corrected_range,notes
+fig3_17_cmp_01,1.436000,6134.9,8489.8,-2354.9,2.9224196,2.9224873,-0.0000677,true,Linear interpolation within accepted PALC branch; digitized point is higher-amplitude than corrected branch at same rho
+fig3_17_cmp_02,1.440000,8422.1,11127.6,-2705.5,2.9223534,2.9224237,-0.0000703,true,Linear interpolation within accepted PALC branch; digitized point is higher-amplitude than corrected branch at same rho
+fig3_17_cmp_03,1.443878,10164.0,13204.1,-3040.1,2.9222884,2.9223627,-0.0000743,true,Accepted corrected branch endpoint; digitized trend remains about 3.0e3 km higher
+fig3_17_cmp_04,1.445000,N/A,13989.8,N/A,N/A,2.9223475,N/A,false,Outside accepted corrected branch; no extrapolation
+fig3_17_cmp_05,1.450000,N/A,16178.6,N/A,N/A,2.9222585,N/A,false,Outside accepted corrected branch; no extrapolation
+fig3_17_cmp_06,1.455000,N/A,18142.9,N/A,N/A,2.9221695,N/A,false,Outside accepted corrected branch; no extrapolation
+fig3_17_cmp_07,1.460000,N/A,19770.4,N/A,N/A,2.9220831,N/A,false,Outside accepted corrected branch; no extrapolation
+fig3_17_cmp_08,1.465000,N/A,21341.8,N/A,N/A,2.9219966,N/A,false,Outside accepted corrected branch; no extrapolation
+fig3_17_cmp_09,1.470000,N/A,22632.7,N/A,N/A,2.9219051,N/A,false,Outside accepted corrected branch; no extrapolation
+fig3_17_cmp_10,1.475000,N/A,23923.5,N/A,N/A,2.9218136,N/A,false,Outside accepted corrected branch; no extrapolation
+fig3_17_cmp_11,1.480000,N/A,24989.8,N/A,N/A,2.9217220,N/A,false,Outside accepted corrected branch; no extrapolation
+fig3_17_cmp_12,1.490000,N/A,27122.4,N/A,N/A,2.9215441,N/A,false,Outside accepted corrected branch; no extrapolation
+fig3_17_cmp_13,1.500000,N/A,29142.9,N/A,N/A,2.9213610,N/A,false,Outside accepted corrected branch; no extrapolation
+fig3_17_cmp_14,1.508000,N/A,30714.3,N/A,N/A,N/A,N/A,false,Outside accepted corrected branch; no extrapolation
+fig3_17_cmp_15,1.510000,N/A,N/A,N/A,N/A,2.9212034,N/A,false,Jacobi panel only; outside accepted corrected branch; no extrapolation

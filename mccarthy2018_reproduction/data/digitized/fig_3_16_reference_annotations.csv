@@ -1,0 +1,5 @@
+panel,observable,value,source_image,method,uncertainty,notes
+all,panel_type,3D torus surface rendering,outputs/reference_pages/fig_3_16_reference.png,visual inspection,qualitative only,Static perspective image is not suitable for strict 3D coordinate digitization
+all,coordinate_recoverability,not uniquely recoverable from static image,outputs/reference_pages/fig_3_16_reference.png,feasibility analysis,not quantifiable,Requires raw branch states or camera/model metadata for precise 3D data
+all,corrected_branch_coverage,low-amplitude end only,outputs/reference_pages/fig_3_16_reference.png,comparison to chapter3_quasi_dro_palc_validation.csv,accepted branch max_abs_z 10164.02309965055 km,No accepted corrected member exceeds 10500 km or 11000 km
+all,proxy_surface_status,grey/high-amplitude surfaces remain reference/proxy,outputs/reference_pages/fig_3_16_reference.png,report audit,qualitative only,Do not treat visible high-amplitude surfaces as corrected numerical data

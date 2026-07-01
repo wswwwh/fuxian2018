@@ -5,6 +5,19 @@ in this documentation round.
 
 ## Route A: McCarthy Original Data / Digitization
 
+### current status after bounded search
+
+The 2026-07-01 Route A pass checked the Hammer/Figshare thesis record,
+Purdue/Howell publication routes, McCarthy and Howell 2019/2021/2022 related
+papers, Olikara method sources, the JPL periodic-orbits API, and required
+GitHub searches. No McCarthy original quasi-DRO branch data, initial states,
+appendix tables, or official code were found.
+
+Fig. 3.17 now has a traceable digitized fallback package, and Fig. 3.16 is
+documented as unsuitable for precise 3D digitization. These products support
+audit and reporting only; they do not upgrade Fig. 3.16/Fig. 3.17 to full
+numerical reproduction.
+
 ### objective
 
 Find or reconstruct McCarthy 2018 original numerical data sufficiently to
@@ -27,10 +40,12 @@ compare the current reproduction against the thesis at branch/table level.
    `14.75 days`, and McCarthy/Howell related materials.
 3. Record negative evidence explicitly if no appendix, code, or branch data is
    found.
-4. Digitize Fig. 3.16 and Fig. 3.17 only after confirming no raw branch data is
-   public.
-5. Compare digitized values against the accepted corrected branch and proxy
-   trends.
+4. Continue Fig. 3.17 digitization only for additional traceable 2D comparison
+   points if needed.
+5. Keep Fig. 3.16 limited to feasibility and annotations unless raw branch data
+   or a formulation replacement becomes available.
+6. Compare digitized values only within the accepted corrected branch rho range;
+   do not extrapolate the corrected branch.
 
 ### success criteria
 
@@ -48,9 +63,9 @@ compare the current reproduction against the thesis at branch/table level.
 
 ### stop condition
 
-Stop when either original data are found, or the negative search has checked
-the main Purdue/Hammer/Howell/AAS/public-repository routes and no new evidence
-appears.
+This stop condition has been met for the bounded public search. Further Route A
+work should be either targeted author contact, a later refreshed public search,
+or controlled digitization refinement.
 
 ## Route B: quasi-DRO formulation replacement
 

@@ -68,6 +68,18 @@ Physical-consistency baseline (partial):
   trends. The proxy trends are not upgraded because the bottleneck diagnosis did
   not pass 10,500 km or 11,000 km.
 
+Route A digitization update:
+
+- Fig. 3.17 now has traceable digitized reference-trend CSV files in
+  `data/digitized/`. They are lower-authority data extracted from a rendered
+  image, not McCarthy raw branch data.
+- The accepted corrected branch covers only the left edge of the digitized
+  trend. At rho about `1.443878 rad`, the digitized z-amplitude is about
+  `13204.1 km`, while the accepted corrected endpoint is
+  `10164.02309965055 km`.
+- Fig. 3.16 has only a feasibility/annotation note because a static 3D torus
+  surface image cannot be inverted into precise 3D branch coordinates.
+
 The Chapter 3 warning is central to the report: Fig. 3.16 and Fig. 3.17 cannot
 be called full numerical reproductions. The accepted quasi-DRO branch reaches
 only `max_abs_z = 10164.02309965055 km`, and fixed-rotation high-amplitude

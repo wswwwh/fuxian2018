@@ -30,6 +30,23 @@ Public artifact status:
 - Third-party QPO repositories exist, but they should not be treated as
   McCarthy's original data.
 
+Route A bounded-search update, 2026-07-01:
+
+- Purdue Hammer / Figshare API metadata lists only `thesisMcCarthySubmit.pdf`;
+  no supplementary files, related materials, linked files, branch tables, or
+  official code were found.
+- The Purdue Howell direct McCarthy thesis mirror currently redirects to a
+  site-under-construction landing page; the Hammer/local PDF remains the usable
+  thesis source.
+- McCarthy and Howell 2019/2021/2022 materials are useful context, but no raw
+  McCarthy 2018 quasi-DRO branch data were found there.
+- GitHub API searches for the required McCarthy/Olikara/quasi-DRO queries
+  returned zero repository matches. A general third-party QPO repository was
+  found, but it is not McCarthy original data.
+- Fig. 3.17 now has a traceable digitized fallback package under
+  `data/digitized/`; Fig. 3.16 is documented as unsuitable for precise 3D
+  digitization from the static image.
+
 | resource_name | url | resource_type | topic | direct_usefulness | possible_project_use | limitations | priority |
 |---|---|---|---|---|---|---|---|
 | McCarthy 2018 Purdue Hammer thesis record | https://hammer.purdue.edu/articles/thesis/Characterization_of_Quasi-Periodic_Orbits_for_Applications_in_the_Sun-Earth_and_Earth-Moon_Systems/7423658 | Thesis landing page / PDF record | Original McCarthy thesis; CR3BP QPO computation, invariant tori, DG stability, applications | Fig. 3.10: high; Fig. 3.16/3.17: high; Chapter 4: high; Chapter 5: high | Primary source for figure intent, equations, algorithm sequence, terminology, and figure classification | Does not expose machine-readable branch data or code; figures must still be digitized or recomputed | A |
@@ -108,10 +125,10 @@ Public artifact status:
 
 ## Immediate Use Recommendations
 
-1. Route A should start with the Hammer thesis record, local PDF, Purdue/Howell
-   publication pages, and figure digitization. There is no confirmed public
-   McCarthy branch data or official code, so the search should be treated as a
-   finite discovery task rather than an assumption.
+1. Route A has now completed the bounded public search recorded in
+   `docs/reproduction_report/original_data_search_log.md`. No McCarthy original
+   branch data or official code were found. Continue only with targeted author
+   contact, refreshed repository searches, or traceable digitization.
 2. Route B should compare the current fixed-mapping invariant-curve formulation
    against Olikara/Howell 2010, Schilder/Osinga/Vogt 2005, and Tor/COCO. The
    bottleneck evidence favors a formulation change before increasing spectral
