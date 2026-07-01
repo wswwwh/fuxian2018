@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import csv
 from dataclasses import dataclass
 from functools import lru_cache
 import hashlib
@@ -12,7 +13,7 @@ import pickle
 import numpy as np
 
 from .constants import CR3BPSystem
-from .cr3bp import integrate_cr3bp
+from .cr3bp import integrate_cr3bp, jacobi_constant
 from .quasi_torus import (
     FreeEnergyCurveCorrection,
     FixedFrequencyPseudoArclengthCorrection,
@@ -155,6 +156,190 @@ class CorrectedCurveManifoldSheet:
         if self.branch == "stable":
             return 1.0 / multiplier
         return multiplier
+
+
+CHAPTER4_MANIFOLD_VALIDATION_COLUMNS = [
+    "figure_id",
+    "family",
+    "branch",
+    "source_curve",
+    "source_curve_residual",
+    "dg_mapping_time",
+    "dg_rotation_angle",
+    "selected_eigenvalue",
+    "selected_eigenvalue_abs",
+    "perturbation_scale",
+    "perturbation_sign",
+    "duration_nd",
+    "duration_days",
+    "duration_periods",
+    "time_samples",
+    "curve_samples",
+    "initial_mean_separation",
+    "final_mean_separation",
+    "mean_state_growth",
+    "expected_growth",
+    "growth_ratio",
+    "jacobi_drift_max",
+    "terminal_x_min",
+    "terminal_x_max",
+    "terminal_y_min",
+    "terminal_y_max",
+    "terminal_z_min",
+    "terminal_z_max",
+    "uses_proxy_background",
+    "validation_status",
+    "next_action",
+]
+
+
+def _format_complex(value: complex) -> str:
+    return f"{value.real:.16g}{value.imag:+.16g}j"
+
+
+def _format_csv_value(value: object) -> object:
+    if isinstance(value, bool):
+        return str(value).lower()
+    if isinstance(value, (float, np.floating)):
+        number = float(value)
+        if np.isfinite(number):
+            return f"{number:.16g}"
+        return str(number)
+    if isinstance(value, (int, np.integer)):
+        return str(int(value))
+    return value
+
+
+def _source_curve_residual(sheet: CorrectedCurveManifoldSheet) -> float:
+    residuals = getattr(sheet.dg.correction, "final_residual_norms", None)
+    if residuals is None:
+        return float("nan")
+    return float(np.max(np.asarray(residuals, dtype=float)))
+
+
+def _linear_expected_growth(sheet: CorrectedCurveManifoldSheet) -> tuple[float, float]:
+    duration_nd = float(abs(sheet.times[-1] - sheet.times[0]))
+    mapping_time = float(abs(sheet.dg.mapping_time))
+    if mapping_time <= 0.0:
+        return float("nan"), float("nan")
+    duration_periods = duration_nd / mapping_time
+    multiplier = float(abs(sheet.eigenvalue))
+    if sheet.branch == "stable":
+        multiplier = 1.0 / multiplier
+    return float(multiplier**duration_periods), duration_periods
+
+
+def corrected_manifold_validation_row(
+    sheet: CorrectedCurveManifoldSheet,
+    system: CR3BPSystem,
+    *,
+    figure_id: str,
+    family: str,
+    branch: str,
+    source_curve: str,
+    uses_proxy_background: bool,
+    validation_status: str,
+    next_action: str,
+) -> dict[str, object]:
+    """Summarize one corrected Chapter 4 manifold branch for audit."""
+
+    state_separation = sheet.state_separation_norms
+    initial_mean_separation = float(np.mean(state_separation[0]))
+    final_mean_separation = float(np.mean(state_separation[-1]))
+    mean_state_growth = (
+        final_mean_separation / initial_mean_separation
+        if initial_mean_separation > 0.0
+        else float("nan")
+    )
+    expected_growth, duration_periods = _linear_expected_growth(sheet)
+    growth_ratio = (
+        mean_state_growth / expected_growth
+        if expected_growth > 0.0 and np.isfinite(expected_growth)
+        else float("nan")
+    )
+    jacobi_values = jacobi_constant(
+        sheet.manifold_states.reshape(-1, 6),
+        system.mu,
+    ).reshape(sheet.manifold_states.shape[:2])
+    jacobi_drift = float(np.max(np.abs(jacobi_values - jacobi_values[0:1, :])))
+    terminal = sheet.surface[-1]
+    duration_nd = float(abs(sheet.times[-1] - sheet.times[0]))
+    time_unit_days = system.time_unit_days or 1.0
+
+    return {
+        "figure_id": figure_id,
+        "family": family,
+        "branch": branch,
+        "source_curve": source_curve,
+        "source_curve_residual": _source_curve_residual(sheet),
+        "dg_mapping_time": float(sheet.dg.mapping_time),
+        "dg_rotation_angle": float(sheet.dg.rotation_angle_rad),
+        "selected_eigenvalue": _format_complex(sheet.eigenvalue),
+        "selected_eigenvalue_abs": float(abs(sheet.eigenvalue)),
+        "perturbation_scale": float(sheet.perturbation_scale),
+        "perturbation_sign": float(sheet.perturbation_sign),
+        "duration_nd": duration_nd,
+        "duration_days": duration_nd * time_unit_days,
+        "duration_periods": duration_periods,
+        "time_samples": int(sheet.times.size),
+        "curve_samples": int(sheet.surface.shape[1]),
+        "initial_mean_separation": initial_mean_separation,
+        "final_mean_separation": final_mean_separation,
+        "mean_state_growth": mean_state_growth,
+        "expected_growth": expected_growth,
+        "growth_ratio": growth_ratio,
+        "jacobi_drift_max": jacobi_drift,
+        "terminal_x_min": float(np.min(terminal[:, 0])),
+        "terminal_x_max": float(np.max(terminal[:, 0])),
+        "terminal_y_min": float(np.min(terminal[:, 1])),
+        "terminal_y_max": float(np.max(terminal[:, 1])),
+        "terminal_z_min": float(np.min(terminal[:, 2])),
+        "terminal_z_max": float(np.max(terminal[:, 2])),
+        "uses_proxy_background": uses_proxy_background,
+        "validation_status": validation_status,
+        "next_action": next_action,
+    }
+
+
+def update_chapter4_manifold_validation(
+    project_root: Path,
+    rows: list[dict[str, object]],
+) -> Path:
+    """Create or update the Chapter 4 manifold audit CSV."""
+
+    output = Path(project_root) / "data" / "computed" / "chapter4_manifold_validation.csv"
+    output.parent.mkdir(parents=True, exist_ok=True)
+    figure_ids = {str(row["figure_id"]) for row in rows}
+    existing: list[dict[str, object]] = []
+    if output.exists():
+        with output.open(newline="", encoding="utf-8") as stream:
+            reader = csv.DictReader(stream)
+            existing = [
+                row
+                for row in reader
+                if row.get("figure_id") not in figure_ids
+            ]
+    combined = existing + rows
+
+    def sort_key(row: dict[str, object]) -> tuple[float, str]:
+        try:
+            figure_sort = float(row["figure_id"])
+        except (KeyError, TypeError, ValueError):
+            figure_sort = float("inf")
+        return figure_sort, str(row.get("branch", ""))
+
+    combined.sort(key=sort_key)
+    with output.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(stream, fieldnames=CHAPTER4_MANIFOLD_VALIDATION_COLUMNS)
+        writer.writeheader()
+        for row in combined:
+            writer.writerow(
+                {
+                    field: _format_csv_value(row.get(field, ""))
+                    for field in CHAPTER4_MANIFOLD_VALIDATION_COLUMNS
+                }
+            )
+    return output
 
 
 def display_scaled_corrected_dg_spectrum(

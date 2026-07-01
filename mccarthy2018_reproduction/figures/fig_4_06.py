@@ -14,7 +14,13 @@ from _chapter4_plotting import (
 )
 from qp_orbits.constants import SYSTEMS
 from qp_orbits.plot_style import apply_style, save_figure
-from qp_orbits.torus_stability import base_torus, manifold_sheet
+from qp_orbits.torus_stability import (
+    base_torus,
+    corrected_manifold_validation_row,
+    corrected_vertical_curve_unstable_manifold,
+    manifold_sheet,
+    update_chapter4_manifold_validation,
+)
 
 
 FIGURE_ID = "4.6"
@@ -28,6 +34,28 @@ def main() -> None:
     apply_style()
     system = SYSTEMS["earth_moon"]
     torus = base_torus(system, "vertical")
+    corrected_branch = corrected_vertical_curve_unstable_manifold(
+        system.mu,
+        samples=9,
+        time_samples=24,
+        perturbation_sign=-1.0,
+    )
+    update_chapter4_manifold_validation(
+        PROJECT_ROOT,
+        [
+            corrected_manifold_validation_row(
+                corrected_branch,
+                system,
+                figure_id=FIGURE_ID,
+                family="quasi-vertical",
+                branch="minus_x_unstable_local",
+                source_curve="corrected quasi-vertical stroboscopic curve",
+                uses_proxy_background=True,
+                validation_status="local corrected DG branch audited; global sheet remains proxy",
+                next_action="Promote from local branch diagnostic to continued thesis-scale vertical manifold",
+            )
+        ],
+    )
     stages = [0.14, 0.32, 0.62, 1.0]
     fig = plt.figure(figsize=(8.4, 7.4), constrained_layout=True)
     for idx, stage in enumerate(stages, start=1):
@@ -41,6 +69,7 @@ def main() -> None:
                 ax,
                 perturbation_sign=-1.0,
                 bounds=(0.70, 0.58, 0.24, 0.22),
+                sheet=corrected_branch,
             )
         ax.text2D(0.47, -0.10, f"({chr(96 + idx)})", transform=ax.transAxes, fontsize=12)
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)

@@ -160,16 +160,18 @@ def add_corrected_vertical_local_growth_inset(
     *,
     perturbation_sign: float = 1.0,
     bounds=(0.56, 0.60, 0.36, 0.28),
+    sheet=None,
 ) -> None:
     """Add a compact diagnostic for the corrected local quasi-vertical manifold."""
 
     system = SYSTEMS["earth_moon"]
-    sheet = corrected_vertical_curve_unstable_manifold(
-        system.mu,
-        samples=9,
-        time_samples=18,
-        perturbation_sign=perturbation_sign,
-    )
+    if sheet is None:
+        sheet = corrected_vertical_curve_unstable_manifold(
+            system.mu,
+            samples=9,
+            time_samples=18,
+            perturbation_sign=perturbation_sign,
+        )
     _plot_corrected_local_growth_inset(ax, sheet, bounds=bounds)
 
 

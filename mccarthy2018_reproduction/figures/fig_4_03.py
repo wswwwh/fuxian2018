@@ -17,7 +17,9 @@ from qp_orbits.plot_style import apply_style, save_figure
 from qp_orbits.torus_stability import (
     base_torus,
     corrected_l1_constant_energy_halo_unstable_manifolds,
+    corrected_manifold_validation_row,
     manifold_sheet,
+    update_chapter4_manifold_validation,
 )
 
 
@@ -37,6 +39,22 @@ def main() -> None:
     plus_x, _ = corrected_l1_constant_energy_halo_unstable_manifolds(
         system.mu,
         time_unit_days=system.time_unit_days,
+    )
+    update_chapter4_manifold_validation(
+        PROJECT_ROOT,
+        [
+            corrected_manifold_validation_row(
+                plus_x,
+                system,
+                figure_id=FIGURE_ID,
+                family="quasi-halo",
+                branch="plus_x_unstable",
+                source_curve="JC=3.1389 quasi-halo pseudo-arclength endpoint",
+                uses_proxy_background=True,
+                validation_status="corrected DG finite-amplitude branch audited; proxy background retained",
+                next_action="Continue the corrected branch to a thesis-scale global torus manifold",
+            )
+        ],
     )
     fig = plt.figure(figsize=(8.2, 7.6), constrained_layout=True)
     for idx, stage in enumerate(stages, start=1):

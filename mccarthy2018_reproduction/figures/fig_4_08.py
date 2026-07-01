@@ -11,8 +11,10 @@ from qp_orbits.manifolds import periodic_halo_manifold_sample
 from qp_orbits.plot_style import apply_style, save_figure
 from qp_orbits.torus_stability import (
     base_torus,
+    corrected_manifold_validation_row,
     corrected_vertical_global_unstable_manifold,
     manifold_sheet,
+    update_chapter4_manifold_validation,
 )
 
 
@@ -52,6 +54,22 @@ def main() -> None:
         if curve[:, 0].min() < 0.55 and curve[-1, 1] > 0.02
     ]
     corrected_vertical = corrected_vertical_global_unstable_manifold(system.mu)
+    update_chapter4_manifold_validation(
+        PROJECT_ROOT,
+        [
+            corrected_manifold_validation_row(
+                corrected_vertical,
+                system,
+                figure_id=FIGURE_ID,
+                family="quasi-vertical",
+                branch="earthward_global_unstable",
+                source_curve="corrected quasi-vertical stroboscopic curve",
+                uses_proxy_background=True,
+                validation_status="main corrected DG global sheet audited with periodic-halo comparison; proxy reference retained",
+                next_action="Continue the source quasi-vertical torus family before global manifold propagation",
+            )
+        ],
+    )
 
     fig = plt.figure(figsize=(8.1, 4.2), constrained_layout=True)
     ax = fig.add_subplot(111, projection="3d")

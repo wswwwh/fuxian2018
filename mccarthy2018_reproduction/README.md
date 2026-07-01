@@ -214,13 +214,27 @@ Status C - shape-match with local numerical overlay:
 Status D - proxy/schematic only:
 2.1, 2.2, 2.5, 2.9, 2.10, 2.12, 3.1, 3.2, 3.3, 3.4, 5.2, 5.3, 5.4.
 
-The next upgrades should focus on robust Figure 3.10 q=8 single-arc or
-continued-branch validation, Figures 4.3-4.8 continued torus-scale DG
-manifold propagation, the remaining Figure
-3.9 quasi-halo proxy tail, and Chapter 5's ephemeris-corrected or optimized
-transfer gaps. Chapter 5 entries are intentionally labelled as CR3BP baseline,
-DE421-oriented baseline, local direct-shooting solution, or geometric proxy
-instead of complete BCR4BP or optimized transfer reproductions.
+Chapter 4 now has a dedicated manifold audit table at
+`data/computed/chapter4_manifold_validation.csv`. Figures 4.3-4.8 record
+corrected DG manifold diagnostics including source-curve residual, DG mapping
+time and rotation angle, selected real unstable multiplier, perturbation scale,
+growth versus linear expectation, Jacobi drift, terminal spatial bounds, and
+whether a proxy background is still retained.
+
+Figures 4.3-4.4 retain proxy thesis-scale backgrounds with audited corrected
+quasi-halo finite-amplitude DG overlays. Figures 4.5-4.6 retain proxy global
+backgrounds with audited corrected quasi-vertical local branches. Figures
+4.7-4.8 use corrected DG propagation as the main red sheet and keep the grey
+sheet only as a proxy reference. These corrected sheets are physical-consistency
+baselines, not full high-amplitude torus-scale global manifold reproductions.
+
+The next upgrades should focus on Figures 4.3-4.8 continued torus-scale DG
+manifold propagation, the remaining Figure 3.9 quasi-halo proxy tail, and
+Chapter 5's ephemeris-corrected or optimized transfer gaps. Figure 3.10's q=2
+and q=8 period-q audit is already documented and is not the current priority.
+Chapter 5 entries are intentionally labelled as CR3BP baseline, DE421-oriented
+baseline, local direct-shooting solution, or geometric proxy instead of complete
+BCR4BP or optimized transfer reproductions.
 
 ## Environment
 
