@@ -99,6 +99,12 @@ design and endpoint reproduction for the current accepted `N=61` endpoint; it
 does not implement PALC, high-amplitude continuation, or any Figure 3.16/3.17
 source update.
 
+The Route B BVP/PALC neighborhood diagnostic is recorded in
+`docs/chapter3_route_b_bvp_palc_neighborhood.md`. It confirms local accepted
+neighbor residual reproduction and one tiny accepted forward diagnostic, but
+known-neighbor PALC is not uniformly successful and no Figure 3.16/3.17 source
+replacement is justified.
+
 ### required inputs
 
 - Current accepted quasi-DRO branch and bottleneck diagnostics.

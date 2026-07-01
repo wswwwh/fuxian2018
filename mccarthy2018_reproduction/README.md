@@ -80,6 +80,10 @@ The current implementation is the first verified layer of the reproduction plan:
   `N=61` quasi-DRO endpoint, recorded in
   `docs/chapter3_route_b_bvp_residual_prototype.md`, without updating Figure
   3.16, Figure 3.17, or the fixed-mapping accepted branch CSV
+- Route B local BVP/PALC neighborhood diagnostics, recorded in
+  `docs/chapter3_route_b_bvp_palc_neighborhood.md`; accepted-neighbor residual
+  reproduction holds, but the PALC evidence remains bounded-local and does not
+  justify Figure 3.16/3.17 source replacement
 - pseudo-arclength branch anchors and fixed-perilune STM correction for the
   4,800 km and 12,610 km northern Earth-Moon L2 NRHOs in Figure 5.9
 - fixed-time STM direct shooting for the 23-day and 12.4-day NRHO transfers,
