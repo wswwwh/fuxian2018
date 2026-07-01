@@ -231,7 +231,11 @@ baselines, not full high-amplitude torus-scale global manifold reproductions.
 Figures 3.16-3.17 now have a dedicated quasi-DRO audit table at
 `data/computed/chapter3_quasi_dro_validation.csv`, plus an extended attempt in
 `data/computed/chapter3_quasi_dro_extended_validation.csv` and
-`data/computed/chapter3_quasi_dro_continuation_log.csv`. The corrected
+`data/computed/chapter3_quasi_dro_continuation_log.csv`. A bounded
+fixed-mapping pseudo-arclength diagnostic is also recorded in
+`data/computed/chapter3_quasi_dro_palc_family.csv`,
+`data/computed/chapter3_quasi_dro_palc_validation.csv`, and
+`data/computed/chapter3_quasi_dro_palc_log.csv`. The corrected
 fixed-mapping-time CR3BP branch preserves the original five `N=21` local
 members and adds four accepted `N=41` members through a 10,000 km vertical
 amplitude target. The extended accepted range is mapping time
@@ -242,7 +246,12 @@ amplitude target. The extended accepted range is mapping time
 Jacobi span stays below 4.89e-15. Fig. 3.16 still retains grey thesis-scale
 proxy surfaces and Fig. 3.17 still retains grey proxy trends as references,
 because 11,000 km, 12,000 km, and the Stage 2 14,000 km attempt failed the
-residual/Jacobi audit.
+residual/Jacobi audit. The PALC diagnostic adds one accepted `N=41` member and
+one accepted lifted `N=61` member, but only reaches rho 1.443877875293695 rad
+and max abs z 10164.02309965055 km; fixed-rotation fallback candidates at rho
+1.4445-1.4500 cross the 11,000 km amplitude range but fail residual/Jacobi
+audits, so the figures remain partial physical-consistency baselines rather
+than full numerical reproductions.
 
 The next upgrades should focus on Figures 4.3-4.8 continued torus-scale DG
 manifold propagation, the remaining Figure 3.9 quasi-halo proxy tail, and the
@@ -315,6 +324,9 @@ Generated files are written under `data/` and `outputs/`.
 - `data/computed/chapter3_corrected_vertical_stroboscopic_torus_family.csv`
 - `data/computed/chapter3_corrected_dro_fixed_mapping_family.csv`
 - `data/computed/chapter3_quasi_dro_validation.csv`
+- `data/computed/chapter3_quasi_dro_palc_family.csv`
+- `data/computed/chapter3_quasi_dro_palc_validation.csv`
+- `data/computed/chapter3_quasi_dro_palc_log.csv`
 - `data/computed/quasi_dro_family.csv`
 - `data/computed/chapter4_torus_stability_proxy.csv`
 - `data/computed/chapter4_corrected_curve_dg.csv`

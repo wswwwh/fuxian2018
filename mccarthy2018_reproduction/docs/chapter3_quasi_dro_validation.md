@@ -94,6 +94,58 @@ continuation round should add pseudo-arclength or fixed-rotation continuation
 near 10,000-11,000 km, with adaptive spectral order above `N=41`, before
 attempting Stage 3 or Chapter 5 quasi-DRO application scenes.
 
+## Pseudo-arclength / fixed-rotation continuation attempt
+
+The next diagnostic round added a fixed-mapping pseudo-arclength continuation
+path without overwriting the accepted extended branch. New outputs are written
+to:
+
+- `data/computed/chapter3_quasi_dro_palc_family.csv`
+- `data/computed/chapter3_quasi_dro_palc_validation.csv`
+- `data/computed/chapter3_quasi_dro_palc_log.csv`
+
+The PALC run used the accepted 9,500 km and 10,000 km members as secant
+anchors. At `N=41`, a very small step of 0.003740477244835401 in continuation
+variables, equal to 15% of the phase-projected secant norm, converged and was
+accepted. It reached rho 1.443872724217783 rad and max abs z
+10161.69305030281 km. The full audit remained tight: map residual
+5.285409860268169e-13, curve Jacobi span 2.993387759886446e-10, one-map
+Jacobi drift 2.993396641670643e-10, one-map phase return error
+7.183210268722789e-14, and ten-return Jacobi span 3.108624468950438e-15.
+
+The accepted `N=41` PALC member and its predecessor were then spectrally lifted
+to `N=61` and re-corrected before any acceptance. Both lifted anchors passed
+the same audit. A subsequent `N=61` PALC step at 10% of the lifted secant was
+accepted, reaching rho 1.443877875293695 rad and max abs z
+10164.02309965055 km. Its audit metrics were map residual
+7.890795489455144e-10, curve Jacobi span 1.794120407794253e-11, one-map
+Jacobi drift 1.794253634557208e-11, phase return error
+2.124646163197596e-10, and ten-return Jacobi span 3.552713678800501e-15.
+
+This did not break the 11,000 km barrier. The accepted PALC family contains 11
+members: five original local members, four accepted amplitude-stepped extended
+members, one `N=41` PALC member, and one `N=61` lifted PALC member. Its accepted
+range is rho 1.431231722670483 to 1.443877875293695 rad, max abs z
+383.3341592553633 to 10164.02309965055 km, and mean Jacobi
+2.922288411389487 to 2.922496961073728.
+
+Because PALC did not pass 11,000 km, a fixed-rotation fallback was attempted at
+rho 1.4445, 1.4455, 1.4465, 1.4480, and 1.4500. These candidates reached max
+abs z values from 10405.93030301209 km to 12508.77229261919 km, so the target
+rho sequence does cross the 11,000-12,000 km amplitude range. None was accepted:
+map residuals grew from 1.04971292772575e-03 to 3.870249377410935e-01, while
+curve Jacobi spans grew from 1.976794371261192e-05 to
+8.922896028212612e-03. They therefore failed the residual/Jacobi quick audit
+before one-map or ten-return phase audits were meaningful. This behavior is
+consistent with local ill-conditioning or folding in the branch
+parameterization, not with a validated high-amplitude corrected branch.
+
+The practical conclusion is unchanged: Fig. 3.16 and Fig. 3.17 remain partial
+physical-consistency baselines. The new PALC files document a narrower
+continuation bottleneck near rho 1.44388 and max abs z 10.16e3 km. Chapter 3
+should continue here with a better-conditioned continuation strategy before
+Chapter 5 quasi-DRO application scenes are upgraded.
+
 ## Figure source split
 
 Fig. 3.16:
@@ -117,11 +169,12 @@ Fig. 3.17:
 ## Status decision
 
 The extended corrected quasi-DRO family is auditable through rho 1.4438 rad and
-max abs z 10.13e3 km. Fig. 3.16 and Fig. 3.17 can be treated as a limited
-`physical-consistency baseline` for the low-amplitude corrected branch, but not
-as full `numerical reproduction`. The grey proxy surfaces and trends remain
-reference geometry because the corrected branch still does not cover the
-thesis-scale high-amplitude end.
+max abs z 10.13e3 km; the separate PALC diagnostic reaches rho 1.44388 rad and
+max abs z 10.16e3 km but still does not pass 11,000 km. Fig. 3.16 and Fig.
+3.17 can be treated as a limited `physical-consistency baseline` for the
+low-amplitude corrected branch, but not as full `numerical reproduction`. The
+grey proxy surfaces and trends remain reference geometry because the corrected
+branch still does not cover the thesis-scale high-amplitude end.
 
 To promote these figures further, the project needs a robust continuation past
 the 11,000-14,000 km failure region, ideally using pseudo-arclength or

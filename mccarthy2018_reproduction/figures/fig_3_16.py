@@ -8,7 +8,7 @@ import numpy as np
 from _figure_paths import PROJECT_ROOT
 from qp_orbits.constants import SYSTEMS
 from qp_orbits.corrected_dro_family import (
-    load_or_compute_extended_corrected_dro_family,
+    load_best_chapter3_corrected_dro_family,
     sweep_corrected_dro_member,
     write_chapter3_quasi_dro_validation,
 )
@@ -28,6 +28,8 @@ EXTENDED_FAMILY_PATH = (
 )
 VALIDATION_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_extended_validation.csv"
 CONTINUATION_LOG_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_continuation_log.csv"
+PALC_FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_palc_family.csv"
+PALC_VALIDATION_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_palc_validation.csv"
 
 
 def plot_corrected_torus(ax, member) -> None:
@@ -82,13 +84,19 @@ def main() -> None:
     apply_style()
     system = SYSTEMS["earth_moon"]
     family = quasi_dro_family(system, samples=4, n_major=128, n_minor=28)
-    corrected_family = load_or_compute_extended_corrected_dro_family(
+    corrected_family = load_best_chapter3_corrected_dro_family(
         FAMILY_PATH,
         EXTENDED_FAMILY_PATH,
+        PALC_FAMILY_PATH,
         CONTINUATION_LOG_PATH,
         system,
     )
-    write_chapter3_quasi_dro_validation(VALIDATION_PATH, corrected_family, system)
+    validation_path = (
+        PALC_VALIDATION_PATH
+        if corrected_family[-1].max_abs_z_km > 11000.0
+        else VALIDATION_PATH
+    )
+    write_chapter3_quasi_dro_validation(validation_path, corrected_family, system)
     selected_indices = np.linspace(0, len(corrected_family) - 1, 4, dtype=int)
     selected_corrected = [corrected_family[index] for index in selected_indices]
     fig = plt.figure(figsize=(8.3, 7.4), constrained_layout=True)

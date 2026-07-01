@@ -8,7 +8,7 @@ from matplotlib.ticker import ScalarFormatter
 from _figure_paths import PROJECT_ROOT
 from qp_orbits.constants import SYSTEMS
 from qp_orbits.corrected_dro_family import (
-    load_or_compute_extended_corrected_dro_family,
+    load_best_chapter3_corrected_dro_family,
     write_chapter3_quasi_dro_validation,
 )
 from qp_orbits.plot_style import apply_style, save_figure
@@ -26,6 +26,8 @@ EXTENDED_FAMILY_PATH = (
 )
 VALIDATION_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_extended_validation.csv"
 CONTINUATION_LOG_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_continuation_log.csv"
+PALC_FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_palc_family.csv"
+PALC_VALIDATION_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_palc_validation.csv"
 
 
 def max_audit_metric(rows, field: str) -> float | None:
@@ -44,13 +46,19 @@ def main() -> None:
     rho = [row["rotation_angle_rad"] for row in rows]
     z_amp = [row["z_amplitude_km"] for row in rows]
     jacobi = [row["jacobi"] for row in rows]
-    corrected = load_or_compute_extended_corrected_dro_family(
+    corrected = load_best_chapter3_corrected_dro_family(
         FAMILY_PATH,
         EXTENDED_FAMILY_PATH,
+        PALC_FAMILY_PATH,
         CONTINUATION_LOG_PATH,
         system,
     )
-    audit_rows = write_chapter3_quasi_dro_validation(VALIDATION_PATH, corrected, system)
+    validation_path = (
+        PALC_VALIDATION_PATH
+        if corrected[-1].max_abs_z_km > 11000.0
+        else VALIDATION_PATH
+    )
+    audit_rows = write_chapter3_quasi_dro_validation(validation_path, corrected, system)
     corrected_rho = [member.rotation_angle_rad for member in corrected]
     corrected_z_amp = [member.max_abs_z_km for member in corrected]
     corrected_jacobi = [member.mean_jacobi for member in corrected]
