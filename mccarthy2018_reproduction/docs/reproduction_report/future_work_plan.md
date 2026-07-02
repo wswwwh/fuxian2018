@@ -105,6 +105,13 @@ neighbor residual reproduction and one tiny accepted forward diagnostic, but
 known-neighbor PALC is not uniformly successful and no Figure 3.16/3.17 source
 replacement is justified.
 
+The Route B BVP/PALC stabilization diagnostic is recorded in
+`docs/chapter3_route_b_bvp_stabilization.md`. It finds that N=41/N=61 mixing is
+not the primary rank-deficiency cause, bounded substepping can mitigate the
+local 8_to_9 failure, and tiny forward diagnostics still remain tiny; the
+smaller-family PALC failure means no Figure 3.16/3.17 source replacement or
+broad fixed-time continuation campaign is justified yet.
+
 ### required inputs
 
 - Current accepted quasi-DRO branch and bottleneck diagnostics.
