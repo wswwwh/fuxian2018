@@ -112,6 +112,94 @@ The present PALC machinery is therefore more interpretable, but it is not yet
 generally robust. The tiny forward result is explicitly not a branch
 breakthrough and does not approach the 10,500 km gate.
 
+## PALC Safeguard Sweep
+
+The follow-up PALC safeguard sweep tested the smaller quasi-vertical sanity
+case that blocked a stronger fixed-time BVP/PALC claim.
+
+- Smaller-family endpoint members 0, 1, and 2 are all reproduced by the BVP
+  assembly, with map residual maxima from `2.198293511726119e-10` to
+  `3.897854251985743e-10`.
+- The existing current-parameter full-secant PALC policy remains not accepted,
+  with map residual max `3.010133652490457e-05`.
+- A component-aware state/rho predictor using the target member's mapping time
+  and mean Jacobi is accepted, with map residual max
+  `8.064093604852799e-09`.
+- A target-state control case is accepted, with map residual max
+  `3.897854251985743e-10`.
+
+The smaller-family failure is therefore better isolated as a predictor and
+external-parameter policy issue than as a BVP residual representation failure.
+This still does not justify a Figure 3.16 / Figure 3.17 update. It does justify
+making mapping time and continuation-parameter handling explicit before any
+wider quasi-DRO fixed-time continuation campaign.
+
+## Parameter-Aware PALC Prototype
+
+The parameter-aware PALC prototype promotes mapping time and mean Jacobi into
+the PALC unknown vector, then tests the resulting layout on the smaller
+quasi-vertical sanity family and the accepted free-time quasi-DRO diagnostic
+branch.
+
+- The smaller-family known-neighbor case `0, 1 -> 2` is accepted, with map
+  residual max `5.110189872355422e-09`.
+- The free-time quasi-DRO known-neighbor case `4, 5 -> 6` converges but remains
+  not accepted because it misses target amplitude, mapping-time, and
+  mean-Jacobi gates.
+- One bounded free-time quasi-DRO forward diagnostic from members 5 and 6 is
+  accepted, reaching `max_abs_z_km = 11302.51011593767`.
+- That forward diagnostic has map residual max `5.283548785728993e-12`, curve
+  Jacobi span `3.044320351364149e-11`, ten-return Jacobi span
+  `1.77635683940025e-15`, and condition estimate
+  `10338527736262.46`.
+- The accepted parameter-aware quasi-DRO forward state is archived in
+  `data/computed/chapter3_route_b_parameter_aware_palc_states.npz` with
+  schema `1.1`, shape `(1, 61, 6)`, and the matching phase grid.
+
+This is the strongest Route B continuation diagnostic so far because the
+predictor/parameter policy issue is now explicit and the accepted free-time
+diagnostic branch has been extended beyond the stored 11,107 km member. It is
+still not a fixed-mapping-time McCarthy reproduction. Figure 3.16 and Figure
+3.17 must therefore remain tied to the accepted fixed-time branch, not to this
+diagnostic state archive.
+
+## Fixed-Time Constrained PALC
+
+The fixed-time constrained PALC pass fixes the mapping time at the McCarthy
+baseline value `14.74932760227518` days while retaining the state/rho/mean
+Jacobi continuation layout from the parameter-aware prototype.
+
+- The accepted endpoint is reproduced with map residual max
+  `7.890972080147777e-10`, curve Jacobi span
+  `1.794120407794253e-11`, and one-map phase-return error
+  `2.12467501228811e-10`.
+- The local fixed-time endpoint secant still produces only tiny accepted
+  movement near `10164` km.
+- Projecting the accepted free-time member 6 to fixed mapping time converges to
+  an accepted fixed-time candidate at
+  `max_abs_z_km = 10274.98132505419`, with map residual max
+  `1.21126444227941e-11`, curve Jacobi span
+  `4.743894166381324e-11`, one-map phase-return error
+  `2.793146522877499e-12`, and ten-return Jacobi span
+  `2.220446049250313e-15`.
+- Projecting the parameter-aware free-time forward state independently
+  converges to a nearby accepted fixed-time candidate at
+  `max_abs_z_km = 10273.52387554093`.
+- A follow-on fixed-time PALC step from the old endpoint toward the best
+  fixed-time candidate accepts only a bounded local move at
+  `max_abs_z_km = 10272.24671170378`.
+- The 10,500 km and 11,000 km fixed-time gates remain unpassed. Evaluated
+  higher-amplitude rows up to `11370.5355898953` km are rejected by
+  residual/Jacobi/phase gates.
+- Accepted fixed-time diagnostic states are archived in
+  `data/computed/chapter3_route_b_fixed_time_constrained_palc_states.npz`.
+
+This is real progress past the old `10164.02309965055` km fixed-time endpoint
+as a diagnostic candidate layer, but it is not yet a figure-source update. The
+current accepted branch CSV still ends at member 10, and the new state archive
+needs branch-continuity and promotion checks before Fig. 3.16 / Fig. 3.17 can
+be regenerated from it.
+
 ## Scientific Interpretation
 
 The current bottleneck is not a simple spectral-order problem. The N=61 lift
@@ -155,8 +243,9 @@ evidence is already strong enough to explain the bottleneck boundary without
 claiming a figure update.
 
 Option B: continue only as a very bounded local PALC safeguards task. This
-should first improve the smaller-family sanity case and only then return to
-quasi-DRO fixed-time continuation.
+should next stabilize continuation from the accepted fixed-time `10275` km
+candidate, then promote it to a figure source only if branch-continuity and
+multi-member audit checks remain accepted.
 
 Option C: later consider a full Fourier/collocation continuation framework.
 This is higher cost and should wait until the reporting boundary is stable.
@@ -175,6 +264,9 @@ Core docs:
 - `docs/chapter3_route_b_bvp_residual_prototype.md`
 - `docs/chapter3_route_b_bvp_palc_neighborhood.md`
 - `docs/chapter3_route_b_bvp_stabilization.md`
+- `docs/chapter3_route_b_palc_safeguard_sweep.md`
+- `docs/chapter3_route_b_parameter_aware_palc.md`
+- `docs/chapter3_route_b_fixed_time_constrained_palc.md`
 - `docs/chapter3_route_b_stage_summary.md`
 - `docs/chapter3_route_b_artifact_index.md`
 - `docs/chapter3_quasi_dro_validation.md`
@@ -189,6 +281,9 @@ Route B scripts:
 - `scripts/prototype_chapter3_route_b_bvp_residual.py`
 - `scripts/prototype_chapter3_route_b_bvp_palc_neighborhood.py`
 - `scripts/run_chapter3_route_b_bvp_palc_stabilization.py`
+- `scripts/run_chapter3_route_b_palc_safeguard_sweep.py`
+- `scripts/run_chapter3_route_b_parameter_aware_palc.py`
+- `scripts/run_chapter3_route_b_fixed_time_constrained_palc.py`
 
 Fixed-time baseline and bottleneck CSVs:
 
@@ -223,3 +318,8 @@ Route B experiment outputs:
 - `data/computed/chapter3_route_b_bvp_known_neighbor_retry.csv`
 - `data/computed/chapter3_route_b_bvp_small_family_sanity.csv`
 - `data/computed/chapter3_route_b_bvp_stabilized_tiny_forward.csv`
+- `data/computed/chapter3_route_b_palc_safeguard_sweep.csv`
+- `data/computed/chapter3_route_b_parameter_aware_palc.csv`
+- `data/computed/chapter3_route_b_parameter_aware_palc_states.npz`
+- `data/computed/chapter3_route_b_fixed_time_constrained_palc.csv`
+- `data/computed/chapter3_route_b_fixed_time_constrained_palc_states.npz`

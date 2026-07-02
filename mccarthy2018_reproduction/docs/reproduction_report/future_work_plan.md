@@ -112,6 +112,35 @@ local 8_to_9 failure, and tiny forward diagnostics still remain tiny; the
 smaller-family PALC failure means no Figure 3.16/3.17 source replacement or
 broad fixed-time continuation campaign is justified yet.
 
+The Route B PALC safeguard sweep is recorded in
+`docs/chapter3_route_b_palc_safeguard_sweep.md`. It shows that the smaller
+quasi-vertical endpoints and a target-parameter PALC predictor pass the audit,
+while the existing current-parameter full-secant predictor still fails. The next
+Route B coding step should therefore make mapping time and continuation
+parameter policy explicit before any wider quasi-DRO fixed-time campaign.
+
+The Route B parameter-aware PALC prototype is recorded in
+`docs/chapter3_route_b_parameter_aware_palc.md`. It promotes mapping time and
+mean Jacobi into the PALC unknown vector, passes the smaller-family
+known-neighbor audit, and takes one accepted bounded free-time quasi-DRO
+diagnostic step to `max_abs_z_km = 11302.51011593767`. The matching accepted
+diagnostic state is archived in
+`data/computed/chapter3_route_b_parameter_aware_palc_states.npz`. This remains
+a free-time diagnostic result, not a fixed-time McCarthy Figure 3.16 / Figure
+3.17 source, so the next Route B task is a constrained or projection PALC
+variant that keeps the McCarthy mapping time fixed.
+
+The Route B fixed-time constrained PALC diagnostic is recorded in
+`docs/chapter3_route_b_fixed_time_constrained_palc.md`. It fixes the mapping
+time at `14.74932760227518` days and projects two independent high-amplitude
+free-time sources to nearby accepted fixed-time candidates around
+`10274.98132505419` km and `10273.52387554093` km. This is the first accepted
+fixed-time diagnostic evidence beyond the old `10164.02309965055` km endpoint,
+but no accepted candidate exceeds 10,500 km; higher-amplitude rows up to
+`11370.5355898953` km still fail residual/Jacobi/phase gates. The next Route B
+task is therefore branch-continuity and stabilized continuation from the
+accepted `10275` km candidate before any Fig. 3.16 / Fig. 3.17 promotion.
+
 The Route B stage closeout is recorded in
 `docs/chapter3_route_b_stage_summary.md` and
 `docs/chapter3_route_b_artifact_index.md`. These files consolidate the full
@@ -138,9 +167,11 @@ reproduction.
 4. Define phase constraints that remove parameterization ambiguity.
 5. Define acceptance thresholds for residual, Jacobi span, phase consistency,
    Fourier tail, singular values, and multi-return drift.
-6. Prototype on a smaller known torus family before returning to quasi-DRO.
-7. Attempt to pass 10,500 km and 11,000 km only after the prototype passes
-   audit gates.
+6. Audit branch continuity between the accepted fixed-time endpoint and the new
+   fixed-time `10275` km diagnostic candidates.
+7. Attempt stabilized fixed-time continuation past 10,500 km and 11,000 km only
+   after the 10,275 km candidate passes multi-member continuity and promotion
+   checks.
 
 ### success criteria
 
@@ -162,7 +193,8 @@ reproduction.
 ### stop condition
 
 Do not start coding until the formulation note exists. Stop a prototype if it
-cannot reproduce a smaller known torus family with strict audit gates.
+cannot reproduce a smaller known torus family with strict audit gates under an
+explicit mapping-time / parameter policy.
 
 ## Route C: paper-level reproduction report and opening/report preparation
 
