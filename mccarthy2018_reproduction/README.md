@@ -84,6 +84,16 @@ The current implementation is the first verified layer of the reproduction plan:
   `docs/chapter3_route_b_bvp_palc_neighborhood.md`; accepted-neighbor residual
   reproduction holds, but the PALC evidence remains bounded-local and does not
   justify Figure 3.16/3.17 source replacement
+- Route B BVP/PALC stabilization diagnostics, recorded in
+  `docs/chapter3_route_b_bvp_stabilization.md`; N=41/N=61 mixing is not the
+  primary rank issue, bounded substepping mitigates the local 8_to_9 failure,
+  but the PALC machinery is not yet robust enough for a broad fixed-time
+  high-amplitude continuation campaign
+- Route B stage summary and artifact index, recorded in
+  `docs/chapter3_route_b_stage_summary.md` and
+  `docs/chapter3_route_b_artifact_index.md`; Route B currently provides a
+  diagnostic account of the quasi-DRO bottleneck, not a confirmed Fig. 3.16 /
+  Fig. 3.17 fixed-time reproduction
 - pseudo-arclength branch anchors and fixed-perilune STM correction for the
   4,800 km and 12,610 km northern Earth-Moon L2 NRHOs in Figure 5.9
 - fixed-time STM direct shooting for the 23-day and 12.4-day NRHO transfers,
@@ -315,6 +325,19 @@ The current recommended reading path is the formal report package in
 - `docs/chapter3_route_b_branch_consistency.md` - Route B diagnostic free-time
   branch audit; the branch is continuous and phase-gauge robust, but fixed-time
   projection did not produce an accepted >10,500 km fixed-time candidate.
+- `docs/chapter3_route_b_bvp_residual_prototype.md` - endpoint BVP residual
+  prototype for the current accepted `N=61` quasi-DRO member.
+- `docs/chapter3_route_b_bvp_palc_neighborhood.md` - bounded local BVP/PALC
+  neighborhood diagnostic around the current endpoint.
+- `docs/chapter3_route_b_bvp_stabilization.md` - local stabilization pass for
+  N-consistency, rank, known-neighbor, smaller-family, and tiny-forward checks.
+- `docs/chapter3_route_b_stage_summary.md` - stage conclusion for the full
+  Route B quasi-DRO bottleneck chain.
+- `docs/chapter3_route_b_artifact_index.md` - Route B artifact table with
+  inputs, outputs, docs, scripts, conclusions, and figure-update status.
+
+Route B currently provides a diagnostic account of the quasi-DRO bottleneck,
+not a confirmed Fig. 3.16 / Fig. 3.17 fixed-time reproduction.
 
 ### Route A data search and digitization
 

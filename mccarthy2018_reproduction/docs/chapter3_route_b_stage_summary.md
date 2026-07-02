@@ -1,0 +1,225 @@
+# Chapter 3 Route B Stage Summary
+
+## Purpose
+
+This document summarizes the Route B formulation experiments for the Chapter 3
+quasi-DRO bottleneck. It is a stage conclusion for reporting and planning: it
+collects the current fixed-time baseline, the diagnostic free-time branch, the
+BVP residual prototype, and the BVP/PALC neighborhood and stabilization
+diagnostics in one citable technical note.
+
+This document does not update Figure 3.16, Figure 3.17, the accepted
+fixed-mapping-time branch CSV files, Chapter 5, the teacher package, or any
+numerical CSV.
+
+## Current Fixed-Time Baseline
+
+The accepted fixed-time quasi-DRO branch remains the only source allowed for
+the current Figure 3.16 / Figure 3.17 physical-consistency baseline.
+
+- Accepted branch endpoint source:
+  `data/computed/chapter3_quasi_dro_palc_family.csv`.
+- Current accepted endpoint member: `10`, with `N=61`.
+- Fixed mapping time: `14.74932760227518` days.
+- Endpoint rotation angle: `rho = 1.443877875293695` rad.
+- Endpoint mean Jacobi: `2.922288411389487`.
+- `max_abs_z = 10164.02309965055 km`.
+
+Figure 3.16 and Figure 3.17 therefore remain partial physical-consistency
+baselines. They do not contain an accepted fixed-time member beyond 10,500 km or
+11,000 km, and the grey reference/proxy elements must not be described as a
+confirmed McCarthy fixed-time reproduction.
+
+## Free-Time Diagnostic Branch
+
+The fixed-Jacobi/free-time/free-rho Route B branch is useful evidence about the
+bottleneck, but it is not a Figure 3.16 / Figure 3.17 source.
+
+- The correction-only reproduction of the current endpoint passed the Route B
+  audit gates.
+- The bounded diagnostic free-time branch exceeded 11,000 km, reaching
+  `max_abs_z_km = 11107.54149221647`.
+- The branch-consistency audit classified the diagnostic free-time branch as
+  continuous, amplitude-monotone, and mapping-time-drift-monotone.
+- Phase-gauge robustness passed all tested perturbations and phase shifts.
+- The highest diagnostic member used mapping time
+  `14.80556377691894` days, which is a drift of about
+  `+0.05623617464375563` days from the fixed-time endpoint.
+- Fixed-time projection accepted `0` projected high-amplitude candidates.
+
+The scientific reading is that releasing mapping time exposes a nearby
+audit-clean diagnostic path, so the mapping-time constraint is important. The
+same evidence also prevents a figure update: the high-amplitude gain did not
+survive projection back to the fixed-time convention.
+
+## BVP Residual Endpoint Prototype
+
+The BVP residual prototype assembled a map-based one-angle invariant-curve
+residual at the current accepted `N=61` endpoint.
+
+- Endpoint map residual max norm: `7.890972080147777e-10`.
+- Existing accepted audit map residual: `7.890795489455144e-10`.
+- Endpoint curve Jacobi span: `1.794120407794253e-11`.
+- Endpoint residual matches existing audit level: `yes`.
+- Jacobian shape: `368x367`.
+- Rank estimate: `367`.
+- Condition estimate: `48237180374.00163`.
+- Classification: `full_column_rank_ill_conditioned`.
+
+This establishes that the BVP residual assembly can reproduce the accepted
+endpoint and is internally consistent with the existing shooting audit. It is
+not continuation success and does not show that a fixed-time high-amplitude
+branch can be continued.
+
+## BVP/PALC Neighborhood Diagnostics
+
+The BVP/PALC neighborhood diagnostic tested local residual/scaling conventions,
+nearby accepted members, and only bounded local PALC moves.
+
+- The best local conditioning convention was `two_phase_overdetermined`.
+- The condition estimate improved from `4.82372e+10` to `7.61396e+07` under
+  the best diagnostic convention.
+- Accepted-neighbor residual reproduction held for members 7, 8, 9, and 10.
+- `reproduce_known_neighbor_8_to_9` failed: not converged, not accepted, with
+  map max about `3.936381921134426e-04`.
+- `reproduce_known_neighbor_9_to_10` succeeded and was accepted.
+- `tiny_forward_from_10_step_1` succeeded and was accepted.
+
+This is useful local evidence, but not a robust continuation result. The
+diagnostic shows that the endpoint residual is not merely a single-row artifact,
+while also showing that known-neighbor PALC is not uniformly successful.
+
+## BVP/PALC Stabilization
+
+The stabilization pass clarified the local failure modes without producing a
+branch breakthrough.
+
+- N=41/N=61 mixing is not the primary cause of the member 8/9 rank deficiency.
+- The one-phase rank issue is better explained as a phase-gauge or missing
+  second-phase-row weakness.
+- Adding the second phase row resolves the local one-phase rank deficiency for
+  the tested members.
+- The full N=61 `8_to_9` retry still fails, but a rho-matched bounded substep
+  mitigates the local failure.
+- The unified N=61 `9_to_10` confirmation remains locally accepted.
+- The smaller quasi-vertical sanity check reproduces the endpoint, but its
+  known-neighbor PALC case still fails.
+- Three stabilized tiny forward steps were accepted, but the total amplitude
+  increase was only `1.51536` km, reaching
+  `10165.538454966758` km.
+
+The present PALC machinery is therefore more interpretable, but it is not yet
+generally robust. The tiny forward result is explicitly not a branch
+breakthrough and does not approach the 10,500 km gate.
+
+## Scientific Interpretation
+
+The current bottleneck is not a simple spectral-order problem. The N=61 lift
+controls tail energy and supports local diagnostics, but it does not by itself
+advance the accepted fixed-time branch past the current endpoint.
+
+The bottleneck is also not a simple fixed-time residual assembly failure. The
+BVP residual prototype reproduces the accepted endpoint and nearby accepted
+members at the expected residual scale.
+
+The stronger interpretation is that phase gauge, predictor choice, PALC scaling,
+and branch geometry jointly control the failure near the current fixed-time
+endpoint. The free-time branch suggests that the fixed mapping-time constraint
+is central, while the BVP/PALC diagnostics show that local fixed-time residual
+machinery still needs better safeguards before it can support a high-amplitude
+continuation campaign.
+
+Fixed-time McCarthy reproduction for Figure 3.16 / Figure 3.17 remains
+unresolved.
+
+## Reporting Boundary
+
+Use the following boundary in reports and meetings:
+
+- Do not call Route B a complete reproduction.
+- Do not update Figure 3.16 or Figure 3.17 from any diagnostic Route B result.
+- Do not write diagnostic candidates into the accepted branch.
+- Do not use the free-time branch as a fixed-time McCarthy figure source.
+- Do not treat the tiny BVP/PALC forward steps as a high-amplitude branch.
+- Do not let Chapter 5 depend on a high-amplitude quasi-DRO upgrade that has
+  not been accepted.
+
+Route B currently provides a diagnostic account of the quasi-DRO bottleneck,
+not a confirmed Fig. 3.16 / Fig. 3.17 fixed-time reproduction.
+
+## Recommended Next Steps
+
+Option A: stop the Route B high-amplitude attempt for now and write it as a
+methods/diagnostic result. This is the recommended near-term path because the
+evidence is already strong enough to explain the bottleneck boundary without
+claiming a figure update.
+
+Option B: continue only as a very bounded local PALC safeguards task. This
+should first improve the smaller-family sanity case and only then return to
+quasi-DRO fixed-time continuation.
+
+Option C: later consider a full Fourier/collocation continuation framework.
+This is higher cost and should wait until the reporting boundary is stable.
+
+The preferred next step is Option A, or a narrowly scoped version of Option B
+that focuses on PALC safeguards rather than high-amplitude continuation.
+
+## Key Files
+
+Core docs:
+
+- `docs/route_b_formulation_note.md`
+- `docs/chapter3_route_b_free_time_experiment.md`
+- `docs/chapter3_route_b_refinement.md`
+- `docs/chapter3_route_b_branch_consistency.md`
+- `docs/chapter3_route_b_bvp_residual_prototype.md`
+- `docs/chapter3_route_b_bvp_palc_neighborhood.md`
+- `docs/chapter3_route_b_bvp_stabilization.md`
+- `docs/chapter3_route_b_stage_summary.md`
+- `docs/chapter3_route_b_artifact_index.md`
+- `docs/chapter3_quasi_dro_validation.md`
+- `docs/reproduction_report/future_work_plan.md`
+
+Route B scripts:
+
+- `scripts/diagnose_chapter3_quasi_dro_bottleneck.py`
+- `scripts/run_chapter3_route_b_free_time_experiment.py`
+- `scripts/run_chapter3_route_b_refinement.py`
+- `scripts/audit_chapter3_route_b_free_time_branch.py`
+- `scripts/prototype_chapter3_route_b_bvp_residual.py`
+- `scripts/prototype_chapter3_route_b_bvp_palc_neighborhood.py`
+- `scripts/run_chapter3_route_b_bvp_palc_stabilization.py`
+
+Fixed-time baseline and bottleneck CSVs:
+
+- `data/computed/chapter3_quasi_dro_validation.csv`
+- `data/computed/chapter3_quasi_dro_extended_validation.csv`
+- `data/computed/chapter3_quasi_dro_continuation_log.csv`
+- `data/computed/chapter3_quasi_dro_palc_family.csv`
+- `data/computed/chapter3_quasi_dro_palc_validation.csv`
+- `data/computed/chapter3_quasi_dro_palc_log.csv`
+- `data/computed/chapter3_quasi_dro_bottleneck_diagnostics.csv`
+- `data/computed/chapter3_quasi_dro_bottleneck_experiments.csv`
+
+Route B experiment outputs:
+
+- `data/computed/chapter3_route_b_free_time_local_experiment.csv`
+- `data/computed/chapter3_route_b_free_time_log.csv`
+- `data/computed/chapter3_route_b_refinement_experiments.csv`
+- `data/computed/chapter3_route_b_refinement_diagnostics.csv`
+- `data/computed/chapter3_route_b_branch_consistency.csv`
+- `data/computed/chapter3_route_b_phase_gauge_robustness.csv`
+- `data/computed/chapter3_route_b_fixed_time_projection.csv`
+- `data/computed/chapter3_route_b_free_time_branch_states.npz`
+- `data/computed/chapter3_route_b_bvp_endpoint_residual.csv`
+- `data/computed/chapter3_route_b_bvp_residual_blocks.csv`
+- `data/computed/chapter3_route_b_bvp_index_map.csv`
+- `data/computed/chapter3_route_b_bvp_scaling_experiments.csv`
+- `data/computed/chapter3_route_b_bvp_neighbor_reproduction.csv`
+- `data/computed/chapter3_route_b_bvp_palc_neighborhood.csv`
+- `data/computed/chapter3_route_b_bvp_singular_values.csv`
+- `data/computed/chapter3_route_b_bvp_n_consistency.csv`
+- `data/computed/chapter3_route_b_bvp_rank_diagnostics.csv`
+- `data/computed/chapter3_route_b_bvp_known_neighbor_retry.csv`
+- `data/computed/chapter3_route_b_bvp_small_family_sanity.csv`
+- `data/computed/chapter3_route_b_bvp_stabilized_tiny_forward.csv`

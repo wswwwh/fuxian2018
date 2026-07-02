@@ -112,6 +112,14 @@ local 8_to_9 failure, and tiny forward diagnostics still remain tiny; the
 smaller-family PALC failure means no Figure 3.16/3.17 source replacement or
 broad fixed-time continuation campaign is justified yet.
 
+The Route B stage closeout is recorded in
+`docs/chapter3_route_b_stage_summary.md` and
+`docs/chapter3_route_b_artifact_index.md`. These files consolidate the full
+Route B experiment chain and explicitly keep `figure_update_allowed = no` for
+every Route B artifact. Route B currently provides a diagnostic account of the
+quasi-DRO bottleneck, not a confirmed Fig. 3.16 / Fig. 3.17 fixed-time
+reproduction.
+
 ### required inputs
 
 - Current accepted quasi-DRO branch and bottleneck diagnostics.
@@ -171,6 +179,8 @@ use.
 - `docs/reproduction_report/figure_status_appendix.md`
 - `docs/reproduction_report/numerical_audit_appendix.md`
 - `docs/reproduction_report/proxy_usage_appendix.md`
+- `docs/chapter3_route_b_stage_summary.md`
+- `docs/chapter3_route_b_artifact_index.md`
 - `docs/external_reproduction_resources.md`
 - `docs/stage_report_reproduction_status.md`
 - `docs/next_reproduction_roadmap.md`
