@@ -196,7 +196,8 @@ Fig. 3.16 / Fig. 3.17 can be regenerated from
 `data/computed/chapter3_fixed_mapping_cache_accepted_validation.csv`, subject to
 the figure scripts being updated to use this Route H source. Chapter 4
 torus-scale DG/manifold work is now unblocked at the Route H source/DG layer.
-Chapter 5 remains gated until Chapter 4 has been regenerated and audited.
+Chapter 5 has a Route H / DE421-oriented baseline for Figs. 5.6-5.7, but the
+high-fidelity/optimization layer remains gated.
 
 The staged gate audit in
 `data/computed/mccarthy2018_staged_goal_gate_status.csv` records the current
@@ -212,8 +213,9 @@ promotion and downstream regeneration:
 2. Make the Chapter 4 figure-source decision: add Route H quasi-DRO
    torus/manifold figures, or separately continue the L1 quasi-halo and
    quasi-vertical families before replacing Fig. 4.3-4.8 proxy backgrounds.
-3. Keep Chapter 5 gated until the Chapter 4 manifold layer passes its own
-   figure-level audit.
+3. Use the Route H Chapter 5 baseline only as a DE421-oriented geometry layer
+   until BCR4BP/ephemeris multiple-shooting or optimized-transfer audit rows
+   exist.
 
 Chapter 4 torus-scale DG/manifold work and Chapter 5 high-fidelity/optimization
 applications should not use the older proxy quasi-DRO data now that a stronger
@@ -223,3 +225,17 @@ Route H fixed-time source exists. The current Chapter 4 Route H artifacts are
 `docs/chapter4_route_h_quasi_dro_dg_manifold_audit.md`, with regenerated figure
 outputs in `outputs/figures_png/fig_4_route_h.png` and
 `outputs/figures_pdf/fig_4_route_h.pdf`.
+
+The current Chapter 5 Route H artifacts are
+`data/computed/chapter5_upstream_application_gate_audit.csv`,
+`docs/chapter5_upstream_application_gate_audit.md`,
+`data/computed/chapter5_bcr4bp_dynamics_audit.csv`,
+`docs/chapter5_bcr4bp_dynamics_audit.md`,
+`data/computed/chapter5_bcr4bp_segment_correction_audit.csv`,
+`docs/chapter5_bcr4bp_segment_correction_audit.md`,
+`data/computed/chapter5_optimized_transfer_audit.csv`,
+`docs/chapter5_optimized_transfer_audit.md`,
+`data/computed/chapter5_high_fidelity_optimization_readiness_audit.csv`,
+`docs/chapter5_high_fidelity_optimization_readiness_audit.md`,
+`outputs/figures_png/fig_5_6.png`, `outputs/figures_png/fig_5_7.png`, and
+`outputs/figures_png/fig_5_bcr4bp_optimized_transfer.png`.

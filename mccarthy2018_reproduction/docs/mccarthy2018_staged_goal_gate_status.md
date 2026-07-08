@@ -14,7 +14,9 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - Fig. 3.16 / Fig. 3.17 update allowed: `True`
 - Chapter 4 Route H DG source layer passed: `True`
 - Chapter 4 next decision: `route_h_chapter4_figure_source_available`
-- Chapter 5 regeneration allowed: `False`
+- Chapter 5 Route H / DE421 baseline passed: `True`
+- Chapter 5 high-fidelity/optimization status: `pass`
+- Chapter 5 regeneration allowed: `True`
 
 ## Gate Rows
 
@@ -27,8 +29,10 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - `C4-UPSTREAM-TORUS-DATA` (chapter4): status `route_h_figure_source_passed`, metric `chapter3_figure_source_frontier_max_abs_z_km` = `14573.10318409037`, decision `route_h_chapter4_figure_source_available`
 - `C4-ROUTE-H-DG-MANIFOLD` (chapter4): status `pass`, metric `worst_route_h_manifold_jacobi_drift` = `1.77635683940025e-15`, decision `route_h_source_layer_ready`
 - `C4-ROUTE-H-FIGURE-SOURCE` (chapter4): status `pass`, metric `route_h_figure_png_bytes` = `539093`, decision `route_h_chapter4_figure_source_available`
-- `C5-UPSTREAM-HIGH-FIDELITY-DATA` (chapter5): status `blocked_by_chapter4`, metric `chapter3_figure_source_frontier_max_abs_z_km` = `14573.10318409037`, decision `wait_for_chapter4_regeneration`
-- `STAGED-GOAL-STATUS` (goal): status `chapter3_passed_chapter4_route_h_figure_source_passed`, metric `chapter3_gate_passes` = `True`, decision `continue_to_chapter4_l1_thesis_figure_replacement_or_chapter5_gate_design`
+- `C5-UPSTREAM-HIGH-FIDELITY-DATA` (chapter5): status `route_h_bcr4bp_optimization_source_layer_passed`, metric `chapter3_figure_source_frontier_max_abs_z_km` = `14573.10318409037`, decision `chapter5_source_layer_optimization_available`
+- `C5-ROUTE-H-DE421-BASELINE` (chapter5): status `pass`, metric `fig_5_6_png_bytes` = `746932`, decision `route_h_de421_baseline_available`
+- `C5-HIGH-FIDELITY-OPTIMIZATION` (chapter5): status `pass`, metric `missing_high_fidelity_capabilities` = `0`, decision `chapter5_high_fidelity_optimization_source_layer_ready`
+- `STAGED-GOAL-STATUS` (goal): status `staged_route_h_source_layers_complete`, metric `chapter3_gate_passes` = `True`, decision `staged_goal_source_layers_complete`
 
 ## Interpretation
 
@@ -41,7 +45,18 @@ The corresponding regenerated source-layer figure artifacts are
 `outputs/figures_pdf/fig_4_route_h.pdf` when gate `C4-ROUTE-H-FIGURE-SOURCE`
 passes.
 
-This unlocks a Chapter 4 figure-source decision, not a completed replacement of
-Fig. 4.3-4.8: those existing figures target L1 quasi-halo and quasi-vertical
-families and still retain proxy backgrounds. Chapter 5 remains gated until the
-Chapter 4 figure/manifold layer is regenerated and audited.
+This unlocks a Chapter 4 Route H figure-source artifact, not a completed
+replacement of Fig. 4.3-4.8: those existing figures target L1 quasi-halo and
+quasi-vertical families and still retain proxy backgrounds.
+
+The Chapter 5 Route H / DE421 baseline audit is recorded in
+`data/computed/chapter5_upstream_application_gate_audit.csv`. Passing this gate
+means Figures 5.6 and 5.7 use the accepted Route H quasi-DRO branch in the
+DE421 Sun-Moon frame. It does not complete the high-fidelity/optimization
+layer. The BCR4BP model-level audit is recorded in
+`data/computed/chapter5_bcr4bp_dynamics_audit.csv`. The stricter readiness audit in
+`data/computed/chapter5_high_fidelity_optimization_readiness_audit.csv`
+records `0` missing high-fidelity
+capabilities. When this value is zero, the available Chapter 5 result should be
+read as a Route H/BCR4BP source-layer promotion with rendered figure artifacts,
+not a claim that every original thesis application figure has been replaced.

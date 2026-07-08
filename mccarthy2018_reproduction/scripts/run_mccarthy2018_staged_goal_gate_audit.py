@@ -138,6 +138,12 @@ def _build_rows() -> list[dict[str, Any]]:
     chapter4_route_h_manifold_path = data / "chapter4_route_h_quasi_dro_manifold_probe.csv"
     chapter4_route_h_figure_png = PROJECT_ROOT / "outputs" / "figures_png" / "fig_4_route_h.png"
     chapter4_route_h_figure_pdf = PROJECT_ROOT / "outputs" / "figures_pdf" / "fig_4_route_h.pdf"
+    chapter5_audit_path = data / "chapter5_upstream_application_gate_audit.csv"
+    chapter5_doc_path = docs / "chapter5_upstream_application_gate_audit.md"
+    chapter5_readiness_path = data / "chapter5_high_fidelity_optimization_readiness_audit.csv"
+    chapter5_readiness_doc_path = docs / "chapter5_high_fidelity_optimization_readiness_audit.md"
+    chapter5_optimization_figure_png = PROJECT_ROOT / "outputs" / "figures_png" / "fig_5_bcr4bp_optimized_transfer.png"
+    chapter5_optimization_figure_pdf = PROJECT_ROOT / "outputs" / "figures_pdf" / "fig_5_bcr4bp_optimized_transfer.pdf"
     decision_path = docs / "chapter3_quasi_dro_frontier_decision.md"
 
     candidates = _read_rows(candidates_path)
@@ -152,6 +158,8 @@ def _build_rows() -> list[dict[str, Any]]:
     cache_validation = _read_rows(cache_validation_path)
     chapter4_route_h_dg = _read_rows(chapter4_route_h_dg_path)
     chapter4_route_h_manifold = _read_rows(chapter4_route_h_manifold_path)
+    chapter5_audit = _read_rows(chapter5_audit_path)
+    chapter5_readiness = _read_rows(chapter5_readiness_path)
 
     best_campaign = _best_value(candidates, "max_abs_z_km", "overall_acceptance")
     best_campaign_revalidated = _best_value(
@@ -243,7 +251,43 @@ def _build_rows() -> list[dict[str, Any]]:
         and chapter4_route_h_figure_png.stat().st_size > 0
         and chapter4_route_h_figure_pdf.stat().st_size > 0
     )
-
+    chapter5_by_gate = {row.get("gate_id", ""): row for row in chapter5_audit}
+    chapter5_readiness_by_gate = {row.get("gate_id", ""): row for row in chapter5_readiness}
+    chapter5_route_h_de421_passes = (
+        chapter5_by_gate.get("C5-ROUTE-H-DE421-BASELINE", {}).get("status") == "pass"
+    )
+    chapter5_readiness_documented = (
+        chapter5_readiness_by_gate.get("C5-HF-READINESS-STATUS", {}).get("status")
+        == "bounded_blocker_documented"
+    )
+    chapter5_readiness_passes = (
+        chapter5_readiness_by_gate.get("C5-HF-READINESS-STATUS", {}).get("status") == "pass"
+    )
+    chapter5_bcr4bp_passes = (
+        chapter5_readiness_by_gate.get("C5-HF-BCR4BP-DYNAMICS", {}).get("status") == "pass"
+    )
+    chapter5_correction_passes = (
+        chapter5_readiness_by_gate.get("C5-HF-DYNAMICS-CORRECTION", {}).get("status") == "pass"
+    )
+    chapter5_optimization_passes = (
+        chapter5_readiness_by_gate.get("C5-HF-TRANSFER-OPTIMIZATION", {}).get("status") == "pass"
+        and chapter5_optimization_figure_png.exists()
+        and chapter5_optimization_figure_pdf.exists()
+        and chapter5_optimization_figure_png.stat().st_size > 0
+        and chapter5_optimization_figure_pdf.stat().st_size > 0
+    )
+    chapter5_missing_hf_capabilities = _as_float(
+        chapter5_readiness_by_gate.get("C5-HF-READINESS-STATUS", {}).get("value"),
+        0.0,
+    )
+    chapter5_high_fidelity_blocked = (
+        not chapter5_readiness_passes
+        and (
+            chapter5_by_gate.get("C5-HIGH-FIDELITY-OPTIMIZATION", {}).get("status")
+            == "blocked_missing_high_fidelity_optimization"
+            or chapter5_readiness_documented
+        )
+    )
     rows: list[dict[str, Any]] = [
         _row(
             scope="chapter3",
@@ -379,16 +423,88 @@ def _build_rows() -> list[dict[str, Any]]:
             scope="chapter5",
             gate_id="C5-UPSTREAM-HIGH-FIDELITY-DATA",
             requirement="Chapter 5 high-fidelity/optimization figures require reliable Chapter 3 and Chapter 4 upstream data.",
-            status="blocked_by_chapter4" if chapter3_passes else "blocked_by_chapter3",
+            status=(
+                "route_h_bcr4bp_optimization_source_layer_passed"
+                if chapter5_route_h_de421_passes and chapter5_readiness_passes and chapter5_optimization_passes
+                else
+                "route_h_de421_baseline_ready_high_fidelity_blocked"
+                if chapter5_route_h_de421_passes and chapter5_high_fidelity_blocked
+                else ("blocked_by_chapter4" if chapter3_passes else "blocked_by_chapter3")
+            ),
             metric="chapter3_figure_source_frontier_max_abs_z_km",
             value=figure_source_frontier,
             threshold=f">= {campaign.TARGET_MIN_KM}",
-            evidence_artifact=_artifact(decision_path),
-            decision="wait_for_chapter4_regeneration" if chapter3_passes else "do_not_regenerate_chapter5_applications",
+            evidence_artifact=f"{_artifact(decision_path)};{_artifact(chapter5_audit_path)};{_artifact(chapter5_readiness_path)}",
+            decision=(
+                "chapter5_source_layer_optimization_available"
+                if chapter5_route_h_de421_passes and chapter5_readiness_passes and chapter5_optimization_passes
+                else
+                "do_not_claim_high_fidelity_chapter5"
+                if chapter5_route_h_de421_passes and chapter5_high_fidelity_blocked
+                else ("wait_for_chapter4_regeneration" if chapter3_passes else "do_not_regenerate_chapter5_applications")
+            ),
             notes=(
-                "Chapter 3 is available through Route H, but Chapter 5 remains gated until Chapter 4 manifold regeneration is complete."
+                "Route H / DE421 Chapter 5 baseline figures are regenerated; BCR4BP dynamics, short-segment defect correction, and transfer-optimization source-layer figure artifacts now have audit evidence."
+                if chapter5_route_h_de421_passes and chapter5_readiness_passes and chapter5_optimization_passes
+                else
+                "Route H / DE421 Chapter 5 baseline figures are regenerated, and BCR4BP dynamics plus short-segment defect correction now have audit evidence; optimized transfer evidence is still missing."
+                if chapter5_route_h_de421_passes and chapter5_high_fidelity_blocked and chapter5_bcr4bp_passes and chapter5_correction_passes
+                else
+                "Route H / DE421 Chapter 5 baseline figures are regenerated and the BCR4BP dynamics kernel now has model-level audit evidence, but ephemeris correction and optimized transfer evidence are still missing."
+                if chapter5_route_h_de421_passes and chapter5_high_fidelity_blocked and chapter5_bcr4bp_passes
+                else
+                "Route H / DE421 Chapter 5 baseline figures are regenerated, but BCR4BP, ephemeris correction, and optimized transfer evidence are still missing."
+                if chapter5_route_h_de421_passes and chapter5_high_fidelity_blocked
+                else "Chapter 3 is available through Route H, but Chapter 5 remains gated until Chapter 4 manifold regeneration is complete."
                 if chapter3_passes
                 else "Chapter 5 remains gated until Chapter 3 and Chapter 4 have accepted source data."
+            ),
+        ),
+        _row(
+            scope="chapter5",
+            gate_id="C5-ROUTE-H-DE421-BASELINE",
+            requirement="Chapter 5 DE421-oriented quasi-DRO baseline figures should use the accepted Route H upstream member.",
+            status="pass" if chapter5_route_h_de421_passes else "not_run_or_fail",
+            metric="fig_5_6_png_bytes",
+            value=_as_float(chapter5_by_gate.get("C5-ROUTE-H-DE421-BASELINE", {}).get("value")),
+            threshold="> 0 and Fig. 5.7 exists",
+            evidence_artifact=f"{_artifact(chapter5_audit_path)};outputs/figures_png/fig_5_6.png;outputs/figures_png/fig_5_7.png",
+            decision="route_h_de421_baseline_available" if chapter5_route_h_de421_passes else "run_chapter5_upstream_application_gate_audit",
+            notes="This is an application baseline upgrade only; it is not BCR4BP or optimized-transfer reproduction.",
+        ),
+        _row(
+            scope="chapter5",
+            gate_id="C5-HIGH-FIDELITY-OPTIMIZATION",
+            requirement="Chapter 5 high-fidelity/optimization completion requires accepted BCR4BP/ephemeris correction or optimized transfer audit rows.",
+            status="pass" if chapter5_readiness_passes and chapter5_optimization_passes else "blocked_missing_high_fidelity_optimization" if chapter5_high_fidelity_blocked else "not_audited",
+            metric="missing_high_fidelity_capabilities",
+            value=chapter5_missing_hf_capabilities,
+            threshold="0 for completed high-fidelity/optimization layer",
+            evidence_artifact=f"{_artifact(chapter5_audit_path)};{_artifact(chapter5_doc_path)};{_artifact(chapter5_readiness_path)};{_artifact(chapter5_readiness_doc_path)};{_artifact(chapter5_optimization_figure_png)};{_artifact(chapter5_optimization_figure_pdf)}",
+            decision=(
+                "chapter5_high_fidelity_optimization_source_layer_ready"
+                if chapter5_readiness_passes and chapter5_optimization_passes
+                else
+                "implement_transfer_optimization_audit_next"
+                if chapter5_readiness_documented and chapter5_bcr4bp_passes and chapter5_correction_passes
+                else
+                "implement_bcr4bp_ephemeris_optimization_interface"
+                if chapter5_readiness_documented
+                else "define_bcr4bp_or_optimization_audit_next"
+            ),
+            notes=(
+                "Chapter 5 high-fidelity/optimization source layer now has accepted Route H/BCR4BP dynamics, defect-correction, optimized-transfer rows, and rendered optimization figure artifacts."
+                if chapter5_readiness_passes and chapter5_optimization_passes
+                else
+                "Chapter 5 high-fidelity/optimization blocker is now documented by a readiness audit: BCR4BP dynamics and short-segment defect correction pass, while optimized transfer rows are still missing."
+                if chapter5_readiness_documented and chapter5_bcr4bp_passes and chapter5_correction_passes
+                else
+                "Chapter 5 high-fidelity/optimization blocker is now documented by a readiness audit: the BCR4BP dynamics kernel passes a model-level audit, while ephemeris correction and optimized transfer rows are still missing."
+                if chapter5_readiness_documented and chapter5_bcr4bp_passes
+                else
+                "Chapter 5 high-fidelity/optimization blocker is now documented by a readiness audit: BCR4BP dynamics, ephemeris correction, and optimized transfer rows are still missing."
+                if chapter5_readiness_documented
+                else "Current repository evidence supports Route H/DE421 baseline figures, not full high-fidelity application reproduction."
             ),
         ),
         _row(
@@ -396,6 +512,12 @@ def _build_rows() -> list[dict[str, Any]]:
             gate_id="STAGED-GOAL-STATUS",
             requirement="Advance all three fronts or record bounded blockers with CSV evidence.",
             status=(
+                "staged_route_h_source_layers_complete"
+                if chapter5_route_h_de421_passes and chapter5_readiness_passes and chapter5_optimization_passes
+                else
+                "chapter3_chapter4_passed_chapter5_baseline_ready_high_fidelity_blocked"
+                if chapter5_route_h_de421_passes and chapter5_high_fidelity_blocked
+                else
                 "chapter3_passed_chapter4_route_h_figure_source_passed"
                 if chapter4_route_h_figure_passes
                 else "chapter3_passed_chapter4_source_layer_passed"
@@ -407,6 +529,15 @@ def _build_rows() -> list[dict[str, Any]]:
             threshold="True",
             evidence_artifact=f"{_artifact(OUTPUT)};{_artifact(decision_path)}",
             decision=(
+                "staged_goal_source_layers_complete"
+                if chapter5_route_h_de421_passes and chapter5_readiness_passes and chapter5_optimization_passes
+                else
+                "continue_to_chapter5_transfer_optimization_audit"
+                if chapter5_route_h_de421_passes and chapter5_high_fidelity_blocked and chapter5_bcr4bp_passes and chapter5_correction_passes
+                else
+                "continue_to_chapter5_bcr4bp_or_optimization_audit"
+                if chapter5_route_h_de421_passes and chapter5_high_fidelity_blocked
+                else
                 "continue_to_chapter4_l1_thesis_figure_replacement_or_chapter5_gate_design"
                 if chapter4_route_h_figure_passes
                 else
@@ -415,6 +546,18 @@ def _build_rows() -> list[dict[str, Any]]:
                 else ("continue_to_chapter4_regeneration" if chapter3_passes else "keep_goal_active_or_request_bounded_acceptance")
             ),
             notes=(
+                "Chapter 3 Route H, Chapter 4 Route H figure source, and Chapter 5 Route H/BCR4BP optimization source-layer artifacts are all available with CSV audit evidence. Original thesis-scale figure replacements remain documented separately where applicable."
+                if chapter5_route_h_de421_passes and chapter5_readiness_passes and chapter5_optimization_passes
+                else
+                "Chapter 3, Route H Chapter 4 source figure, and Route H/DE421 Chapter 5 baseline are available; BCR4BP dynamics and short-segment defect correction now pass audit, but high-fidelity/optimization completion remains blocked by missing optimized-transfer audit evidence."
+                if chapter5_route_h_de421_passes and chapter5_high_fidelity_blocked and chapter5_bcr4bp_passes and chapter5_correction_passes
+                else
+                "Chapter 3, Route H Chapter 4 source figure, and Route H/DE421 Chapter 5 baseline are available; the BCR4BP dynamics kernel now passes a model-level audit, but high-fidelity/optimization completion remains blocked by missing ephemeris-correction and optimized-transfer audit evidence."
+                if chapter5_route_h_de421_passes and chapter5_high_fidelity_blocked and chapter5_bcr4bp_passes
+                else
+                "Chapter 3, Route H Chapter 4 source figure, and Route H/DE421 Chapter 5 baseline are available; high-fidelity/optimization completion remains blocked by missing BCR4BP or optimized-transfer audit evidence."
+                if chapter5_route_h_de421_passes and chapter5_high_fidelity_blocked
+                else
                 "Chapter 3 and a regenerated Route H Chapter 4 source-layer figure are available; original L1 Chapter 4 thesis-figure replacement and Chapter 5 application upgrades remain incomplete."
                 if chapter4_route_h_figure_passes
                 else
@@ -435,6 +578,9 @@ def _write_doc(rows: list[dict[str, Any]]) -> None:
     experimental = by_gate["C3-EXPERIMENTAL-FRONTIER"]
     c4 = by_gate["C4-UPSTREAM-TORUS-DATA"]
     c4_route_h = by_gate["C4-ROUTE-H-DG-MANIFOLD"]
+    c5 = by_gate["C5-UPSTREAM-HIGH-FIDELITY-DATA"]
+    c5_baseline = by_gate.get("C5-ROUTE-H-DE421-BASELINE", {})
+    c5_high_fidelity = by_gate.get("C5-HIGH-FIDELITY-OPTIMIZATION", {})
     lines = "\n".join(
         f"- `{row['gate_id']}` ({row['scope']}): status `{row['status']}`, "
         f"metric `{row['metric']}` = `{_fmt(row['value'])}`, decision `{row['decision']}`"
@@ -457,7 +603,9 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - Fig. 3.16 / Fig. 3.17 update allowed: `{bool(c3['status'] == 'pass')}`
 - Chapter 4 Route H DG source layer passed: `{bool(c4_route_h['status'] == 'pass')}`
 - Chapter 4 next decision: `{c4['decision']}`
-- Chapter 5 regeneration allowed: `False`
+- Chapter 5 Route H / DE421 baseline passed: `{bool(c5_baseline.get('status') == 'pass')}`
+- Chapter 5 high-fidelity/optimization status: `{c5_high_fidelity.get('status')}`
+- Chapter 5 regeneration allowed: `{bool(c5['status'] != 'blocked_missing_high_fidelity_optimization' and c5_high_fidelity.get('status') != 'blocked_missing_high_fidelity_optimization')}`
 
 ## Gate Rows
 
@@ -474,10 +622,21 @@ The corresponding regenerated source-layer figure artifacts are
 `outputs/figures_pdf/fig_4_route_h.pdf` when gate `C4-ROUTE-H-FIGURE-SOURCE`
 passes.
 
-This unlocks a Chapter 4 figure-source decision, not a completed replacement of
-Fig. 4.3-4.8: those existing figures target L1 quasi-halo and quasi-vertical
-families and still retain proxy backgrounds. Chapter 5 remains gated until the
-Chapter 4 figure/manifold layer is regenerated and audited.
+This unlocks a Chapter 4 Route H figure-source artifact, not a completed
+replacement of Fig. 4.3-4.8: those existing figures target L1 quasi-halo and
+quasi-vertical families and still retain proxy backgrounds.
+
+The Chapter 5 Route H / DE421 baseline audit is recorded in
+`data/computed/chapter5_upstream_application_gate_audit.csv`. Passing this gate
+means Figures 5.6 and 5.7 use the accepted Route H quasi-DRO branch in the
+DE421 Sun-Moon frame. It does not complete the high-fidelity/optimization
+layer. The BCR4BP model-level audit is recorded in
+`data/computed/chapter5_bcr4bp_dynamics_audit.csv`. The stricter readiness audit in
+`data/computed/chapter5_high_fidelity_optimization_readiness_audit.csv`
+records `{_fmt(c5_high_fidelity.get('value'))}` missing high-fidelity
+capabilities. When this value is zero, the available Chapter 5 result should be
+read as a Route H/BCR4BP source-layer promotion with rendered figure artifacts,
+not a claim that every original thesis application figure has been replaced.
 """,
         encoding="utf-8",
     )

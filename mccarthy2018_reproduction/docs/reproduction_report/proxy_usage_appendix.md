@@ -115,8 +115,8 @@ Proxy/schematic only:
 Physical-consistency baseline:
 
 - Fig. 5.5: local CR3BP quasi-DRO return baseline.
-- Fig. 5.6: DE421-oriented baseline.
-- Fig. 5.7: DE421-oriented baseline.
+- Fig. 5.6: Route H accepted quasi-DRO embedded in DE421-oriented geometry.
+- Fig. 5.7: Route H accepted quasi-DRO embedded across DE421 epochs.
 - Fig. 5.10: local direct-shooting baseline.
 - Fig. 5.11: local direct-shooting baseline.
 
@@ -129,11 +129,13 @@ Shape-match with local numerical overlay:
 - Fig. 5.13: proxy heat map with periodic baseline.
 - Fig. 5.14: proxy Lissajous torus with periodic baseline.
 
-Chapter 5 should remain a baseline/proxy layer because the high-amplitude
-quasi-DRO branch required by the application scenes is not yet accepted. A
-later BCR4BP or ephemeris-corrected upgrade should only proceed after the
-Chapter 3 quasi-DRO branch passes the residual/Jacobi/phase audit over the
-required amplitude range.
+Chapter 5 should remain a baseline/proxy layer for high-fidelity claims. Route
+H now supplies an accepted high-amplitude quasi-DRO input for the DE421-oriented
+Figs. 5.6-5.7 baseline, and a BCR4BP model-level dynamics audit now exists.
+There is also a BCR4BP short-segment defect-correction audit and a Route
+H/BCR4BP source-layer optimized-transfer audit. These artifacts do not replace
+every original thesis application figure; they provide auditable source-layer
+promotion evidence.
 
 ## Figures That Must Not Be Overclaimed
 
@@ -146,4 +148,5 @@ required amplitude range.
 - Figures 4.3-4.8: corrected DG evidence exists, but proxy/grey reference
   geometry remains.
 - Figures 5.1 and 5.8-5.14: application-layer scenes are baseline/proxy/local
-  overlay until ephemeris/BCR4BP and transfer optimization are completed.
+  overlay unless explicitly superseded by the Route H/BCR4BP source-layer
+  optimization audit.

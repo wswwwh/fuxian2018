@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from _chapter5_plotting import plot_de421_dro_scene, style_moon_km_axis
 from _figure_paths import PROJECT_ROOT
 from qp_orbits.constants import SYSTEMS
-from qp_orbits.corrected_dro_family import load_or_compute_corrected_dro_family
+from qp_orbits.corrected_dro_family import load_best_chapter3_corrected_dro_family
 from qp_orbits.ephemeris import de421_quasi_dro_phase_scenes
 from qp_orbits.plot_style import apply_style, save_figure
 
@@ -16,15 +16,27 @@ FIGURE_ID = "5.6"
 SOURCE_PAGE = 103
 REPRO_LEVEL = "shape-match + local numerical"
 SYSTEM = "Earth-Moon CR3BP + JPL DE421 geometry"
-NOTES = "Corrected quasi-DRO phases embedded in the DE421 Sun-Moon frame; full ephemeris shooting remains pending."
+NOTES = "Route H accepted quasi-DRO phases embedded in the DE421 Sun-Moon frame; full ephemeris shooting remains pending."
+
+BASE_FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family.csv"
+EXTENDED_FAMILY_PATH = (
+    PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family_extended.csv"
+)
+PALC_FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_palc_family.csv"
+CONTINUATION_LOG_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_continuation_log.csv"
+ROUTE_H_FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_fixed_mapping_cache_accepted_family.csv"
 
 
 def main() -> None:
     apply_style()
     system = SYSTEMS["earth_moon"]
-    member = load_or_compute_corrected_dro_family(
-        PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family.csv",
+    member = load_best_chapter3_corrected_dro_family(
+        BASE_FAMILY_PATH,
+        EXTENDED_FAMILY_PATH,
+        PALC_FAMILY_PATH,
+        CONTINUATION_LOG_PATH,
         system,
+        ROUTE_H_FAMILY_PATH,
     )[-1]
     phases_deg = (0.0, 24.0, 80.0, 120.0)
     scenes = de421_quasi_dro_phase_scenes(
