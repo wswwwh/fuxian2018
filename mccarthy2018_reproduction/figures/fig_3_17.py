@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import csv
+
 import matplotlib.pyplot as plt
 from matplotlib.ticker import ScalarFormatter
 
@@ -19,7 +21,7 @@ FIGURE_ID = "3.17"
 SOURCE_PAGE = 83
 REPRO_LEVEL = "shape-match + local numerical"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Proxy trends retained as reference with an expanded corrected fixed-mapping-time CR3BP quasi-DRO family."
+NOTES = "Proxy trends retained as reference with a Route H accepted high-amplitude fixed-mapping-time CR3BP quasi-DRO family."
 FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family.csv"
 EXTENDED_FAMILY_PATH = (
     PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family_extended.csv"
@@ -28,6 +30,10 @@ VALIDATION_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_exten
 CONTINUATION_LOG_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_continuation_log.csv"
 PALC_FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_palc_family.csv"
 PALC_VALIDATION_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_quasi_dro_palc_validation.csv"
+ROUTE_H_FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_fixed_mapping_cache_accepted_family.csv"
+ROUTE_H_VALIDATION_PATH = (
+    PROJECT_ROOT / "data" / "computed" / "chapter3_fixed_mapping_cache_accepted_validation.csv"
+)
 
 
 def max_audit_metric(rows, field: str) -> float | None:
@@ -37,6 +43,11 @@ def max_audit_metric(rows, field: str) -> float | None:
 
 def metric_text(value: float | None) -> str:
     return "N/A" if value is None else f"{value:.2e}"
+
+
+def load_validation_rows(path):
+    with path.open(newline="", encoding="utf-8") as stream:
+        return list(csv.DictReader(stream))
 
 
 def main() -> None:
@@ -52,13 +63,21 @@ def main() -> None:
         PALC_FAMILY_PATH,
         CONTINUATION_LOG_PATH,
         system,
+        ROUTE_H_FAMILY_PATH,
     )
     validation_path = (
+        ROUTE_H_VALIDATION_PATH
+        if ROUTE_H_FAMILY_PATH.exists() and corrected[-1].max_abs_z_km > 11000.0
+        else
         PALC_VALIDATION_PATH
         if corrected[-1].max_abs_z_km > 11000.0
         else VALIDATION_PATH
     )
-    audit_rows = write_chapter3_quasi_dro_validation(validation_path, corrected, system)
+    audit_rows = (
+        load_validation_rows(validation_path)
+        if validation_path.exists()
+        else write_chapter3_quasi_dro_validation(validation_path, corrected, system)
+    )
     corrected_rho = [member.rotation_angle_rad for member in corrected]
     corrected_z_amp = [member.max_abs_z_km for member in corrected]
     corrected_jacobi = [member.mean_jacobi for member in corrected]

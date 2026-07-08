@@ -216,7 +216,11 @@ def _constant_column(rows: list[dict[str, str]], field: str) -> float:
     return float(values[0])
 
 
-def load_corrected_dro_family_csv(path: str | Path) -> tuple[CorrectedDROFamilyMember, ...]:
+def load_corrected_dro_family_csv(
+    path: str | Path,
+    *,
+    require_contiguous_members: bool = True,
+) -> tuple[CorrectedDROFamilyMember, ...]:
     """Load and validate the corrected fixed-time quasi-DRO family CSV."""
 
     source = Path(path)
@@ -246,7 +250,7 @@ def load_corrected_dro_family_csv(path: str | Path) -> tuple[CorrectedDROFamilyM
     for row in rows:
         grouped.setdefault(int(row["member"]), []).append(row)
     member_ids = sorted(grouped)
-    if member_ids != list(range(len(member_ids))):
+    if require_contiguous_members and member_ids != list(range(len(member_ids))):
         raise ValueError(f"family member ids must be contiguous from zero, got {member_ids}")
 
     family: list[CorrectedDROFamilyMember] = []
@@ -1191,20 +1195,47 @@ def load_best_chapter3_corrected_dro_family(
     palc_path: str | Path,
     log_path: str | Path,
     system: CR3BPSystem,
+    route_h_path: str | Path | None = None,
 ) -> tuple[CorrectedDROFamilyMember, ...]:
-    """Load PALC data when it extends the branch; otherwise load the extended branch."""
+    """Load the strongest accepted Chapter 3 quasi-DRO family currently available.
 
+    The Route H fixed-mapping cache export is appended to the local/PALC branch
+    when present, so figure scripts retain the low-amplitude context while using
+    the accepted high-amplitude source members for the frontier.
+    """
+
+    local_family: tuple[CorrectedDROFamilyMember, ...] | None = None
     palc = Path(palc_path)
     if palc.exists():
         family = load_corrected_dro_family_csv(palc)
         if family and family[-1].max_abs_z_km > 11000.0:
-            return family
-    return load_or_compute_extended_corrected_dro_family(
-        base_path,
-        extended_path,
-        log_path,
-        system,
+            local_family = family
+    if local_family is None:
+        local_family = load_or_compute_extended_corrected_dro_family(
+            base_path,
+            extended_path,
+            log_path,
+            system,
+        )
+
+    if route_h_path is None:
+        return local_family
+    route_h = Path(route_h_path)
+    if not route_h.exists():
+        return local_family
+    route_h_family = load_corrected_dro_family_csv(route_h, require_contiguous_members=False)
+    if not route_h_family or route_h_family[-1].max_abs_z_km <= local_family[-1].max_abs_z_km:
+        return local_family
+    frontier_z = local_family[-1].max_abs_z_km
+    frontier_rho = local_family[-1].rotation_angle_rad
+    high_members = tuple(
+        member
+        for member in route_h_family
+        if member.max_abs_z_km > frontier_z and member.rotation_angle_rad > frontier_rho
     )
+    if not high_members:
+        return local_family
+    return (*local_family, *high_members)
 
 
 def compute_chapter3_extended_corrected_dro_family(

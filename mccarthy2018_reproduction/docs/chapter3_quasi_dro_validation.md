@@ -6,6 +6,29 @@ family used in Fig. 3.16 and Fig. 3.17. The original local branch remains in
 is tracked in `data/computed/chapter3_quasi_dro_extended_validation.csv` and
 `data/computed/chapter3_quasi_dro_continuation_log.csv`.
 
+## Current Route H superseding status
+
+The older continuation and bottleneck sections below are retained as historical
+audit evidence for Routes A-G. They are no longer the current figure-source
+frontier. Route H revalidated the cached fixed-mapping corrections and exported
+an accepted high-amplitude family in
+`data/computed/chapter3_fixed_mapping_cache_accepted_family.csv`, with
+independent validation in
+`data/computed/chapter3_fixed_mapping_cache_accepted_validation.csv`.
+
+Current accepted Route H evidence:
+
+- Strictly accepted cache rows above 10,500 km: 31.
+- Strictly accepted cache rows above 11,000 km: 30.
+- Best exported accepted member: 14,573.10318409037 km.
+- Regenerated figures: `outputs/figures_png/fig_3_16.png` and
+  `outputs/figures_png/fig_3_17.png`.
+
+Fig. 3.16 and Fig. 3.17 now use the combined low-amplitude corrected branch plus
+the Route H accepted high-amplitude members. The grey surfaces/trends remain
+proxy references for the thesis-scale visual context, but the corrected CR3BP
+frontier is no longer limited to 10,164 km.
+
 ## Audit method
 
 The audit reuses the stored corrected invariant curves through

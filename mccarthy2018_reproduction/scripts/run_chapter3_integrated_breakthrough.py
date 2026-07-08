@@ -66,6 +66,11 @@ PALC_SUBSTEPS = (3, 6, 9)
 MAX_MACRO_STEPS = 12
 FOURIER_LIFT_SAMPLES = 71
 RHO_TARGET_MAX_NEWTON_STEPS = 8
+AMPLITUDE_TARGET_STEP_KM = 25.0
+AMPLITUDE_TARGET_STEP_OPTIONS_KM = (25.0, 10.0, 5.0, 2.0, 1.0)
+AMPLITUDE_TARGET_MAX_NEWTON_STEPS = 24
+AMPLITUDE_TARGET_TOL_KM = 0.25
+MAX_AMPLITUDE_RESCUE_STEPS = 10
 
 GATE_1_MAP_RESIDUAL = 1.0e-9
 GATE_2_CURVE_JACOBI_SPAN = 1.0e-10
@@ -115,6 +120,8 @@ DIAGNOSTIC_FIELDS = (
     "source_member_id",
     "previous_member_id",
     "target_rho_delta",
+    "target_max_abs_z_km",
+    "amplitude_error_km",
     "predictor_alpha",
     "fourier_order",
     "converged",
@@ -396,6 +403,106 @@ def _solve_fixed_time_target_rho(
     return assembly, correction_norms, converged, failure_reason, condition, raw_condition
 
 
+def _amplitude_target_predictor(
+    *,
+    current: CampaignMember,
+    target_max_abs_z_km: float,
+) -> tuple[np.ndarray, float]:
+    predicted_states = current.states.copy()
+    scale = target_max_abs_z_km / max(current.max_abs_z_km, 1.0e-12)
+    predicted_states[:, 2] *= scale
+    predicted_states[:, 5] *= scale
+    predictor = fixed_time._fixed_unknown_vector(
+        predicted_states,
+        current.rho + TARGET_RHO_DELTA,
+        fixed_time._mean_jacobi(predicted_states),
+    )
+    return predictor, scale
+
+
+def _amplitude_anchor(reference_states: np.ndarray) -> tuple[int, float]:
+    index = int(np.argmax(np.abs(reference_states[:, 2])))
+    sign = float(np.sign(reference_states[index, 2]))
+    if sign == 0.0:
+        sign = 1.0
+    return index, sign
+
+
+def _solve_fixed_time_target_amplitude(
+    *,
+    case_id: str,
+    predictor: np.ndarray,
+    target_max_abs_z_km: float,
+    phases: np.ndarray,
+    reference_states: np.ndarray,
+) -> tuple[fixed_time.FixedTimeAssembly, list[float], bool, str, float, float]:
+    sample_count = phases.size
+    vector = predictor.copy()
+    length_unit = fixed_time.SYSTEM.length_unit_km or 1.0
+    amplitude_index, amplitude_sign = _amplitude_anchor(reference_states)
+    target_z_nd = amplitude_sign * target_max_abs_z_km / length_unit
+    correction_norms: list[float] = []
+    assembly: fixed_time.FixedTimeAssembly | None = None
+    final_jacobian: np.ndarray | None = None
+    converged = False
+    failure_reason = "maximum iterations reached"
+    for _ in range(AMPLITUDE_TARGET_MAX_NEWTON_STEPS):
+        states, rho, target_jacobi = fixed_time._unpack_fixed_unknown(vector, sample_count)
+        assembly = fixed_time._assemble_fixed_time_bvp(
+            case_id=case_id,
+            states=states,
+            phases=phases,
+            rho=rho,
+            target_jacobi=target_jacobi,
+            reference_states=reference_states,
+            include_second_phase=True,
+            palc=None,
+        )
+        amplitude_residual = float(states[amplitude_index, 2] - target_z_nd)
+        residual = np.concatenate([assembly.residual, np.array([amplitude_residual], dtype=float)])
+        jacobian = np.zeros((assembly.jacobian.shape[0] + 1, assembly.jacobian.shape[1]), dtype=float)
+        jacobian[:-1, :] = assembly.jacobian
+        jacobian[-1, 6 * amplitude_index + 2] = 1.0
+        final_jacobian = jacobian
+        map_max = float(np.max(assembly.map_residual_norms))
+        amplitude_error_km = abs(amplitude_residual) * length_unit
+        if (
+            map_max < fixed_time.AUDIT_TOLERANCE
+            and abs(assembly.mean_jacobi_residual) < fixed_time.AUDIT_TOLERANCE
+            and abs(assembly.phase_residual) < fixed_time.AUDIT_TOLERANCE
+            and abs(assembly.second_phase_residual) < fixed_time.SECOND_PHASE_TOLERANCE
+            and amplitude_error_km < AMPLITUDE_TARGET_TOL_KM
+        ):
+            converged = True
+            failure_reason = ""
+            break
+        correction = bvp._solve_scaled_correction(jacobian, residual)
+        correction_norm = float(np.linalg.norm(correction))
+        if correction_norm > fixed_time.CORRECTION_NORM_CAP:
+            correction *= fixed_time.CORRECTION_NORM_CAP / correction_norm
+            correction_norm = fixed_time.CORRECTION_NORM_CAP
+        correction_norms.append(correction_norm)
+        vector += correction
+    if assembly is None or final_jacobian is None:
+        states, rho, target_jacobi = fixed_time._unpack_fixed_unknown(vector, sample_count)
+        assembly = fixed_time._assemble_fixed_time_bvp(
+            case_id=case_id,
+            states=states,
+            phases=phases,
+            rho=rho,
+            target_jacobi=target_jacobi,
+            reference_states=reference_states,
+            include_second_phase=True,
+            palc=None,
+        )
+        final_jacobian = np.zeros((assembly.jacobian.shape[0] + 1, assembly.jacobian.shape[1]), dtype=float)
+        final_jacobian[:-1, :] = assembly.jacobian
+        final_jacobian[-1, 6 * amplitude_index + 2] = 1.0
+    raw_condition = fixed_time._condition(np.linalg.svd(final_jacobian, compute_uv=False))
+    condition = _scaled_condition(final_jacobian)
+    return assembly, correction_norms, converged, failure_reason, condition, raw_condition
+
+
 def _evaluate_gates(
     *,
     member: CampaignMember,
@@ -545,9 +652,82 @@ def _attempt_substep(
     )
 
 
-def _diagnostic_row(result: AttemptResult, *, attempt_id: str, retry_level: str | None = None) -> dict[str, Any]:
+def _attempt_amplitude_target(
+    *,
+    current: CampaignMember,
+    member_id: int,
+    target_max_abs_z_km: float,
+    step_size_km: float,
+    macro_step: int,
+    rescue_step: int,
+) -> AttemptResult:
+    predictor, scale = _amplitude_target_predictor(
+        current=current,
+        target_max_abs_z_km=target_max_abs_z_km,
+    )
+    (
+        assembly,
+        correction_norms,
+        converged,
+        solver_failure,
+        condition_override,
+        raw_condition_override,
+    ) = _solve_fixed_time_target_amplitude(
+        case_id=f"integrated_amplitude_rescue_{rescue_step}",
+        predictor=predictor,
+        target_max_abs_z_km=target_max_abs_z_km,
+        phases=current.phases,
+        reference_states=current.states,
+    )
+    validation = fixed_time._validation_for(assembly)
+    step_source = f"amplitude_target_{step_size_km:g}km"
+    member = _member_from_assembly(
+        member_id=member_id,
+        assembly=assembly,
+        source=step_source,
+        source_member_id=current.member_id,
+    )
+    gates = _evaluate_gates(
+        member=member,
+        previous=current,
+        assembly=assembly,
+        validation=validation,
+        converged=converged,
+        step_source=step_source,
+        macro_step=macro_step,
+        substep_index=rescue_step,
+        substep_count=MAX_AMPLITUDE_RESCUE_STEPS,
+        condition_override=condition_override,
+        raw_condition_override=raw_condition_override,
+    )
+    failure_reason = solver_failure if solver_failure else "; ".join(gates.failed_gates)
+    return AttemptResult(
+        member=member,
+        assembly=assembly,
+        validation=validation,
+        gates=gates,
+        converged=converged,
+        failure_reason=failure_reason,
+        correction_norms=correction_norms,
+        predictor_alpha=scale - 1.0,
+    )
+
+
+def _diagnostic_row(
+    result: AttemptResult,
+    *,
+    attempt_id: str,
+    retry_level: str | None = None,
+    target_rho_delta: float | None = None,
+    target_max_abs_z_km: float | None = None,
+) -> dict[str, Any]:
     row = result.gates.row
     retry_label = retry_level or str(row["step_source"])
+    if target_rho_delta is None:
+        target_rho_delta = TARGET_RHO_DELTA / max(int(row["substep_count"]), 1)
+    amplitude_error = None
+    if target_max_abs_z_km is not None:
+        amplitude_error = float(row["max_abs_z_km"]) - target_max_abs_z_km
     return {
         "attempt_id": attempt_id,
         "macro_step": row["macro_step"],
@@ -557,7 +737,9 @@ def _diagnostic_row(result: AttemptResult, *, attempt_id: str, retry_level: str 
         "step_source": row["step_source"],
         "source_member_id": row["source_member_id"],
         "previous_member_id": result.member.source_member_id,
-        "target_rho_delta": TARGET_RHO_DELTA / max(int(row["substep_count"]), 1),
+        "target_rho_delta": target_rho_delta,
+        "target_max_abs_z_km": target_max_abs_z_km,
+        "amplitude_error_km": amplitude_error,
         "predictor_alpha": result.predictor_alpha,
         "fourier_order": row["fourier_order"],
         "converged": result.converged,
@@ -705,6 +887,59 @@ def _advance_macro(
             final_member = step_attempts[-1].member
             return final_member, all_attempts, retry_level
     return None, all_attempts, "all_retry_levels_failed"
+
+
+def _run_amplitude_rescue(
+    *,
+    current: CampaignMember,
+    next_member_id: int,
+    start_macro_step: int,
+) -> tuple[list[tuple[AttemptResult, float]], str]:
+    attempts: list[tuple[AttemptResult, float]] = []
+    local_current = current
+    local_member_id = next_member_id
+    stop_reason = "amplitude target rescue exhausted"
+    attempt_counter = 0
+    for rescue_step in range(1, MAX_AMPLITUDE_RESCUE_STEPS + 1):
+        accepted_step = False
+        last_result: AttemptResult | None = None
+        last_target = local_current.max_abs_z_km
+        for step_size_km in AMPLITUDE_TARGET_STEP_OPTIONS_KM:
+            target_max_abs_z_km = min(
+                TARGET_MIN_KM,
+                local_current.max_abs_z_km + step_size_km,
+            )
+            attempt_counter += 1
+            result = _attempt_amplitude_target(
+                current=local_current,
+                member_id=local_member_id,
+                target_max_abs_z_km=target_max_abs_z_km,
+                step_size_km=step_size_km,
+                macro_step=start_macro_step,
+                rescue_step=attempt_counter,
+            )
+            attempts.append((result, target_max_abs_z_km))
+            last_result = result
+            last_target = target_max_abs_z_km
+            if (
+                result.gates.overall_acceptance
+                and result.member.max_abs_z_km > local_current.max_abs_z_km + 1.0e-6
+            ):
+                local_current = result.member
+                local_member_id += 1
+                accepted_step = True
+                break
+        if local_current.max_abs_z_km >= TARGET_MIN_KM:
+            stop_reason = "minimum target reached by adaptive amplitude target rescue"
+            break
+        if not accepted_step:
+            failure = last_result.failure_reason if last_result is not None else "no attempt executed"
+            stop_reason = (
+                f"adaptive amplitude target rescue failed up to {last_target:.12g} km: "
+                f"{failure}"
+            )
+            break
+    return attempts, stop_reason
 
 
 def _candidate_row(member: CampaignMember, gates: GateEvaluation) -> dict[str, Any]:
@@ -866,6 +1101,10 @@ and independently revalidated.
 The rho-target retry rows show whether explicit rotation targeting can push the
 amplitude upward. Those rows are not accepted unless the residual, Jacobi, phase,
 monotonicity, mapping-time, and condition gates all pass.
+
+The amplitude-target rescue rows add a direct max-z constraint after the
+standard continuation path stalls, using adaptive step sizes from 25 km down to
+1 km. They are also rejected unless the same seven campaign gates pass.
 """,
         encoding="utf-8",
     )
@@ -905,6 +1144,7 @@ def main() -> None:
                 ),
                 attempt_id="bootstrap_fixed_time_projection",
                 retry_level="bootstrap",
+                target_rho_delta=0.0,
             )
         }
         _append_row(DIAGNOSTICS_OUTPUT, DIAGNOSTIC_FIELDS, diagnostic_row)
@@ -943,13 +1183,6 @@ def main() -> None:
                 f"accepted forward step decreased amplitude from "
                 f"{current.max_abs_z_km:.12g} km to {next_member.max_abs_z_km:.12g} km"
             )
-            previous = current
-            current = next_member
-            accepted_members.append(current)
-            final_attempt = next(attempt for attempt in reversed(attempts) if attempt.member.member_id == current.member_id)
-            candidate_row = _candidate_row(current, final_attempt.gates)
-            _append_row(CANDIDATES_OUTPUT, CANDIDATE_FIELDS, candidate_row)
-            candidate_rows.append(candidate_row)
             break
         previous = current
         current = next_member
@@ -959,6 +1192,48 @@ def main() -> None:
         _append_row(CANDIDATES_OUTPUT, CANDIDATE_FIELDS, candidate_row)
         candidate_rows.append(candidate_row)
         next_member_id += 1
+
+    if current.max_abs_z_km < TARGET_MIN_KM:
+        next_member_id = max(
+            [start.member_id, current.member_id, *(member.member_id for member in accepted_members)]
+        ) + 1
+        rescue_attempts, rescue_stop_reason = _run_amplitude_rescue(
+            current=current,
+            next_member_id=next_member_id,
+            start_macro_step=MAX_MACRO_STEPS + 1,
+        )
+        rescue_current = current
+        rescue_accepted = False
+        for index, (attempt, target_max_abs_z_km) in enumerate(rescue_attempts, start=1):
+            diagnostic_row = _diagnostic_row(
+                attempt,
+                attempt_id=f"amplitude_rescue_attempt_{index}",
+                retry_level="amplitude_target_rescue",
+                target_rho_delta=TARGET_RHO_DELTA,
+                target_max_abs_z_km=target_max_abs_z_km,
+            )
+            _append_row(DIAGNOSTICS_OUTPUT, DIAGNOSTIC_FIELDS, diagnostic_row)
+            diagnostic_rows.append(diagnostic_row)
+            if (
+                attempt.gates.overall_acceptance
+                and attempt.member.source_member_id == rescue_current.member_id
+                and attempt.member.max_abs_z_km > rescue_current.max_abs_z_km + 1.0e-6
+            ):
+                previous = rescue_current
+                current = attempt.member
+                accepted_members.append(current)
+                candidate_row = _candidate_row(current, attempt.gates)
+                _append_row(CANDIDATES_OUTPUT, CANDIDATE_FIELDS, candidate_row)
+                candidate_rows.append(candidate_row)
+                rescue_current = current
+                rescue_accepted = True
+                continue
+        if rescue_attempts:
+            stop_reason = (
+                rescue_stop_reason
+                if rescue_accepted
+                else f"{stop_reason}; {rescue_stop_reason}"
+            )
 
     revalidation_previous = start
     for member in accepted_members:

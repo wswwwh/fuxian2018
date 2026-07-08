@@ -10,6 +10,17 @@ Figures 4.1-4.2 remain stability-shape figures with corrected local DG samples
 over proxy or display-scaled context. They are not global manifold
 reproductions.
 
+Route H now adds a separate high-amplitude quasi-DRO source-layer audit for
+Chapter 4. The accepted Chapter 3 fixed-mapping cache members can be converted
+to DG spectra and short local unstable manifold probes; see
+`data/computed/chapter4_route_h_quasi_dro_dg.csv`,
+`data/computed/chapter4_route_h_quasi_dro_manifold_probe.csv`, and
+`docs/chapter4_route_h_quasi_dro_dg_manifold_audit.md`. The regenerated
+source-layer figure is `outputs/figures_png/fig_4_route_h.png` with a PDF copy
+under `outputs/figures_pdf/`. This does not yet replace the existing
+Fig. 4.3-4.8 backgrounds because those figures are L1 quasi-halo and
+quasi-vertical manifold figures, not quasi-DRO figures.
+
 Figures 4.3-4.6 still retain proxy manifold backgrounds. The corrected DG
 eigenvector propagation is now audited separately for the actual local or
 finite-amplitude branch used in each figure:
@@ -58,21 +69,25 @@ residual, selected real unstable multiplier, finite perturbation size, elapsed
 time, state-separation growth, Jacobi drift, and terminal spatial bounds.
 
 They should not be labelled as thesis-level numerical reproduction yet. The
-current computation still uses a small number of corrected curve samples, a
-single endpoint or local vertical curve, and proxy visual backgrounds for the
-thesis-scale torus manifold geometry. It does not yet reproduce the full
-continued high-amplitude torus family or the dense global manifold sheets shown
-in the thesis.
+current figure computation still uses a small number of corrected curve
+samples, a single endpoint or local vertical curve, and proxy visual
+backgrounds for the thesis-scale torus manifold geometry. Route H removes the
+upstream high-amplitude quasi-DRO source/DG blocker, but it does not by itself
+reproduce the L1 quasi-halo/quasi-vertical dense global manifold sheets shown in
+the thesis.
 
 ## Next steps
 
 1. Continue the corrected quasi-halo and quasi-vertical torus families to the
    thesis-scale amplitudes used in Chapter 4.
-2. Compute DG spectra and selected unstable eigenvectors at each continued
+2. Decide whether to add new Route H quasi-DRO torus/manifold figures or keep
+   the Chapter 4 figure set strictly aligned to the L1 quasi-halo and
+   quasi-vertical thesis figures.
+3. Compute DG spectra and selected unstable eigenvectors at each continued
    member, not only the local curve or endpoint member.
-3. Propagate manifold sheets over dense phase and continuation samples with
+4. Propagate manifold sheets over dense phase and continuation samples with
    automated Jacobi-drift and growth-ratio thresholds.
-4. Replace the proxy backgrounds in Figs. 4.3-4.8 only after the continued
+5. Replace the proxy backgrounds in Figs. 4.3-4.8 only after the continued
    torus-scale sheets exist.
-5. Add figure-level checks that compare topology, terminal bounds, and
+6. Add figure-level checks that compare topology, terminal bounds, and
    periodic-halo intersections against thesis data when extractable.
