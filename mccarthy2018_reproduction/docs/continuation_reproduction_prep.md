@@ -35,7 +35,11 @@
 | Route H 接受分支 | `data/computed/chapter3_fixed_mapping_cache_accepted_family.csv` |
 | Route H 独立验证 | `data/computed/chapter3_fixed_mapping_cache_accepted_validation.csv` |
 | Chapter 4 Route H DG/manifold | `docs/chapter4_route_h_quasi_dro_dg_manifold_audit.md` |
+| Chapter 4 逐图 source-layer 审计 | `docs/chapter4_per_figure_source_layer_audit.md` |
 | Chapter 5 readiness | `docs/chapter5_high_fidelity_optimization_readiness_audit.md` |
+| Chapter 5 NRHO 转移逐图审计 | `docs/chapter5_nrho_transfer_per_figure_audit.md` |
+| Chapter 5 stable-manifold 逐图审计 | `docs/chapter5_stable_manifold_per_figure_audit.md` |
+| Chapter 5 逐图 source-layer 审计 | `docs/chapter5_per_figure_source_layer_audit.md` |
 
 如果 `chapter3_quasi_dro_frontier_decision.md` 和 staged gate 在 Chapter 4 / Chapter 5 状态上出现差异，以更新时间更晚的 `docs/mccarthy2018_staged_goal_gate_status.md` 和 `data/computed/mccarthy2018_staged_goal_gate_status.csv` 为准；frontier decision 主要用于 Chapter 3 Route A-H 的来龙去脉。
 
@@ -49,15 +53,25 @@
 - Route H max curve Jacobi span: `7.759926035078024e-11`
 - Route H max one-map Jacobi drift: `7.760059261840979e-11`
 
-当前逐图状态表 `data/computed/figure_validation_table.csv` 的旧分类统计为：
+当前逐图状态表 `data/computed/figure_validation_table.csv` 的分类统计为：
 
 - `numerical reproduction`: 16
-- `shape-match with local numerical overlay`: 17
+- `shape-match with local numerical overlay`: 8
 - `proxy/schematic only`: 13
-- `physical-consistency baseline`: 6
-- `physical-consistency baseline (partial)`: 2
+- `physical-consistency baseline`: 4
+- `audited Route H fixed-time source-layer`: 2
+- `Route H / DE421 geometry baseline`: 2
+- `CR3BP endpoint-corrected NRHO transfer audit`: 2
+- `CR3BP stable-manifold periapsis audit`: 1
+- `CR3BP stable-manifold LEO transfer audit`: 1
+- `shape-match with corrected DG numerical overlay`: 2
+- `corrected DG finite-amplitude manifold source layer`: 2
+- `local corrected DG manifold source layer`: 2
+- `corrected DG manifold source layer with proxy comparison`: 1
+- `corrected DG global manifold source layer with proxy comparison`: 1
+- `shape-match with local numerical overlay + source-layer optimization available`: 1
 
-注意：该表中 Fig. 3.16 / Fig. 3.17 的行仍保留旧的 partial 描述，尚未同步 Route H 通过后的口径。
+注意：Fig. 3.16 / Fig. 3.17 已同步为 Route H fixed-time source-layer。Chapter 4 和 Chapter 5 也已分别建立逐图 source-layer 审计表，但这仍不等于整篇论文 full numerical equivalence。
 
 ## 3. 当前成果地图
 
@@ -109,6 +123,8 @@
 
 - `data/computed/chapter4_route_h_quasi_dro_dg.csv`
 - `data/computed/chapter4_route_h_quasi_dro_manifold_probe.csv`
+- `data/computed/chapter4_per_figure_source_layer_audit.csv`
+- `docs/chapter4_per_figure_source_layer_audit.md`
 - `outputs/figures_png/fig_4_route_h.png`
 - `outputs/figures_pdf/fig_4_route_h.pdf`
 
@@ -130,14 +146,38 @@
 - `data/computed/chapter5_bcr4bp_segment_correction_audit.csv`
 - `data/computed/chapter5_optimized_transfer_audit.csv`
 - `data/computed/chapter5_high_fidelity_optimization_readiness_audit.csv`
+- `data/computed/chapter5_nrho_transfer_per_figure_audit.csv`
+- `docs/chapter5_nrho_transfer_per_figure_audit.md`
+- `data/computed/chapter5_stable_manifold_per_figure_audit.csv`
+- `docs/chapter5_stable_manifold_per_figure_audit.md`
+- `data/computed/chapter5_per_figure_source_layer_audit.csv`
+- `docs/chapter5_per_figure_source_layer_audit.md`
 - `outputs/figures_png/fig_5_6.png`
 - `outputs/figures_png/fig_5_7.png`
 - `outputs/figures_png/fig_5_bcr4bp_optimized_transfer.png`
 
+Fig. 5.10 / Fig. 5.11 当前已有 CR3BP endpoint-corrected transfer 逐图审计：
+
+- accepted rows: 4 / 4
+- best total delta-v: `47.73443414309953 m/s`
+- worst endpoint error: `2.336264914251333e-05 km`
+- max Jacobi span: `5.092193333666728e-11`
+
+Fig. 5.13 / Fig. 5.14 当前已有 Sun-Earth CR3BP stable-manifold 逐图审计：
+
+- accepted rows: 2 / 2
+- selected phase: `14.88928693528482 deg`
+- periapsis error: `0.0001116857147280825 km`
+- transfer time: `407.6352466744673 days`
+- Jacobi span: `3.126388037344441e-13`
+- periodicity error: `4.66846168370424e-10`
+
 后续重点：
 
-- 对每张 Chapter 5 原图建立“当前图件是否等价替换原始应用图”的逐图结论。
-- 区分 DE421-oriented geometry baseline、BCR4BP dynamics audit、segment correction、optimized-transfer source-layer。
+- 在现有逐图审计基础上，继续把 Fig. 5.8 / Fig. 5.9 / Fig. 5.12 等仍需 delta-v、endpoint、ephemeris correction 的原始应用图推进到对应的 per-figure accepted rows。
+- 对 Fig. 5.10 / Fig. 5.11，下一步是从 CR3BP endpoint-corrected rows 继续推进到 BCR4BP/ephemeris per-figure accepted rows。
+- 对 Fig. 5.13 / Fig. 5.14，下一步是从 CR3BP periodic-orbit stable-manifold rows 继续推进到 quasi-periodic Lissajous-torus / ephemeris rows。
+- 继续区分 DE421-oriented geometry baseline、BCR4BP dynamics audit、segment correction、optimized-transfer source-layer。
 - 若要声称某张原图完成高保真复现，需要补齐对应 residual、endpoint、delta-v、Jacobi 或 ephemeris consistency 证据。
 
 ## 4. 需要同步的旧材料
@@ -154,25 +194,27 @@
 | `docs/reproduction_report/qa_for_group_meeting.md` | 问答仍以未过 10500 km 为核心结论 | 更新 Q2、Q8、Q9、Q13、Q18 等相关回答 |
 | `README.md` | 多处历史状态混合 | 在顶部或状态段添加“当前以 staged gate 为准”的说明 |
 
+上述旧材料同步项目前已由 `scripts/sync_route_h_report_status.py` 覆盖更新；后续如果重新生成旧报告或手工修改材料，应再次运行同步脚本和 staged gate 脚本。
+
 ## 5. 建议的下一步任务队列
 
-### P0：统一当前口径
+### P0：统一当前口径（已完成，后续重生成材料时需复跑）
 
 目标：避免后续继续复现时引用旧结论。
 
-具体任务：
+已完成任务：
 
 1. 更新 `figure_validation_table.csv` 中 Fig. 3.16 / Fig. 3.17。
 2. 更新 teacher package 和 reproduction report 中关于 quasi-DRO frontier 的旧段落。
 3. 在 README 添加当前状态短注：Route H 已通过 Chapter 3 source gate，但整篇论文仍不是 full numerical equivalence。
 4. 重新生成或至少校验 Fig. 3.16 / Fig. 3.17 PNG/PDF。
 
-验收：
+当前验收：
 
-- 所有公开汇报材料不再出现“当前 accepted branch 只能到 10164 km，因此 Fig. 3.16 / 3.17 不能更新”的旧结论。
+- 当前公开汇报材料不再以“accepted branch 只能到 10164 km，因此 Fig. 3.16 / 3.17 不能更新”为当前结论。
 - 同时保留“不是整篇论文完全数值等价复现”的边界。
 
-### P1：Fig. 3.16 / Fig. 3.17 Route H 图件提升
+### P1：Fig. 3.16 / Fig. 3.17 Route H 图件提升（已完成，后续只需复核）
 
 目标：把 Route H source branch 从数据通过推进到图件和说明闭环。
 
@@ -202,19 +244,25 @@
 
 - 后续图件命名和报告表述不会把 Route H quasi-DRO 图误称为原论文 Fig. 4.3-4.8 完成替换。
 
-### P3：Chapter 5 逐图验收表
+### P3：Chapter 5 逐图验收表（已完成初版，后续推进 per-figure 高保真替换）
 
 目标：把 high-fidelity / optimization source-layer 结果映射到原论文应用图。
 
-具体任务：
+已完成任务：
 
 1. 对 Fig. 5.1-5.14 每张图添加 current source-layer status。
 2. 区分 schematic、CR3BP baseline、DE421 baseline、BCR4BP dynamics、segment correction、optimized transfer。
 3. 对需要 delta-v、endpoint、ephemeris correction 的图列出缺口。
 
-验收：
+当前验收：
 
 - Chapter 5 不再只用一个总 gate 表示完成度，而是逐图说明能否替换原始图。
+
+后续任务：
+
+- 对 Fig. 5.8 / Fig. 5.9 / Fig. 5.12 等仍为 baseline / overlay / source-layer 的原图，继续补齐对应 endpoint、delta-v、ephemeris/BCR4BP correction 和 per-figure accepted rows。
+- 对 Fig. 5.10 / Fig. 5.11，将当前 CR3BP endpoint-corrected rows 升级为 BCR4BP/ephemeris corrected rows。
+- 对 Fig. 5.13 / Fig. 5.14，将当前 CR3BP periodic-orbit stable-manifold rows 升级为 quasi-periodic Lissajous-torus 或 ephemeris corrected rows。
 
 ### P4：原始数据和外部对照
 

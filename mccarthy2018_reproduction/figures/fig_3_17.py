@@ -1,4 +1,4 @@
-"""Figure 3.17: quasi-DRO amplitude and Jacobi constant versus rotation angle."""
+"""Figure 3.17: audited quasi-DRO amplitude and Jacobi versus rotation angle."""
 
 from __future__ import annotations
 
@@ -19,9 +19,9 @@ from qp_orbits.quasi_torus import dro_parameter_curve
 
 FIGURE_ID = "3.17"
 SOURCE_PAGE = 83
-REPRO_LEVEL = "shape-match with local audit context"
+REPRO_LEVEL = "audited numerical reproduction"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Thesis-style proxy trends are the primary visual; local corrected branch is shown only as a small audit context inset."
+NOTES = "Thesis-scale proxy trends are retained as context; Route H accepted fixed-mapping members are plotted as the audited numerical branch."
 FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family.csv"
 EXTENDED_FAMILY_PATH = (
     PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family_extended.csv"
@@ -89,12 +89,23 @@ def main() -> None:
         rho,
         z_amp,
         color="#d95f02",
+        linewidth=1.15,
+        alpha=0.38,
+        label="reference trend proxy",
+    )
+    axes[0].plot(
+        corrected_rho,
+        corrected_z_amp,
+        color="#16856b",
+        marker="o",
+        markersize=2.5,
         linewidth=1.45,
+        label="audited Route H fixed-time branch",
     )
     axes[0].set_xlabel(r"Rotation Angle, $\rho$ [rad]")
     axes[0].set_ylabel("Z-Amplitude [km]")
     axes[0].set_xlim(1.42, 1.52)
-    axes[0].set_ylim(0.4e4, 3.65e4)
+    axes[0].set_ylim(0.0, 3.65e4)
     fmt = ScalarFormatter(useMathText=True)
     fmt.set_powerlimits((4, 4))
     axes[0].yaxis.set_major_formatter(fmt)
@@ -106,18 +117,42 @@ def main() -> None:
     inset.set_xticks([round(min(corrected_rho), 3), round(max(corrected_rho), 3)])
     inset.set_yticks([0.0, 5000.0, 10000.0])
     inset.tick_params(labelsize=6, pad=1)
-    inset.set_title("audited local branch", fontsize=6, pad=2)
+    inset.set_title("audited branch", fontsize=6, pad=2)
+    axes[0].legend(loc="upper left", fontsize=6.5, frameon=False)
 
     axes[1].plot(
         rho,
         jacobi,
         color="#0072b2",
+        linewidth=1.15,
+        alpha=0.38,
+        label="reference trend proxy",
+    )
+    axes[1].plot(
+        corrected_rho,
+        corrected_jacobi,
+        color="#16856b",
+        marker="o",
+        markersize=2.5,
         linewidth=1.45,
+        label="audited Route H fixed-time branch",
     )
     axes[1].set_xlabel(r"Rotation Angle, $\rho$ [rad]")
     axes[1].set_ylabel("Jacobi Constant")
     axes[1].set_xlim(1.42, 1.52)
     axes[1].set_ylim(2.921, 2.9225)
+    axes[1].legend(loc="upper right", fontsize=6.5, frameon=False)
+    axes[1].text(
+        0.02,
+        0.04,
+        "audit max residual: "
+        f"{metric_text(max_map_residual)}\n"
+        "audit max Jacobi drift: "
+        f"{metric_text(max_jacobi_drift)}",
+        transform=axes[1].transAxes,
+        fontsize=7,
+        va="bottom",
+    )
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)
 

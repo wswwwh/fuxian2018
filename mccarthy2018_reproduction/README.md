@@ -1,5 +1,17 @@
 # McCarthy 2018 Quasi-Periodic Orbit Reproduction
 
+<!-- ROUTE_H_STATUS_SYNC_START -->
+## Current Route H Status Note
+
+As of the current staged gate audit, Chapter 3 Fig. 3.16 / Fig. 3.17 should be
+read from the Route H fixed-mapping quasi-DRO source branch, not from the older
+local-only 10,164 km bottleneck description. Route H accepted validation rows:
+`30`; best max abs z: `14573.10318409037` km; rows above
+10,500 km: `30`; rows above 11,000 km:
+`29`. This promotes the Chapter 3 source layer, but it does
+not make the whole thesis a complete numerical-equivalence reproduction.
+<!-- ROUTE_H_STATUS_SYNC_END -->
+
 This repository is the local reproduction workspace for:
 
 Brian P. McCarthy, *Characterization of Quasi-Periodic Orbits for Applications
@@ -246,38 +258,7 @@ backgrounds with audited corrected quasi-vertical local branches. Figures
 sheet only as a proxy reference. These corrected sheets are physical-consistency
 baselines, not full high-amplitude torus-scale global manifold reproductions.
 
-Figures 3.16-3.17 now have a dedicated quasi-DRO audit table at
-`data/computed/chapter3_quasi_dro_validation.csv`, plus an extended attempt in
-`data/computed/chapter3_quasi_dro_extended_validation.csv` and
-`data/computed/chapter3_quasi_dro_continuation_log.csv`. A bounded
-fixed-mapping pseudo-arclength diagnostic is also recorded in
-`data/computed/chapter3_quasi_dro_palc_family.csv`,
-`data/computed/chapter3_quasi_dro_palc_validation.csv`, and
-`data/computed/chapter3_quasi_dro_palc_log.csv`. The 10,000-11,000 km
-bottleneck is diagnosed in
-`data/computed/chapter3_quasi_dro_bottleneck_diagnostics.csv` and
-`data/computed/chapter3_quasi_dro_bottleneck_experiments.csv`. The corrected
-fixed-mapping-time CR3BP branch preserves the original five `N=21` local
-members and adds four accepted `N=41` members through a 10,000 km vertical
-amplitude target. The extended accepted range is mapping time
-14.74932760227518 days, rho 1.431231722670483-1.443804463949337 rad, max abs z
-383.3341592553633-10134.48630541837 km, and mean Jacobi
-2.922289662015089-2.922496961073728. The largest stored map residual is
-8.44e-11, the largest one-map Jacobi drift is 2.36e-09, and the ten-return
-Jacobi span stays below 4.89e-15. Fig. 3.16 still retains grey thesis-scale
-proxy surfaces and Fig. 3.17 still retains grey proxy trends as references,
-because 11,000 km, 12,000 km, and the Stage 2 14,000 km attempt failed the
-residual/Jacobi audit. The PALC diagnostic adds one accepted `N=41` member and
-one accepted lifted `N=61` member, but only reaches rho 1.443877875293695 rad
-and max abs z 10164.02309965055 km; fixed-rotation fallback candidates at rho
-1.4445-1.4500 cross the 11,000 km amplitude range but fail residual/Jacobi
-audits, so the figures remain partial physical-consistency baselines rather
-than full numerical reproductions. The bottleneck diagnosis finds that `N=61`
-reduces Fourier tail energy but does not advance the accepted branch past
-10,164.02309965055 km; fixed-rotation and fixed-mean-Jacobi/free-rho local
-experiments do not produce an accepted member beyond 10,500 km. The most likely
-blocker is fixed-mapping-time parameterization/Newton-basin failure near rho
-1.44388, not a pure spectral-resolution limit.
+Figures 3.16-3.17 now use the Route H fixed-mapping quasi-DRO source branch recorded in `data/computed/chapter3_fixed_mapping_cache_accepted_family.csv` and `data/computed/chapter3_fixed_mapping_cache_accepted_validation.csv`. The accepted Route H range is mapping time 14.74932760227518 days, rho 1.445863346020272-1.457169483818128 rad, and max abs z 10969.67553863909-14573.10318409037 km. The Route H audit has 30 rows above 10,500 km and 29 rows above 11,000 km, with max map residual 6.469474407020314e-10 and max one-map Jacobi drift 7.760059261840979e-11. Fig. 3.16 renders corrected Route H tori directly; Fig. 3.17 plots Route H as the audited branch and keeps the reference trend only as context. This supersedes the older local-only PALC/Route B endpoint discussion for the figure-source layer, while preserving the boundary that the full thesis is not yet a complete numerical-equivalence reproduction.
 
 The next upgrades should focus on Figures 4.3-4.8 continued torus-scale DG
 manifold propagation, the remaining Figure 3.9 quasi-halo proxy tail, and the

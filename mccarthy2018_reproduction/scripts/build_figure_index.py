@@ -189,6 +189,10 @@ LOCAL_NUMERICAL = {
     "5.13",
     "5.14",
 }
+AUDITED_NUMERICAL = {
+    "3.16",
+    "3.17",
+}
 
 
 def dependency_label(stage: int) -> str:
@@ -238,6 +242,9 @@ def main() -> Path:
                     "script": script,
                     "status": "implemented" if figure_id in IMPLEMENTED else "planned",
                     "repro_level": (
+                        "audited numerical"
+                        if figure_id in AUDITED_NUMERICAL
+                        else
                         "shape-match + local numerical"
                         if figure_id in LOCAL_NUMERICAL
                         else "shape-match"

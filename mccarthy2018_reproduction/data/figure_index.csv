@@ -29,8 +29,8 @@ figure_id,source_page,pdf_page,figure_type,dependency_stage,dependency_label,tit
 3.13,77,93,numeric,3,quasi-periodic-tori,Constant-frequency quasi-halo amplitudes and Jacobi constant,figures/fig_3_13.py,implemented,physical-consistency
 3.14,78,94,numeric,3,quasi-periodic-tori,Constant-frequency quasi-vertical tori,figures/fig_3_14.py,implemented,physical-consistency
 3.15,79,95,numeric,3,quasi-periodic-tori,Constant-frequency quasi-vertical Jacobi constant and mapping time,figures/fig_3_15.py,implemented,physical-consistency
-3.16,82,98,numeric,3,quasi-periodic-tori,Constant-mapping-time quasi-DRO tori,figures/fig_3_16.py,implemented,shape-match + local numerical
-3.17,83,99,numeric,3,quasi-periodic-tori,Quasi-DRO amplitude and Jacobi constant versus rotation angle,figures/fig_3_17.py,implemented,shape-match + local numerical
+3.16,82,98,numeric,3,quasi-periodic-tori,Constant-mapping-time quasi-DRO tori,figures/fig_3_16.py,implemented,audited numerical
+3.17,83,99,numeric,3,quasi-periodic-tori,Quasi-DRO amplitude and Jacobi constant versus rotation angle,figures/fig_3_17.py,implemented,audited numerical
 4.1,86,102,numeric,4,torus-stability-manifolds,Earth-Moon L2 quasi-halo orbit and DG eigenstructure,figures/fig_4_01.py,implemented,shape-match + local numerical
 4.2,87,103,numeric,4,torus-stability-manifolds,Quasi-halo stability index versus mapping time,figures/fig_4_02.py,implemented,shape-match + local numerical
 4.3,89,105,numeric,4,torus-stability-manifolds,Quasi-halo unstable manifold in +x direction,figures/fig_4_03.py,implemented,shape-match + local numerical

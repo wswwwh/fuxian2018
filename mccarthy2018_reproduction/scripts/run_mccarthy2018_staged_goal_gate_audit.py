@@ -64,6 +64,14 @@ def _as_float(value: str | None, default: float = float("nan")) -> float:
     return number if np.isfinite(number) else default
 
 
+def _is_original_chapter5_figure(figure_id: str) -> bool:
+    return figure_id.startswith("5.") and figure_id[2:].isdigit()
+
+
+def _is_original_chapter4_figure(figure_id: str) -> bool:
+    return figure_id.startswith("4.") and figure_id[2:].isdigit()
+
+
 def _write_rows(rows: list[dict[str, Any]]) -> None:
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     with OUTPUT.open("w", newline="", encoding="utf-8") as stream:
@@ -138,10 +146,18 @@ def _build_rows() -> list[dict[str, Any]]:
     chapter4_route_h_manifold_path = data / "chapter4_route_h_quasi_dro_manifold_probe.csv"
     chapter4_route_h_figure_png = PROJECT_ROOT / "outputs" / "figures_png" / "fig_4_route_h.png"
     chapter4_route_h_figure_pdf = PROJECT_ROOT / "outputs" / "figures_pdf" / "fig_4_route_h.pdf"
+    chapter4_per_figure_path = data / "chapter4_per_figure_source_layer_audit.csv"
+    chapter4_per_figure_doc_path = docs / "chapter4_per_figure_source_layer_audit.md"
     chapter5_audit_path = data / "chapter5_upstream_application_gate_audit.csv"
     chapter5_doc_path = docs / "chapter5_upstream_application_gate_audit.md"
     chapter5_readiness_path = data / "chapter5_high_fidelity_optimization_readiness_audit.csv"
     chapter5_readiness_doc_path = docs / "chapter5_high_fidelity_optimization_readiness_audit.md"
+    chapter5_nrho_transfer_path = data / "chapter5_nrho_transfer_per_figure_audit.csv"
+    chapter5_nrho_transfer_doc_path = docs / "chapter5_nrho_transfer_per_figure_audit.md"
+    chapter5_stable_manifold_path = data / "chapter5_stable_manifold_per_figure_audit.csv"
+    chapter5_stable_manifold_doc_path = docs / "chapter5_stable_manifold_per_figure_audit.md"
+    chapter5_per_figure_path = data / "chapter5_per_figure_source_layer_audit.csv"
+    chapter5_per_figure_doc_path = docs / "chapter5_per_figure_source_layer_audit.md"
     chapter5_optimization_figure_png = PROJECT_ROOT / "outputs" / "figures_png" / "fig_5_bcr4bp_optimized_transfer.png"
     chapter5_optimization_figure_pdf = PROJECT_ROOT / "outputs" / "figures_pdf" / "fig_5_bcr4bp_optimized_transfer.pdf"
     decision_path = docs / "chapter3_quasi_dro_frontier_decision.md"
@@ -158,8 +174,12 @@ def _build_rows() -> list[dict[str, Any]]:
     cache_validation = _read_rows(cache_validation_path)
     chapter4_route_h_dg = _read_rows(chapter4_route_h_dg_path)
     chapter4_route_h_manifold = _read_rows(chapter4_route_h_manifold_path)
+    chapter4_per_figure = _read_rows(chapter4_per_figure_path)
     chapter5_audit = _read_rows(chapter5_audit_path)
     chapter5_readiness = _read_rows(chapter5_readiness_path)
+    chapter5_nrho_transfer = _read_rows(chapter5_nrho_transfer_path)
+    chapter5_stable_manifold = _read_rows(chapter5_stable_manifold_path)
+    chapter5_per_figure = _read_rows(chapter5_per_figure_path)
 
     best_campaign = _best_value(candidates, "max_abs_z_km", "overall_acceptance")
     best_campaign_revalidated = _best_value(
@@ -199,6 +219,11 @@ def _build_rows() -> list[dict[str, Any]]:
     best_projection = max(
         [value for value in (best_free_projection, best_variable) if value is not None],
         default=None,
+    )
+    chapter3_frontier_artifact = (
+        f"{_artifact(cache_audit_path)};{_artifact(cache_family_path)};{_artifact(cache_validation_path)}"
+        if best_cache is not None and best_cache >= campaign.TARGET_MIN_KM
+        else _artifact(family_path)
     )
 
     route_values = [
@@ -251,6 +276,17 @@ def _build_rows() -> list[dict[str, Any]]:
         and chapter4_route_h_figure_png.stat().st_size > 0
         and chapter4_route_h_figure_pdf.stat().st_size > 0
     )
+    chapter4_original_figure_rows = [
+        row for row in chapter4_per_figure if _is_original_chapter4_figure(row.get("figure_id", ""))
+    ]
+    chapter4_derived_source_rows = [
+        row for row in chapter4_per_figure if not _is_original_chapter4_figure(row.get("figure_id", ""))
+    ]
+    chapter4_per_figure_audit_passes = (
+        len(chapter4_original_figure_rows) == 8
+        and any(row.get("figure_id") == "4.route_h" for row in chapter4_derived_source_rows)
+        and chapter4_per_figure_doc_path.exists()
+    )
     chapter5_by_gate = {row.get("gate_id", ""): row for row in chapter5_audit}
     chapter5_readiness_by_gate = {row.get("gate_id", ""): row for row in chapter5_readiness}
     chapter5_route_h_de421_passes = (
@@ -288,6 +324,37 @@ def _build_rows() -> list[dict[str, Any]]:
             or chapter5_readiness_documented
         )
     )
+    chapter5_original_figure_rows = [
+        row for row in chapter5_per_figure if _is_original_chapter5_figure(row.get("figure_id", ""))
+    ]
+    chapter5_derived_source_rows = [
+        row for row in chapter5_per_figure if not _is_original_chapter5_figure(row.get("figure_id", ""))
+    ]
+    chapter5_per_figure_audit_passes = (
+        len(chapter5_original_figure_rows) == 14
+        and any(
+            row.get("figure_id") == "5.bcr4bp_optimized_transfer"
+            and _as_float(row.get("accepted_rows"), 0.0) > 0.0
+            for row in chapter5_derived_source_rows
+        )
+        and chapter5_per_figure_doc_path.exists()
+    )
+    chapter5_nrho_transfer_accepted = [
+        row for row in chapter5_nrho_transfer if _as_bool(row.get("acceptance"))
+    ]
+    chapter5_nrho_transfer_passes = (
+        len(chapter5_nrho_transfer_accepted) >= 4
+        and {row.get("figure_id") for row in chapter5_nrho_transfer_accepted} >= {"5.10", "5.11"}
+        and chapter5_nrho_transfer_doc_path.exists()
+    )
+    chapter5_stable_manifold_accepted = [
+        row for row in chapter5_stable_manifold if _as_bool(row.get("acceptance"))
+    ]
+    chapter5_stable_manifold_passes = (
+        len(chapter5_stable_manifold_accepted) >= 2
+        and {row.get("figure_id") for row in chapter5_stable_manifold_accepted} >= {"5.13", "5.14"}
+        and chapter5_stable_manifold_doc_path.exists()
+    )
     rows: list[dict[str, Any]] = [
         _row(
             scope="chapter3",
@@ -297,7 +364,7 @@ def _build_rows() -> list[dict[str, Any]]:
             metric="figure_source_frontier_max_abs_z_km",
             value=figure_source_frontier,
             threshold=f">= {campaign.TARGET_MIN_KM}",
-            evidence_artifact=_artifact(family_path),
+            evidence_artifact=chapter3_frontier_artifact,
             decision="do_not_update_fig_3_16_3_17" if not chapter3_passes else "figure_update_allowed",
             notes="Experimental routes beyond this value are excluded unless they preserve the original fixed-time figure-source gate semantics.",
         ),
@@ -375,7 +442,7 @@ def _build_rows() -> list[dict[str, Any]]:
             metric="chapter3_figure_source_frontier_max_abs_z_km",
             value=figure_source_frontier,
             threshold=f">= {campaign.TARGET_MIN_KM}",
-            evidence_artifact=f"{_artifact(cache_family_path)};{_artifact(chapter4_route_h_dg_path)};{_artifact(chapter4_route_h_manifold_path)};{_artifact(chapter4_route_h_figure_png)}",
+            evidence_artifact=f"{_artifact(cache_family_path)};{_artifact(chapter4_route_h_dg_path)};{_artifact(chapter4_route_h_manifold_path)};{_artifact(chapter4_per_figure_path)};{_artifact(chapter4_route_h_figure_png)}",
             decision=(
                 "route_h_chapter4_figure_source_available"
                 if chapter4_route_h_figure_passes
@@ -415,9 +482,29 @@ def _build_rows() -> list[dict[str, Any]]:
             metric="route_h_figure_png_bytes",
             value=chapter4_route_h_figure_png.stat().st_size if chapter4_route_h_figure_png.exists() else None,
             threshold="> 0 and PDF exists",
-            evidence_artifact=f"{_artifact(chapter4_route_h_figure_png)};{_artifact(chapter4_route_h_figure_pdf)}",
+            evidence_artifact=f"{_artifact(chapter4_route_h_figure_png)};{_artifact(chapter4_route_h_figure_pdf)};{_artifact(chapter4_per_figure_path)}",
             decision="route_h_chapter4_figure_source_available" if chapter4_route_h_figure_passes else "run_fig_4_route_h_quasi_dro",
             notes="This figure is a Route H quasi-DRO Chapter 4 source-layer artifact; it does not claim to replace the original L1 quasi-halo/vertical thesis figures 4.3-4.8.",
+        ),
+        _row(
+            scope="chapter4",
+            gate_id="C4-PER-FIGURE-SOURCE-LAYER-AUDIT",
+            requirement="Chapter 4 source-layer evidence must be mapped back to each original Fig. 4.1-4.8 and separated from the derived Route H quasi-DRO source-layer figure.",
+            status="pass" if chapter4_per_figure_audit_passes else "not_run_or_incomplete",
+            metric="original_chapter4_figure_rows",
+            value=len(chapter4_original_figure_rows),
+            threshold="8 original rows plus one derived Route H source-layer row",
+            evidence_artifact=f"{_artifact(chapter4_per_figure_path)};{_artifact(chapter4_per_figure_doc_path)}",
+            decision=(
+                "use_per_figure_chapter4_status_table"
+                if chapter4_per_figure_audit_passes
+                else "run_chapter4_per_figure_source_layer_audit"
+            ),
+            notes=(
+                f"Per-figure audit maps {len(chapter4_original_figure_rows)} original Chapter 4 figures and "
+                f"{len(chapter4_derived_source_rows)} derived source-layer figure(s); the Route H quasi-DRO "
+                "source layer is not counted as a direct replacement for original L1 quasi-halo/vertical thesis figures."
+            ),
         ),
         _row(
             scope="chapter5",
@@ -434,7 +521,7 @@ def _build_rows() -> list[dict[str, Any]]:
             metric="chapter3_figure_source_frontier_max_abs_z_km",
             value=figure_source_frontier,
             threshold=f">= {campaign.TARGET_MIN_KM}",
-            evidence_artifact=f"{_artifact(decision_path)};{_artifact(chapter5_audit_path)};{_artifact(chapter5_readiness_path)}",
+            evidence_artifact=f"{_artifact(decision_path)};{_artifact(chapter5_audit_path)};{_artifact(chapter5_readiness_path)};{_artifact(chapter5_per_figure_path)}",
             decision=(
                 "chapter5_source_layer_optimization_available"
                 if chapter5_route_h_de421_passes and chapter5_readiness_passes and chapter5_optimization_passes
@@ -480,7 +567,7 @@ def _build_rows() -> list[dict[str, Any]]:
             metric="missing_high_fidelity_capabilities",
             value=chapter5_missing_hf_capabilities,
             threshold="0 for completed high-fidelity/optimization layer",
-            evidence_artifact=f"{_artifact(chapter5_audit_path)};{_artifact(chapter5_doc_path)};{_artifact(chapter5_readiness_path)};{_artifact(chapter5_readiness_doc_path)};{_artifact(chapter5_optimization_figure_png)};{_artifact(chapter5_optimization_figure_pdf)}",
+            evidence_artifact=f"{_artifact(chapter5_audit_path)};{_artifact(chapter5_doc_path)};{_artifact(chapter5_readiness_path)};{_artifact(chapter5_readiness_doc_path)};{_artifact(chapter5_nrho_transfer_path)};{_artifact(chapter5_stable_manifold_path)};{_artifact(chapter5_per_figure_path)};{_artifact(chapter5_per_figure_doc_path)};{_artifact(chapter5_optimization_figure_png)};{_artifact(chapter5_optimization_figure_pdf)}",
             decision=(
                 "chapter5_high_fidelity_optimization_source_layer_ready"
                 if chapter5_readiness_passes and chapter5_optimization_passes
@@ -505,6 +592,66 @@ def _build_rows() -> list[dict[str, Any]]:
                 "Chapter 5 high-fidelity/optimization blocker is now documented by a readiness audit: BCR4BP dynamics, ephemeris correction, and optimized transfer rows are still missing."
                 if chapter5_readiness_documented
                 else "Current repository evidence supports Route H/DE421 baseline figures, not full high-fidelity application reproduction."
+            ),
+        ),
+        _row(
+            scope="chapter5",
+            gate_id="C5-STABLE-MANIFOLD-PER-FIGURE-AUDIT",
+            requirement="Figures 5.13 and 5.14 should have per-figure stable-manifold rows with periapsis targeting, transfer time, Jacobi span, and periodicity evidence before being promoted beyond generic overlay status.",
+            status="pass" if chapter5_stable_manifold_passes else "not_run_or_incomplete",
+            metric="accepted_stable_manifold_rows",
+            value=len(chapter5_stable_manifold_accepted),
+            threshold=">= 2 accepted rows covering Fig. 5.13 and Fig. 5.14",
+            evidence_artifact=f"{_artifact(chapter5_stable_manifold_path)};{_artifact(chapter5_stable_manifold_doc_path)}",
+            decision=(
+                "use_stable_manifold_per_figure_rows"
+                if chapter5_stable_manifold_passes
+                else "run_chapter5_stable_manifold_per_figure_audit"
+            ),
+            notes=(
+                "Accepted rows are Sun-Earth CR3BP stable-manifold baseline rows; "
+                "they record periapsis targeting and transfer-scene evidence but do not "
+                "claim full quasi-periodic Lissajous-torus or ephemeris replacement."
+            ),
+        ),
+        _row(
+            scope="chapter5",
+            gate_id="C5-NRHO-PER-FIGURE-TRANSFER-AUDIT",
+            requirement="Figures 5.10 and 5.11 should have per-figure accepted transfer rows with endpoint error, delta-v, and Jacobi-span evidence before being promoted beyond generic baseline status.",
+            status="pass" if chapter5_nrho_transfer_passes else "not_run_or_incomplete",
+            metric="accepted_nrho_transfer_rows",
+            value=len(chapter5_nrho_transfer_accepted),
+            threshold=">= 4 accepted rows covering Fig. 5.10 and Fig. 5.11",
+            evidence_artifact=f"{_artifact(chapter5_nrho_transfer_path)};{_artifact(chapter5_nrho_transfer_doc_path)}",
+            decision=(
+                "use_nrho_per_figure_transfer_rows"
+                if chapter5_nrho_transfer_passes
+                else "run_chapter5_nrho_transfer_per_figure_audit"
+            ),
+            notes=(
+                "Accepted rows are CR3BP endpoint-corrected direct-shooting transfers; "
+                "they record per-figure delta-v and endpoint defects but do not claim "
+                "BCR4BP/ephemeris high-fidelity thesis replacement."
+            ),
+        ),
+        _row(
+            scope="chapter5",
+            gate_id="C5-PER-FIGURE-SOURCE-LAYER-AUDIT",
+            requirement="Chapter 5 aggregate source-layer gates must be mapped back to each original Fig. 5.1-5.14 before status is reported.",
+            status="pass" if chapter5_per_figure_audit_passes else "not_run_or_incomplete",
+            metric="original_chapter5_figure_rows",
+            value=len(chapter5_original_figure_rows),
+            threshold="14 original rows plus one derived optimized-transfer source-layer row",
+            evidence_artifact=f"{_artifact(chapter5_per_figure_path)};{_artifact(chapter5_per_figure_doc_path)}",
+            decision=(
+                "use_per_figure_chapter5_status_table"
+                if chapter5_per_figure_audit_passes
+                else "run_chapter5_per_figure_source_layer_audit"
+            ),
+            notes=(
+                f"Per-figure audit maps {len(chapter5_original_figure_rows)} original Chapter 5 figures and "
+                f"{len(chapter5_derived_source_rows)} derived source-layer figure(s); the optimized-transfer "
+                "source layer is not counted as a direct replacement for every original thesis figure."
             ),
         ),
         _row(
@@ -578,9 +725,13 @@ def _write_doc(rows: list[dict[str, Any]]) -> None:
     experimental = by_gate["C3-EXPERIMENTAL-FRONTIER"]
     c4 = by_gate["C4-UPSTREAM-TORUS-DATA"]
     c4_route_h = by_gate["C4-ROUTE-H-DG-MANIFOLD"]
+    c4_per_figure = by_gate.get("C4-PER-FIGURE-SOURCE-LAYER-AUDIT", {})
     c5 = by_gate["C5-UPSTREAM-HIGH-FIDELITY-DATA"]
     c5_baseline = by_gate.get("C5-ROUTE-H-DE421-BASELINE", {})
     c5_high_fidelity = by_gate.get("C5-HIGH-FIDELITY-OPTIMIZATION", {})
+    c5_nrho_transfer = by_gate.get("C5-NRHO-PER-FIGURE-TRANSFER-AUDIT", {})
+    c5_stable_manifold = by_gate.get("C5-STABLE-MANIFOLD-PER-FIGURE-AUDIT", {})
+    c5_per_figure = by_gate.get("C5-PER-FIGURE-SOURCE-LAYER-AUDIT", {})
     lines = "\n".join(
         f"- `{row['gate_id']}` ({row['scope']}): status `{row['status']}`, "
         f"metric `{row['metric']}` = `{_fmt(row['value'])}`, decision `{row['decision']}`"
@@ -603,8 +754,12 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - Fig. 3.16 / Fig. 3.17 update allowed: `{bool(c3['status'] == 'pass')}`
 - Chapter 4 Route H DG source layer passed: `{bool(c4_route_h['status'] == 'pass')}`
 - Chapter 4 next decision: `{c4['decision']}`
+- Chapter 4 per-figure source-layer audit: `{c4_per_figure.get('status')}`
 - Chapter 5 Route H / DE421 baseline passed: `{bool(c5_baseline.get('status') == 'pass')}`
 - Chapter 5 high-fidelity/optimization status: `{c5_high_fidelity.get('status')}`
+- Chapter 5 NRHO per-figure transfer audit: `{c5_nrho_transfer.get('status')}`
+- Chapter 5 stable-manifold per-figure audit: `{c5_stable_manifold.get('status')}`
+- Chapter 5 per-figure source-layer audit: `{c5_per_figure.get('status')}`
 - Chapter 5 regeneration allowed: `{bool(c5['status'] != 'blocked_missing_high_fidelity_optimization' and c5_high_fidelity.get('status') != 'blocked_missing_high_fidelity_optimization')}`
 
 ## Gate Rows
@@ -625,6 +780,11 @@ passes.
 This unlocks a Chapter 4 Route H figure-source artifact, not a completed
 replacement of Fig. 4.3-4.8: those existing figures target L1 quasi-halo and
 quasi-vertical families and still retain proxy backgrounds.
+The Chapter 4 per-original-figure mapping is recorded in
+`data/computed/chapter4_per_figure_source_layer_audit.csv` and
+`docs/chapter4_per_figure_source_layer_audit.md`; gate
+`C4-PER-FIGURE-SOURCE-LAYER-AUDIT` must pass before Chapter 4 status summaries
+are treated as figure-by-figure rather than aggregate-only.
 
 The Chapter 5 Route H / DE421 baseline audit is recorded in
 `data/computed/chapter5_upstream_application_gate_audit.csv`. Passing this gate
@@ -637,6 +797,21 @@ records `{_fmt(c5_high_fidelity.get('value'))}` missing high-fidelity
 capabilities. When this value is zero, the available Chapter 5 result should be
 read as a Route H/BCR4BP source-layer promotion with rendered figure artifacts,
 not a claim that every original thesis application figure has been replaced.
+The per-original-figure mapping is recorded in
+`data/computed/chapter5_per_figure_source_layer_audit.csv` and
+`docs/chapter5_per_figure_source_layer_audit.md`; gate
+`C5-PER-FIGURE-SOURCE-LAYER-AUDIT` must pass before Chapter 5 status summaries
+are treated as figure-by-figure rather than aggregate-only.
+For Fig. 5.10 and Fig. 5.11 specifically, the CR3BP endpoint-corrected transfer
+rows are recorded in `data/computed/chapter5_nrho_transfer_per_figure_audit.csv`
+and `docs/chapter5_nrho_transfer_per_figure_audit.md`; these rows strengthen
+the per-figure transfer evidence without claiming BCR4BP/ephemeris equivalence.
+For Fig. 5.13 and Fig. 5.14, the Sun-Earth CR3BP stable-manifold periapsis and
+transfer-scene rows are recorded in
+`data/computed/chapter5_stable_manifold_per_figure_audit.csv` and
+`docs/chapter5_stable_manifold_per_figure_audit.md`; these rows strengthen the
+per-figure application evidence without claiming full quasi-periodic Lissajous
+or ephemeris equivalence.
 """,
         encoding="utf-8",
     )

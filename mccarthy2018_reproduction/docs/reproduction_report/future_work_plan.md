@@ -135,7 +135,7 @@ The Route B fixed-time constrained PALC diagnostic is recorded in
 time at `14.74932760227518` days and projects two independent high-amplitude
 free-time sources to nearby accepted fixed-time candidates around
 `10274.98132505419` km and `10273.52387554093` km. This is the first accepted
-fixed-time diagnostic evidence beyond the old `10164.02309965055` km endpoint,
+fixed-time diagnostic evidence beyond the old local Route B endpoint,
 but no accepted candidate exceeds 10,500 km; higher-amplitude rows up to
 `11370.5355898953` km still fail residual/Jacobi/phase gates. The next Route B
 task is therefore branch-continuity and stabilized continuation from the

@@ -1,4 +1,4 @@
-"""Figure 3.16: constant-mapping-time quasi-DRO tori."""
+"""Figure 3.16: audited constant-mapping-time quasi-DRO tori."""
 
 from __future__ import annotations
 
@@ -14,14 +14,13 @@ from qp_orbits.corrected_dro_family import (
 )
 from qp_orbits.libration_points import compute_libration_points
 from qp_orbits.plot_style import apply_style, save_figure
-from qp_orbits.quasi_torus import quasi_dro_family
 
 
 FIGURE_ID = "3.16"
 SOURCE_PAGE = 82
-REPRO_LEVEL = "shape-match"
+REPRO_LEVEL = "audited numerical reproduction"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Thesis-style proxy rendering. Audited corrected quasi-DRO branch remains in data/computed but is not drawn as the thesis main result."
+NOTES = "Route H accepted fixed-mapping quasi-DRO members are drawn directly after the seven-gate cache audit."
 FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family.csv"
 EXTENDED_FAMILY_PATH = (
     PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family_extended.csv"
@@ -36,9 +35,9 @@ ROUTE_H_VALIDATION_PATH = (
 )
 
 
-def plot_corrected_torus(ax, member) -> None:
+def plot_corrected_torus(ax, member, *, time_samples: int = 11) -> None:
     system = SYSTEMS["earth_moon"]
-    sweep = sweep_corrected_dro_member(member, system, time_samples=23)
+    sweep = sweep_corrected_dro_member(member, system, time_samples=time_samples)
     points = np.concatenate([sweep.points, sweep.points[:, :1]], axis=1)
     ax.plot_wireframe(
         points[:, :, 0],
@@ -61,6 +60,13 @@ def plot_corrected_torus(ax, member) -> None:
         color="#075b4d",
         va="top",
     )
+
+
+def representative_members(family, count: int = 4):
+    if len(family) < count:
+        raise ValueError(f"need at least {count} corrected quasi-DRO members")
+    indices = np.linspace(0, len(family) - 1, count, dtype=int)
+    return tuple(family[int(index)] for index in indices)
 
 
 def style_axis(ax, label: str) -> None:
@@ -87,7 +93,6 @@ def style_axis(ax, label: str) -> None:
 def main() -> None:
     apply_style()
     system = SYSTEMS["earth_moon"]
-    family = quasi_dro_family(system, samples=4, n_major=128, n_minor=28)
     corrected_family = load_best_chapter3_corrected_dro_family(
         FAMILY_PATH,
         EXTENDED_FAMILY_PATH,
@@ -107,23 +112,10 @@ def main() -> None:
     if not validation_path.exists():
         write_chapter3_quasi_dro_validation(validation_path, corrected_family, system)
     fig = plt.figure(figsize=(7.6, 7.0), constrained_layout=True)
-    panels = zip(family, ["(a)", "(b)", "(c)", "(d)"])
+    panels = zip(representative_members(corrected_family), ["(a)", "(b)", "(c)", "(d)"])
     for idx, (member, label) in enumerate(panels, start=1):
         ax = fig.add_subplot(2, 2, idx, projection="3d")
-        surface = member.surface
-        ax.plot_surface(
-            surface[:, :, 0],
-            surface[:, :, 1],
-            surface[:, :, 2],
-            color="#9ea4a6",
-            edgecolor="none",
-            linewidth=0,
-            antialiased=True,
-            shade=True,
-            alpha=0.46,
-        )
-        curve = member.invariant_curve
-        ax.plot(curve[:, 0], curve[:, 1], curve[:, 2], color="#1f77b4", linewidth=1.25)
+        plot_corrected_torus(ax, member)
         style_axis(ax, label)
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)
