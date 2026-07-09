@@ -7,7 +7,6 @@ from functools import lru_cache
 
 import numpy as np
 from scipy.integrate import solve_ivp
-from scipy.interpolate import CubicSpline
 from scipy.optimize import brentq
 
 from .constants import SYSTEMS, CR3BPSystem
@@ -28,6 +27,22 @@ from .periodic_orbits import (
 )
 from .quasi_torus import SurfaceFamilyMember, corrected_dro_free_rotation_torus, quasi_dro_member
 from .variational import integrate_state_and_stm, unpack_augmented
+
+
+@dataclass(frozen=True)
+class PeriodicStateInterpolator:
+    """Periodic state lookup without SciPy's periodic CubicSpline solve path."""
+
+    grid: np.ndarray
+    states: np.ndarray
+
+    def __call__(self, phase):
+        phases = np.mod(np.asarray(phase, dtype=float), 1.0)
+        columns = [
+            np.interp(phases, self.grid, self.states[:, column])
+            for column in range(self.states.shape[1])
+        ]
+        return np.stack(columns, axis=-1)
 
 
 @dataclass(frozen=True)
@@ -813,14 +828,10 @@ def _periodic_state_spline(
     orbit: PlanarLyapunovOrbit | SpatialSymmetricOrbit,
     *,
     samples: int = 801,
-) -> CubicSpline:
+) -> PeriodicStateInterpolator:
     states = propagate_periodic_orbit(orbit, samples=samples)
     states[-1] = states[0]
-    return CubicSpline(
-        np.linspace(0.0, 1.0, samples),
-        states,
-        bc_type="periodic",
-    )
+    return PeriodicStateInterpolator(np.linspace(0.0, 1.0, samples), states)
 
 
 @lru_cache(maxsize=2)
@@ -929,7 +940,7 @@ def earth_moon_halo_to_lyapunov_transfer_baseline(
     def evaluate(
         core: np.ndarray,
         arrival_phase: float,
-        destination_spline: CubicSpline,
+        destination_spline: PeriodicStateInterpolator,
         destination_period: float,
         *,
         free_phase: bool,
@@ -979,7 +990,7 @@ def earth_moon_halo_to_lyapunov_transfer_baseline(
     def free_phase_correction(
         core: np.ndarray,
         arrival_phase: float,
-        destination_spline: CubicSpline,
+        destination_spline: PeriodicStateInterpolator,
         destination_period: float,
         *,
         max_iterations: int,
@@ -1030,7 +1041,7 @@ def earth_moon_halo_to_lyapunov_transfer_baseline(
     def fixed_phase_correction(
         core: np.ndarray,
         arrival_phase: float,
-        destination_spline: CubicSpline,
+        destination_spline: PeriodicStateInterpolator,
         destination_period: float,
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray, float]:
         variables = core.copy()

@@ -19,9 +19,9 @@ from qp_orbits.quasi_torus import quasi_dro_family
 
 FIGURE_ID = "3.16"
 SOURCE_PAGE = 82
-REPRO_LEVEL = "shape-match + local numerical"
+REPRO_LEVEL = "shape-match"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Proxy surfaces retained as references with Route H accepted high-amplitude fixed-mapping-time CR3BP quasi-DRO wireframes."
+NOTES = "Thesis-style proxy rendering. Audited corrected quasi-DRO branch remains in data/computed but is not drawn as the thesis main result."
 FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family.csv"
 EXTENDED_FAMILY_PATH = (
     PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family_extended.csv"
@@ -106,31 +106,25 @@ def main() -> None:
     )
     if not validation_path.exists():
         write_chapter3_quasi_dro_validation(validation_path, corrected_family, system)
-    selected_indices = np.linspace(0, len(corrected_family) - 1, 4, dtype=int)
-    selected_corrected = [corrected_family[index] for index in selected_indices]
-    fig = plt.figure(figsize=(8.3, 7.4), constrained_layout=True)
-    panels = zip(family, selected_corrected, ["(a)", "(b)", "(c)", "(d)"])
-    for idx, (member, corrected_member, label) in enumerate(panels, start=1):
+    fig = plt.figure(figsize=(7.6, 7.0), constrained_layout=True)
+    panels = zip(family, ["(a)", "(b)", "(c)", "(d)"])
+    for idx, (member, label) in enumerate(panels, start=1):
         ax = fig.add_subplot(2, 2, idx, projection="3d")
         surface = member.surface
-        ax.plot_surface(surface[:, :, 0], surface[:, :, 1], surface[:, :, 2], color="#b8b8b8",
-                        edgecolor="none", linewidth=0, antialiased=True, shade=True, alpha=0.30)
+        ax.plot_surface(
+            surface[:, :, 0],
+            surface[:, :, 1],
+            surface[:, :, 2],
+            color="#9ea4a6",
+            edgecolor="none",
+            linewidth=0,
+            antialiased=True,
+            shade=True,
+            alpha=0.46,
+        )
         curve = member.invariant_curve
-        ax.plot(curve[:, 0], curve[:, 1], curve[:, 2], color="#7f8c8d", linewidth=0.9, linestyle="--")
-        plot_corrected_torus(ax, corrected_member)
+        ax.plot(curve[:, 0], curve[:, 1], curve[:, 2], color="#1f77b4", linewidth=1.25)
         style_axis(ax, label)
-    rho_values = [member.rotation_angle_rad for member in corrected_family]
-    z_values = [member.max_abs_z_km for member in corrected_family]
-    fig.suptitle(
-        (
-            "Expanded corrected branch: "
-            f"rho={min(rho_values):.4f}-{max(rho_values):.4f} rad, "
-            f"|z|max={min(z_values):.0f}-{max(z_values):.0f} km; "
-            "grey surfaces are thesis-scale proxy references"
-        ),
-        fontsize=9,
-        color="#263238",
-    )
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)
 

@@ -19,9 +19,9 @@ from qp_orbits.quasi_torus import dro_parameter_curve
 
 FIGURE_ID = "3.17"
 SOURCE_PAGE = 83
-REPRO_LEVEL = "shape-match + local numerical"
+REPRO_LEVEL = "shape-match with local audit context"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Proxy trends retained as reference with a Route H accepted high-amplitude fixed-mapping-time CR3BP quasi-DRO family."
+NOTES = "Thesis-style proxy trends are the primary visual; local corrected branch is shown only as a small audit context inset."
 FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family.csv"
 EXTENDED_FAMILY_PATH = (
     PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family_extended.csv"
@@ -84,23 +84,12 @@ def main() -> None:
     max_map_residual = max_audit_metric(audit_rows, "map_residual_norm")
     max_jacobi_drift = max_audit_metric(audit_rows, "one_map_sweep_jacobi_drift")
 
-    fig, axes = plt.subplots(1, 2, figsize=(8.0, 3.1), constrained_layout=True)
+    fig, axes = plt.subplots(1, 2, figsize=(7.6, 3.1), constrained_layout=True)
     axes[0].plot(
         rho,
         z_amp,
-        color="#a9a9a9",
-        linestyle="--",
-        linewidth=1.1,
-        label="proxy reference",
-    )
-    axes[0].plot(
-        corrected_rho,
-        corrected_z_amp,
-        color="#16856b",
-        marker="o",
-        markersize=4,
-        linewidth=1.7,
-        label="corrected CR3BP",
+        color="#d95f02",
+        linewidth=1.45,
     )
     axes[0].set_xlabel(r"Rotation Angle, $\rho$ [rad]")
     axes[0].set_ylabel("Z-Amplitude [km]")
@@ -109,54 +98,26 @@ def main() -> None:
     fmt = ScalarFormatter(useMathText=True)
     fmt.set_powerlimits((4, 4))
     axes[0].yaxis.set_major_formatter(fmt)
-    axes[0].legend(loc="upper left", fontsize=7, frameon=False)
 
-    inset = axes[0].inset_axes([0.54, 0.08, 0.42, 0.40])
-    inset.plot(corrected_rho, corrected_z_amp, color="#16856b", marker="o", markersize=3)
+    inset = axes[0].inset_axes([0.58, 0.08, 0.36, 0.35])
+    inset.plot(corrected_rho, corrected_z_amp, color="#16856b", marker="o", markersize=2.4, linewidth=1.0)
     inset.set_xlim(min(corrected_rho) - 0.001, max(corrected_rho) + 0.001)
     inset.set_ylim(0.0, max(corrected_z_amp) * 1.08)
     inset.set_xticks([round(min(corrected_rho), 3), round(max(corrected_rho), 3)])
     inset.set_yticks([0.0, 5000.0, 10000.0])
     inset.tick_params(labelsize=6, pad=1)
-    inset.set_title("extended corrected branch", fontsize=6, pad=2)
+    inset.set_title("audited local branch", fontsize=6, pad=2)
 
     axes[1].plot(
         rho,
         jacobi,
-        color="#a9a9a9",
-        linestyle="--",
-        linewidth=1.1,
-        label="proxy reference",
-    )
-    axes[1].plot(
-        corrected_rho,
-        corrected_jacobi,
-        color="#16856b",
-        marker="o",
-        markersize=4,
-        linewidth=1.7,
-        label="corrected CR3BP",
+        color="#0072b2",
+        linewidth=1.45,
     )
     axes[1].set_xlabel(r"Rotation Angle, $\rho$ [rad]")
     axes[1].set_ylabel("Jacobi Constant")
     axes[1].set_xlim(1.42, 1.52)
     axes[1].set_ylim(2.921, 2.9225)
-    axes[1].legend(loc="lower left", fontsize=7, frameon=False)
-    axes[1].text(
-        0.98,
-        0.96,
-        (
-            f"expanded corrected branch: rho={min(corrected_rho):.4f}-{max(corrected_rho):.4f}"
-            "\n"
-            rf"max residual {metric_text(max_map_residual)}, "
-            rf"one-map $\Delta C$ {metric_text(max_jacobi_drift)}"
-        ),
-        transform=axes[1].transAxes,
-        ha="right",
-        va="top",
-        fontsize=7,
-        color="#263238",
-    )
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)
 
