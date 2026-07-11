@@ -3500,16 +3500,23 @@ def assert_chapter5_earth_moon_nrho_transfer_baseline() -> None:
                             "jacobi_span": f"{transfer.jacobi_span:.16g}",
                         }
                     )
-        for sample, (offset, delta_v) in enumerate(
+        for sample, (offset, phase, total_delta_v, delta_v, endpoint_error) in enumerate(
             zip(
                 baseline.rendezvous_offsets_hours,
+                baseline.rendezvous_arrival_phases,
+                baseline.rendezvous_total_delta_v_m_s,
                 baseline.rendezvous_delta_v_difference_m_s,
+                baseline.rendezvous_endpoint_error_km,
             )
         ):
             writer.writerow(
                 {
                     "kind": "rendezvous_scan",
                     "sample": sample,
+                    "phase": f"{phase:.16g}",
+                    "time_of_flight_days": f"{forward[0].time_of_flight_days:.16g}",
+                    "total_delta_v_m_s": f"{total_delta_v:.16g}",
+                    "endpoint_position_error_km": f"{endpoint_error:.16g}",
                     "arrival_offset_hours": f"{offset:.16g}",
                     "delta_v_difference_m_s": f"{delta_v:.16g}",
                 }

@@ -5,7 +5,7 @@
 This repository has an engineered output for all 54 target figures in McCarthy
 2018 and maintains a figure-by-figure evidence table at
 `data/computed/figure_validation_table.csv`. The current status counts are:
-CR3BP endpoint-corrected NRHO transfer audit: 2; CR3BP stable-manifold LEO transfer audit: 1; CR3BP stable-manifold periapsis audit: 1; Route H / DE421 geometry baseline: 2; audited Route H fixed-time source-layer: 2; corrected DG finite-amplitude manifold source layer: 2; corrected DG global manifold source layer with proxy comparison: 1; corrected DG manifold source layer with proxy comparison: 1; local corrected DG manifold source layer: 2; numerical reproduction: 16; physical-consistency baseline: 2; proxy/schematic only: 13; shape-match with corrected DG numerical overlay: 2; shape-match with local numerical overlay: 6; shape-match with local numerical overlay + source-layer optimization available: 1.
+CR3BP Sun-Earth L1 long-propagation audit: 1; CR3BP corrected NRHO corridor marker audit: 1; CR3BP endpoint-corrected NRHO transfer audit: 2; CR3BP endpoint-corrected halo-Lyapunov transfer audit: 1; CR3BP fixed-departure rendezvous branch audit: 1; CR3BP stable-manifold LEO transfer audit: 1; CR3BP stable-manifold periapsis audit: 1; Route H / DE421 geometry baseline: 2; audited Route H fixed-time source-layer: 2; corrected DG finite-amplitude manifold source layer: 2; corrected DG global manifold source layer with proxy comparison: 1; corrected DG manifold source layer with proxy comparison: 1; local corrected DG manifold source layer: 2; numerical reproduction: 16; period-q multiple-shooting audit with q8 boundary: 1; physical-consistency baseline: 2; proxy/schematic only: 13; shape-match with corrected DG numerical overlay: 2; shape-match with local numerical overlay: 2.
 
 The main status change is Chapter 3 Route H. Fig. 3.16 and Fig. 3.17 now use an
 accepted fixed-mapping quasi-DRO source layer from
@@ -30,8 +30,8 @@ source-layer, baseline, local-overlay, or proxy-context results.
   max residual `6.469474407020314e-10`, max curve Jacobi span
   `7.759926035078024e-11`, and max one-map Jacobi drift
   `7.760059261840979e-11`.
-- Fig. 3.10 q=8 remains a local multiple-shooting approximation, not a robust
-  single-shoot periodic orbit.
+- Fig. 3.10 q=2/q=3 are strict period-q audit rows; q=8 remains a local
+  multiple-shooting approximation, not a robust single-shoot periodic orbit.
 - Chapter 4 Route H DG/manifold and Chapter 5 BCR4BP/optimization source-layer
   audits exist, but they do not replace every original thesis figure.
 

@@ -9,7 +9,11 @@ Total figures: 54.
 
 | current_repro_level | count |
 |---|---:|
+| CR3BP Sun-Earth L1 long-propagation audit | 1 |
+| CR3BP corrected NRHO corridor marker audit | 1 |
 | CR3BP endpoint-corrected NRHO transfer audit | 2 |
+| CR3BP endpoint-corrected halo-Lyapunov transfer audit | 1 |
+| CR3BP fixed-departure rendezvous branch audit | 1 |
 | CR3BP stable-manifold LEO transfer audit | 1 |
 | CR3BP stable-manifold periapsis audit | 1 |
 | Route H / DE421 geometry baseline | 2 |
@@ -19,11 +23,11 @@ Total figures: 54.
 | corrected DG manifold source layer with proxy comparison | 1 |
 | local corrected DG manifold source layer | 2 |
 | numerical reproduction | 16 |
+| period-q multiple-shooting audit with q8 boundary | 1 |
 | physical-consistency baseline | 2 |
 | proxy/schematic only | 13 |
 | shape-match with corrected DG numerical overlay | 2 |
-| shape-match with local numerical overlay | 6 |
-| shape-match with local numerical overlay + source-layer optimization available | 1 |
+| shape-match with local numerical overlay | 2 |
 
 ## Figure-Level Entries
 
@@ -466,16 +470,16 @@ Total figures: 54.
 | figure_id | 3.10 |
 | source_page | 72 |
 | script | figures/fig_3_10.py |
-| current_repro_level | shape-match with local numerical overlay |
+| current_repro_level | period-q multiple-shooting audit with q8 boundary |
 | uses_proxy | partial |
-| main_data_source | data/computed/period_q_halo_examples.csv;q8 audit CSV |
-| key_physical_quantities | q2 q3 q8 period-q halo examples |
-| residual evidence | 7.65e-14;3.69e-15;8.36e-15 |
-| Jacobi evidence | 4.44e-15;1.78e-15;2.22e-15 |
-| periodicity evidence | 1.10e-10;5.19e-09;3.91e+00 q8 single-shoot |
-| stability evidence | -8.11e-08;6.43e-09;-3.97e-09 |
-| visual_status | local numerical approximation |
-| next_action | q2 target fixed; keep q8 as unstable multiple-shooting overlay until robust single-shoot closure is available |
+| main_data_source | data/computed/period_q_halo_examples.csv;data/computed/period_q_halo_closure_audit.csv;data/computed/chapter3_period_q_per_figure_audit.csv |
+| key_physical_quantities | q=2/q=3/q=8 Earth-Moon CR3BP period-q halo examples; strict single-shoot accepted rows 2; local multiple-shooting accepted rows 3; q8 max multiplier 3.431052642945378e+16 |
+| residual evidence | worst local multiple-shooting residual 7.654092149144291e-14; local accepted rows 3 |
+| Jacobi evidence | worst local trajectory Jacobi drift 4.440892098500626e-15 |
+| periodicity evidence | worst strict single-shoot closure 5.188337924828195e-09; q8 single-shoot closure 3.906984451743337 |
+| stability evidence | q8 high-instability boundary recorded by monodromy multiplier; do not use q8 single-shoot closure as accepted periodic evidence |
+| visual_status | q=2 and q=3 are strict period-q audit rows; q=8 is retained as a local multiple-shooting overlay with an explicit single-shoot closure boundary |
+| next_action | Promote q=8 only after a robust high-instability single-shoot validation path or an alternate closure audit is accepted. |
 
 ### Figure 3.11
 
@@ -754,16 +758,16 @@ Total figures: 54.
 | figure_id | 5.1 |
 | source_page | 96 |
 | script | figures/fig_5_01.py |
-| current_repro_level | shape-match with local numerical overlay |
+| current_repro_level | CR3BP Sun-Earth L1 long-propagation audit |
 | uses_proxy | partial |
-| main_data_source | data/computed/chapter5_sun_earth_l1_cr3bp_long_propagation.csv;data/computed/chapter5_upstream_application_gate_audit.csv;outputs/figures_png/fig_5_1.png;outputs/figures_pdf/fig_5_1.pdf |
-| key_physical_quantities | Sun-Earth L1 CR3BP long-propagation baseline with proxy torus context; local CR3BP baseline only; original replacement status: not_replaced |
-| residual evidence | accepted source rows: 0; Route H dependency: none; BCR4BP dependency: none |
+| main_data_source | data/computed/chapter5_sun_earth_l1_cr3bp_long_propagation.csv;data/computed/chapter5_sun_earth_l1_long_propagation_per_figure_audit.csv;data/computed/chapter5_upstream_application_gate_audit.csv;outputs/figures_png/fig_5_1.png;outputs/figures_pdf/fig_5_1.pdf |
+| key_physical_quantities | Sun-Earth L1 CR3BP long-propagation baseline with proxy torus context; accepted CR3BP L1 long-propagation rows 5; duration 72.50168833048522 days; max Jacobi span 1.332267629550188e-15; minimum transverse span 0.002930000770814965; max L1 distance 605346.6174117256 km; original replacement status: local_cr3bp_center_mode_not_lissajous_torus_replacement |
+| residual evidence | accepted source rows: 5; Route H dependency: none; BCR4BP dependency: none |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 860121; PDF bytes 236515; boundary: The rendered torus/context is not a corrected Sun-Earth quasi-periodic family from McCarthy raw data. |
-| next_action | Continue with corrected Sun-Earth quasi-periodic family or keep this as a local-overlay application baseline. |
+| visual_status | PNG bytes 860121; PDF bytes 236515; boundary: Local Sun-Earth L1 CR3BP center-mode propagation rows are accepted; rendered torus/context remains proxy and is not a corrected thesis Lissajous torus. |
+| next_action | Replace proxy torus context with corrected two-frequency Lissajous/quasi-periodic family or BCR4BP/ephemeris evidence before thesis-equivalence claims. |
 
 ### Figure 5.2
 
@@ -880,16 +884,16 @@ Total figures: 54.
 | figure_id | 5.8 |
 | source_page | 106 |
 | script | figures/fig_5_08.py |
-| current_repro_level | shape-match with local numerical overlay + source-layer optimization available |
+| current_repro_level | CR3BP endpoint-corrected halo-Lyapunov transfer audit |
 | uses_proxy | partial |
-| main_data_source | data/computed/chapter5_earth_moon_halo_lyapunov_transfer_baseline.csv;data/computed/chapter5_bcr4bp_dynamics_audit.csv;data/computed/chapter5_bcr4bp_segment_correction_audit.csv;data/computed/chapter5_optimized_transfer_audit.csv;outputs/figures_png/fig_5_8.png;outputs/figures_pdf/fig_5_8.pdf |
-| key_physical_quantities | Earth-Moon halo-to-Lyapunov CR3BP baseline plus separate Route H/BCR4BP optimized-transfer source layer; 25 accepted optimized rows; best delta-v 0.1374941742891632 m/s; corrected defect 1.454778958530722e-14; member 54 phase 0 TOF 0.13026 days; original replacement status: not_replaced_by_original_figure; source_layer_available_separately |
-| residual evidence | accepted source rows: 25; Route H dependency: accepted Route H upstream member for separate source-layer figure; BCR4BP dependency: 4 dynamics audit rows; 3 correction rows |
+| main_data_source | data/computed/chapter5_earth_moon_halo_lyapunov_transfer_baseline.csv;data/computed/chapter5_halo_lyapunov_transfer_per_figure_audit.csv;data/computed/chapter5_bcr4bp_dynamics_audit.csv;data/computed/chapter5_bcr4bp_segment_correction_audit.csv;data/computed/chapter5_optimized_transfer_audit.csv;outputs/figures_png/fig_5_8.png;outputs/figures_pdf/fig_5_8.pdf |
+| key_physical_quantities | Earth-Moon halo-to-Lyapunov CR3BP baseline plus separate Route H/BCR4BP optimized-transfer source layer; accepted CR3BP halo-Lyapunov transfer rows 1; total delta-v 294.6245071767839 m/s; endpoint error 2.083434735432931e-06 km; continuity 9.280132972015876e-12; Jacobi span 2.472244631235299e-12; boundary Jacobi difference 0; original replacement status: endpoint_corrected_cr3bp_not_high_fidelity_replacement |
+| residual evidence | accepted source rows: 1; Route H dependency: accepted Route H upstream member for separate source-layer figure; BCR4BP dependency: 4 dynamics audit rows; 3 correction rows |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 470710; PDF bytes 231145; boundary: The optimized Route H/BCR4BP transfer is a source-layer result, not a direct replacement of the original Fig. 5.8 geometry yet. |
-| next_action | Map optimized endpoints, constraints, and cost definition to the original transfer figure before promotion. |
+| visual_status | PNG bytes 470710; PDF bytes 231145; boundary: Per-figure endpoint-corrected CR3BP equal-Jacobi transfer row is accepted; the separate Route H/BCR4BP optimized source layer is still not a direct original Fig. 5.8 replacement. |
+| next_action | Promote further only after BCR4BP/ephemeris correction or original thesis transfer data are mapped to this specific Fig. 5.8 geometry. |
 
 ### Figure 5.9
 
@@ -898,16 +902,16 @@ Total figures: 54.
 | figure_id | 5.9 |
 | source_page | 107 |
 | script | figures/fig_5_09.py |
-| current_repro_level | shape-match with local numerical overlay |
+| current_repro_level | CR3BP corrected NRHO corridor marker audit |
 | uses_proxy | partial |
-| main_data_source | data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv;data/computed/chapter5_bcr4bp_dynamics_audit.csv;data/computed/chapter5_bcr4bp_segment_correction_audit.csv;data/computed/chapter5_optimized_transfer_audit.csv;outputs/figures_png/fig_5_9.png;outputs/figures_pdf/fig_5_9.pdf |
-| key_physical_quantities | Earth-Moon NRHO transfer baseline with proxy quasi-NRHO surface; NRHO baseline only; no accepted per-figure optimized endpoint mapping; original replacement status: not_replaced |
-| residual evidence | accepted source rows: 0; Route H dependency: indirect only; BCR4BP dependency: available as separate source-layer audit |
+| main_data_source | data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv;data/computed/chapter5_nrho_corridor_per_figure_audit.csv;data/computed/chapter5_bcr4bp_dynamics_audit.csv;data/computed/chapter5_bcr4bp_segment_correction_audit.csv;data/computed/chapter5_optimized_transfer_audit.csv;outputs/figures_png/fig_5_9.png;outputs/figures_pdf/fig_5_9.pdf |
+| key_physical_quantities | Earth-Moon NRHO transfer baseline with proxy quasi-NRHO surface; accepted CR3BP corridor marker rows 2; best total delta-v 47.73443414309953 m/s; worst endpoint error 2.336264914251333e-05 km; max Jacobi span 5.092193333666728e-11; perilune radii 4800.000000000002 / 12610 km; original replacement status: corrected_boundary_markers_not_torus_replacement |
+| residual evidence | accepted source rows: 2; Route H dependency: indirect only; BCR4BP dependency: available as separate source-layer audit |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 281783; PDF bytes 217849; boundary: Grey/proxy quasi-NRHO surface remains contextual and is not corrected torus data. |
-| next_action | Replace proxy surface with corrected torus/transfer data and add endpoint residual evidence. |
+| visual_status | PNG bytes 281783; PDF bytes 217849; boundary: Corrected NRHO boundaries and departure markers have endpoint evidence; grey corridor remains a linear corrected-boundary bridge, not corrected torus data. |
+| next_action | Replace the grey corridor with corrected quasi-NRHO torus or BCR4BP/ephemeris corridor data before thesis-equivalence claims. |
 
 ### Figure 5.10
 
@@ -952,16 +956,16 @@ Total figures: 54.
 | figure_id | 5.12 |
 | source_page | 109 |
 | script | figures/fig_5_12.py |
-| current_repro_level | shape-match with local numerical overlay |
+| current_repro_level | CR3BP fixed-departure rendezvous branch audit |
 | uses_proxy | partial |
-| main_data_source | data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv;outputs/figures_png/fig_5_12.png;outputs/figures_pdf/fig_5_12.pdf |
-| key_physical_quantities | Earth-Moon NRHO branch baseline with proxy continuation beyond fold; local branch baseline only; original replacement status: not_replaced |
-| residual evidence | accepted source rows: 0; Route H dependency: none; BCR4BP dependency: none |
+| main_data_source | data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv;data/computed/chapter5_nrho_rendezvous_per_figure_audit.csv;outputs/figures_png/fig_5_12.png;outputs/figures_pdf/fig_5_12.pdf |
+| key_physical_quantities | Earth-Moon NRHO fixed-departure rendezvous arrival-offset branch; accepted CR3BP rendezvous scan rows 36; coverage -24 to 11 h; minimum delta-v difference -6.029648133534657 m/s; maximum endpoint error 3.714687617288433e-05 km; original replacement status: local_cr3bp_rendezvous_branch_not_global_replacement |
+| residual evidence | accepted source rows: 36; Route H dependency: none; BCR4BP dependency: none |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 90688; PDF bytes 25324; boundary: Proxy trend beyond the fold is not robust continuation data. |
-| next_action | Replace proxy trend beyond the fold with a robust continued branch and residual checks. |
+| visual_status | PNG bytes 90688; PDF bytes 25324; boundary: Local CR3BP fixed-departure rendezvous branch has endpoint evidence; grey proxy trend beyond the fold remains non-replacement context. |
+| next_action | Replace the remaining grey proxy region with a robust global quasi-NRHO continuation or high-fidelity ephemeris branch before thesis-equivalence claims. |
 
 ### Figure 5.13
 

@@ -37,7 +37,11 @@
 | Chapter 4 Route H DG/manifold | `docs/chapter4_route_h_quasi_dro_dg_manifold_audit.md` |
 | Chapter 4 逐图 source-layer 审计 | `docs/chapter4_per_figure_source_layer_audit.md` |
 | Chapter 5 readiness | `docs/chapter5_high_fidelity_optimization_readiness_audit.md` |
+| Chapter 5 Sun-Earth L1 long-propagation 逐图审计 | `docs/chapter5_sun_earth_l1_long_propagation_per_figure_audit.md` |
+| Chapter 5 halo-Lyapunov 转移逐图审计 | `docs/chapter5_halo_lyapunov_transfer_per_figure_audit.md` |
+| Chapter 5 NRHO corridor 逐图审计 | `docs/chapter5_nrho_corridor_per_figure_audit.md` |
 | Chapter 5 NRHO 转移逐图审计 | `docs/chapter5_nrho_transfer_per_figure_audit.md` |
+| Chapter 5 NRHO rendezvous 逐图审计 | `docs/chapter5_nrho_rendezvous_per_figure_audit.md` |
 | Chapter 5 stable-manifold 逐图审计 | `docs/chapter5_stable_manifold_per_figure_audit.md` |
 | Chapter 5 逐图 source-layer 审计 | `docs/chapter5_per_figure_source_layer_audit.md` |
 
@@ -52,24 +56,68 @@
 - Route H max map residual: `6.469474407020314e-10`
 - Route H max curve Jacobi span: `7.759926035078024e-11`
 - Route H max one-map Jacobi drift: `7.760059261840979e-11`
+- Fig. 3.10 period-q strict single-shoot accepted rows: 2 / 3
+- Fig. 3.10 period-q local multiple-shooting accepted rows: 3 / 3
+- Fig. 3.10 q=8 full-period single-shoot closure error: `3.906984451743337`
+- Fig. 3.10 q=8 max monodromy multiplier magnitude: `3.431052642945378e+16`
+- Fig. 5.1 Sun-Earth L1 long-propagation accepted rows: 5 / 5
+- Fig. 5.1 propagation duration: `72.50168833048522 days`
+- Fig. 5.1 max Jacobi span: `1.332267629550188e-15`
+- Fig. 5.1 minimum transverse span: `0.002930000770814965`
+- Fig. 5.8 halo-Lyapunov accepted rows: 1 / 1
+- Fig. 5.8 total delta-v: `294.6245071767839 m/s`
+- Fig. 5.8 endpoint error: `2.083434735432931e-06 km`
+- Fig. 5.8 maximum continuity error: `9.280132972015876e-12`
+- Fig. 5.8 Jacobi span: `2.472244631235299e-12`
+- Fig. 5.9 NRHO corridor marker accepted rows: 2 / 2
+- Fig. 5.9 best marker total delta-v: `47.73443414309953 m/s`
+- Fig. 5.9 worst marker endpoint error: `2.336264914251333e-05 km`
+- Fig. 5.9 max marker Jacobi span: `5.092193333666728e-11`
+- Fig. 5.12 rendezvous accepted rows: 36 / 36
+- Fig. 5.12 rendezvous coverage: `-24` to `11 h`
+- Fig. 5.12 minimum delta-v difference: `-6.029648133534657 m/s`
+- Fig. 5.12 maximum endpoint error: `3.714687617288433e-05 km`
 
 当前逐图状态表 `data/computed/figure_validation_table.csv` 的分类统计为：
 
 - `numerical reproduction`: 16
-- `shape-match with local numerical overlay`: 8
 - `proxy/schematic only`: 13
-- `physical-consistency baseline`: 4
-- `audited Route H fixed-time source-layer`: 2
+- `shape-match with local numerical overlay`: 2
+- `local corrected DG manifold source layer`: 2
 - `Route H / DE421 geometry baseline`: 2
 - `CR3BP endpoint-corrected NRHO transfer audit`: 2
-- `CR3BP stable-manifold periapsis audit`: 1
-- `CR3BP stable-manifold LEO transfer audit`: 1
-- `shape-match with corrected DG numerical overlay`: 2
 - `corrected DG finite-amplitude manifold source layer`: 2
-- `local corrected DG manifold source layer`: 2
-- `corrected DG manifold source layer with proxy comparison`: 1
+- `audited Route H fixed-time source-layer`: 2
+- `physical-consistency baseline`: 2
+- `shape-match with corrected DG numerical overlay`: 2
+- `CR3BP stable-manifold LEO transfer audit`: 1
+- `CR3BP stable-manifold periapsis audit`: 1
+- `CR3BP fixed-departure rendezvous branch audit`: 1
 - `corrected DG global manifold source layer with proxy comparison`: 1
-- `shape-match with local numerical overlay + source-layer optimization available`: 1
+- `corrected DG manifold source layer with proxy comparison`: 1
+- `CR3BP corrected NRHO corridor marker audit`: 1
+- `CR3BP endpoint-corrected halo-Lyapunov transfer audit`: 1
+- `CR3BP Sun-Earth L1 long-propagation audit`: 1
+- `period-q multiple-shooting audit with q8 boundary`: 1
+
+Fig. 3.10 update note: the current status table now treats q=2/q=3 as strict
+single-shoot accepted period-q rows and q=8 as a local multiple-shooting row
+with an explicit single-shoot closure boundary. This is not a full original
+branch equivalence claim.
+
+Chapter 5 逐图 source-layer 审计表 `data/computed/chapter5_per_figure_source_layer_audit.csv` 的分类统计为：
+
+- `proxy/schematic only`: 3
+- `Route H / DE421 geometry baseline`: 2
+- `CR3BP endpoint-corrected NRHO transfer audit`: 2
+- `Route H / BCR4BP source-layer optimization audit`: 1
+- `CR3BP stable-manifold LEO transfer audit`: 1
+- `CR3BP stable-manifold periapsis audit`: 1
+- `physical-consistency baseline`: 1
+- `CR3BP Sun-Earth L1 long-propagation audit`: 1
+- `CR3BP corrected NRHO corridor marker audit`: 1
+- `CR3BP endpoint-corrected halo-Lyapunov transfer audit`: 1
+- `CR3BP fixed-departure rendezvous branch audit`: 1
 
 注意：Fig. 3.16 / Fig. 3.17 已同步为 Route H fixed-time source-layer。Chapter 4 和 Chapter 5 也已分别建立逐图 source-layer 审计表，但这仍不等于整篇论文 full numerical equivalence。
 
@@ -146,8 +194,16 @@
 - `data/computed/chapter5_bcr4bp_segment_correction_audit.csv`
 - `data/computed/chapter5_optimized_transfer_audit.csv`
 - `data/computed/chapter5_high_fidelity_optimization_readiness_audit.csv`
+- `data/computed/chapter5_sun_earth_l1_long_propagation_per_figure_audit.csv`
+- `docs/chapter5_sun_earth_l1_long_propagation_per_figure_audit.md`
+- `data/computed/chapter5_halo_lyapunov_transfer_per_figure_audit.csv`
+- `docs/chapter5_halo_lyapunov_transfer_per_figure_audit.md`
+- `data/computed/chapter5_nrho_corridor_per_figure_audit.csv`
+- `docs/chapter5_nrho_corridor_per_figure_audit.md`
 - `data/computed/chapter5_nrho_transfer_per_figure_audit.csv`
 - `docs/chapter5_nrho_transfer_per_figure_audit.md`
+- `data/computed/chapter5_nrho_rendezvous_per_figure_audit.csv`
+- `docs/chapter5_nrho_rendezvous_per_figure_audit.md`
 - `data/computed/chapter5_stable_manifold_per_figure_audit.csv`
 - `docs/chapter5_stable_manifold_per_figure_audit.md`
 - `data/computed/chapter5_per_figure_source_layer_audit.csv`
@@ -156,12 +212,45 @@
 - `outputs/figures_png/fig_5_7.png`
 - `outputs/figures_png/fig_5_bcr4bp_optimized_transfer.png`
 
+Fig. 5.1 当前已有 Sun-Earth L1 CR3BP long-propagation 逐图审计：
+
+- accepted rows: 5 / 5
+- duration: `72.50168833048522 days`
+- max Jacobi span: `1.332267629550188e-15`
+- minimum transverse span: `0.002930000770814965`
+- max L1 distance: `605346.6174117256 km`
+
+Fig. 5.8 当前已有 Earth-Moon CR3BP endpoint-corrected halo-Lyapunov transfer 逐图审计：
+
+- accepted rows: 1 / 1
+- total delta-v: `294.6245071767839 m/s`
+- endpoint error: `2.083434735432931e-06 km`
+- maximum continuity error: `9.280132972015876e-12`
+- Jacobi span: `2.472244631235299e-12`
+- boundary Jacobi difference: `0`
+
+Fig. 5.9 当前已有 Earth-Moon CR3BP corrected NRHO boundary/departure-marker 逐图审计：
+
+- accepted rows: 2 / 2
+- best total delta-v: `47.73443414309953 m/s`
+- worst endpoint error: `2.336264914251333e-05 km`
+- max Jacobi span: `5.092193333666728e-11`
+- perilune radii: `4800.000000000002 / 12610 km`
+
 Fig. 5.10 / Fig. 5.11 当前已有 CR3BP endpoint-corrected transfer 逐图审计：
 
 - accepted rows: 4 / 4
 - best total delta-v: `47.73443414309953 m/s`
 - worst endpoint error: `2.336264914251333e-05 km`
 - max Jacobi span: `5.092193333666728e-11`
+
+Fig. 5.12 当前已有 Earth-Moon CR3BP fixed-departure rendezvous arrival-offset branch 逐图审计：
+
+- accepted rows: 36 / 36
+- coverage: `-24` to `11 h`
+- minimum delta-v difference: `-6.029648133534657 m/s`
+- offset at minimum: `6 h`
+- maximum endpoint error: `3.714687617288433e-05 km`
 
 Fig. 5.13 / Fig. 5.14 当前已有 Sun-Earth CR3BP stable-manifold 逐图审计：
 
@@ -174,8 +263,11 @@ Fig. 5.13 / Fig. 5.14 当前已有 Sun-Earth CR3BP stable-manifold 逐图审计�
 
 后续重点：
 
-- 在现有逐图审计基础上，继续把 Fig. 5.8 / Fig. 5.9 / Fig. 5.12 等仍需 delta-v、endpoint、ephemeris correction 的原始应用图推进到对应的 per-figure accepted rows。
+- 对 Fig. 5.1，下一步是把当前 CR3BP center-mode propagation rows 升级为 corrected two-frequency Lissajous/quasi-periodic torus 或 BCR4BP/ephemeris evidence；当前 torus surface 仍是 proxy context。
+- 对 Fig. 5.8，下一步是从 CR3BP endpoint-corrected halo-Lyapunov row 继续推进到 BCR4BP/ephemeris per-figure accepted row，或映射到 McCarthy 原始 transfer 初值数据。
+- 对 Fig. 5.9，下一步是把当前 corrected-boundary marker rows 升级为 corrected quasi-NRHO torus/corridor 或 BCR4BP/ephemeris corridor；当前 grey corridor 仍不能算 thesis-equivalent torus。
 - 对 Fig. 5.10 / Fig. 5.11，下一步是从 CR3BP endpoint-corrected rows 继续推进到 BCR4BP/ephemeris per-figure accepted rows。
+- 对 Fig. 5.12，下一步是把当前 CR3BP local rendezvous branch 升级为 robust global quasi-NRHO continuation 或 BCR4BP/ephemeris branch；当前 grey proxy beyond fold 不能算 thesis-equivalent replacement。
 - 对 Fig. 5.13 / Fig. 5.14，下一步是从 CR3BP periodic-orbit stable-manifold rows 继续推进到 quasi-periodic Lissajous-torus / ephemeris rows。
 - 继续区分 DE421-oriented geometry baseline、BCR4BP dynamics audit、segment correction、optimized-transfer source-layer。
 - 若要声称某张原图完成高保真复现，需要补齐对应 residual、endpoint、delta-v、Jacobi 或 ephemeris consistency 证据。
@@ -253,6 +345,7 @@ Fig. 5.13 / Fig. 5.14 当前已有 Sun-Earth CR3BP stable-manifold 逐图审计�
 1. 对 Fig. 5.1-5.14 每张图添加 current source-layer status。
 2. 区分 schematic、CR3BP baseline、DE421 baseline、BCR4BP dynamics、segment correction、optimized transfer。
 3. 对需要 delta-v、endpoint、ephemeris correction 的图列出缺口。
+4. 对 Fig. 5.1、Fig. 5.8、Fig. 5.9、Fig. 5.10、Fig. 5.11、Fig. 5.12、Fig. 5.13、Fig. 5.14 增加 per-figure accepted rows，并在 staged gate 中单列通过项。
 
 当前验收：
 
@@ -260,8 +353,11 @@ Fig. 5.13 / Fig. 5.14 当前已有 Sun-Earth CR3BP stable-manifold 逐图审计�
 
 后续任务：
 
-- 对 Fig. 5.8 / Fig. 5.9 / Fig. 5.12 等仍为 baseline / overlay / source-layer 的原图，继续补齐对应 endpoint、delta-v、ephemeris/BCR4BP correction 和 per-figure accepted rows。
+- 对 Fig. 5.1，将当前 CR3BP center-mode long-propagation rows 升级为 corrected two-frequency Lissajous/quasi-periodic torus 或 BCR4BP/ephemeris evidence。
+- 对 Fig. 5.8，将当前 CR3BP endpoint-corrected halo-Lyapunov row 升级为 BCR4BP/ephemeris corrected row，或映射到 McCarthy 原始 transfer 初值数据。
+- 对 Fig. 5.9，将当前 CR3BP corrected-boundary marker rows 升级为 corrected quasi-NRHO torus/corridor 或 BCR4BP/ephemeris corrected corridor。
 - 对 Fig. 5.10 / Fig. 5.11，将当前 CR3BP endpoint-corrected rows 升级为 BCR4BP/ephemeris corrected rows。
+- 对 Fig. 5.12，将当前 CR3BP local rendezvous branch 升级为 robust global quasi-NRHO continuation 或 BCR4BP/ephemeris corrected branch。
 - 对 Fig. 5.13 / Fig. 5.14，将当前 CR3BP periodic-orbit stable-manifold rows 升级为 quasi-periodic Lissajous-torus 或 ephemeris corrected rows。
 
 ### P4：原始数据和外部对照

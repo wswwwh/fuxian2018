@@ -12,12 +12,17 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - Chapter 3 required minimum: `10500.0` km
 - Best experimental/local frontier: `10293.6651410641` km
 - Fig. 3.16 / Fig. 3.17 update allowed: `True`
+- Fig. 3.10 period-q per-figure audit: `pass`
 - Chapter 4 Route H DG source layer passed: `True`
 - Chapter 4 next decision: `route_h_chapter4_figure_source_available`
 - Chapter 4 per-figure source-layer audit: `pass`
 - Chapter 5 Route H / DE421 baseline passed: `True`
 - Chapter 5 high-fidelity/optimization status: `pass`
+- Chapter 5 Sun-Earth L1 long-propagation audit: `pass`
+- Chapter 5 halo-Lyapunov per-figure transfer audit: `pass`
+- Chapter 5 NRHO corridor per-figure audit: `pass`
 - Chapter 5 NRHO per-figure transfer audit: `pass`
+- Chapter 5 NRHO rendezvous per-figure audit: `pass`
 - Chapter 5 stable-manifold per-figure audit: `pass`
 - Chapter 5 per-figure source-layer audit: `pass`
 - Chapter 5 regeneration allowed: `True`
@@ -30,6 +35,7 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - `C3-ROUTE-C-E` (chapter3): status `fail`, metric `best_diagnostic_palc_max_abs_z_km` = `10293.6651410641`, decision `diagnostic_only`
 - `C3-ROUTE-D-G` (chapter3): status `fail`, metric `best_accepted_projection_max_abs_z_km` = `N/A`, decision `bounded_projection_routes`
 - `C3-ROUTE-H` (chapter3): status `pass`, metric `best_strict_cache_max_abs_z_km` = `14573.10318409037`, decision `use_route_h_for_chapter3_source`
+- `C3-PERIOD-Q-PER-FIGURE-AUDIT` (chapter3): status `pass`, metric `strict_single_shoot_rows` = `2`, decision `use_period_q_boundary_audit`
 - `C4-UPSTREAM-TORUS-DATA` (chapter4): status `route_h_figure_source_passed`, metric `chapter3_figure_source_frontier_max_abs_z_km` = `14573.10318409037`, decision `route_h_chapter4_figure_source_available`
 - `C4-ROUTE-H-DG-MANIFOLD` (chapter4): status `pass`, metric `worst_route_h_manifold_jacobi_drift` = `1.77635683940025e-15`, decision `route_h_source_layer_ready`
 - `C4-ROUTE-H-FIGURE-SOURCE` (chapter4): status `pass`, metric `route_h_figure_png_bytes` = `539093`, decision `route_h_chapter4_figure_source_available`
@@ -37,8 +43,12 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - `C5-UPSTREAM-HIGH-FIDELITY-DATA` (chapter5): status `route_h_bcr4bp_optimization_source_layer_passed`, metric `chapter3_figure_source_frontier_max_abs_z_km` = `14573.10318409037`, decision `chapter5_source_layer_optimization_available`
 - `C5-ROUTE-H-DE421-BASELINE` (chapter5): status `pass`, metric `fig_5_6_png_bytes` = `746932`, decision `route_h_de421_baseline_available`
 - `C5-HIGH-FIDELITY-OPTIMIZATION` (chapter5): status `pass`, metric `missing_high_fidelity_capabilities` = `0`, decision `chapter5_high_fidelity_optimization_source_layer_ready`
+- `C5-HALO-LYAPUNOV-PER-FIGURE-TRANSFER-AUDIT` (chapter5): status `pass`, metric `accepted_halo_lyapunov_transfer_rows` = `1`, decision `use_halo_lyapunov_per_figure_transfer_row`
+- `C5-SUN-EARTH-L1-LONG-PROPAGATION-AUDIT` (chapter5): status `pass`, metric `accepted_l1_long_propagation_rows` = `5`, decision `use_l1_long_propagation_per_figure_rows`
+- `C5-NRHO-CORRIDOR-PER-FIGURE-AUDIT` (chapter5): status `pass`, metric `accepted_nrho_corridor_marker_rows` = `2`, decision `use_nrho_corridor_per_figure_marker_rows`
 - `C5-STABLE-MANIFOLD-PER-FIGURE-AUDIT` (chapter5): status `pass`, metric `accepted_stable_manifold_rows` = `2`, decision `use_stable_manifold_per_figure_rows`
 - `C5-NRHO-PER-FIGURE-TRANSFER-AUDIT` (chapter5): status `pass`, metric `accepted_nrho_transfer_rows` = `4`, decision `use_nrho_per_figure_transfer_rows`
+- `C5-NRHO-RENDEZVOUS-PER-FIGURE-AUDIT` (chapter5): status `pass`, metric `accepted_nrho_rendezvous_rows` = `36`, decision `use_nrho_rendezvous_per_figure_branch`
 - `C5-PER-FIGURE-SOURCE-LAYER-AUDIT` (chapter5): status `pass`, metric `original_chapter5_figure_rows` = `14`, decision `use_per_figure_chapter5_status_table`
 - `STAGED-GOAL-STATUS` (goal): status `staged_route_h_source_layers_complete`, metric `chapter3_gate_passes` = `True`, decision `staged_goal_source_layers_complete`
 
@@ -78,10 +88,31 @@ The per-original-figure mapping is recorded in
 `docs/chapter5_per_figure_source_layer_audit.md`; gate
 `C5-PER-FIGURE-SOURCE-LAYER-AUDIT` must pass before Chapter 5 status summaries
 are treated as figure-by-figure rather than aggregate-only.
+For Fig. 5.1, the Sun-Earth L1 CR3BP center-mode long-propagation rows are
+recorded in
+`data/computed/chapter5_sun_earth_l1_long_propagation_per_figure_audit.csv`
+and `docs/chapter5_sun_earth_l1_long_propagation_per_figure_audit.md`; these
+rows strengthen the green propagated overlays while the torus context remains a
+proxy rather than a corrected two-frequency Lissajous family.
+For Fig. 5.8, the Earth-Moon CR3BP equal-Jacobi halo-to-Lyapunov transfer row is
+recorded in `data/computed/chapter5_halo_lyapunov_transfer_per_figure_audit.csv`
+and `docs/chapter5_halo_lyapunov_transfer_per_figure_audit.md`; this row
+strengthens the per-figure transfer evidence without claiming BCR4BP/ephemeris
+equivalence.
+For Fig. 5.9, the corrected NRHO boundary and departure-marker rows are
+recorded in `data/computed/chapter5_nrho_corridor_per_figure_audit.csv` and
+`docs/chapter5_nrho_corridor_per_figure_audit.md`; these rows strengthen the
+figure-specific marker evidence, while the grey corridor remains a linear bridge
+rather than a corrected quasi-NRHO torus.
 For Fig. 5.10 and Fig. 5.11 specifically, the CR3BP endpoint-corrected transfer
 rows are recorded in `data/computed/chapter5_nrho_transfer_per_figure_audit.csv`
 and `docs/chapter5_nrho_transfer_per_figure_audit.md`; these rows strengthen
 the per-figure transfer evidence without claiming BCR4BP/ephemeris equivalence.
+For Fig. 5.12, the CR3BP fixed-departure rendezvous arrival-offset branch is
+recorded in `data/computed/chapter5_nrho_rendezvous_per_figure_audit.csv` and
+`docs/chapter5_nrho_rendezvous_per_figure_audit.md`; this replaces the prior
+un-audited local curve with endpoint-residual and delta-v evidence, while the
+grey proxy beyond the fold remains non-replacement context.
 For Fig. 5.13 and Fig. 5.14, the Sun-Earth CR3BP stable-manifold periapsis and
 transfer-scene rows are recorded in
 `data/computed/chapter5_stable_manifold_per_figure_audit.csv` and

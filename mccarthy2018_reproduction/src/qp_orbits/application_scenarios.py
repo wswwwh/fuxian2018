@@ -143,7 +143,10 @@ class EarthMoonNRHOTransferBaseline:
     forward_transfers: tuple[TwoImpulseTransfer, ...]
     reverse_transfers: tuple[TwoImpulseTransfer, ...]
     rendezvous_offsets_hours: np.ndarray
+    rendezvous_arrival_phases: np.ndarray
+    rendezvous_total_delta_v_m_s: np.ndarray
     rendezvous_delta_v_difference_m_s: np.ndarray
+    rendezvous_endpoint_error_km: np.ndarray
 
 
 @dataclass(frozen=True)
@@ -675,9 +678,10 @@ def _rendezvous_delta_v_scan(
     destination_orbit: SpatialSymmetricOrbit,
     baseline: TwoImpulseTransfer,
     samples: int,
-) -> tuple[np.ndarray, np.ndarray]:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     if samples == 0:
-        return np.empty(0), np.empty(0)
+        empty = np.empty(0)
+        return empty, empty, empty, empty, empty
     if samples < 5 or samples % 2 == 0:
         raise ValueError("rendezvous_samples must be zero or an odd integer at least five")
     if system.length_unit_km is None or system.time_unit_days is None:
@@ -692,7 +696,11 @@ def _rendezvous_delta_v_scan(
         system.length_unit_km / (system.time_unit_days * 86_400.0) * 1_000.0
     )
     totals = np.full(samples, np.nan, dtype=float)
+    endpoint_errors = np.full(samples, np.nan, dtype=float)
+    arrival_phases = np.full(samples, np.nan, dtype=float)
     totals[midpoint] = baseline.total_delta_v_m_s
+    endpoint_errors[midpoint] = baseline.endpoint_position_error_km
+    arrival_phases[midpoint] = baseline.arrival_phase
 
     for indices in (
         range(midpoint + 1, samples),
@@ -708,7 +716,7 @@ def _rendezvous_delta_v_scan(
             arrival_phase = baseline.arrival_phase + phase_shift
             arrival = _spatial_orbit_state(destination_orbit, arrival_phase)
             try:
-                velocity_guess, final_state, _ = _correct_transfer_velocity(
+                velocity_guess, final_state, residual_norm = _correct_transfer_velocity(
                     system,
                     departure,
                     arrival[:3],
@@ -726,8 +734,16 @@ def _rendezvous_delta_v_scan(
                 np.linalg.norm(arrival[3:] - final_state[3:]) * velocity_unit_m_s
             )
             totals[index] = departure_delta_v + arrival_delta_v
+            endpoint_errors[index] = residual_norm * system.length_unit_km
+            arrival_phases[index] = arrival_phase % 1.0
     valid = np.isfinite(totals)
-    return offsets[valid], totals[valid] - baseline.total_delta_v_m_s
+    return (
+        offsets[valid],
+        arrival_phases[valid],
+        totals[valid],
+        totals[valid] - baseline.total_delta_v_m_s,
+        endpoint_errors[valid],
+    )
 
 
 @lru_cache(maxsize=4)
@@ -799,7 +815,7 @@ def earth_moon_nrho_transfer_baseline(
         ),
     )
     reverse = tuple(_reverse_symmetric_transfer(item) for item in forward)
-    offsets, delta_v_difference = _rendezvous_delta_v_scan(
+    offsets, arrival_phases, rendezvous_total_delta_v, delta_v_difference, endpoint_errors = _rendezvous_delta_v_scan(
         system,
         destination_orbit,
         forward[0],
@@ -820,7 +836,10 @@ def earth_moon_nrho_transfer_baseline(
         forward_transfers=forward,
         reverse_transfers=reverse,
         rendezvous_offsets_hours=offsets,
+        rendezvous_arrival_phases=arrival_phases,
+        rendezvous_total_delta_v_m_s=rendezvous_total_delta_v,
         rendezvous_delta_v_difference_m_s=delta_v_difference,
+        rendezvous_endpoint_error_km=endpoint_errors,
     )
 
 

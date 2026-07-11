@@ -20,11 +20,15 @@ FIGURES_PDF = PROJECT_ROOT / "outputs" / "figures_pdf"
 
 FIGURE_VALIDATION = DATA / "figure_validation_table.csv"
 UPSTREAM_AUDIT = DATA / "chapter5_upstream_application_gate_audit.csv"
+SUN_EARTH_L1_LONG_PROP_AUDIT = DATA / "chapter5_sun_earth_l1_long_propagation_per_figure_audit.csv"
 READINESS_AUDIT = DATA / "chapter5_high_fidelity_optimization_readiness_audit.csv"
 BCR4BP_DYNAMICS_AUDIT = DATA / "chapter5_bcr4bp_dynamics_audit.csv"
 BCR4BP_CORRECTION_AUDIT = DATA / "chapter5_bcr4bp_segment_correction_audit.csv"
 OPTIMIZED_TRANSFER_AUDIT = DATA / "chapter5_optimized_transfer_audit.csv"
+HALO_LYAPUNOV_TRANSFER_AUDIT = DATA / "chapter5_halo_lyapunov_transfer_per_figure_audit.csv"
+NRHO_CORRIDOR_AUDIT = DATA / "chapter5_nrho_corridor_per_figure_audit.csv"
 NRHO_TRANSFER_AUDIT = DATA / "chapter5_nrho_transfer_per_figure_audit.csv"
+NRHO_RENDEZVOUS_AUDIT = DATA / "chapter5_nrho_rendezvous_per_figure_audit.csv"
 STABLE_MANIFOLD_AUDIT = DATA / "chapter5_stable_manifold_per_figure_audit.csv"
 ROUTE_H_FAMILY = DATA / "chapter3_fixed_mapping_cache_accepted_family.csv"
 ROUTE_H_VALIDATION = DATA / "chapter3_fixed_mapping_cache_accepted_validation.csv"
@@ -140,14 +144,21 @@ def _source_metrics() -> dict[str, str]:
     bcr4bp_rows = _count_truthy(BCR4BP_DYNAMICS_AUDIT, "acceptance")
     correction_rows = _count_truthy(BCR4BP_CORRECTION_AUDIT, "correction_acceptance")
     optimized_rows = _count_truthy(OPTIMIZED_TRANSFER_AUDIT, "optimization_acceptance")
+    l1_long_rows = [row for row in _read_csv(SUN_EARTH_L1_LONG_PROP_AUDIT) if _truthy(row.get("acceptance"))] if SUN_EARTH_L1_LONG_PROP_AUDIT.exists() else []
     nrho_rows = [row for row in _read_csv(NRHO_TRANSFER_AUDIT) if _truthy(row.get("acceptance"))] if NRHO_TRANSFER_AUDIT.exists() else []
     nrho_by_figure: dict[str, list[dict[str, str]]] = {}
     for row in nrho_rows:
         nrho_by_figure.setdefault(row["figure_id"], []).append(row)
+    rendezvous_rows = [row for row in _read_csv(NRHO_RENDEZVOUS_AUDIT) if _truthy(row.get("acceptance"))] if NRHO_RENDEZVOUS_AUDIT.exists() else []
+    rendezvous_by_figure: dict[str, list[dict[str, str]]] = {}
+    for row in rendezvous_rows:
+        rendezvous_by_figure.setdefault(row["figure_id"], []).append(row)
     stable_rows = [row for row in _read_csv(STABLE_MANIFOLD_AUDIT) if _truthy(row.get("acceptance"))] if STABLE_MANIFOLD_AUDIT.exists() else []
     stable_by_figure: dict[str, list[dict[str, str]]] = {}
     for row in stable_rows:
         stable_by_figure.setdefault(row["figure_id"], []).append(row)
+    halo_lyapunov_rows = [row for row in _read_csv(HALO_LYAPUNOV_TRANSFER_AUDIT) if _truthy(row.get("acceptance"))] if HALO_LYAPUNOV_TRANSFER_AUDIT.exists() else []
+    nrho_corridor_rows = [row for row in _read_csv(NRHO_CORRIDOR_AUDIT) if _truthy(row.get("acceptance"))] if NRHO_CORRIDOR_AUDIT.exists() else []
     return {
         "route_h_rows": route_h["rows"],
         "route_h_member": route_h["member"],
@@ -161,6 +172,11 @@ def _source_metrics() -> dict[str, str]:
         "best_member": best.get("route_h_member", "N/A"),
         "best_phase": best.get("phase_index", "N/A"),
         "best_tof_days": best.get("time_of_flight_days", "N/A"),
+        "l1_long_rows": str(len(l1_long_rows)),
+        "l1_long_duration": _max_field(l1_long_rows, "duration_days"),
+        "l1_long_max_jacobi": _max_field(l1_long_rows, "jacobi_span"),
+        "l1_long_min_transverse_span": _min_field(l1_long_rows, "transverse_span"),
+        "l1_long_max_l1_distance": _max_field(l1_long_rows, "max_l1_distance_km"),
         "nrho_5_10_rows": str(len(nrho_by_figure.get("5.10", []))),
         "nrho_5_11_rows": str(len(nrho_by_figure.get("5.11", []))),
         "nrho_5_10_best_delta_v": _best_delta_v(nrho_by_figure.get("5.10", [])),
@@ -169,6 +185,11 @@ def _source_metrics() -> dict[str, str]:
         "nrho_5_11_worst_endpoint_error": _worst_endpoint_error(nrho_by_figure.get("5.11", [])),
         "nrho_5_10_max_jacobi_span": _max_jacobi_span(nrho_by_figure.get("5.10", [])),
         "nrho_5_11_max_jacobi_span": _max_jacobi_span(nrho_by_figure.get("5.11", [])),
+        "rendezvous_5_12_rows": str(len(rendezvous_by_figure.get("5.12", []))),
+        "rendezvous_5_12_left_coverage": _min_field(rendezvous_by_figure.get("5.12", []), "arrival_offset_hours"),
+        "rendezvous_5_12_right_coverage": _max_field(rendezvous_by_figure.get("5.12", []), "arrival_offset_hours"),
+        "rendezvous_5_12_min_delta_v_diff": _min_field(rendezvous_by_figure.get("5.12", []), "delta_v_difference_m_s"),
+        "rendezvous_5_12_max_endpoint_error": _max_field(rendezvous_by_figure.get("5.12", []), "endpoint_position_error_km"),
         "stable_5_13_rows": str(len(stable_by_figure.get("5.13", []))),
         "stable_5_14_rows": str(len(stable_by_figure.get("5.14", []))),
         "stable_5_13_periapsis_error": _max_field(stable_by_figure.get("5.13", []), "periapsis_error_km"),
@@ -179,6 +200,18 @@ def _source_metrics() -> dict[str, str]:
         "stable_5_14_transfer_time": _max_field(stable_by_figure.get("5.14", []), "transfer_time_days"),
         "stable_5_13_phase": _max_field(stable_by_figure.get("5.13", []), "selected_phase_deg"),
         "stable_5_14_phase": _max_field(stable_by_figure.get("5.14", []), "selected_phase_deg"),
+        "halo_lyapunov_rows": str(len(halo_lyapunov_rows)),
+        "halo_lyapunov_total_delta_v": _max_field(halo_lyapunov_rows, "total_delta_v_m_s"),
+        "halo_lyapunov_endpoint_error": _max_field(halo_lyapunov_rows, "endpoint_position_error_km"),
+        "halo_lyapunov_continuity": _max_field(halo_lyapunov_rows, "maximum_continuity_error"),
+        "halo_lyapunov_jacobi_span": _max_field(halo_lyapunov_rows, "jacobi_span"),
+        "halo_lyapunov_boundary_jacobi": _max_field(halo_lyapunov_rows, "boundary_jacobi_difference"),
+        "nrho_corridor_rows": str(len(nrho_corridor_rows)),
+        "nrho_corridor_best_delta_v": _best_delta_v(nrho_corridor_rows),
+        "nrho_corridor_worst_endpoint_error": _worst_endpoint_error(nrho_corridor_rows),
+        "nrho_corridor_max_jacobi_span": _max_jacobi_span(nrho_corridor_rows),
+        "nrho_corridor_departure_perilune": _max_field(nrho_corridor_rows, "departure_perilune_radius_km"),
+        "nrho_corridor_destination_perilune": _max_field(nrho_corridor_rows, "destination_perilune_radius_km"),
     }
 
 
@@ -206,6 +239,12 @@ def _max_field(rows: list[dict[str, str]], field: str) -> str:
     return f"{max(float(row[field]) for row in rows):.16g}"
 
 
+def _min_field(rows: list[dict[str, str]], field: str) -> str:
+    if not rows:
+        return "N/A"
+    return f"{min(float(row[field]) for row in rows):.16g}"
+
+
 def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
     route_h_source = f"{_rel(ROUTE_H_FAMILY)};{_rel(ROUTE_H_VALIDATION)}"
     bcr4bp_source = (
@@ -226,18 +265,24 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
         {
             "figure_id": "5.1",
             "current_source_layer": "Sun-Earth L1 CR3BP long-propagation baseline with proxy torus context",
-            "current_repro_level": "shape-match with local numerical overlay",
-            "original_replacement_status": "not_replaced",
+            "current_repro_level": "CR3BP Sun-Earth L1 long-propagation audit",
+            "original_replacement_status": "local_cr3bp_center_mode_not_lissajous_torus_replacement",
             "uses_proxy": "partial",
             "primary_evidence": "data/computed/chapter5_sun_earth_l1_cr3bp_long_propagation.csv",
-            "supporting_evidence": _rel(UPSTREAM_AUDIT),
+            "supporting_evidence": f"{_rel(SUN_EARTH_L1_LONG_PROP_AUDIT)};{_rel(UPSTREAM_AUDIT)}",
             "route_h_dependency": "none",
             "bcr4bp_dependency": "none",
             "optimization_dependency": "none",
-            "accepted_rows": "0",
-            "best_metric": "local CR3BP baseline only",
-            "boundary": "The rendered torus/context is not a corrected Sun-Earth quasi-periodic family from McCarthy raw data.",
-            "next_action": "Continue with corrected Sun-Earth quasi-periodic family or keep this as a local-overlay application baseline.",
+            "accepted_rows": metrics["l1_long_rows"],
+            "best_metric": (
+                f"accepted CR3BP L1 long-propagation rows {metrics['l1_long_rows']}; "
+                f"duration {metrics['l1_long_duration']} days; "
+                f"max Jacobi span {metrics['l1_long_max_jacobi']}; "
+                f"minimum transverse span {metrics['l1_long_min_transverse_span']}; "
+                f"max L1 distance {metrics['l1_long_max_l1_distance']} km"
+            ),
+            "boundary": "Local Sun-Earth L1 CR3BP center-mode propagation rows are accepted; rendered torus/context remains proxy and is not a corrected thesis Lissajous torus.",
+            "next_action": "Replace proxy torus context with corrected two-frequency Lissajous/quasi-periodic family or BCR4BP/ephemeris evidence before thesis-equivalence claims.",
         },
         {
             "figure_id": "5.2",
@@ -338,34 +383,48 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
         {
             "figure_id": "5.8",
             "current_source_layer": "Earth-Moon halo-to-Lyapunov CR3BP baseline plus separate Route H/BCR4BP optimized-transfer source layer",
-            "current_repro_level": "shape-match with local numerical overlay + source-layer optimization available",
-            "original_replacement_status": "not_replaced_by_original_figure; source_layer_available_separately",
+            "current_repro_level": "CR3BP endpoint-corrected halo-Lyapunov transfer audit",
+            "original_replacement_status": "endpoint_corrected_cr3bp_not_high_fidelity_replacement",
             "uses_proxy": "partial",
             "primary_evidence": "data/computed/chapter5_earth_moon_halo_lyapunov_transfer_baseline.csv",
-            "supporting_evidence": bcr4bp_source,
+            "supporting_evidence": f"{_rel(HALO_LYAPUNOV_TRANSFER_AUDIT)};{bcr4bp_source}",
             "route_h_dependency": "accepted Route H upstream member for separate source-layer figure",
             "bcr4bp_dependency": f"{metrics['bcr4bp_rows']} dynamics audit rows; {metrics['correction_rows']} correction rows",
             "optimization_dependency": f"{metrics['optimized_rows']} accepted optimized transfer rows",
-            "accepted_rows": metrics["optimized_rows"],
-            "best_metric": optimized_metric,
-            "boundary": "The optimized Route H/BCR4BP transfer is a source-layer result, not a direct replacement of the original Fig. 5.8 geometry yet.",
-            "next_action": "Map optimized endpoints, constraints, and cost definition to the original transfer figure before promotion.",
+            "accepted_rows": metrics["halo_lyapunov_rows"],
+            "best_metric": (
+                f"accepted CR3BP halo-Lyapunov transfer rows {metrics['halo_lyapunov_rows']}; "
+                f"total delta-v {metrics['halo_lyapunov_total_delta_v']} m/s; "
+                f"endpoint error {metrics['halo_lyapunov_endpoint_error']} km; "
+                f"continuity {metrics['halo_lyapunov_continuity']}; "
+                f"Jacobi span {metrics['halo_lyapunov_jacobi_span']}; "
+                f"boundary Jacobi difference {metrics['halo_lyapunov_boundary_jacobi']}"
+            ),
+            "boundary": "Per-figure endpoint-corrected CR3BP equal-Jacobi transfer row is accepted; the separate Route H/BCR4BP optimized source layer is still not a direct original Fig. 5.8 replacement.",
+            "next_action": "Promote further only after BCR4BP/ephemeris correction or original thesis transfer data are mapped to this specific Fig. 5.8 geometry.",
         },
         {
             "figure_id": "5.9",
             "current_source_layer": "Earth-Moon NRHO transfer baseline with proxy quasi-NRHO surface",
-            "current_repro_level": "shape-match with local numerical overlay",
-            "original_replacement_status": "not_replaced",
+            "current_repro_level": "CR3BP corrected NRHO corridor marker audit",
+            "original_replacement_status": "corrected_boundary_markers_not_torus_replacement",
             "uses_proxy": "partial",
             "primary_evidence": "data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv",
-            "supporting_evidence": bcr4bp_source,
+            "supporting_evidence": f"{_rel(NRHO_CORRIDOR_AUDIT)};{bcr4bp_source}",
             "route_h_dependency": "indirect only",
             "bcr4bp_dependency": "available as separate source-layer audit",
             "optimization_dependency": "available as separate source-layer audit",
-            "accepted_rows": "0",
-            "best_metric": "NRHO baseline only; no accepted per-figure optimized endpoint mapping",
-            "boundary": "Grey/proxy quasi-NRHO surface remains contextual and is not corrected torus data.",
-            "next_action": "Replace proxy surface with corrected torus/transfer data and add endpoint residual evidence.",
+            "accepted_rows": metrics["nrho_corridor_rows"],
+            "best_metric": (
+                f"accepted CR3BP corridor marker rows {metrics['nrho_corridor_rows']}; "
+                f"best total delta-v {metrics['nrho_corridor_best_delta_v']} m/s; "
+                f"worst endpoint error {metrics['nrho_corridor_worst_endpoint_error']} km; "
+                f"max Jacobi span {metrics['nrho_corridor_max_jacobi_span']}; "
+                f"perilune radii {metrics['nrho_corridor_departure_perilune']} / "
+                f"{metrics['nrho_corridor_destination_perilune']} km"
+            ),
+            "boundary": "Corrected NRHO boundaries and departure markers have endpoint evidence; grey corridor remains a linear corrected-boundary bridge, not corrected torus data.",
+            "next_action": "Replace the grey corridor with corrected quasi-NRHO torus or BCR4BP/ephemeris corridor data before thesis-equivalence claims.",
         },
         {
             "figure_id": "5.10",
@@ -411,19 +470,25 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
         },
         {
             "figure_id": "5.12",
-            "current_source_layer": "Earth-Moon NRHO branch baseline with proxy continuation beyond fold",
-            "current_repro_level": "shape-match with local numerical overlay",
-            "original_replacement_status": "not_replaced",
+            "current_source_layer": "Earth-Moon NRHO fixed-departure rendezvous arrival-offset branch",
+            "current_repro_level": "CR3BP fixed-departure rendezvous branch audit",
+            "original_replacement_status": "local_cr3bp_rendezvous_branch_not_global_replacement",
             "uses_proxy": "partial",
             "primary_evidence": "data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv",
-            "supporting_evidence": "",
+            "supporting_evidence": _rel(NRHO_RENDEZVOUS_AUDIT),
             "route_h_dependency": "none",
             "bcr4bp_dependency": "none",
             "optimization_dependency": "none",
-            "accepted_rows": "0",
-            "best_metric": "local branch baseline only",
-            "boundary": "Proxy trend beyond the fold is not robust continuation data.",
-            "next_action": "Replace proxy trend beyond the fold with a robust continued branch and residual checks.",
+            "accepted_rows": metrics["rendezvous_5_12_rows"],
+            "best_metric": (
+                f"accepted CR3BP rendezvous scan rows {metrics['rendezvous_5_12_rows']}; "
+                f"coverage {metrics['rendezvous_5_12_left_coverage']} to "
+                f"{metrics['rendezvous_5_12_right_coverage']} h; "
+                f"minimum delta-v difference {metrics['rendezvous_5_12_min_delta_v_diff']} m/s; "
+                f"maximum endpoint error {metrics['rendezvous_5_12_max_endpoint_error']} km"
+            ),
+            "boundary": "Local CR3BP fixed-departure rendezvous branch has endpoint evidence; grey proxy trend beyond the fold remains non-replacement context.",
+            "next_action": "Replace the remaining grey proxy region with a robust global quasi-NRHO continuation or high-fidelity ephemeris branch before thesis-equivalence claims.",
         },
         {
             "figure_id": "5.13",

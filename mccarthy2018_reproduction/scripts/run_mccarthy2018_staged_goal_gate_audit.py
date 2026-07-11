@@ -142,6 +142,8 @@ def _build_rows() -> list[dict[str, Any]]:
     cache_audit_path = data / "chapter3_fixed_mapping_cache_audit.csv"
     cache_family_path = data / "chapter3_fixed_mapping_cache_accepted_family.csv"
     cache_validation_path = data / "chapter3_fixed_mapping_cache_accepted_validation.csv"
+    chapter3_period_q_path = data / "chapter3_period_q_per_figure_audit.csv"
+    chapter3_period_q_doc_path = docs / "chapter3_period_q_per_figure_audit.md"
     chapter4_route_h_dg_path = data / "chapter4_route_h_quasi_dro_dg.csv"
     chapter4_route_h_manifold_path = data / "chapter4_route_h_quasi_dro_manifold_probe.csv"
     chapter4_route_h_figure_png = PROJECT_ROOT / "outputs" / "figures_png" / "fig_4_route_h.png"
@@ -152,8 +154,16 @@ def _build_rows() -> list[dict[str, Any]]:
     chapter5_doc_path = docs / "chapter5_upstream_application_gate_audit.md"
     chapter5_readiness_path = data / "chapter5_high_fidelity_optimization_readiness_audit.csv"
     chapter5_readiness_doc_path = docs / "chapter5_high_fidelity_optimization_readiness_audit.md"
+    chapter5_l1_long_prop_path = data / "chapter5_sun_earth_l1_long_propagation_per_figure_audit.csv"
+    chapter5_l1_long_prop_doc_path = docs / "chapter5_sun_earth_l1_long_propagation_per_figure_audit.md"
+    chapter5_halo_lyapunov_path = data / "chapter5_halo_lyapunov_transfer_per_figure_audit.csv"
+    chapter5_halo_lyapunov_doc_path = docs / "chapter5_halo_lyapunov_transfer_per_figure_audit.md"
+    chapter5_nrho_corridor_path = data / "chapter5_nrho_corridor_per_figure_audit.csv"
+    chapter5_nrho_corridor_doc_path = docs / "chapter5_nrho_corridor_per_figure_audit.md"
     chapter5_nrho_transfer_path = data / "chapter5_nrho_transfer_per_figure_audit.csv"
     chapter5_nrho_transfer_doc_path = docs / "chapter5_nrho_transfer_per_figure_audit.md"
+    chapter5_nrho_rendezvous_path = data / "chapter5_nrho_rendezvous_per_figure_audit.csv"
+    chapter5_nrho_rendezvous_doc_path = docs / "chapter5_nrho_rendezvous_per_figure_audit.md"
     chapter5_stable_manifold_path = data / "chapter5_stable_manifold_per_figure_audit.csv"
     chapter5_stable_manifold_doc_path = docs / "chapter5_stable_manifold_per_figure_audit.md"
     chapter5_per_figure_path = data / "chapter5_per_figure_source_layer_audit.csv"
@@ -172,12 +182,17 @@ def _build_rows() -> list[dict[str, Any]]:
     variable_time = _read_rows(variable_time_path)
     cache_audit = _read_rows(cache_audit_path)
     cache_validation = _read_rows(cache_validation_path)
+    chapter3_period_q = _read_rows(chapter3_period_q_path)
     chapter4_route_h_dg = _read_rows(chapter4_route_h_dg_path)
     chapter4_route_h_manifold = _read_rows(chapter4_route_h_manifold_path)
     chapter4_per_figure = _read_rows(chapter4_per_figure_path)
     chapter5_audit = _read_rows(chapter5_audit_path)
     chapter5_readiness = _read_rows(chapter5_readiness_path)
+    chapter5_l1_long_prop = _read_rows(chapter5_l1_long_prop_path)
+    chapter5_halo_lyapunov = _read_rows(chapter5_halo_lyapunov_path)
+    chapter5_nrho_corridor = _read_rows(chapter5_nrho_corridor_path)
     chapter5_nrho_transfer = _read_rows(chapter5_nrho_transfer_path)
+    chapter5_nrho_rendezvous = _read_rows(chapter5_nrho_rendezvous_path)
     chapter5_stable_manifold = _read_rows(chapter5_stable_manifold_path)
     chapter5_per_figure = _read_rows(chapter5_per_figure_path)
 
@@ -253,6 +268,27 @@ def _build_rows() -> list[dict[str, Any]]:
         if np.isfinite(value)
     )
     chapter3_passes = figure_source_frontier >= campaign.TARGET_MIN_KM
+    chapter3_period_q_strict = [
+        row for row in chapter3_period_q if _as_bool(row.get("strict_acceptance"))
+    ]
+    chapter3_period_q_local = [
+        row
+        for row in chapter3_period_q
+        if _as_bool(row.get("local_multiple_shooting_acceptance"))
+    ]
+    chapter3_period_q_q8 = next(
+        (row for row in chapter3_period_q if row.get("resonance") == "8"),
+        {},
+    )
+    chapter3_period_q_q8_closure = _as_float(
+        chapter3_period_q_q8.get("full_period_single_shoot_closure_error"),
+        default=float("nan"),
+    )
+    chapter3_period_q_passes = (
+        len(chapter3_period_q_strict) >= 2
+        and len(chapter3_period_q_local) >= 3
+        and chapter3_period_q_doc_path.exists()
+    )
     chapter4_route_h_dg_passes = (
         chapter3_passes
         and bool(chapter4_route_h_dg)
@@ -324,6 +360,48 @@ def _build_rows() -> list[dict[str, Any]]:
             or chapter5_readiness_documented
         )
     )
+    chapter5_halo_lyapunov_accepted = [
+        row for row in chapter5_halo_lyapunov if _as_bool(row.get("acceptance"))
+    ]
+    chapter5_l1_long_prop_accepted = [
+        row for row in chapter5_l1_long_prop if _as_bool(row.get("acceptance"))
+    ]
+    chapter5_l1_long_prop_passes = (
+        len(chapter5_l1_long_prop_accepted) >= 5
+        and max(
+            (_as_float(row.get("jacobi_span"), 1.0) for row in chapter5_l1_long_prop_accepted),
+            default=1.0,
+        )
+        <= 1.0e-10
+        and min(
+            (_as_float(row.get("duration_days"), 0.0) for row in chapter5_l1_long_prop_accepted),
+            default=0.0,
+        )
+        >= 70.0
+        and chapter5_l1_long_prop_doc_path.exists()
+    )
+    chapter5_halo_lyapunov_passes = (
+        len(chapter5_halo_lyapunov_accepted) >= 1
+        and chapter5_halo_lyapunov_doc_path.exists()
+    )
+    chapter5_nrho_corridor_accepted = [
+        row for row in chapter5_nrho_corridor if _as_bool(row.get("acceptance"))
+    ]
+    chapter5_nrho_corridor_passes = (
+        len(chapter5_nrho_corridor_accepted) >= 2
+        and {row.get("figure_id") for row in chapter5_nrho_corridor_accepted} >= {"5.9"}
+        and max(
+            (_as_float(row.get("endpoint_position_error_km"), 1.0) for row in chapter5_nrho_corridor_accepted),
+            default=1.0,
+        )
+        <= 1.0e-3
+        and max(
+            (_as_float(row.get("jacobi_span"), 1.0) for row in chapter5_nrho_corridor_accepted),
+            default=1.0,
+        )
+        <= 1.0e-8
+        and chapter5_nrho_corridor_doc_path.exists()
+    )
     chapter5_original_figure_rows = [
         row for row in chapter5_per_figure if _is_original_chapter5_figure(row.get("figure_id", ""))
     ]
@@ -346,6 +424,29 @@ def _build_rows() -> list[dict[str, Any]]:
         len(chapter5_nrho_transfer_accepted) >= 4
         and {row.get("figure_id") for row in chapter5_nrho_transfer_accepted} >= {"5.10", "5.11"}
         and chapter5_nrho_transfer_doc_path.exists()
+    )
+    chapter5_nrho_rendezvous_accepted = [
+        row for row in chapter5_nrho_rendezvous if _as_bool(row.get("acceptance"))
+    ]
+    chapter5_nrho_rendezvous_left = min(
+        (_as_float(row.get("arrival_offset_hours"), float("inf")) for row in chapter5_nrho_rendezvous_accepted),
+        default=float("nan"),
+    )
+    chapter5_nrho_rendezvous_right = max(
+        (_as_float(row.get("arrival_offset_hours"), -float("inf")) for row in chapter5_nrho_rendezvous_accepted),
+        default=float("nan"),
+    )
+    chapter5_nrho_rendezvous_endpoint = max(
+        (_as_float(row.get("endpoint_position_error_km"), 1.0) for row in chapter5_nrho_rendezvous_accepted),
+        default=1.0,
+    )
+    chapter5_nrho_rendezvous_passes = (
+        len(chapter5_nrho_rendezvous_accepted) >= 35
+        and {row.get("figure_id") for row in chapter5_nrho_rendezvous_accepted} >= {"5.12"}
+        and chapter5_nrho_rendezvous_left <= -20.0
+        and chapter5_nrho_rendezvous_right >= 10.0
+        and chapter5_nrho_rendezvous_endpoint <= 1.0e-3
+        and chapter5_nrho_rendezvous_doc_path.exists()
     )
     chapter5_stable_manifold_accepted = [
         row for row in chapter5_stable_manifold if _as_bool(row.get("acceptance"))
@@ -427,6 +528,26 @@ def _build_rows() -> list[dict[str, Any]]:
             evidence_artifact=f"{_artifact(cache_audit_path)};{_artifact(cache_family_path)};{_artifact(cache_validation_path)}",
             decision="use_route_h_for_chapter3_source" if best_cache is not None else "cache_not_accepted",
             notes=f"Best exported validation max abs z is {best_cache_validation}; accepted cache family is monotone-filtered.",
+        ),
+        _row(
+            scope="chapter3",
+            gate_id="C3-PERIOD-Q-PER-FIGURE-AUDIT",
+            requirement="Fig. 3.10 period-q audit must separate strict single-shoot periodic rows from the q=8 local multiple-shooting boundary.",
+            status="pass" if chapter3_period_q_passes else "not_run_or_incomplete",
+            metric="strict_single_shoot_rows",
+            value=len(chapter3_period_q_strict),
+            threshold=">= 2 strict rows and >= 3 local multiple-shooting rows",
+            evidence_artifact=f"{_artifact(chapter3_period_q_path)};{_artifact(chapter3_period_q_doc_path)}",
+            decision=(
+                "use_period_q_boundary_audit"
+                if chapter3_period_q_passes
+                else "run_chapter3_period_q_per_figure_audit"
+            ),
+            notes=(
+                f"Local multiple-shooting rows: {len(chapter3_period_q_local)}; "
+                f"q8 full-period single-shoot closure error: {_fmt(chapter3_period_q_q8_closure)}. "
+                "Passing this gate preserves the q8 boundary and does not promote q8 to robust single-shoot closure."
+            ),
         ),
         _row(
             scope="chapter4",
@@ -567,7 +688,7 @@ def _build_rows() -> list[dict[str, Any]]:
             metric="missing_high_fidelity_capabilities",
             value=chapter5_missing_hf_capabilities,
             threshold="0 for completed high-fidelity/optimization layer",
-            evidence_artifact=f"{_artifact(chapter5_audit_path)};{_artifact(chapter5_doc_path)};{_artifact(chapter5_readiness_path)};{_artifact(chapter5_readiness_doc_path)};{_artifact(chapter5_nrho_transfer_path)};{_artifact(chapter5_stable_manifold_path)};{_artifact(chapter5_per_figure_path)};{_artifact(chapter5_per_figure_doc_path)};{_artifact(chapter5_optimization_figure_png)};{_artifact(chapter5_optimization_figure_pdf)}",
+            evidence_artifact=f"{_artifact(chapter5_audit_path)};{_artifact(chapter5_doc_path)};{_artifact(chapter5_readiness_path)};{_artifact(chapter5_readiness_doc_path)};{_artifact(chapter5_l1_long_prop_path)};{_artifact(chapter5_halo_lyapunov_path)};{_artifact(chapter5_nrho_corridor_path)};{_artifact(chapter5_nrho_transfer_path)};{_artifact(chapter5_nrho_rendezvous_path)};{_artifact(chapter5_stable_manifold_path)};{_artifact(chapter5_per_figure_path)};{_artifact(chapter5_per_figure_doc_path)};{_artifact(chapter5_optimization_figure_png)};{_artifact(chapter5_optimization_figure_pdf)}",
             decision=(
                 "chapter5_high_fidelity_optimization_source_layer_ready"
                 if chapter5_readiness_passes and chapter5_optimization_passes
@@ -592,6 +713,66 @@ def _build_rows() -> list[dict[str, Any]]:
                 "Chapter 5 high-fidelity/optimization blocker is now documented by a readiness audit: BCR4BP dynamics, ephemeris correction, and optimized transfer rows are still missing."
                 if chapter5_readiness_documented
                 else "Current repository evidence supports Route H/DE421 baseline figures, not full high-fidelity application reproduction."
+            ),
+        ),
+        _row(
+            scope="chapter5",
+            gate_id="C5-HALO-LYAPUNOV-PER-FIGURE-TRANSFER-AUDIT",
+            requirement="Figure 5.8 should have a per-figure halo-to-Lyapunov transfer row with endpoint, continuity, delta-v, Jacobi, and periodicity evidence before being promoted beyond generic overlay status.",
+            status="pass" if chapter5_halo_lyapunov_passes else "not_run_or_incomplete",
+            metric="accepted_halo_lyapunov_transfer_rows",
+            value=len(chapter5_halo_lyapunov_accepted),
+            threshold=">= 1 accepted row covering Fig. 5.8",
+            evidence_artifact=f"{_artifact(chapter5_halo_lyapunov_path)};{_artifact(chapter5_halo_lyapunov_doc_path)}",
+            decision=(
+                "use_halo_lyapunov_per_figure_transfer_row"
+                if chapter5_halo_lyapunov_passes
+                else "run_chapter5_halo_lyapunov_transfer_per_figure_audit"
+            ),
+            notes=(
+                "Accepted row is an Earth-Moon CR3BP equal-Jacobi multiple-shooting "
+                "transfer; it records delta-v, endpoint defect, continuity, and Jacobi "
+                "evidence but does not claim BCR4BP/ephemeris replacement."
+            ),
+        ),
+        _row(
+            scope="chapter5",
+            gate_id="C5-SUN-EARTH-L1-LONG-PROPAGATION-AUDIT",
+            requirement="Figure 5.1 should have CR3BP long-propagation rows with duration, spatial extent, and Jacobi-conservation evidence before being promoted beyond visual overlay status.",
+            status="pass" if chapter5_l1_long_prop_passes else "not_run_or_incomplete",
+            metric="accepted_l1_long_propagation_rows",
+            value=len(chapter5_l1_long_prop_accepted),
+            threshold=">= 5 accepted rows with duration >= 70 days and Jacobi span <= 1e-10",
+            evidence_artifact=f"{_artifact(chapter5_l1_long_prop_path)};{_artifact(chapter5_l1_long_prop_doc_path)}",
+            decision=(
+                "use_l1_long_propagation_per_figure_rows"
+                if chapter5_l1_long_prop_passes
+                else "run_chapter5_sun_earth_l1_long_propagation_per_figure_audit"
+            ),
+            notes=(
+                "Accepted rows are local Sun-Earth L1 CR3BP center-mode propagations; "
+                "the plotted torus context remains proxy and does not claim corrected "
+                "two-frequency Lissajous or BCR4BP/ephemeris equivalence."
+            ),
+        ),
+        _row(
+            scope="chapter5",
+            gate_id="C5-NRHO-CORRIDOR-PER-FIGURE-AUDIT",
+            requirement="Figure 5.9 should have corrected NRHO boundary/departure-marker rows with endpoint, delta-v, Jacobi, periodicity, and radius evidence before being promoted beyond visual overlay status.",
+            status="pass" if chapter5_nrho_corridor_passes else "not_run_or_incomplete",
+            metric="accepted_nrho_corridor_marker_rows",
+            value=len(chapter5_nrho_corridor_accepted),
+            threshold=">= 2 accepted rows covering Fig. 5.9 with endpoint <= 1e-3 km and Jacobi span <= 1e-8",
+            evidence_artifact=f"{_artifact(chapter5_nrho_corridor_path)};{_artifact(chapter5_nrho_corridor_doc_path)}",
+            decision=(
+                "use_nrho_corridor_per_figure_marker_rows"
+                if chapter5_nrho_corridor_passes
+                else "run_chapter5_nrho_corridor_per_figure_audit"
+            ),
+            notes=(
+                "Accepted rows are CR3BP corrected-boundary departure-marker rows; "
+                "the grey corridor remains a linear corrected-boundary bridge and "
+                "does not claim corrected quasi-NRHO torus or BCR4BP/ephemeris equivalence."
             ),
         ),
         _row(
@@ -632,6 +813,27 @@ def _build_rows() -> list[dict[str, Any]]:
                 "Accepted rows are CR3BP endpoint-corrected direct-shooting transfers; "
                 "they record per-figure delta-v and endpoint defects but do not claim "
                 "BCR4BP/ephemeris high-fidelity thesis replacement."
+            ),
+        ),
+        _row(
+            scope="chapter5",
+            gate_id="C5-NRHO-RENDEZVOUS-PER-FIGURE-AUDIT",
+            requirement="Figure 5.12 should have a per-figure fixed-departure rendezvous branch with arrival-offset coverage, delta-v variation, and endpoint residual evidence before being promoted beyond proxy overlay status.",
+            status="pass" if chapter5_nrho_rendezvous_passes else "not_run_or_incomplete",
+            metric="accepted_nrho_rendezvous_rows",
+            value=len(chapter5_nrho_rendezvous_accepted),
+            threshold=">= 35 accepted rows covering Fig. 5.12 with left <= -20 h, right >= 10 h, endpoint <= 1e-3 km",
+            evidence_artifact=f"{_artifact(chapter5_nrho_rendezvous_path)};{_artifact(chapter5_nrho_rendezvous_doc_path)}",
+            decision=(
+                "use_nrho_rendezvous_per_figure_branch"
+                if chapter5_nrho_rendezvous_passes
+                else "run_chapter5_nrho_rendezvous_per_figure_audit"
+            ),
+            notes=(
+                f"Accepted rows span {_fmt(chapter5_nrho_rendezvous_left)} to "
+                f"{_fmt(chapter5_nrho_rendezvous_right)} hours with worst endpoint "
+                f"{_fmt(chapter5_nrho_rendezvous_endpoint)} km; this is a local CR3BP "
+                "arrival-offset branch, not a thesis global quasi-NRHO or ephemeris replacement."
             ),
         ),
         _row(
@@ -723,13 +925,18 @@ def _write_doc(rows: list[dict[str, Any]]) -> None:
     by_gate = {row["gate_id"]: row for row in rows}
     c3 = by_gate["C3-FIGURE-SOURCE-FRONTIER"]
     experimental = by_gate["C3-EXPERIMENTAL-FRONTIER"]
+    c3_period_q = by_gate.get("C3-PERIOD-Q-PER-FIGURE-AUDIT", {})
     c4 = by_gate["C4-UPSTREAM-TORUS-DATA"]
     c4_route_h = by_gate["C4-ROUTE-H-DG-MANIFOLD"]
     c4_per_figure = by_gate.get("C4-PER-FIGURE-SOURCE-LAYER-AUDIT", {})
     c5 = by_gate["C5-UPSTREAM-HIGH-FIDELITY-DATA"]
     c5_baseline = by_gate.get("C5-ROUTE-H-DE421-BASELINE", {})
     c5_high_fidelity = by_gate.get("C5-HIGH-FIDELITY-OPTIMIZATION", {})
+    c5_l1_long_prop = by_gate.get("C5-SUN-EARTH-L1-LONG-PROPAGATION-AUDIT", {})
+    c5_halo_lyapunov = by_gate.get("C5-HALO-LYAPUNOV-PER-FIGURE-TRANSFER-AUDIT", {})
+    c5_nrho_corridor = by_gate.get("C5-NRHO-CORRIDOR-PER-FIGURE-AUDIT", {})
     c5_nrho_transfer = by_gate.get("C5-NRHO-PER-FIGURE-TRANSFER-AUDIT", {})
+    c5_nrho_rendezvous = by_gate.get("C5-NRHO-RENDEZVOUS-PER-FIGURE-AUDIT", {})
     c5_stable_manifold = by_gate.get("C5-STABLE-MANIFOLD-PER-FIGURE-AUDIT", {})
     c5_per_figure = by_gate.get("C5-PER-FIGURE-SOURCE-LAYER-AUDIT", {})
     lines = "\n".join(
@@ -752,12 +959,17 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - Chapter 3 required minimum: `{campaign.TARGET_MIN_KM}` km
 - Best experimental/local frontier: `{_fmt(experimental['value'])}` km
 - Fig. 3.16 / Fig. 3.17 update allowed: `{bool(c3['status'] == 'pass')}`
+- Fig. 3.10 period-q per-figure audit: `{c3_period_q.get('status')}`
 - Chapter 4 Route H DG source layer passed: `{bool(c4_route_h['status'] == 'pass')}`
 - Chapter 4 next decision: `{c4['decision']}`
 - Chapter 4 per-figure source-layer audit: `{c4_per_figure.get('status')}`
 - Chapter 5 Route H / DE421 baseline passed: `{bool(c5_baseline.get('status') == 'pass')}`
 - Chapter 5 high-fidelity/optimization status: `{c5_high_fidelity.get('status')}`
+- Chapter 5 Sun-Earth L1 long-propagation audit: `{c5_l1_long_prop.get('status')}`
+- Chapter 5 halo-Lyapunov per-figure transfer audit: `{c5_halo_lyapunov.get('status')}`
+- Chapter 5 NRHO corridor per-figure audit: `{c5_nrho_corridor.get('status')}`
 - Chapter 5 NRHO per-figure transfer audit: `{c5_nrho_transfer.get('status')}`
+- Chapter 5 NRHO rendezvous per-figure audit: `{c5_nrho_rendezvous.get('status')}`
 - Chapter 5 stable-manifold per-figure audit: `{c5_stable_manifold.get('status')}`
 - Chapter 5 per-figure source-layer audit: `{c5_per_figure.get('status')}`
 - Chapter 5 regeneration allowed: `{bool(c5['status'] != 'blocked_missing_high_fidelity_optimization' and c5_high_fidelity.get('status') != 'blocked_missing_high_fidelity_optimization')}`
@@ -802,10 +1014,31 @@ The per-original-figure mapping is recorded in
 `docs/chapter5_per_figure_source_layer_audit.md`; gate
 `C5-PER-FIGURE-SOURCE-LAYER-AUDIT` must pass before Chapter 5 status summaries
 are treated as figure-by-figure rather than aggregate-only.
+For Fig. 5.1, the Sun-Earth L1 CR3BP center-mode long-propagation rows are
+recorded in
+`data/computed/chapter5_sun_earth_l1_long_propagation_per_figure_audit.csv`
+and `docs/chapter5_sun_earth_l1_long_propagation_per_figure_audit.md`; these
+rows strengthen the green propagated overlays while the torus context remains a
+proxy rather than a corrected two-frequency Lissajous family.
+For Fig. 5.8, the Earth-Moon CR3BP equal-Jacobi halo-to-Lyapunov transfer row is
+recorded in `data/computed/chapter5_halo_lyapunov_transfer_per_figure_audit.csv`
+and `docs/chapter5_halo_lyapunov_transfer_per_figure_audit.md`; this row
+strengthens the per-figure transfer evidence without claiming BCR4BP/ephemeris
+equivalence.
+For Fig. 5.9, the corrected NRHO boundary and departure-marker rows are
+recorded in `data/computed/chapter5_nrho_corridor_per_figure_audit.csv` and
+`docs/chapter5_nrho_corridor_per_figure_audit.md`; these rows strengthen the
+figure-specific marker evidence, while the grey corridor remains a linear bridge
+rather than a corrected quasi-NRHO torus.
 For Fig. 5.10 and Fig. 5.11 specifically, the CR3BP endpoint-corrected transfer
 rows are recorded in `data/computed/chapter5_nrho_transfer_per_figure_audit.csv`
 and `docs/chapter5_nrho_transfer_per_figure_audit.md`; these rows strengthen
 the per-figure transfer evidence without claiming BCR4BP/ephemeris equivalence.
+For Fig. 5.12, the CR3BP fixed-departure rendezvous arrival-offset branch is
+recorded in `data/computed/chapter5_nrho_rendezvous_per_figure_audit.csv` and
+`docs/chapter5_nrho_rendezvous_per_figure_audit.md`; this replaces the prior
+un-audited local curve with endpoint-residual and delta-v evidence, while the
+grey proxy beyond the fold remains non-replacement context.
 For Fig. 5.13 and Fig. 5.14, the Sun-Earth CR3BP stable-manifold periapsis and
 transfer-scene rows are recorded in
 `data/computed/chapter5_stable_manifold_per_figure_audit.csv` and

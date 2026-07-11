@@ -34,7 +34,7 @@ comparison, and several Chapter 4/5 figures retain proxy or source-layer status.
 - Fig. 3.3: `proxy/schematic only`; proxy flag `partial`; schematic with numerical diagnostic
 - Fig. 3.4: `proxy/schematic only`; proxy flag `true`; schematic only
 - Fig. 3.9: `shape-match with local numerical overlay`; proxy flag `partial`; corrected curves with proxy tail
-- Fig. 3.10: `shape-match with local numerical overlay`; proxy flag `partial`; local numerical approximation
+- Fig. 3.10: `period-q multiple-shooting audit with q8 boundary`; proxy flag `partial`; q=2 and q=3 are strict period-q audit rows; q=8 is retained as a local multiple-shooting overlay with an explicit single-shoot closure boundary
 - Fig. 3.11: `shape-match with local numerical overlay`; proxy flag `partial`; local numerical scene
 - Fig. 3.17: `audited Route H fixed-time source-layer`; proxy flag `partial`; audited Route H branch is plotted as the main numerical layer; faint reference trend proxy is retained only for visual context
 
@@ -51,13 +51,13 @@ comparison, and several Chapter 4/5 figures retain proxy or source-layer status.
 
 ### Chapter 5
 
-- Fig. 5.1: `shape-match with local numerical overlay`; proxy flag `partial`; PNG bytes 860121; PDF bytes 236515; boundary: The rendered torus/context is not a corrected Sun-Earth quasi-periodic family from McCarthy raw data.
+- Fig. 5.1: `CR3BP Sun-Earth L1 long-propagation audit`; proxy flag `partial`; PNG bytes 860121; PDF bytes 236515; boundary: Local Sun-Earth L1 CR3BP center-mode propagation rows are accepted; rendered torus/context remains proxy and is not a corrected thesis Lissajous torus.
 - Fig. 5.2: `proxy/schematic only`; proxy flag `true`; PNG bytes 87543; PDF bytes 13167; boundary: No numerical source-layer is required for the current schematic role.
 - Fig. 5.3: `proxy/schematic only`; proxy flag `true`; PNG bytes 64008; PDF bytes 12487; boundary: No numerical source-layer is required for the current schematic role.
 - Fig. 5.4: `proxy/schematic only`; proxy flag `true`; PNG bytes 205910; PDF bytes 17825; boundary: No numerical source-layer is required for the current schematic role.
-- Fig. 5.8: `shape-match with local numerical overlay + source-layer optimization available`; proxy flag `partial`; PNG bytes 470710; PDF bytes 231145; boundary: The optimized Route H/BCR4BP transfer is a source-layer result, not a direct replacement of the original Fig. 5.8 geometry yet.
-- Fig. 5.9: `shape-match with local numerical overlay`; proxy flag `partial`; PNG bytes 281783; PDF bytes 217849; boundary: Grey/proxy quasi-NRHO surface remains contextual and is not corrected torus data.
-- Fig. 5.12: `shape-match with local numerical overlay`; proxy flag `partial`; PNG bytes 90688; PDF bytes 25324; boundary: Proxy trend beyond the fold is not robust continuation data.
+- Fig. 5.8: `CR3BP endpoint-corrected halo-Lyapunov transfer audit`; proxy flag `partial`; PNG bytes 470710; PDF bytes 231145; boundary: Per-figure endpoint-corrected CR3BP equal-Jacobi transfer row is accepted; the separate Route H/BCR4BP optimized source layer is still not a direct original Fig. 5.8 replacement.
+- Fig. 5.9: `CR3BP corrected NRHO corridor marker audit`; proxy flag `partial`; PNG bytes 281783; PDF bytes 217849; boundary: Corrected NRHO boundaries and departure markers have endpoint evidence; grey corridor remains a linear corrected-boundary bridge, not corrected torus data.
+- Fig. 5.12: `CR3BP fixed-departure rendezvous branch audit`; proxy flag `partial`; PNG bytes 90688; PDF bytes 25324; boundary: Local CR3BP fixed-departure rendezvous branch has endpoint evidence; grey proxy trend beyond the fold remains non-replacement context.
 - Fig. 5.13: `CR3BP stable-manifold periapsis audit`; proxy flag `partial`; PNG bytes 245373; PDF bytes 104629; boundary: Periapsis-targeted CR3BP stable-manifold evidence exists, but the displayed heat map still contains thesis-shaped proxy context and is not a full quasi-periodic Lissajous-torus manifold.
 - Fig. 5.14: `CR3BP stable-manifold LEO transfer audit`; proxy flag `partial`; PNG bytes 383539; PDF bytes 106849; boundary: Accepted CR3BP stable-manifold transfer-scene row exists, but the figure is not yet a BCR4BP/ephemeris or full quasi-periodic Lissajous transfer replacement.
 

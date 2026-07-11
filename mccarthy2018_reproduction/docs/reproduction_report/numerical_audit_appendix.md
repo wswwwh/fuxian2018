@@ -39,10 +39,29 @@ branch states, tables, author code, or another direct high-authority comparison.
 
 ## B. Fig. 3.10 period-q audit
 
-Fig. 3.10 remains `shape-match with local numerical overlay`. q=2 and q=3 have
-good local closure and Jacobi evidence. q=8 is internally consistent as a
-multiple-shooting patch solution, but full-period single integration closure
-remains unreliable on a highly unstable orbit.
+Source files:
+
+- `data/computed/period_q_halo_examples.csv`
+- `data/computed/period_q_halo_closure_audit.csv`
+- `data/computed/chapter3_period_q_per_figure_audit.csv`
+- `docs/chapter3_period_q_per_figure_audit.md`
+
+Fig. 3.10 is now tracked as `period-q multiple-shooting audit with q8
+boundary`. q=2 and q=3 pass the stricter single-shoot periodic-orbit threshold;
+q=8 passes the local multiple-shooting and Jacobi-consistency checks, but its
+full-period single-shoot closure remains unreliable.
+
+| metric | value |
+|---|---:|
+| strict single-shoot accepted rows | `2` / `3` |
+| local multiple-shooting accepted rows | `3` / `3` |
+| worst local multiple-shooting residual | `7.654092149144291e-14` |
+| worst local Jacobi drift | `4.440892098500626e-15` |
+| q=8 full-period single-shoot closure error | `3.906984451743337` |
+
+Boundary: q=8 remains a local multiple-shooting overlay until a robust
+high-instability closure validation path or alternate accepted audit is added.
+
 
 ## C. Chapter 4 DG/manifold audit
 

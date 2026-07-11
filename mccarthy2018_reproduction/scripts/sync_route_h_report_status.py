@@ -25,6 +25,7 @@ ROUTE_H_AUDIT = DATA / "chapter3_fixed_mapping_cache_audit.csv"
 STAGED_GATE = DATA / "mccarthy2018_staged_goal_gate_status.csv"
 CHAPTER4_PER_FIGURE_AUDIT = DATA / "chapter4_per_figure_source_layer_audit.csv"
 CHAPTER5_PER_FIGURE_AUDIT = DATA / "chapter5_per_figure_source_layer_audit.csv"
+CHAPTER3_PERIOD_Q_PER_FIGURE_AUDIT = DATA / "chapter3_period_q_per_figure_audit.csv"
 
 FIGURE_STATUS_APPENDIX = REPORT / "figure_status_appendix.md"
 PROXY_USAGE_APPENDIX = REPORT / "proxy_usage_appendix.md"
@@ -58,6 +59,10 @@ def _write_csv(path: Path, rows: list[dict[str, Any]], fields: list[str]) -> Non
 
 def _as_float(row: dict[str, str], field: str) -> float:
     return float(row[field])
+
+
+def _as_bool(value: str | None) -> bool:
+    return str(value).strip().lower() == "true"
 
 
 def _fmt(value: float | int | str | None) -> str:
@@ -180,10 +185,84 @@ def _update_figure_validation_table(summary: dict[str, float | int | str]) -> li
                     ),
                 }
             )
+    _update_chapter3_figure_validation_rows(rows)
     _update_chapter4_figure_validation_rows(rows)
     _update_chapter5_figure_validation_rows(rows)
     _write_csv(FIGURE_VALIDATION, rows, fields)
     return rows
+
+
+def _update_chapter3_figure_validation_rows(rows: list[dict[str, str]]) -> None:
+    if not CHAPTER3_PERIOD_Q_PER_FIGURE_AUDIT.exists():
+        return
+    period_q_rows = _read_csv(CHAPTER3_PERIOD_Q_PER_FIGURE_AUDIT)
+    if not period_q_rows:
+        return
+    strict_rows = [row for row in period_q_rows if _as_bool(row.get("strict_acceptance"))]
+    local_rows = [
+        row for row in period_q_rows if _as_bool(row.get("local_multiple_shooting_acceptance"))
+    ]
+    worst_local_residual = max(
+        (_as_float(row, "multiple_shooting_residual_norm") for row in local_rows),
+        default=float("nan"),
+    )
+    worst_local_jacobi = max(
+        (_as_float(row, "trajectory_jacobi_drift") for row in local_rows),
+        default=float("nan"),
+    )
+    worst_strict_closure = max(
+        (_as_float(row, "full_period_single_shoot_closure_error") for row in strict_rows),
+        default=float("nan"),
+    )
+    q8 = next((row for row in period_q_rows if row.get("resonance") == "8"), None)
+    q8_closure = (
+        _as_float(q8, "full_period_single_shoot_closure_error") if q8 is not None else None
+    )
+    q8_multiplier = (
+        _as_float(q8, "max_monodromy_multiplier_abs") if q8 is not None else None
+    )
+    for row in rows:
+        if row["figure_id"] != "3.10":
+            continue
+        row.update(
+            {
+                "current_repro_level": "period-q multiple-shooting audit with q8 boundary",
+                "uses_proxy": "partial",
+                "main_data_source": (
+                    "data/computed/period_q_halo_examples.csv;"
+                    "data/computed/period_q_halo_closure_audit.csv;"
+                    "data/computed/chapter3_period_q_per_figure_audit.csv"
+                ),
+                "key_physical_quantities": (
+                    "q=2/q=3/q=8 Earth-Moon CR3BP period-q halo examples; "
+                    f"strict single-shoot accepted rows {len(strict_rows)}; "
+                    f"local multiple-shooting accepted rows {len(local_rows)}; "
+                    f"q8 max multiplier {_fmt(q8_multiplier)}"
+                ),
+                "residual_norm": (
+                    f"worst local multiple-shooting residual {_fmt(worst_local_residual)}; "
+                    f"local accepted rows {len(local_rows)}"
+                ),
+                "jacobi_drift": f"worst local trajectory Jacobi drift {_fmt(worst_local_jacobi)}",
+                "periodicity_error": (
+                    f"worst strict single-shoot closure {_fmt(worst_strict_closure)}; "
+                    f"q8 single-shoot closure {_fmt(q8_closure)}"
+                ),
+                "stability_index_error": (
+                    "q8 high-instability boundary recorded by monodromy multiplier; "
+                    "do not use q8 single-shoot closure as accepted periodic evidence"
+                ),
+                "visual_status": (
+                    "q=2 and q=3 are strict period-q audit rows; q=8 is retained as "
+                    "a local multiple-shooting overlay with an explicit single-shoot "
+                    "closure boundary"
+                ),
+                "next_action": (
+                    "Promote q=8 only after a robust high-instability single-shoot "
+                    "validation path or an alternate closure audit is accepted."
+                ),
+            }
+        )
 
 
 def _update_chapter4_figure_validation_rows(rows: list[dict[str, str]]) -> None:
@@ -435,7 +514,7 @@ Route H is now the current Chapter 3 quasi-DRO source-layer result:
 | Figure status counts | {count_text}. | These counts come from `data/computed/figure_validation_table.csv`. | Re-run `scripts/sync_route_h_report_status.py` after status-changing audits. |
 | Fig. 3.16 / 3.17 Route H source | Route H fixed-time quasi-DRO branch reaches `{_fmt(summary['max_z'])}` km at member `{summary['max_member']}`. | Chapter 3 source gate is passed for the fixed-time quasi-DRO source layer. | Exact thesis equivalence still needs original branch data or author code. |
 | Route H audit quality | max map residual `{_fmt(summary['max_residual'])}`, max curve Jacobi span `{_fmt(summary['max_curve_jacobi_span'])}`, max one-map Jacobi drift `{_fmt(summary['max_one_map_jacobi_drift'])}`. | The promoted source layer is backed by current CSV audit evidence. | Do not reuse rejected Route B/diagnostic rows as accepted source data. |
-| Fig. 3.10 q=8 | Multiple-shooting residuals are small, but single-shoot full-period closure remains unreliable. | It is a local approximation, not a robust periodic-orbit reproduction. | Keep the current boundary label. |
+| Fig. 3.10 period-q audit | q=2/q=3 are strict single-shoot accepted rows; q=8 is local multiple shooting with unreliable full-period single-shoot closure. | The figure has an explicit period-q audit boundary, not a full original-branch equivalence claim. | Promote q=8 only after robust high-instability closure validation or another accepted audit. |
 | Chapter 4 | Route H source-layer DG/manifold artifacts exist, while original L1 quasi-halo/quasi-vertical thesis-scale replacement remains separate. | Source-layer progress is real. | Do not conflate Route H quasi-DRO source-layer figures with original Fig. 4.3-4.8 replacement. |
 | Chapter 5 | Route H/DE421/BCR4BP/optimization source-layer audits exist. | Application-layer evidence has improved. | Per-figure high-fidelity equivalence still needs endpoint, delta-v, and ephemeris consistency checks where applicable. |
 """,
@@ -553,8 +632,8 @@ source-layer, baseline, local-overlay, or proxy-context results.
   max residual `{_fmt(summary['max_residual'])}`, max curve Jacobi span
   `{_fmt(summary['max_curve_jacobi_span'])}`, and max one-map Jacobi drift
   `{_fmt(summary['max_one_map_jacobi_drift'])}`.
-- Fig. 3.10 q=8 remains a local multiple-shooting approximation, not a robust
-  single-shoot periodic orbit.
+- Fig. 3.10 q=2/q=3 are strict period-q audit rows; q=8 remains a local
+  multiple-shooting approximation, not a robust single-shoot periodic orbit.
 - Chapter 4 Route H DG/manifold and Chapter 5 BCR4BP/optimization source-layer
   audits exist, but they do not replace every original thesis figure.
 
@@ -570,6 +649,59 @@ of every McCarthy 2018 thesis figure.
 
 
 def _write_numerical_audit(summary: dict[str, float | int | str]) -> None:
+    if CHAPTER3_PERIOD_Q_PER_FIGURE_AUDIT.exists():
+        period_q_rows = _read_csv(CHAPTER3_PERIOD_Q_PER_FIGURE_AUDIT)
+        strict_rows = [row for row in period_q_rows if _as_bool(row.get("strict_acceptance"))]
+        local_rows = [
+            row for row in period_q_rows if _as_bool(row.get("local_multiple_shooting_acceptance"))
+        ]
+        q8 = next((row for row in period_q_rows if row.get("resonance") == "8"), None)
+        worst_local_residual = max(
+            (_as_float(row, "multiple_shooting_residual_norm") for row in local_rows),
+            default=float("nan"),
+        )
+        worst_local_jacobi = max(
+            (_as_float(row, "trajectory_jacobi_drift") for row in local_rows),
+            default=float("nan"),
+        )
+        q8_closure = (
+            _as_float(q8, "full_period_single_shoot_closure_error")
+            if q8 is not None
+            else None
+        )
+        period_q_section = f"""## B. Fig. 3.10 period-q audit
+
+Source files:
+
+- `data/computed/period_q_halo_examples.csv`
+- `data/computed/period_q_halo_closure_audit.csv`
+- `data/computed/chapter3_period_q_per_figure_audit.csv`
+- `docs/chapter3_period_q_per_figure_audit.md`
+
+Fig. 3.10 is now tracked as `period-q multiple-shooting audit with q8
+boundary`. q=2 and q=3 pass the stricter single-shoot periodic-orbit threshold;
+q=8 passes the local multiple-shooting and Jacobi-consistency checks, but its
+full-period single-shoot closure remains unreliable.
+
+| metric | value |
+|---|---:|
+| strict single-shoot accepted rows | `{len(strict_rows)}` / `{len(period_q_rows)}` |
+| local multiple-shooting accepted rows | `{len(local_rows)}` / `{len(period_q_rows)}` |
+| worst local multiple-shooting residual | `{_fmt(worst_local_residual)}` |
+| worst local Jacobi drift | `{_fmt(worst_local_jacobi)}` |
+| q=8 full-period single-shoot closure error | `{_fmt(q8_closure)}` |
+
+Boundary: q=8 remains a local multiple-shooting overlay until a robust
+high-instability closure validation path or alternate accepted audit is added.
+"""
+    else:
+        period_q_section = """## B. Fig. 3.10 period-q audit
+
+Fig. 3.10 remains `shape-match with local numerical overlay`. q=2 and q=3 have
+good local closure and Jacobi evidence. q=8 is internally consistent as a
+multiple-shooting patch solution, but full-period single integration closure
+remains unreliable on a highly unstable orbit.
+"""
     NUMERICAL_AUDIT.write_text(
         f"""# Numerical Audit Appendix
 
@@ -610,12 +742,7 @@ Boundary: Route H is not McCarthy original raw branch data. It is an audited
 reproduction source layer. Exact thesis equivalence still requires original
 branch states, tables, author code, or another direct high-authority comparison.
 
-## B. Fig. 3.10 period-q audit
-
-Fig. 3.10 remains `shape-match with local numerical overlay`. q=2 and q=3 have
-good local closure and Jacobi evidence. q=8 is internally consistent as a
-multiple-shooting patch solution, but full-period single integration closure
-remains unreliable on a highly unstable orbit.
+{period_q_section}
 
 ## C. Chapter 4 DG/manifold audit
 
