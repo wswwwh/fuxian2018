@@ -23,7 +23,8 @@
 - Route H 的边界：当前导出成员的平均 Jacobi 范围仅为约 `2.9220593262..2.9222548409`，尚未覆盖 Fig. 3.16 标注的完整目标 `2.9225、2.9221、2.9215、2.9212`。因此“振幅 source gate 通过”不能替代“论文参数范围复现”。
 - Chapter 4：Route H 派生 DG/manifold source-layer 已通过，但原论文 Fig. 4.1-4.8 全部仍是 partial；派生 quasi-DRO 图不能替代 L1 quasi-halo/quasi-vertical 原图。
 - Chapter 5：aggregate readiness/source-layer gate 已通过，但各原图仍包含 CR3BP baseline、DE421 geometry、短段 BCR4BP correction 或 proxy；这些结果不能自动升级为原论文应用图等价复现。
-- Chapter 4 科学风险：`real_hyperbolic_eigen_index()` 当前可能选择“相对虚部最小”但并不近实的复特征值；已有 Route H probe 中出现约 `-0.833+0.666j`、`-0.953+0.347j` 的选择，而 aggregate gate 未检查特征值实性。现有 Chapter 4 pass 必须在修复/收紧该 gate 后重审。
+- Chapter 4 科学风险已显式化：`real_hyperbolic_eigen_index()` 的近实硬门槛和 staged gate 已修复；全 31-member 扫描只有 member 68 通过，旧 Chapter 4 aggregate pass 已撤销，必须重建具有分支覆盖的真实双曲 source family。
+- Route H 可复现性风险：隔离 smoke cold-start 可以从零生成邻近目标，但 full cold-start 两次均在 `JC=2.9222828` 失去单调方向，只得到 19-member checkpoint；historical canonical pickle 目前不能由当前代码端到端重建，因此新增 cold-start gate 为 fail。
 - Chapter 5 尺度风险：现有 BCR4BP correction/optimization 主要是约 `0.13..0.30 day` 的短段 source-layer，不是原论文的长期场景或具体转移。
 - 验证基础设施：当前没有独立 `tests/`、CI 或依赖锁；`pyproject.toml` 还缺少代码实际使用的 `skyfield` 声明。`scripts/validate_basics.py` 是重型、会写产物的集成脚本，最近完整日志早于 Route H 和 7 月 8-9 日的更新。
 

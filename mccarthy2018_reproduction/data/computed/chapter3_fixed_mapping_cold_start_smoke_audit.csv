@@ -1,0 +1,2 @@
+mode,cache_path,cache_sha256,member_count,target_jacobi_values,worst_target_error,first_mean_jacobi,last_mean_jacobi,max_map_residual,max_curve_jacobi_span,rho_monotone,jacobi_monotone,elapsed_seconds,status,failure_reason
+smoke,C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction\outputs\cold_start\fixed_mapping_smoke\fixed_mapping_dro_v1_8c8e44bd2459fa87.pkl,1AD4C36980502572C430B0B55182750E09324102670124D257CA14E58FAFAC6D,4,2.92249,4.71438998950191e-07,2.922496961073729,2.922486430532329,3.736908906471105e-10,6.151523734843067e-12,true,true,22.37121470000011,pass,

@@ -90,17 +90,25 @@ def _fixed_frequency_cache_path(kind: str, parameters: dict[str, object]) -> Pat
     )
 
 
-def _fixed_mapping_dro_cache_path(parameters: dict[str, object]) -> Path:
+def fixed_mapping_dro_cache_path(
+    parameters: dict[str, object],
+    *,
+    cache_directory: str | Path | None = None,
+) -> Path:
+    """Return the deterministic fixed-mapping cache path.
+
+    ``cache_directory`` allows cold-start audits to write outside the canonical
+    project cache without changing the parameter-derived cache key.
+    """
+
     payload = json.dumps(parameters, sort_keys=True, separators=(",", ":"))
     digest = hashlib.sha256(payload.encode("ascii")).hexdigest()[:16]
-    project_root = Path(__file__).resolve().parents[2]
-    return (
-        project_root
-        / "data"
-        / "computed"
-        / "cache"
-        / f"fixed_mapping_dro_v{_FIXED_MAPPING_DRO_CACHE_VERSION}_{digest}.pkl"
-    )
+    if cache_directory is None:
+        project_root = Path(__file__).resolve().parents[2]
+        directory = project_root / "data" / "computed" / "cache"
+    else:
+        directory = Path(cache_directory)
+    return directory / f"fixed_mapping_dro_v{_FIXED_MAPPING_DRO_CACHE_VERSION}_{digest}.pkl"
 
 
 @dataclass(frozen=True)
@@ -5259,6 +5267,7 @@ def corrected_dro_fixed_mapping_full_corrections(
     jacobi_span_tolerance: float = 2e-8,
     max_step: float = 0.01,
     persistent_cache: bool = True,
+    cache_directory: str | Path | None = None,
 ) -> tuple[
     FreeRotationCurveCorrection | FixedRotationCurveCorrection,
     ...,
@@ -5299,7 +5308,10 @@ def corrected_dro_fixed_mapping_full_corrections(
         "jacobi_span_tolerance": float(jacobi_span_tolerance),
         "max_step": float(max_step),
     }
-    cache_path = _fixed_mapping_dro_cache_path(parameters)
+    cache_path = fixed_mapping_dro_cache_path(
+        parameters,
+        cache_directory=cache_directory,
+    )
     family: list[FreeRotationCurveCorrection | FixedRotationCurveCorrection] = []
 
     def mean_jacobi(

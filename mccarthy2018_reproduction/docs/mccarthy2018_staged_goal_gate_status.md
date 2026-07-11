@@ -12,9 +12,10 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - Chapter 3 required minimum: `10500.0` km
 - Best experimental/local frontier: `10293.6651410641` km
 - Fig. 3.16 / Fig. 3.17 update allowed: `True`
+- Chapter 3 Route H full cold-start: `fail`
 - Fig. 3.10 period-q per-figure audit: `pass`
-- Chapter 4 Route H DG source layer passed: `True`
-- Chapter 4 next decision: `route_h_chapter4_figure_source_available`
+- Chapter 4 Route H DG source layer passed: `False`
+- Chapter 4 next decision: `repair_route_h_cold_start_before_chapter4`
 - Chapter 4 per-figure source-layer audit: `pass`
 - Chapter 5 Route H / DE421 baseline passed: `True`
 - Chapter 5 high-fidelity/optimization status: `pass`
@@ -35,12 +36,13 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - `C3-ROUTE-C-E` (chapter3): status `fail`, metric `best_diagnostic_palc_max_abs_z_km` = `10293.6651410641`, decision `diagnostic_only`
 - `C3-ROUTE-D-G` (chapter3): status `fail`, metric `best_accepted_projection_max_abs_z_km` = `N/A`, decision `bounded_projection_routes`
 - `C3-ROUTE-H` (chapter3): status `pass`, metric `best_strict_cache_max_abs_z_km` = `14573.10318409037`, decision `use_route_h_for_chapter3_source`
+- `C3-ROUTE-H-COLD-START` (chapter3): status `fail`, metric `cold_start_member_count` = `19`, decision `repair_fixed_mapping_cold_start_continuation`
 - `C3-PERIOD-Q-PER-FIGURE-AUDIT` (chapter3): status `pass`, metric `strict_single_shoot_rows` = `2`, decision `use_period_q_boundary_audit`
-- `C4-UPSTREAM-TORUS-DATA` (chapter4): status `route_h_figure_source_passed`, metric `chapter3_figure_source_frontier_max_abs_z_km` = `14573.10318409037`, decision `route_h_chapter4_figure_source_available`
-- `C4-ROUTE-H-DG-MANIFOLD` (chapter4): status `pass`, metric `worst_route_h_manifold_jacobi_drift` = `1.77635683940025e-15`, decision `route_h_source_layer_ready`
-- `C4-ROUTE-H-FIGURE-SOURCE` (chapter4): status `pass`, metric `route_h_figure_png_bytes` = `539093`, decision `route_h_chapter4_figure_source_available`
+- `C4-UPSTREAM-TORUS-DATA` (chapter4): status `blocked_by_chapter3_cold_start`, metric `chapter3_figure_source_frontier_max_abs_z_km` = `14573.10318409037`, decision `repair_route_h_cold_start_before_chapter4`
+- `C4-ROUTE-H-DG-MANIFOLD` (chapter4): status `not_run_or_fail`, metric `worst_selected_eigen_relative_imaginary` = `0.6242638760846617`, decision `run_chapter4_route_h_dg_manifold_audit`
+- `C4-ROUTE-H-FIGURE-SOURCE` (chapter4): status `not_run_or_fail`, metric `route_h_figure_png_bytes` = `539093`, decision `run_fig_4_route_h_quasi_dro`
 - `C4-PER-FIGURE-SOURCE-LAYER-AUDIT` (chapter4): status `pass`, metric `original_chapter4_figure_rows` = `8`, decision `use_per_figure_chapter4_status_table`
-- `C5-UPSTREAM-HIGH-FIDELITY-DATA` (chapter5): status `route_h_bcr4bp_optimization_source_layer_passed`, metric `chapter3_figure_source_frontier_max_abs_z_km` = `14573.10318409037`, decision `chapter5_source_layer_optimization_available`
+- `C5-UPSTREAM-HIGH-FIDELITY-DATA` (chapter5): status `blocked_by_chapter4`, metric `chapter3_figure_source_frontier_max_abs_z_km` = `14573.10318409037`, decision `wait_for_chapter4_regeneration`
 - `C5-ROUTE-H-DE421-BASELINE` (chapter5): status `pass`, metric `fig_5_6_png_bytes` = `746932`, decision `route_h_de421_baseline_available`
 - `C5-HIGH-FIDELITY-OPTIMIZATION` (chapter5): status `pass`, metric `missing_high_fidelity_capabilities` = `0`, decision `chapter5_high_fidelity_optimization_source_layer_ready`
 - `C5-HALO-LYAPUNOV-PER-FIGURE-TRANSFER-AUDIT` (chapter5): status `pass`, metric `accepted_halo_lyapunov_transfer_rows` = `1`, decision `use_halo_lyapunov_per_figure_transfer_row`
@@ -50,22 +52,19 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - `C5-NRHO-PER-FIGURE-TRANSFER-AUDIT` (chapter5): status `pass`, metric `accepted_nrho_transfer_rows` = `4`, decision `use_nrho_per_figure_transfer_rows`
 - `C5-NRHO-RENDEZVOUS-PER-FIGURE-AUDIT` (chapter5): status `pass`, metric `accepted_nrho_rendezvous_rows` = `36`, decision `use_nrho_rendezvous_per_figure_branch`
 - `C5-PER-FIGURE-SOURCE-LAYER-AUDIT` (chapter5): status `pass`, metric `original_chapter5_figure_rows` = `14`, decision `use_per_figure_chapter5_status_table`
-- `STAGED-GOAL-STATUS` (goal): status `staged_route_h_source_layers_complete`, metric `chapter3_gate_passes` = `True`, decision `staged_goal_source_layers_complete`
+- `STAGED-GOAL-STATUS` (goal): status `chapter3_route_h_artifact_pass_cold_start_failed`, metric `chapter3_gate_passes` = `True`, decision `repair_route_h_cold_start_continuation`
 
 ## Interpretation
 
-Route H contributes accepted fixed-time figure-source members above 10,500 km.
-Those cached corrections now also pass the Chapter 4 source-layer DG/manifold
-probe in `data/computed/chapter4_route_h_quasi_dro_dg.csv` and
-`data/computed/chapter4_route_h_quasi_dro_manifold_probe.csv`.
-The corresponding regenerated source-layer figure artifacts are
-`outputs/figures_png/fig_4_route_h.png` and
-`outputs/figures_pdf/fig_4_route_h.pdf` when gate `C4-ROUTE-H-FIGURE-SOURCE`
-passes.
+Route H contributes accepted fixed-time figure-source
+members above 10,500 km, but the current Chapter 4 source-layer DG/manifold probe
+does not pass the nearly-real hyperbolic-direction gate. The worst selected-eigenvalue
+relative imaginary part is `0.6242638760846617` against the `<= 1e-6`
+threshold. Existing `fig_4_route_h` artifacts are diagnostic outputs and must not be
+treated as accepted Chapter 4 figure-source evidence until the DG/manifold audit is
+regenerated with a valid real hyperbolic direction. Original Fig. 4.1-4.8 replacement
+also remains incomplete.
 
-This unlocks a Chapter 4 Route H figure-source artifact, not a completed
-replacement of Fig. 4.3-4.8: those existing figures target L1 quasi-halo and
-quasi-vertical families and still retain proxy backgrounds.
 The Chapter 4 per-original-figure mapping is recorded in
 `data/computed/chapter4_per_figure_source_layer_audit.csv` and
 `docs/chapter4_per_figure_source_layer_audit.md`; gate

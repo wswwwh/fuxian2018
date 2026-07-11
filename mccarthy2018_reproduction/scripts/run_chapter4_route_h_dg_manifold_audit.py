@@ -66,9 +66,16 @@ DG_FIELDS = (
     "min_multiplier",
     "real_unstable_index",
     "real_unstable_multiplier",
+    "real_unstable_eigenvalue_real",
+    "real_unstable_eigenvalue_imag",
+    "real_unstable_relative_imaginary",
     "real_stable_index",
     "real_stable_multiplier",
+    "real_stable_eigenvalue_real",
+    "real_stable_eigenvalue_imag",
+    "real_stable_relative_imaginary",
     "real_pair_reciprocity_error",
+    "real_pair_complex_reciprocity_error",
     "unit_multiplier_count",
     "dg_status",
 )
@@ -171,8 +178,10 @@ def _dg_row(member_index: int, correction: Any, max_step: float) -> tuple[dict[s
     dg = corrected_curve_dg(correction, max_step=max_step)
     unstable_index = real_hyperbolic_eigen_index(dg, branch="unstable")
     stable_index = real_hyperbolic_eigen_index(dg, branch="stable")
-    unstable = float(abs(dg.eigenvalues[unstable_index]))
-    stable = float(abs(dg.eigenvalues[stable_index]))
+    unstable_eigenvalue = complex(dg.eigenvalues[unstable_index])
+    stable_eigenvalue = complex(dg.eigenvalues[stable_index])
+    unstable = float(abs(unstable_eigenvalue))
+    stable = float(abs(stable_eigenvalue))
     row = {
         "member_index": member_index,
         "max_abs_z_km": member.max_abs_z_km,
@@ -189,9 +198,18 @@ def _dg_row(member_index: int, correction: Any, max_step: float) -> tuple[dict[s
         "min_multiplier": dg.min_multiplier,
         "real_unstable_index": unstable_index,
         "real_unstable_multiplier": unstable,
+        "real_unstable_eigenvalue_real": unstable_eigenvalue.real,
+        "real_unstable_eigenvalue_imag": unstable_eigenvalue.imag,
+        "real_unstable_relative_imaginary": abs(unstable_eigenvalue.imag) / unstable,
         "real_stable_index": stable_index,
         "real_stable_multiplier": stable,
+        "real_stable_eigenvalue_real": stable_eigenvalue.real,
+        "real_stable_eigenvalue_imag": stable_eigenvalue.imag,
+        "real_stable_relative_imaginary": abs(stable_eigenvalue.imag) / stable,
         "real_pair_reciprocity_error": abs(unstable * stable - 1.0),
+        "real_pair_complex_reciprocity_error": abs(
+            unstable_eigenvalue * stable_eigenvalue - 1.0
+        ),
         "unit_multiplier_count": dg.unit_multiplier_count,
         "dg_status": "route_h accepted source converted to discrete-curve DG",
     }

@@ -1,0 +1,3 @@
+attempt,mode,starting_member_count,ending_member_count,elapsed_seconds,cache_sha256,status,failure_reason
+1,full,0,19,560.5006395,4B8209C045A7929482EA65227AB603A4627BD83E58D5E4B1FC7AF67939CBA5DA,fail,RuntimeError: Fixed-mapping rotation continuation lost monotonic direction at JC=2.9222828
+2,full,19,19,39.38870039999983,4B8209C045A7929482EA65227AB603A4627BD83E58D5E4B1FC7AF67939CBA5DA,fail,RuntimeError: Fixed-mapping rotation continuation lost monotonic direction at JC=2.9222828

@@ -530,7 +530,12 @@ def corrected_vertical_stroboscopic_curve_dg(
     )
 
 
-def real_hyperbolic_eigen_index(dg: DiscreteCurveDG, *, branch: str) -> int:
+def real_hyperbolic_eigen_index(
+    dg: DiscreteCurveDG,
+    *,
+    branch: str,
+    relative_imaginary_tolerance: float = 1.0e-6,
+) -> int:
     """Return the nearly real stable or unstable eigenvalue index.
 
     McCarthy's manifold construction uses the purely real member of the stable
@@ -539,6 +544,8 @@ def real_hyperbolic_eigen_index(dg: DiscreteCurveDG, *, branch: str) -> int:
     complex Fourier-shifted member instead.
     """
 
+    if relative_imaginary_tolerance <= 0.0:
+        raise ValueError("relative_imaginary_tolerance must be positive")
     magnitudes = np.abs(dg.eigenvalues)
     if branch == "unstable":
         candidates = np.flatnonzero(magnitudes > 1.0 + 1.0e-3)
@@ -549,10 +556,14 @@ def real_hyperbolic_eigen_index(dg: DiscreteCurveDG, *, branch: str) -> int:
     if candidates.size == 0:
         raise RuntimeError(f"DG has no {branch} hyperbolic eigenvalue")
     relative_imaginary = np.abs(np.imag(dg.eigenvalues[candidates])) / magnitudes[candidates]
-    minimum_imaginary = float(np.min(relative_imaginary))
-    nearly_real = candidates[
-        relative_imaginary <= max(minimum_imaginary + 1.0e-10, 1.0e-8)
-    ]
+    nearly_real = candidates[relative_imaginary <= relative_imaginary_tolerance]
+    if nearly_real.size == 0:
+        minimum_imaginary = float(np.min(relative_imaginary))
+        raise RuntimeError(
+            f"DG has no nearly real {branch} hyperbolic eigenvalue; "
+            f"minimum relative imaginary part is {minimum_imaginary:.6g}, "
+            f"tolerance is {relative_imaginary_tolerance:.6g}"
+        )
     if branch == "unstable":
         return int(nearly_real[np.argmax(magnitudes[nearly_real])])
     return int(nearly_real[np.argmin(magnitudes[nearly_real])])
