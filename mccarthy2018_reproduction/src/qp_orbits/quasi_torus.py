@@ -42,6 +42,37 @@ _FIXED_FREQUENCY_CACHE_VERSION = 1
 _FIXED_MAPPING_DRO_CACHE_VERSION = 1
 
 
+def _smooth_absolute_support(
+    values: np.ndarray,
+    *,
+    sharpness: float = 80.0,
+) -> tuple[float, np.ndarray]:
+    """Return a smooth approximation of ``max(abs(values))`` and its gradient.
+
+    The normalized log-sum-exp over both signs is zero at the origin and
+    approaches the absolute maximum from below.  Shifting by the exact maximum
+    keeps the exponential evaluation stable for dimensional and normalized
+    state arrays alike.
+    """
+
+    samples = np.asarray(values, dtype=float)
+    if samples.size == 0:
+        raise ValueError("values must not be empty")
+    if not np.all(np.isfinite(samples)):
+        raise ValueError("values must contain only finite entries")
+    if sharpness <= 0.0 or not np.isfinite(sharpness):
+        raise ValueError("sharpness must be a positive finite value")
+
+    flat = samples.reshape(-1)
+    shift = float(np.max(np.abs(flat)))
+    positive = np.exp(sharpness * (flat - shift))
+    negative = np.exp(sharpness * (-flat - shift))
+    denominator = float(np.sum(positive + negative))
+    support = shift + np.log(denominator / (2.0 * flat.size)) / sharpness
+    gradient = ((positive - negative) / denominator).reshape(samples.shape)
+    return float(support), gradient
+
+
 def _high_order_cache_path(parameters: dict[str, float | int]) -> Path:
     """Return a versioned cache path for an expensive continuation family."""
 
