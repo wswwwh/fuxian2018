@@ -32,6 +32,7 @@ NRHO_RENDEZVOUS_AUDIT = DATA / "chapter5_nrho_rendezvous_per_figure_audit.csv"
 STABLE_MANIFOLD_AUDIT = DATA / "chapter5_stable_manifold_per_figure_audit.csv"
 LISSAJOUS_TORUS_AUDIT = DATA / "chapter5_sun_earth_l1_lissajous_torus_audit.csv"
 LISSAJOUS_MANIFOLD_AUDIT = DATA / "chapter5_sun_earth_l1_lissajous_stable_manifold_audit.csv"
+LISSAJOUS_LEO_TRANSFER_AUDIT = DATA / "chapter5_sun_earth_l1_lissajous_leo_transfer_audit.csv"
 ROUTE_H_FAMILY = DATA / "chapter3_fixed_mapping_cache_accepted_family.csv"
 ROUTE_H_VALIDATION = DATA / "chapter3_fixed_mapping_cache_accepted_validation.csv"
 CHAPTER4_ROUTE_H_FIGURE = PROJECT_ROOT / "outputs" / "figures_png" / "fig_4_route_h.png"
@@ -163,6 +164,7 @@ def _source_metrics() -> dict[str, str]:
     nrho_corridor_rows = [row for row in _read_csv(NRHO_CORRIDOR_AUDIT) if _truthy(row.get("acceptance"))] if NRHO_CORRIDOR_AUDIT.exists() else []
     lissajous_rows = [row for row in _read_csv(LISSAJOUS_TORUS_AUDIT) if _truthy(row.get("source_acceptance"))] if LISSAJOUS_TORUS_AUDIT.exists() else []
     lissajous_manifold_rows = [row for row in _read_csv(LISSAJOUS_MANIFOLD_AUDIT) if _truthy(row.get("acceptance"))] if LISSAJOUS_MANIFOLD_AUDIT.exists() else []
+    lissajous_leo_rows = [row for row in _read_csv(LISSAJOUS_LEO_TRANSFER_AUDIT) if _truthy(row.get("acceptance"))] if LISSAJOUS_LEO_TRANSFER_AUDIT.exists() else []
     return {
         "route_h_rows": route_h["rows"],
         "route_h_member": route_h["member"],
@@ -228,6 +230,12 @@ def _source_metrics() -> dict[str, str]:
         "lissajous_manifold_trajectories": _max_field(lissajous_manifold_rows, "manifold_trajectories"),
         "lissajous_manifold_target_error": _max_field(lissajous_manifold_rows, "best_7033_error_km"),
         "lissajous_manifold_jacobi_drift": _max_field(lissajous_manifold_rows, "maximum_jacobi_drift"),
+        "lissajous_leo_rows": str(len(lissajous_leo_rows)),
+        "lissajous_leo_samples": _max_field(lissajous_leo_rows, "trajectory_samples"),
+        "lissajous_leo_time": _max_field(lissajous_leo_rows, "transfer_time_days"),
+        "lissajous_leo_periapsis_error": _max_field(lissajous_leo_rows, "periapsis_target_error_km"),
+        "lissajous_leo_jacobi_span": _max_field(lissajous_leo_rows, "jacobi_span"),
+        "lissajous_leo_endpoint": _max_field(lissajous_leo_rows, "lissajous_endpoint_distance_km"),
     }
 
 
@@ -541,25 +549,26 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
         },
         {
             "figure_id": "5.14",
-            "current_source_layer": "Sun-Earth L1 CR3BP long-propagation and transfer-context baseline",
-            "current_repro_level": "CR3BP stable-manifold LEO transfer audit",
-            "original_replacement_status": "not_replaced",
-            "uses_proxy": "partial",
-            "primary_evidence": "data/computed/chapter5_sun_earth_l1_cr3bp_long_propagation.csv",
-            "supporting_evidence": f"{_rel(STABLE_MANIFOLD_AUDIT)};data/computed/chapter5_sun_earth_stable_manifold_baseline.csv",
+            "current_source_layer": "corrected Sun-Earth L1 Lissajous DG stable-manifold LEO transfer",
+            "current_repro_level": "numerical quasi-periodic stable-manifold transfer reproduction",
+            "original_replacement_status": "computed_lissajous_transfer_replaces_analytic_scene_high_fidelity_pending",
+            "uses_proxy": "false",
+            "primary_evidence": "data/computed/chapter5_sun_earth_l1_lissajous_leo_transfer.csv",
+            "supporting_evidence": f"{_rel(LISSAJOUS_LEO_TRANSFER_AUDIT)};{_rel(LISSAJOUS_TORUS_AUDIT)};{_rel(LISSAJOUS_MANIFOLD_AUDIT)}",
             "route_h_dependency": "none",
             "bcr4bp_dependency": "none",
             "optimization_dependency": "none",
-            "accepted_rows": metrics["stable_5_14_rows"],
+            "accepted_rows": metrics["lissajous_leo_rows"],
             "best_metric": (
-                f"accepted stable-manifold transfer rows {metrics['stable_5_14_rows']}; "
-                f"selected phase {metrics['stable_5_14_phase']} deg; "
-                f"periapsis error {metrics['stable_5_14_periapsis_error']} km; "
-                f"transfer time {metrics['stable_5_14_transfer_time']} days; "
-                f"Jacobi span {metrics['stable_5_14_jacobi_span']}"
+                f"accepted Lissajous transfer rows {metrics['lissajous_leo_rows']}; "
+                f"trajectory samples {metrics['lissajous_leo_samples']}; "
+                f"periapsis error {metrics['lissajous_leo_periapsis_error']} km; "
+                f"transfer time {metrics['lissajous_leo_time']} days; "
+                f"Jacobi span {metrics['lissajous_leo_jacobi_span']}; "
+                f"Lissajous endpoint distance {metrics['lissajous_leo_endpoint']} km"
             ),
-            "boundary": "Accepted CR3BP stable-manifold transfer-scene row exists, but the figure is not yet a BCR4BP/ephemeris or full quasi-periodic Lissajous transfer replacement.",
-            "next_action": "Add BCR4BP/ephemeris correction and quasi-periodic Lissajous endpoint matching before promoting this original figure.",
+            "boundary": "The analytic transfer and torus scene is removed. The accepted CR3BP trajectory reaches the corrected Lissajous torus and 7033-km periapsis; BCR4BP/ephemeris correction remains pending.",
+            "next_action": "Correct this specific Lissajous stable-manifold transfer in BCR4BP/ephemeris and compare against thesis timing and geometry.",
         },
         {
             "figure_id": "5.bcr4bp_optimized_transfer",

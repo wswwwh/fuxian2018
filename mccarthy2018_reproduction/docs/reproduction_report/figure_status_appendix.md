@@ -14,12 +14,12 @@ Total figures: 54.
 | CR3BP endpoint-corrected NRHO transfer audit | 2 |
 | CR3BP endpoint-corrected halo-Lyapunov transfer audit | 1 |
 | CR3BP fixed-departure rendezvous branch audit | 1 |
-| CR3BP stable-manifold LEO transfer audit | 1 |
 | Route H / DE421 geometry baseline | 2 |
 | audited Route H fixed-time source-layer | 2 |
 | numerical DG family reproduction with paper-digitization boundary | 1 |
 | numerical DG global manifold reproduction | 4 |
 | numerical DG manifold comparison | 2 |
+| numerical quasi-periodic stable-manifold transfer reproduction | 1 |
 | numerical reproduction | 16 |
 | numerical two-angle stable-manifold reproduction | 1 |
 | period-q multiple-shooting audit with q8 boundary | 1 |
@@ -991,13 +991,13 @@ Total figures: 54.
 | figure_id | 5.14 |
 | source_page | 112 |
 | script | figures/fig_5_14.py |
-| current_repro_level | CR3BP stable-manifold LEO transfer audit |
-| uses_proxy | partial |
-| main_data_source | data/computed/chapter5_sun_earth_l1_cr3bp_long_propagation.csv;data/computed/chapter5_stable_manifold_per_figure_audit.csv;data/computed/chapter5_sun_earth_stable_manifold_baseline.csv;outputs/figures_png/fig_5_14.png;outputs/figures_pdf/fig_5_14.pdf |
-| key_physical_quantities | Sun-Earth L1 CR3BP long-propagation and transfer-context baseline; accepted stable-manifold transfer rows 1; selected phase 14.88928693528482 deg; periapsis error 0.0001116857147280825 km; transfer time 407.6352466744673 days; Jacobi span 3.126388037344441e-13; original replacement status: not_replaced |
+| current_repro_level | numerical quasi-periodic stable-manifold transfer reproduction |
+| uses_proxy | false |
+| main_data_source | data/computed/chapter5_sun_earth_l1_lissajous_leo_transfer.csv;data/computed/chapter5_sun_earth_l1_lissajous_leo_transfer_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_audit.csv;outputs/figures_png/fig_5_14.png;outputs/figures_pdf/fig_5_14.pdf |
+| key_physical_quantities | corrected Sun-Earth L1 Lissajous DG stable-manifold LEO transfer; accepted Lissajous transfer rows 1; trajectory samples 900; periapsis error 0.665176709251682 km; transfer time 312.4576174324916 days; Jacobi span 4.067857162226574e-13; Lissajous endpoint distance 40.1720033007723 km; original replacement status: computed_lissajous_transfer_replaces_analytic_scene_high_fidelity_pending |
 | residual evidence | accepted source rows: 1; Route H dependency: none; BCR4BP dependency: none |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 383539; PDF bytes 106849; boundary: Accepted CR3BP stable-manifold transfer-scene row exists, but the figure is not yet a BCR4BP/ephemeris or full quasi-periodic Lissajous transfer replacement. |
-| next_action | Add BCR4BP/ephemeris correction and quasi-periodic Lissajous endpoint matching before promoting this original figure. |
+| visual_status | PNG bytes 289385; PDF bytes 80747; boundary: The analytic transfer and torus scene is removed. The accepted CR3BP trajectory reaches the corrected Lissajous torus and 7033-km periapsis; BCR4BP/ephemeris correction remains pending. |
+| next_action | Correct this specific Lissajous stable-manifold transfer in BCR4BP/ephemeris and compare against thesis timing and geometry. |

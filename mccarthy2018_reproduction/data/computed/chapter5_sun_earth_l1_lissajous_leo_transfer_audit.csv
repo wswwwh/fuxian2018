@@ -1,0 +1,2 @@
+figure_id,source_model,theta0_deg,theta1_deg,stable_half_manifold_sign,trajectory_samples,transfer_time_days,periapsis_radius_km,periapsis_target_error_km,jacobi_span,lissajous_endpoint_distance_km,acceptance
+5.14,Sun-Earth L1 corrected Lissajous DG stable-manifold transfer,242.0,135.0,1.0,900,312.4576174324916,7033.665176709252,0.665176709251682,4.0678571622265736e-13,40.1720033007723,true
