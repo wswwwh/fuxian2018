@@ -10,10 +10,10 @@
 - Target pair accepted: `false`
 
 Natural-parameter free-rotation continuation has been verified through
-vertical RMS amplitude `8.664e-04`. An earlier adaptive run stalled here, but
-deterministic warm-start replay converged, so this point is a verified frontier
-rather than a demonstrated branch boundary. The full torus remains far below
-the paper's out-of-plane scale and its sampled Jacobi span is above the strict
-`1e-8` gate. This quasi-halo route therefore does not replace the currently
-accepted quasi-vertical source. Further continuation, resolution lifting, and
-tighter propagation are required before acceptance.
+vertical RMS amplitude `8.664e-04`. An earlier adaptive
+run stalled here, but deterministic warm-start replay converged, so this point
+is a verified frontier rather than a demonstrated branch boundary. The full
+torus remains far below the paper's out-of-plane scale and its sampled Jacobi
+span is above the strict `1e-8` gate. This quasi-halo route therefore does not
+replace the currently accepted quasi-vertical source. Further continuation,
+resolution lifting, and tighter propagation are required before acceptance.

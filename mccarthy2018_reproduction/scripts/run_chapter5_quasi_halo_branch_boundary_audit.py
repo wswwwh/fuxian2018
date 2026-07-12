@@ -22,6 +22,7 @@ from qp_orbits.quasi_torus import (  # noqa: E402
 
 
 OUTPUT = ROOT / "data" / "computed" / "chapter5_sun_earth_l1_quasi_halo_branch_boundary_audit.csv"
+CHECKPOINT = ROOT / "data" / "computed" / "chapter5_sun_earth_l1_quasi_halo_frontier_checkpoint.npz"
 REPORT = ROOT / "docs" / "chapter5_sun_earth_l1_quasi_halo_branch_boundary_audit.md"
 
 # Accepted natural-parameter continuation path found by step-halving. Keeping
@@ -88,6 +89,7 @@ def main() -> None:
     previous_amplitude = None
     rotation = None
     final_correction = None
+    accepted_corrections = []
     for amplitude in (*AMPLITUDES, VERIFIED_FRONTIER_AMPLITUDE):
         correction, metric = correct(seed, amplitude, previous, previous_amplitude, rotation)
         accepted = metric <= 1.0e-8
@@ -111,6 +113,7 @@ def main() -> None:
         previous_amplitude = amplitude
         rotation = correction.rotation_angle_rad
         final_correction = correction
+        accepted_corrections.append(correction)
 
     if final_correction is None:
         raise RuntimeError("Continuation did not produce an accepted member")
@@ -124,6 +127,17 @@ def main() -> None:
         writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
         writer.writeheader()
         writer.writerows(rows)
+    np.savez_compressed(
+        CHECKPOINT,
+        previous_states=accepted_corrections[-2].corrected_states,
+        previous_amplitude=accepted_corrections[-2].target_amplitude,
+        previous_rotation=accepted_corrections[-2].rotation_angle_rad,
+        current_states=accepted_corrections[-1].corrected_states,
+        current_amplitude=accepted_corrections[-1].target_amplitude,
+        current_rotation=accepted_corrections[-1].rotation_angle_rad,
+        x_amplitude=seed.base_orbit_amplitude,
+        samples=seed.phases.size,
+    )
 
     REPORT.write_text(
         f"""# Chapter 5 Sun-Earth L1 quasi-halo continuation-frontier audit
@@ -149,6 +163,7 @@ resolution lifting, and tighter propagation are required before acceptance.
         encoding="utf-8",
     )
     print(OUTPUT)
+    print(CHECKPOINT)
     print(REPORT)
 
 
