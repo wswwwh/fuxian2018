@@ -4139,9 +4139,10 @@ def corrected_l2_constant_frequency_halo_energy_corrections(
                     candidate = pickle.load(stream)
             except (OSError, pickle.PickleError, EOFError):
                 continue
-            if not isinstance(candidate, tuple) or len(candidate) <= len(family):
+            if not isinstance(candidate, tuple):
                 continue
-            if len(candidate) > len(targets):
+            prefix_length = min(len(candidate), len(targets))
+            if prefix_length <= len(family):
                 continue
             if not all(
                 isinstance(correction, FixedFrequencyEnergyCurveCorrection)
@@ -4155,10 +4156,10 @@ def corrected_l2_constant_frequency_halo_energy_corrections(
                 and correction.final_residual_norms.max() < map_tolerance
                 and np.max(np.abs(correction.energy_residual_history[-1]))
                 < energy_tolerance
-                for index, correction in enumerate(candidate)
+                for index, correction in enumerate(candidate[:prefix_length])
             ):
                 continue
-            family = list(candidate)
+            family = list(candidate[:prefix_length])
     if len(family) == len(targets):
         return tuple(family)
 
