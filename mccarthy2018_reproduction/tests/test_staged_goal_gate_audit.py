@@ -22,17 +22,19 @@ class StagedGoalGateAuditTests(unittest.TestCase):
 
         chapter4 = by_gate["C4-ROUTE-H-DG-MANIFOLD"]
         cold_start = by_gate["C3-ROUTE-H-COLD-START"]
+        hybrid_cold_start = by_gate["C3-ROUTE-H-HYBRID-COLD-START"]
         jacobi_coverage = by_gate["C3-ROUTE-H-JACOBI-TARGET-COVERAGE"]
         goal = by_gate["STAGED-GOAL-STATUS"]
         self.assertEqual(cold_start["status"], "fail")
-        self.assertEqual(jacobi_coverage["status"], "fail")
-        self.assertEqual(int(jacobi_coverage["value"]), 1)
+        self.assertEqual(hybrid_cold_start["status"], "pass")
+        self.assertEqual(jacobi_coverage["status"], "pass")
+        self.assertEqual(int(jacobi_coverage["value"]), 4)
         self.assertEqual(chapter4["status"], "not_run_or_fail")
         self.assertGreater(float(chapter4["value"]), 0.3)
         self.assertIn("1/31", chapter4["notes"])
         self.assertEqual(
             goal["status"],
-            "chapter3_route_h_artifact_pass_cold_start_failed",
+            "chapter3_passed_chapter4_ready",
         )
 
 

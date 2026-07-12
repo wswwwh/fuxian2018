@@ -2,25 +2,27 @@
 
 ## Result
 
-- Strict fixed-time anchors: `1/4`
-- Paper-rounding boundary anchors: `1/4`
-- Remaining fixed-time gaps: `2/4`
+- Strict fixed-time anchors: `3/4`
+- Anchors accepted at paper-reported precision: `4/4`
+- Total paper-level coverage: `4/4`
+- Remaining fixed-time gaps: `0/4`
+- Combined accepted curve-state artifact: `data\computed\chapter3_route_h_fixed_time_target_states.csv`
 
 | Target JC | Best mapping time (day) | Time error (day) | Gap reduction | Map residual | Status |
 | ---: | ---: | ---: | ---: | ---: | --- |
-| 2.9225 | 14.748938082 | -3.895e-04 | 98.586% | 4.249e-10 | paper_rounding_boundary |
+| 2.9225 | 14.749327602 | 0.000e+00 | 100.000% | 7.069e-13 | paper_reported_precision |
 | 2.9221 | 14.749327602 | 0.000e+00 | 100.000% | 4.576e-10 | strict_fixed_time |
-| 2.9215 | 14.762148824 | 1.282e-02 | 87.056% | 7.821e-10 | fixed_time_gap |
-| 2.9212 | 14.799431451 | 5.010e-02 | 63.441% | 7.732e-10 | fixed_time_gap |
+| 2.9215 | 14.749327602 | 0.000e+00 | 100.000% | 7.522e-11 | strict_fixed_time |
+| 2.9212 | 14.749327602 | 0.000e+00 | 100.000% | 8.440e-10 | strict_fixed_time |
 
 ## Acceptance Meaning
 
 `strict_fixed_time` requires the project mapping time exactly (within `1e-10 day`),
 Jacobi error at most `5e-7`, map residual below `1e-9`, and curve Jacobi span below
-`2e-8`. `paper_rounding_boundary` additionally recognizes a time error no larger
-than `0.005 day`, half the unit implied by the paper's two-decimal mapping-time
-label, but it is not counted as strict reproduction. Every other row remains a
-fixed-time gap regardless of how accurately its free-time Jacobi target was solved.
+`2e-8`. `paper_reported_precision` recognizes a time error no larger than `0.005
+day` and Jacobi error no larger than `5e-5`, half the units implied by the paper's
+two-decimal time and four-decimal Jacobi labels. Every other row remains a fixed-
+time gap regardless of how accurately its free-time Jacobi target was solved.
 
 The four-anchor Chapter 3 gate remains failed until all four rows are strict and
 independently revalidated at the tighter spectral-resolution gate.

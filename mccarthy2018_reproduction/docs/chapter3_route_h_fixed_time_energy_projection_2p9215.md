@@ -2,15 +2,18 @@
 
 ## Result
 
-- Status: `fail`
+- Status: `pass`
 - Target Jacobi: `2.9215000`
-- Accepted homotopy steps: `15/16`
-- Final mapping time: `14.76213494614396 day`
-- Mapping-time error: `1.280734e-02 day`
-- Final mean Jacobi: `2.921499999966893`
-- Final map residual: `1.933560e-09`
-- Final Jacobi span: `9.596230e-10`
-- Failure: `fixed-time energy correction exhausted the minimum time step`
+- Accepted homotopy steps: `24/24`
+- Spectral lifts: `2`
+- Final curve samples: `81`
+- Final mapping time: `14.74932760227518 day`
+- Mapping-time error: `0.000000e+00 day`
+- Final mean Jacobi: `2.921499999999909`
+- Final map residual: `7.522289e-11`
+- Final Jacobi span: `1.445253e-10`
+- Failure: `N/A`
+- Final curve-state artifact: `data\computed\chapter3_route_h_fixed_time_energy_states_2p9215.csv`
 
 ## Interpretation
 

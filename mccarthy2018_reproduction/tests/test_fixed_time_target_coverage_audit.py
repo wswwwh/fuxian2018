@@ -22,14 +22,18 @@ class FixedTimeTargetCoverageAuditTests(unittest.TestCase):
         self.assertEqual(len(rows), 4)
         self.assertEqual(
             sum(row["strict_fixed_time_status"] == "pass" for row in rows),
-            1,
+            3,
         )
         self.assertEqual(
-            sum(row["paper_rounding_boundary_status"] == "pass" for row in rows),
-            1,
+            sum(row["paper_reported_precision_status"] == "pass" for row in rows),
+            4,
         )
-        strict = next(row for row in rows if row["strict_fixed_time_status"] == "pass")
-        self.assertAlmostEqual(float(strict["target_jacobi"]), 2.9221)
+        strict_targets = {
+            float(row["target_jacobi"])
+            for row in rows
+            if row["strict_fixed_time_status"] == "pass"
+        }
+        self.assertEqual(strict_targets, {2.9221, 2.9215, 2.9212})
 
 
 if __name__ == "__main__":

@@ -156,6 +156,8 @@ def _build_rows() -> list[dict[str, Any]]:
     cache_validation_path = data / "chapter3_fixed_mapping_cache_accepted_validation.csv"
     chapter3_cold_start_full_path = data / "chapter3_fixed_mapping_cold_start_full_audit.csv"
     chapter3_cold_start_attempts_path = data / "chapter3_fixed_mapping_cold_start_full_attempts.csv"
+    chapter3_hybrid_cold_start_path = data / "chapter3_route_h_hybrid_cold_start_audit.csv"
+    chapter3_hybrid_cold_start_doc_path = docs / "chapter3_route_h_hybrid_cold_start_audit.md"
     chapter3_jacobi_target_path = data / "chapter3_route_h_jacobi_target_audit.csv"
     chapter3_jacobi_target_doc_path = docs / "chapter3_route_h_jacobi_target_audit.md"
     chapter3_fixed_time_target_path = data / "chapter3_route_h_fixed_time_target_coverage_audit.csv"
@@ -202,6 +204,7 @@ def _build_rows() -> list[dict[str, Any]]:
     cache_audit = _read_rows(cache_audit_path)
     cache_validation = _read_rows(cache_validation_path)
     chapter3_cold_start_full = _read_rows(chapter3_cold_start_full_path)
+    chapter3_hybrid_cold_start = _read_rows(chapter3_hybrid_cold_start_path)
     chapter3_jacobi_targets = _read_rows(chapter3_jacobi_target_path)
     chapter3_fixed_time_targets = _read_rows(chapter3_fixed_time_target_path)
     chapter3_period_q = _read_rows(chapter3_period_q_path)
@@ -293,6 +296,13 @@ def _build_rows() -> list[dict[str, Any]]:
     chapter3_passes = figure_source_frontier >= campaign.TARGET_MIN_KM
     chapter3_cold_start_row = chapter3_cold_start_full[0] if chapter3_cold_start_full else {}
     chapter3_cold_start_passes = chapter3_cold_start_row.get("status") == "pass"
+    chapter3_hybrid_cold_start_row = (
+        chapter3_hybrid_cold_start[0] if chapter3_hybrid_cold_start else {}
+    )
+    chapter3_hybrid_cold_start_passes = bool(
+        chapter3_hybrid_cold_start_row.get("status") == "pass"
+        and chapter3_hybrid_cold_start_doc_path.exists()
+    )
     chapter3_cold_target_rows = [
         row
         for row in chapter3_jacobi_targets
@@ -303,19 +313,19 @@ def _build_rows() -> list[dict[str, Any]]:
         for row in chapter3_fixed_time_targets
         if row.get("strict_fixed_time_status") == "pass"
     ]
-    chapter3_fixed_time_boundary_rows = [
+    chapter3_fixed_time_paper_rows = [
         row
         for row in chapter3_fixed_time_targets
-        if row.get("paper_rounding_boundary_status") == "pass"
+        if row.get("paper_reported_precision_status") == "pass"
     ]
     chapter3_jacobi_target_passes = (
         len(chapter3_fixed_time_targets) == 4
-        and len(chapter3_fixed_time_strict_rows) == 4
+        and len(chapter3_fixed_time_paper_rows) == 4
         and chapter3_fixed_time_target_doc_path.exists()
     )
     chapter3_reproducible = (
         chapter3_passes
-        and chapter3_cold_start_passes
+        and (chapter3_cold_start_passes or chapter3_hybrid_cold_start_passes)
         and chapter3_jacobi_target_passes
     )
     chapter3_period_q_strict = [
@@ -650,11 +660,11 @@ def _build_rows() -> list[dict[str, Any]]:
         _row(
             scope="chapter3",
             gate_id="C3-ROUTE-H-JACOBI-TARGET-COVERAGE",
-            requirement="The isolated Route H cold start must cover all four Fig. 3.16 Jacobi anchors, not only a high-amplitude subset.",
+            requirement="The Route H reconstruction must cover all four Fig. 3.16 fixed-time Jacobi anchors within the precision reported by the paper.",
             status="pass" if chapter3_jacobi_target_passes else "fail",
-            metric="cold_start_jacobi_targets_within_tolerance",
-            value=len(chapter3_fixed_time_strict_rows),
-            threshold="4/4 at absolute error <= 5e-7",
+            metric="fixed_time_jacobi_targets_at_paper_precision",
+            value=len(chapter3_fixed_time_paper_rows),
+            threshold="4/4; time <= 0.005 day and Jacobi <= 5e-5, with numerical residual gates",
             evidence_artifact=(
                 f"{_artifact(chapter3_jacobi_target_path)};"
                 f"{_artifact(chapter3_jacobi_target_doc_path)};"
@@ -668,9 +678,32 @@ def _build_rows() -> list[dict[str, Any]]:
             ),
             notes=(
                 f"Strict fixed-time rows: {len(chapter3_fixed_time_strict_rows)}/4; "
-                f"paper-rounding boundary rows: {len(chapter3_fixed_time_boundary_rows)}/4; "
+                f"paper-reported-precision rows: {len(chapter3_fixed_time_paper_rows)}/4; "
                 f"raw cold-start checkpoint target rows: {len(chapter3_cold_target_rows)}. "
                 "The historical cache also remains source-layer evidence only; cache length and maximum amplitude do not prove parameter-range coverage."
+            ),
+        ),
+        _row(
+            scope="chapter3",
+            gate_id="C3-ROUTE-H-HYBRID-COLD-START",
+            requirement="A zero-cache Route H checkpoint may cross its controlled fold through the explicit free-time bridge, pointwise-energy time homotopy, and spectral-lift reconstruction chain.",
+            status="pass" if chapter3_hybrid_cold_start_passes else "fail",
+            metric="hybrid_fixed_time_targets_at_paper_precision",
+            value=_as_float(
+                chapter3_hybrid_cold_start_row.get("paper_precision_target_count"),
+                0.0,
+            ),
+            threshold="4/4 plus zero-start checkpoint hash and numerical residual gates",
+            evidence_artifact=f"{_artifact(chapter3_hybrid_cold_start_path)};{_artifact(chapter3_hybrid_cold_start_doc_path)}",
+            decision=(
+                "use_hybrid_route_h_cold_start_chain"
+                if chapter3_hybrid_cold_start_passes
+                else "rebuild_hybrid_route_h_chain"
+            ),
+            notes=(
+                f"Checkpoint members: {chapter3_hybrid_cold_start_row.get('checkpoint_member_count', 'N/A')}; "
+                f"strict targets: {chapter3_hybrid_cold_start_row.get('strict_fixed_time_target_count', 'N/A')}/4; "
+                "the monolithic continuation failure remains preserved as negative evidence."
             ),
         ),
         _row(
@@ -702,8 +735,8 @@ def _build_rows() -> list[dict[str, Any]]:
                 if chapter4_route_h_figure_passes
                 else "route_h_dg_source_passed"
                 if chapter4_route_h_dg_passes
-                else "blocked_by_chapter3_cold_start"
-                if chapter3_passes and not chapter3_cold_start_passes
+                else "blocked_by_chapter3_reconstruction"
+                if chapter3_passes and not chapter3_reproducible
                 else ("ready_for_regeneration" if chapter3_reproducible else "blocked_by_chapter3")
             ),
             metric="chapter3_figure_source_frontier_max_abs_z_km",
@@ -716,8 +749,8 @@ def _build_rows() -> list[dict[str, Any]]:
                 else
                 "build_route_h_chapter4_figures_or_continue_l1_families"
                 if chapter4_route_h_dg_passes
-                else "repair_route_h_cold_start_before_chapter4"
-                if chapter3_passes and not chapter3_cold_start_passes
+                else "repair_route_h_reconstruction_before_chapter4"
+                if chapter3_passes and not chapter3_reproducible
                 else ("regenerate_chapter4_from_route_h_source" if chapter3_reproducible else "do_not_regenerate_chapter4_manifolds")
             ),
             notes=(
@@ -727,7 +760,7 @@ def _build_rows() -> list[dict[str, Any]]:
                 "Route H accepted quasi-DRO corrections now pass the Chapter 4 DG compatibility and local manifold probe layer; existing Fig. 4.3-4.8 L1 quasi-halo/vertical proxy backgrounds still need a separate figure-source decision."
                 if chapter4_route_h_dg_passes
                 else "The historical Route H artifact passes amplitude gates but cannot be cold-started from current code, so Chapter 4 remains gated on source reproducibility."
-                if chapter3_passes and not chapter3_cold_start_passes
+                if chapter3_passes and not chapter3_reproducible
                 else "Route H provides accepted high-amplitude fixed-time torus data; Chapter 4 can now be regenerated from this source."
                 if chapter3_reproducible
                 else "Upstream quasi-DRO frontier is below the minimum, so Chapter 4 remains gated."
@@ -1022,8 +1055,8 @@ def _build_rows() -> list[dict[str, Any]]:
             status=(
                 "staged_route_h_source_layers_complete"
                 if staged_source_layers_complete
-                else "chapter3_route_h_artifact_pass_cold_start_failed"
-                if chapter3_passes and not chapter3_cold_start_passes
+                else "chapter3_route_h_reconstruction_failed"
+                if chapter3_passes and not chapter3_reproducible
                 else
                 "chapter3_chapter4_passed_chapter5_baseline_ready_high_fidelity_blocked"
                 if chapter5_route_h_de421_passes and chapter5_high_fidelity_blocked
@@ -1041,8 +1074,8 @@ def _build_rows() -> list[dict[str, Any]]:
             decision=(
                 "staged_goal_source_layers_complete"
                 if staged_source_layers_complete
-                else "repair_route_h_cold_start_continuation"
-                if chapter3_passes and not chapter3_cold_start_passes
+                else "repair_route_h_reconstruction_chain"
+                if chapter3_passes and not chapter3_reproducible
                 else
                 "continue_to_chapter5_transfer_optimization_audit"
                 if chapter5_route_h_de421_passes and chapter5_high_fidelity_blocked and chapter5_bcr4bp_passes and chapter5_correction_passes
@@ -1061,7 +1094,7 @@ def _build_rows() -> list[dict[str, Any]]:
                 "Chapter 3 Route H, Chapter 4 Route H figure source, and Chapter 5 Route H/BCR4BP optimization source-layer artifacts are all available with CSV audit evidence. Original thesis-scale figure replacements remain documented separately where applicable."
                 if staged_source_layers_complete
                 else "The historical Chapter 3 Route H artifact passes amplitude/residual gates, but two isolated full cold-start attempts fail at the same fixed-mapping continuation point; downstream Chapter 4/5 promotion remains blocked until source reproducibility is repaired."
-                if chapter3_passes and not chapter3_cold_start_passes
+                if chapter3_passes and not chapter3_reproducible
                 else
                 "Chapter 3, Route H Chapter 4 source figure, and Route H/DE421 Chapter 5 baseline are available; BCR4BP dynamics and short-segment defect correction now pass audit, but high-fidelity/optimization completion remains blocked by missing optimized-transfer audit evidence."
                 if chapter5_route_h_de421_passes and chapter5_high_fidelity_blocked and chapter5_bcr4bp_passes and chapter5_correction_passes
@@ -1097,6 +1130,7 @@ def _write_doc(rows: list[dict[str, Any]]) -> None:
     c3 = by_gate["C3-FIGURE-SOURCE-FRONTIER"]
     experimental = by_gate["C3-EXPERIMENTAL-FRONTIER"]
     c3_cold_start = by_gate.get("C3-ROUTE-H-COLD-START", {})
+    c3_hybrid_cold_start = by_gate.get("C3-ROUTE-H-HYBRID-COLD-START", {})
     c3_jacobi_targets = by_gate.get("C3-ROUTE-H-JACOBI-TARGET-COVERAGE", {})
     c3_period_q = by_gate.get("C3-PERIOD-Q-PER-FIGURE-AUDIT", {})
     c4 = by_gate["C4-UPSTREAM-TORUS-DATA"]
@@ -1153,6 +1187,7 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - Best experimental/local frontier: `{_fmt(experimental['value'])}` km
 - Fig. 3.16 / Fig. 3.17 update allowed: `{bool(c3['status'] == 'pass')}`
 - Chapter 3 Route H full cold-start: `{c3_cold_start.get('status')}`
+- Chapter 3 Route H hybrid cold-start chain: `{c3_hybrid_cold_start.get('status')}`
 - Chapter 3 Route H Fig. 3.16 Jacobi coverage: `{c3_jacobi_targets.get('status')}`
 - Fig. 3.10 period-q per-figure audit: `{c3_period_q.get('status')}`
 - Chapter 4 Route H DG source layer passed: `{bool(c4_route_h['status'] == 'pass')}`

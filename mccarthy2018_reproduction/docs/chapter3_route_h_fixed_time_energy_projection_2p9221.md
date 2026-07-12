@@ -5,12 +5,15 @@
 - Status: `pass`
 - Target Jacobi: `2.9221000`
 - Accepted homotopy steps: `5/5`
+- Spectral lifts: `0`
+- Final curve samples: `57`
 - Final mapping time: `14.74932760227518 day`
 - Mapping-time error: `0.000000e+00 day`
 - Final mean Jacobi: `2.922099999989426`
 - Final map residual: `4.576107e-10`
 - Final Jacobi span: `8.813839e-12`
 - Failure: `N/A`
+- Final curve-state artifact: `data\computed\chapter3_route_h_fixed_time_energy_states_2p9221.csv`
 
 ## Interpretation
 

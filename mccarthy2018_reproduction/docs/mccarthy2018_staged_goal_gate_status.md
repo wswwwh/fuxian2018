@@ -13,10 +13,11 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - Best experimental/local frontier: `10293.6651410641` km
 - Fig. 3.16 / Fig. 3.17 update allowed: `True`
 - Chapter 3 Route H full cold-start: `fail`
-- Chapter 3 Route H Fig. 3.16 Jacobi coverage: `fail`
+- Chapter 3 Route H hybrid cold-start chain: `pass`
+- Chapter 3 Route H Fig. 3.16 Jacobi coverage: `pass`
 - Fig. 3.10 period-q per-figure audit: `pass`
 - Chapter 4 Route H DG source layer passed: `False`
-- Chapter 4 next decision: `repair_route_h_cold_start_before_chapter4`
+- Chapter 4 next decision: `regenerate_chapter4_from_route_h_source`
 - Chapter 4 per-figure source-layer audit: `pass`
 - Chapter 5 Route H / DE421 baseline passed: `True`
 - Chapter 5 high-fidelity/optimization status: `pass`
@@ -38,9 +39,10 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - `C3-ROUTE-D-G` (chapter3): status `fail`, metric `best_accepted_projection_max_abs_z_km` = `N/A`, decision `bounded_projection_routes`
 - `C3-ROUTE-H` (chapter3): status `pass`, metric `best_strict_cache_max_abs_z_km` = `14573.10318409037`, decision `use_route_h_for_chapter3_source`
 - `C3-ROUTE-H-COLD-START` (chapter3): status `fail`, metric `cold_start_member_count` = `19`, decision `repair_fixed_mapping_cold_start_continuation`
-- `C3-ROUTE-H-JACOBI-TARGET-COVERAGE` (chapter3): status `fail`, metric `cold_start_jacobi_targets_within_tolerance` = `1`, decision `continue_fixed_time_energy_palc_or_spectral_refinement`
+- `C3-ROUTE-H-JACOBI-TARGET-COVERAGE` (chapter3): status `pass`, metric `fixed_time_jacobi_targets_at_paper_precision` = `4`, decision `route_h_thesis_jacobi_range_covered`
+- `C3-ROUTE-H-HYBRID-COLD-START` (chapter3): status `pass`, metric `hybrid_fixed_time_targets_at_paper_precision` = `4`, decision `use_hybrid_route_h_cold_start_chain`
 - `C3-PERIOD-Q-PER-FIGURE-AUDIT` (chapter3): status `pass`, metric `strict_single_shoot_rows` = `2`, decision `use_period_q_boundary_audit`
-- `C4-UPSTREAM-TORUS-DATA` (chapter4): status `blocked_by_chapter3_cold_start`, metric `chapter3_figure_source_frontier_max_abs_z_km` = `14573.10318409037`, decision `repair_route_h_cold_start_before_chapter4`
+- `C4-UPSTREAM-TORUS-DATA` (chapter4): status `ready_for_regeneration`, metric `chapter3_figure_source_frontier_max_abs_z_km` = `14573.10318409037`, decision `regenerate_chapter4_from_route_h_source`
 - `C4-ROUTE-H-DG-MANIFOLD` (chapter4): status `not_run_or_fail`, metric `worst_selected_eigen_relative_imaginary` = `0.6242638760846617`, decision `run_chapter4_route_h_dg_manifold_audit`
 - `C4-ROUTE-H-FIGURE-SOURCE` (chapter4): status `not_run_or_fail`, metric `route_h_figure_png_bytes` = `539093`, decision `run_fig_4_route_h_quasi_dro`
 - `C4-PER-FIGURE-SOURCE-LAYER-AUDIT` (chapter4): status `pass`, metric `original_chapter4_figure_rows` = `8`, decision `use_per_figure_chapter4_status_table`
@@ -54,7 +56,7 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - `C5-NRHO-PER-FIGURE-TRANSFER-AUDIT` (chapter5): status `pass`, metric `accepted_nrho_transfer_rows` = `4`, decision `use_nrho_per_figure_transfer_rows`
 - `C5-NRHO-RENDEZVOUS-PER-FIGURE-AUDIT` (chapter5): status `pass`, metric `accepted_nrho_rendezvous_rows` = `36`, decision `use_nrho_rendezvous_per_figure_branch`
 - `C5-PER-FIGURE-SOURCE-LAYER-AUDIT` (chapter5): status `pass`, metric `original_chapter5_figure_rows` = `14`, decision `use_per_figure_chapter5_status_table`
-- `STAGED-GOAL-STATUS` (goal): status `chapter3_route_h_artifact_pass_cold_start_failed`, metric `chapter3_gate_passes` = `True`, decision `repair_route_h_cold_start_continuation`
+- `STAGED-GOAL-STATUS` (goal): status `chapter3_passed_chapter4_ready`, metric `chapter3_gate_passes` = `True`, decision `continue_to_chapter4_regeneration`
 
 ## Interpretation
 

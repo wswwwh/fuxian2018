@@ -21,7 +21,7 @@ FIGURE_ID = "3.17"
 SOURCE_PAGE = 83
 REPRO_LEVEL = "audited numerical reproduction"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Thesis-scale proxy trends are retained as context; Route H accepted fixed-mapping members are plotted as the audited numerical branch."
+NOTES = "Thesis-scale proxy trends and the historical Route H branch are retained as context; the four hybrid cold-start fixed-time anchors are the audited target evidence."
 FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family.csv"
 EXTENDED_FAMILY_PATH = (
     PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family_extended.csv"
@@ -34,6 +34,30 @@ ROUTE_H_FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_fixed_mappi
 ROUTE_H_VALIDATION_PATH = (
     PROJECT_ROOT / "data" / "computed" / "chapter3_fixed_mapping_cache_accepted_validation.csv"
 )
+TARGET_STATE_PATH = (
+    PROJECT_ROOT / "data" / "computed" / "chapter3_route_h_fixed_time_target_states.csv"
+)
+
+
+def load_target_metrics(path, system):
+    grouped = {}
+    for row in load_validation_rows(path):
+        grouped.setdefault(float(row["target_jacobi"]), []).append(row)
+    metrics = []
+    for target in sorted(grouped, reverse=True):
+        member_rows = grouped[target]
+        metrics.append(
+            {
+                "target_jacobi": target,
+                "mean_jacobi": sum(float(row["point_jacobi"]) for row in member_rows)
+                / len(member_rows),
+                "rotation_angle_rad": float(member_rows[0]["rotation_angle_rad"]),
+                "max_abs_z_km": max(abs(float(row["z"])) for row in member_rows)
+                * system.length_unit_km,
+                "max_map_residual": float(member_rows[0]["max_map_residual"]),
+            }
+        )
+    return metrics
 
 
 def max_audit_metric(rows, field: str) -> float | None:
@@ -81,8 +105,13 @@ def main() -> None:
     corrected_rho = [member.rotation_angle_rad for member in corrected]
     corrected_z_amp = [member.max_abs_z_km for member in corrected]
     corrected_jacobi = [member.mean_jacobi for member in corrected]
+    target_metrics = load_target_metrics(TARGET_STATE_PATH, system)
+    target_rho = [row["rotation_angle_rad"] for row in target_metrics]
+    target_z_amp = [row["max_abs_z_km"] for row in target_metrics]
+    target_jacobi = [row["mean_jacobi"] for row in target_metrics]
     max_map_residual = max_audit_metric(audit_rows, "map_residual_norm")
     max_jacobi_drift = max_audit_metric(audit_rows, "one_map_sweep_jacobi_drift")
+    max_target_residual = max(row["max_map_residual"] for row in target_metrics)
 
     fig, axes = plt.subplots(1, 2, figsize=(7.6, 3.1), constrained_layout=True)
     axes[0].plot(
@@ -101,6 +130,16 @@ def main() -> None:
         markersize=2.5,
         linewidth=1.45,
         label="audited Route H fixed-time branch",
+    )
+    axes[0].scatter(
+        target_rho,
+        target_z_amp,
+        color="#6a3d9a",
+        edgecolor="white",
+        linewidth=0.5,
+        s=34,
+        zorder=5,
+        label="Fig. 3.16 fixed-time target anchors",
     )
     axes[0].set_xlabel(r"Rotation Angle, $\rho$ [rad]")
     axes[0].set_ylabel("Z-Amplitude [km]")
@@ -137,6 +176,16 @@ def main() -> None:
         linewidth=1.45,
         label="audited Route H fixed-time branch",
     )
+    axes[1].scatter(
+        target_rho,
+        target_jacobi,
+        color="#6a3d9a",
+        edgecolor="white",
+        linewidth=0.5,
+        s=34,
+        zorder=5,
+        label="hybrid cold-start target anchors",
+    )
     axes[1].set_xlabel(r"Rotation Angle, $\rho$ [rad]")
     axes[1].set_ylabel("Jacobi Constant")
     axes[1].set_xlim(1.42, 1.52)
@@ -148,7 +197,9 @@ def main() -> None:
         "audit max residual: "
         f"{metric_text(max_map_residual)}\n"
         "audit max Jacobi drift: "
-        f"{metric_text(max_jacobi_drift)}",
+        f"{metric_text(max_jacobi_drift)}\n"
+        "target max map residual: "
+        f"{metric_text(max_target_residual)}",
         transform=axes[1].transAxes,
         fontsize=7,
         va="bottom",

@@ -56,13 +56,13 @@ python scripts/validate_reproduction_smoke.py
 
 当前结果：
 
-- 行为测试：`10/10 PASS`；
+- 行为测试：`13/13 PASS`；
 - target registry：`54 rows, up to date`；
 - smoke：`PASS`；
 - 目标分层：`V0=13, V2=41`；
 - 当前完成度：`numerical reproduction=16, open=25`；
 - Route H：`30 rows`，最大 `|z|=14573.1031841 km`，最大 map residual `6.469e-10`；
-- staged goal：`chapter3_route_h_artifact_pass_cold_start_failed`；
+- staged goal：`chapter3_passed_chapter4_ready`；monolithic cold-start 仍为 fail，但 hybrid cold-start reconstruction chain 已通过；
 - 图件：`54 PNG + 54 PDF`，均存在且非空。
 
 ## Corrected Chapter 4 Gate
@@ -96,7 +96,7 @@ python scripts/validate_reproduction_smoke.py
 - cold-start checkpoint SHA-256：`4B8209C045A7929482EA65227AB603A4627BD83E58D5E4B1FC7AF67939CBA5DA`；
 - historical canonical cache SHA-256：`6B1BF209340BB27CA2C489689FFAAEFAA50170D4834A676EDA877FAEEA3363B0`。
 
-因此 historical Route H artifact 仍是可审计数值证据，但当前代码无法从初始条件重建该 artifact。新增 `C3-ROUTE-H-COLD-START` 后，权威 staged goal 状态为 `chapter3_route_h_artifact_pass_cold_start_failed`，不得再表述为端到端可复现。
+因此 historical Route H artifact 仍仅是可审计数值证据，旧 monolithic 路线不得表述为成功。后续新增的 hybrid chain 从零缓存生成的 19-member checkpoint 出发，经 fixed-Jacobi free-time bridge、逐点能量固定时间同伦与谱提升重建 Fig. 3.16 四个锚点；`C3-ROUTE-H-HYBRID-COLD-START` 与论文精度目标覆盖 gate 已通过，权威 staged goal 状态更新为 `chapter3_passed_chapter4_ready`。
 
 ## Full Real-Hyperbolic Coverage Scan
 

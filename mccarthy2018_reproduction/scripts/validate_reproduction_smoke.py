@@ -170,6 +170,18 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
     )
     if len(cold_start_rows) != 1 or not cold_start_rows[0].get("status"):
         raise SmokeFailure("Route H full cold-start audit is incomplete")
+    hybrid_cold_start_rows = read_csv(
+        project_root
+        / "data"
+        / "computed"
+        / "chapter3_route_h_hybrid_cold_start_audit.csv",
+        project_root,
+    )
+    if (
+        len(hybrid_cold_start_rows) != 1
+        or hybrid_cold_start_rows[0].get("status") != "pass"
+    ):
+        raise SmokeFailure("Route H hybrid cold-start reconstruction is not pass")
 
     gate_rows = read_csv(
         project_root
@@ -201,6 +213,7 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
         "route_h_max_z_km": max_z,
         "route_h_max_residual": max_residual,
         "route_h_cold_start_status": cold_start_rows[0]["status"],
+        "route_h_hybrid_cold_start_status": hybrid_cold_start_rows[0]["status"],
         "staged_goal_status": goal_gate["status"],
         "png": png_count,
         "pdf": pdf_count,
@@ -241,6 +254,10 @@ def main() -> int:
         f"max_residual={summary['route_h_max_residual']:.3e}"
     )
     print(f"route_h_cold_start_status={summary['route_h_cold_start_status']}")
+    print(
+        "route_h_hybrid_cold_start_status="
+        f"{summary['route_h_hybrid_cold_start_status']}"
+    )
     print(f"staged_goal_status={summary['staged_goal_status']}")
     print(f"png={summary['png']} pdf={summary['pdf']}")
     return 0

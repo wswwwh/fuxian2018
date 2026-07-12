@@ -76,6 +76,7 @@ class ReproductionSmokeCliTests(unittest.TestCase):
         self.assertIn("targets_v0=13 targets_v2=41", result.stdout)
         self.assertIn("route_h_rows=", result.stdout)
         self.assertIn("route_h_cold_start_status=fail", result.stdout)
+        self.assertIn("route_h_hybrid_cold_start_status=pass", result.stdout)
         self.assertIn("staged_goal_status=", result.stdout)
         self.assertIn("png=54 pdf=54", result.stdout)
 

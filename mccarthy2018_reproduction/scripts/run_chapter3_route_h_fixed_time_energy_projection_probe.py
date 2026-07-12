@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import csv
 import pickle
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
@@ -30,6 +31,8 @@ DEFAULT_CACHE = (
 )
 FIELDS = (
     "step",
+    "event",
+    "curve_samples",
     "mapping_time_days",
     "mapping_time_error_days",
     "rotation_angle_rad",
@@ -43,12 +46,45 @@ FIELDS = (
     "jacobian_condition",
     "status",
 )
+STATE_FIELDS = (
+    "target_jacobi",
+    "phase_index",
+    "phase_rad",
+    "x",
+    "y",
+    "z",
+    "xdot",
+    "ydot",
+    "zdot",
+    "point_jacobi",
+    "mapping_time_days",
+    "rotation_angle_rad",
+    "curve_samples",
+    "max_map_residual",
+    "curve_jacobi_span",
+)
 
 
 def _amplitude(states: np.ndarray, seed: object) -> float:
     component = seed.mode_component
     displacement = states[:, component] - seed.orbit_state[component]
     return float(np.sqrt(2.0 * np.mean(displacement**2)))
+
+
+def _lift_seed_and_states(
+    seed: object,
+    states: np.ndarray,
+    samples: int,
+) -> tuple[object, np.ndarray]:
+    phases = np.linspace(0.0, 2.0 * np.pi, samples, endpoint=False)
+    interpolation = _trigonometric_interpolation_matrix(seed.phases, phases)
+    lifted_states = interpolation @ states
+    lifted_seed = replace(
+        seed,
+        phases=phases,
+        initial_states=lifted_states.copy(),
+    )
+    return lifted_seed, lifted_states
 
 
 def _correct_fixed_time_energy(
@@ -166,6 +202,7 @@ def _correct_fixed_time_energy(
 def _row(
     *,
     step: int,
+    event: str,
     mapping_time: float,
     target_time: float,
     rotation: float,
@@ -184,6 +221,8 @@ def _row(
     )
     return {
         "step": step,
+        "event": event,
+        "curve_samples": states.shape[0],
         "mapping_time_days": time_days,
         "mapping_time_error_days": time_days - target_days,
         "rotation_angle_rad": rotation,
@@ -199,6 +238,7 @@ def _write_doc(
     rows: list[dict[str, object]],
     target_jacobi: float,
     failure: str,
+    state_path: Path,
 ) -> None:
     final = rows[-1]
     reached_time = abs(float(final["mapping_time_error_days"])) < 1.0e-10
@@ -212,12 +252,15 @@ def _write_doc(
 - Status: `{status}`
 - Target Jacobi: `{target_jacobi:.7f}`
 - Accepted homotopy steps: `{sum(row['status'] == 'pass' for row in rows)}/{len(rows)}`
+- Spectral lifts: `{sum(row['event'] == 'spectral_lift' and row['status'] == 'pass' for row in rows)}`
+- Final curve samples: `{final['curve_samples']}`
 - Final mapping time: `{float(final['mapping_time_days']):.16g} day`
 - Mapping-time error: `{float(final['mapping_time_error_days']):.6e} day`
 - Final mean Jacobi: `{float(final['mean_jacobi']):.16g}`
 - Final map residual: `{float(final['max_map_residual']):.6e}`
 - Final Jacobi span: `{float(final['curve_jacobi_span']):.6e}`
 - Failure: `{failure or 'N/A'}`
+- Final curve-state artifact: `{state_path.relative_to(PROJECT_ROOT)}`
 
 ## Interpretation
 
@@ -242,8 +285,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--minimum-time-step-days", type=float, default=1.0e-5)
     parser.add_argument("--max-steps", type=int, default=120)
     parser.add_argument("--max-iterations", type=int, default=12)
+    parser.add_argument("--maximum-samples", type=int, default=81)
+    parser.add_argument("--spectral-increment", type=int, default=12)
     parser.add_argument("--csv", type=Path)
     parser.add_argument("--doc", type=Path)
+    parser.add_argument("--state-csv", type=Path)
     return parser.parse_args()
 
 
@@ -261,10 +307,17 @@ def main() -> int:
         / "docs"
         / f"chapter3_route_h_fixed_time_energy_projection_{target_token}.md"
     )
+    state_path = args.state_csv or (
+        PROJECT_ROOT
+        / "data"
+        / "computed"
+        / f"chapter3_route_h_fixed_time_energy_states_{target_token}.csv"
+    )
     with args.cache.open("rb") as stream:
         fold = tuple(pickle.load(stream))[-1]
     targets = [value for value in (2.9225, 2.9221, 2.9215, 2.9212) if value >= args.target_jacobi]
     states = fold.corrected_states
+    seed = fold.seed
     mapping_time = fold.seed.orbit_period
     rotation = fold.rotation_angle_rad
     free = None
@@ -310,11 +363,12 @@ def main() -> int:
     rows.append(
         _row(
             step=0,
+            event="free_time_anchor",
             mapping_time=mapping_time,
             target_time=target_time,
             rotation=rotation,
             states=states,
-            seed=fold.seed,
+            seed=seed,
             metrics=initial_metrics,
         )
     )
@@ -325,7 +379,7 @@ def main() -> int:
         if (target_time - mapping_time) * (target_time - proposed) <= 0.0:
             proposed = target_time
         candidate_states, candidate_rotation, metrics = _correct_fixed_time_energy(
-            seed=fold.seed,
+            seed=seed,
             states=states,
             rotation=rotation,
             reference=states,
@@ -335,11 +389,12 @@ def main() -> int:
         )
         candidate_row = _row(
             step=accepted_steps + 1,
+            event="time_homotopy",
             mapping_time=proposed,
             target_time=target_time,
             rotation=candidate_rotation,
             states=candidate_states,
-            seed=fold.seed,
+            seed=seed,
             metrics=metrics,
         )
         if candidate_row["status"] != "pass":
@@ -352,7 +407,56 @@ def main() -> int:
             )
             step *= 0.5
             if abs(step) * system.time_unit_days < args.minimum_time_step_days:
-                failure = "fixed-time energy correction exhausted the minimum time step"
+                next_samples = states.shape[0] + args.spectral_increment
+                if next_samples <= args.maximum_samples:
+                    lifted_seed, lifted_states = _lift_seed_and_states(
+                        seed,
+                        states,
+                        next_samples,
+                    )
+                    lifted_states, lifted_rotation, lifted_metrics = (
+                        _correct_fixed_time_energy(
+                            seed=lifted_seed,
+                            states=lifted_states,
+                            rotation=rotation,
+                            reference=lifted_states,
+                            mapping_time=mapping_time,
+                            target_jacobi=args.target_jacobi,
+                            max_iterations=max(args.max_iterations, 16),
+                        )
+                    )
+                    lift_row = _row(
+                        step=accepted_steps + 1,
+                        event="spectral_lift",
+                        mapping_time=mapping_time,
+                        target_time=target_time,
+                        rotation=lifted_rotation,
+                        states=lifted_states,
+                        seed=lifted_seed,
+                        metrics=lifted_metrics,
+                    )
+                    rows.append(lift_row)
+                    if lift_row["status"] == "pass":
+                        seed = lifted_seed
+                        states = lifted_states
+                        rotation = lifted_rotation
+                        accepted_steps += 1
+                        step = np.sign(target_time - mapping_time) * (
+                            args.initial_time_step_days / system.time_unit_days
+                        )
+                        print(
+                            f"accept spectral lift N={next_samples}, "
+                            f"time={mapping_time * system.time_unit_days:.9f} day, "
+                            f"residual={float(lift_row['max_map_residual']):.3e}",
+                            flush=True,
+                        )
+                        continue
+                    failure = f"spectral lift to N={next_samples} failed the correction gate"
+                    break
+                failure = (
+                    "fixed-time energy correction exhausted the minimum time step "
+                    f"and maximum samples N={args.maximum_samples}"
+                )
                 rows.append(candidate_row)
                 break
             continue
@@ -375,7 +479,35 @@ def main() -> int:
         writer = csv.DictWriter(stream, fieldnames=FIELDS)
         writer.writeheader()
         writer.writerows(rows)
-    _write_doc(doc_path, rows, args.target_jacobi, failure)
+    final_pass = next(row for row in reversed(rows) if row["status"] == "pass")
+    point_jacobi = jacobi_constant(states, seed.mu)
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    with state_path.open("w", newline="", encoding="utf-8") as stream:
+        writer = csv.DictWriter(stream, fieldnames=STATE_FIELDS)
+        writer.writeheader()
+        for index, (phase, state, jacobi_value) in enumerate(
+            zip(seed.phases, states, point_jacobi)
+        ):
+            writer.writerow(
+                {
+                    "target_jacobi": args.target_jacobi,
+                    "phase_index": index,
+                    "phase_rad": float(phase),
+                    "x": float(state[0]),
+                    "y": float(state[1]),
+                    "z": float(state[2]),
+                    "xdot": float(state[3]),
+                    "ydot": float(state[4]),
+                    "zdot": float(state[5]),
+                    "point_jacobi": float(jacobi_value),
+                    "mapping_time_days": mapping_time * system.time_unit_days,
+                    "rotation_angle_rad": rotation,
+                    "curve_samples": states.shape[0],
+                    "max_map_residual": final_pass["max_map_residual"],
+                    "curve_jacobi_span": final_pass["curve_jacobi_span"],
+                }
+            )
+    _write_doc(doc_path, rows, args.target_jacobi, failure, state_path)
     print(
         f"Route H fixed-time energy projection: rows={len(rows)}, "
         f"final_time_error_days={float(rows[-1]['mapping_time_error_days']):.3e}, "
@@ -383,6 +515,7 @@ def main() -> int:
     )
     print(f"wrote {csv_path.relative_to(PROJECT_ROOT)}")
     print(f"wrote {doc_path.relative_to(PROJECT_ROOT)}")
+    print(f"wrote {state_path.relative_to(PROJECT_ROOT)}")
     reached = abs(float(rows[-1]["mapping_time_error_days"])) < 1.0e-10
     return 0 if reached and rows[-1]["status"] == "pass" and not failure else 1
 
