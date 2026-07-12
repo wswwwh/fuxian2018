@@ -40,7 +40,6 @@ comparison, and several Chapter 4/5 figures retain proxy or source-layer status.
 
 ### Chapter 5
 
-- Fig. 5.1: `CR3BP Sun-Earth L1 long-propagation audit`; proxy flag `partial`; PNG bytes 860121; PDF bytes 236515; boundary: Local Sun-Earth L1 CR3BP center-mode propagation rows are accepted; rendered torus/context remains proxy and is not a corrected thesis Lissajous torus.
 - Fig. 5.2: `proxy/schematic only`; proxy flag `true`; PNG bytes 87543; PDF bytes 13167; boundary: No numerical source-layer is required for the current schematic role.
 - Fig. 5.3: `proxy/schematic only`; proxy flag `true`; PNG bytes 64008; PDF bytes 12487; boundary: No numerical source-layer is required for the current schematic role.
 - Fig. 5.4: `proxy/schematic only`; proxy flag `true`; PNG bytes 205910; PDF bytes 17825; boundary: No numerical source-layer is required for the current schematic role.

@@ -288,25 +288,25 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
     return [
         {
             "figure_id": "5.1",
-            "current_source_layer": "Sun-Earth L1 CR3BP long-propagation baseline with proxy torus context",
-            "current_repro_level": "CR3BP Sun-Earth L1 long-propagation audit",
-            "original_replacement_status": "local_cr3bp_center_mode_not_lissajous_torus_replacement",
-            "uses_proxy": "partial",
-            "primary_evidence": "data/computed/chapter5_sun_earth_l1_cr3bp_long_propagation.csv",
-            "supporting_evidence": f"{_rel(SUN_EARTH_L1_LONG_PROP_AUDIT)};{_rel(UPSTREAM_AUDIT)}",
+            "current_source_layer": "corrected Sun-Earth L1 two-frequency Lissajous torus trajectories",
+            "current_repro_level": "numerical corrected Lissajous propagation reproduction",
+            "original_replacement_status": "corrected_lissajous_torus_replaces_proxy_long_propagation_scene",
+            "uses_proxy": "false",
+            "primary_evidence": "data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv",
+            "supporting_evidence": f"{_rel(LISSAJOUS_TORUS_AUDIT)};{_rel(SUN_EARTH_L1_LONG_PROP_AUDIT)}",
             "route_h_dependency": "none",
             "bcr4bp_dependency": "none",
             "optimization_dependency": "none",
-            "accepted_rows": metrics["l1_long_rows"],
+            "accepted_rows": metrics["lissajous_source_rows"],
             "best_metric": (
-                f"accepted CR3BP L1 long-propagation rows {metrics['l1_long_rows']}; "
-                f"duration {metrics['l1_long_duration']} days; "
-                f"max Jacobi span {metrics['l1_long_max_jacobi']}; "
-                f"minimum transverse span {metrics['l1_long_min_transverse_span']}; "
-                f"max L1 distance {metrics['l1_long_max_l1_distance']} km"
+                f"accepted corrected Lissajous source rows {metrics['lissajous_source_rows']}; "
+                f"torus points {metrics['lissajous_points']}; "
+                f"curve residual {metrics['lissajous_residual']}; "
+                f"Jacobi span {metrics['lissajous_jacobi_span']}; "
+                f"max |y|/|z| {metrics['lissajous_y_km']}/{metrics['lissajous_z_km']} km"
             ),
-            "boundary": "Local Sun-Earth L1 CR3BP center-mode propagation rows are accepted; rendered torus/context remains proxy and is not a corrected thesis Lissajous torus.",
-            "next_action": "Replace proxy torus context with corrected two-frequency Lissajous/quasi-periodic family or BCR4BP/ephemeris evidence before thesis-equivalence claims.",
+            "boundary": "The analytic torus and center-mode overlays are removed. Remaining boundaries are the source-torus y-amplitude excess and pointwise thesis comparison.",
+            "next_action": "Reduce the corrected torus y-amplitude discrepancy and digitize the thesis panels for pointwise comparison.",
         },
         {
             "figure_id": "5.2",

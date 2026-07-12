@@ -9,7 +9,6 @@ Total figures: 54.
 
 | current_repro_level | count |
 |---|---:|
-| CR3BP Sun-Earth L1 long-propagation audit | 1 |
 | CR3BP corrected periodic-family reproduction | 1 |
 | CR3BP endpoint-corrected NRHO transfer audit | 2 |
 | CR3BP endpoint-corrected halo-Lyapunov transfer audit | 1 |
@@ -19,6 +18,7 @@ Total figures: 54.
 | numerical DG family reproduction with paper-digitization boundary | 1 |
 | numerical DG global manifold reproduction | 4 |
 | numerical DG manifold comparison | 2 |
+| numerical corrected Lissajous propagation reproduction | 1 |
 | numerical quasi-periodic stable-manifold transfer reproduction | 1 |
 | numerical reproduction | 16 |
 | numerical two-angle stable-manifold reproduction | 1 |
@@ -757,16 +757,16 @@ Total figures: 54.
 | figure_id | 5.1 |
 | source_page | 96 |
 | script | figures/fig_5_01.py |
-| current_repro_level | CR3BP Sun-Earth L1 long-propagation audit |
-| uses_proxy | partial |
-| main_data_source | data/computed/chapter5_sun_earth_l1_cr3bp_long_propagation.csv;data/computed/chapter5_sun_earth_l1_long_propagation_per_figure_audit.csv;data/computed/chapter5_upstream_application_gate_audit.csv;outputs/figures_png/fig_5_1.png;outputs/figures_pdf/fig_5_1.pdf |
-| key_physical_quantities | Sun-Earth L1 CR3BP long-propagation baseline with proxy torus context; accepted CR3BP L1 long-propagation rows 5; duration 72.50168833048522 days; max Jacobi span 1.332267629550188e-15; minimum transverse span 0.002930000770814965; max L1 distance 605346.6174117256 km; original replacement status: local_cr3bp_center_mode_not_lissajous_torus_replacement |
-| residual evidence | accepted source rows: 5; Route H dependency: none; BCR4BP dependency: none |
+| current_repro_level | numerical corrected Lissajous propagation reproduction |
+| uses_proxy | false |
+| main_data_source | data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_audit.csv;data/computed/chapter5_sun_earth_l1_long_propagation_per_figure_audit.csv;outputs/figures_png/fig_5_1.png;outputs/figures_pdf/fig_5_1.pdf |
+| key_physical_quantities | corrected Sun-Earth L1 two-frequency Lissajous torus trajectories; accepted corrected Lissajous source rows 1; torus points 3600; curve residual 2.646101981500197e-11; Jacobi span 2.220446049250313e-15; max |y|/|z| 1016592.923818082/939484.302401125 km; original replacement status: corrected_lissajous_torus_replaces_proxy_long_propagation_scene |
+| residual evidence | accepted source rows: 1; Route H dependency: none; BCR4BP dependency: none |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 860121; PDF bytes 236515; boundary: Local Sun-Earth L1 CR3BP center-mode propagation rows are accepted; rendered torus/context remains proxy and is not a corrected thesis Lissajous torus. |
-| next_action | Replace proxy torus context with corrected two-frequency Lissajous/quasi-periodic family or BCR4BP/ephemeris evidence before thesis-equivalence claims. |
+| visual_status | PNG bytes 416295; PDF bytes 178866; boundary: The analytic torus and center-mode overlays are removed. Remaining boundaries are the source-torus y-amplitude excess and pointwise thesis comparison. |
+| next_action | Reduce the corrected torus y-amplitude discrepancy and digitize the thesis panels for pointwise comparison. |
 
 ### Figure 5.2
 
