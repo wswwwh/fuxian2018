@@ -1,0 +1,2 @@
+continuation_steps,target_jacobi,vertical_rms_amplitude_nd,rotation_angle_rad,mapping_time_nd,combined_metric,curve_residual_norm,max_abs_y_km,max_abs_z_km,jacobi_span,closure_residual_norm,y_target_error_km,z_target_error_km
+21,3.000703990914463,0.0009241534953831325,0.12065568982463586,3.1253085035235326,1.8851592501851965e-09,1.8851592501851965e-09,1117501.3467147257,935663.4516908167,1.310879239824203e-06,1.885152898174175e-09,457501.3467147257,-4336.54830918333
