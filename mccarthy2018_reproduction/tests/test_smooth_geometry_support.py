@@ -16,6 +16,7 @@ if str(SRC) not in sys.path:
 
 from qp_orbits.quasi_torus import (
     _regularized_least_squares_step,
+    _propagated_smooth_geometry_constraints,
     _smooth_absolute_support,
     _smooth_dual_geometry_constraints,
 )
@@ -101,6 +102,58 @@ class SmoothAbsoluteSupportTests(unittest.TestCase):
         self.assertGreater(abs(unregularized[1]), 1.0e8)
         self.assertLess(abs(regularized[1]), 1.0e-2)
         self.assertAlmostEqual(regularized[0], 1.0 / 1.000001, places=12)
+
+    def test_propagated_geometry_jacobian_matches_finite_difference(self) -> None:
+        states = np.array(
+            [
+                [0.82, 0.03, 0.015, 0.0, 0.12, 0.01],
+                [0.84, -0.02, -0.01, 0.01, 0.10, -0.015],
+            ],
+            dtype=float,
+        )
+        kwargs = {
+            "mapping_time": 0.04,
+            "mu": 0.012150585609624,
+            "time_fractions": np.array([0.0, 0.5, 1.0]),
+            "target_y_support": 0.025,
+            "target_z_support": 0.012,
+            "sharpness": 25.0,
+            "max_step": 0.01,
+        }
+        residuals, state_jacobian, time_jacobian = (
+            _propagated_smooth_geometry_constraints(states, **kwargs)
+        )
+        step = 1.0e-7
+        for sample, component in ((0, 1), (1, 2), (0, 4)):
+            upper = states.copy()
+            lower = states.copy()
+            upper[sample, component] += step
+            lower[sample, component] -= step
+            upper_residuals = _propagated_smooth_geometry_constraints(
+                upper, **kwargs
+            )[0]
+            lower_residuals = _propagated_smooth_geometry_constraints(
+                lower, **kwargs
+            )[0]
+            numerical = (upper_residuals - lower_residuals) / (2.0 * step)
+            column = 6 * sample + component
+            np.testing.assert_allclose(
+                state_jacobian[:, column], numerical, rtol=2.0e-5, atol=2.0e-8
+            )
+
+        upper_kwargs = dict(kwargs, mapping_time=kwargs["mapping_time"] + step)
+        lower_kwargs = dict(kwargs, mapping_time=kwargs["mapping_time"] - step)
+        upper_residuals = _propagated_smooth_geometry_constraints(
+            states, **upper_kwargs
+        )[0]
+        lower_residuals = _propagated_smooth_geometry_constraints(
+            states, **lower_kwargs
+        )[0]
+        numerical_time = (upper_residuals - lower_residuals) / (2.0 * step)
+        np.testing.assert_allclose(
+            time_jacobian, numerical_time, rtol=3.0e-5, atol=3.0e-8
+        )
+        self.assertEqual(residuals.shape, (2,))
 
 
 if __name__ == "__main__":

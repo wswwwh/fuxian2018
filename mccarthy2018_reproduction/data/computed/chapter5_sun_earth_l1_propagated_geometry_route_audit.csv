@@ -1,0 +1,4 @@
+time_slices,sharpness,y_target_step,accepted,best_metric,full_max_y_km,full_max_z_km,interpretation
+5,80,-0.1pct,true,2.21467710977705e-09,1117496.521745983,935778.9735940634,correct but weak full-torus response
+17,4000,-0.1pct,false,4.733363653240154e-06,,,high-sharpness target exposes ill conditioning
+17,4000,-0.01pct,false,5.125628530472166e-07,,,smaller step improves but does not pass

@@ -101,6 +101,68 @@ def _smooth_dual_geometry_constraints(
     return residuals, jacobian
 
 
+def _propagated_smooth_geometry_constraints(
+    initial_states: np.ndarray,
+    *,
+    mapping_time: float,
+    mu: float,
+    time_fractions: np.ndarray,
+    target_y_support: float,
+    target_z_support: float,
+    sharpness: float = 80.0,
+    max_step: float = 0.01,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Return propagated support residuals and STM-chain-rule derivatives."""
+
+    states = np.asarray(initial_states, dtype=float)
+    fractions = np.asarray(time_fractions, dtype=float)
+    if states.ndim != 2 or states.shape[1] != 6:
+        raise ValueError("initial_states must have shape (samples, 6)")
+    if mapping_time <= 0.0 or not np.isfinite(mapping_time):
+        raise ValueError("mapping_time must be positive and finite")
+    if fractions.ndim != 1 or fractions.size < 1:
+        raise ValueError("time_fractions must be a non-empty vector")
+    if np.any(fractions < 0.0) or np.any(fractions > 1.0) or np.any(np.diff(fractions) < 0.0):
+        raise ValueError("time_fractions must be sorted within [0, 1]")
+
+    times = mapping_time * fractions
+    solution = integrate_states_and_stms(
+        states,
+        (0.0, mapping_time),
+        mu,
+        t_eval=times,
+        max_step=max_step,
+    )
+    if not solution.success:
+        raise RuntimeError(solution.message)
+    values = solution.y.T.reshape(fractions.size, states.shape[0], 42)
+    propagated = values[:, :, :6]
+    stms = values[:, :, 6:].reshape(fractions.size, states.shape[0], 6, 6)
+    residuals = np.empty(2, dtype=float)
+    state_jacobian = np.zeros((2, states.size), dtype=float)
+    time_jacobian = np.zeros(2, dtype=float)
+    for row, (component, target) in enumerate(
+        zip((1, 2), (target_y_support, target_z_support))
+    ):
+        support, support_gradient = _smooth_absolute_support(
+            propagated[:, :, component],
+            sharpness=sharpness,
+        )
+        residuals[row] = support - target
+        for time_index, fraction in enumerate(fractions):
+            for sample_index in range(states.shape[0]):
+                gradient = support_gradient[time_index, sample_index]
+                block = gradient * stms[time_index, sample_index, component, :]
+                start = 6 * sample_index
+                state_jacobian[row, start : start + 6] += block
+                time_jacobian[row] += gradient * fraction * cr3bp_rhs(
+                    times[time_index],
+                    propagated[time_index, sample_index],
+                    mu,
+                )[component]
+    return residuals, state_jacobian, time_jacobian
+
+
 def _regularized_least_squares_step(
     jacobian: np.ndarray,
     right_hand_side: np.ndarray,
@@ -2202,6 +2264,7 @@ def stroboscopic_curve_dual_geometry_correction(
     initial_mapping_time: float,
     initial_rotation_angle_rad: float,
     phase_reference_states: np.ndarray | None = None,
+    geometry_time_fractions: np.ndarray | None = None,
     sharpness: float = 80.0,
     regularization: float = 1.0e-6,
     geometry_residual_scale: float = 1.0,
@@ -2266,12 +2329,29 @@ def stroboscopic_curve_dual_geometry_correction(
         energy_values = jacobi_constant(states, seed.mu)
         energy_residual = float(np.mean(energy_values) - target_jacobi)
         energy_gradient = _jacobi_gradient(states, seed.mu) / states.shape[0]
-        geometry_residuals, geometry_jacobian = _smooth_dual_geometry_constraints(
-            states,
-            target_y_support=target_y_support,
-            target_z_support=target_z_support,
-            sharpness=sharpness,
-        )
+        geometry_time_jacobian = np.zeros(2, dtype=float)
+        if geometry_time_fractions is None:
+            geometry_residuals, geometry_jacobian = _smooth_dual_geometry_constraints(
+                states,
+                target_y_support=target_y_support,
+                target_z_support=target_z_support,
+                sharpness=sharpness,
+            )
+        else:
+            (
+                geometry_residuals,
+                geometry_jacobian,
+                geometry_time_jacobian,
+            ) = _propagated_smooth_geometry_constraints(
+                states,
+                mapping_time=mapping_time,
+                mu=seed.mu,
+                time_fractions=geometry_time_fractions,
+                target_y_support=target_y_support,
+                target_z_support=target_z_support,
+                sharpness=sharpness,
+                max_step=max_step,
+            )
         phase_residual = float(np.sum((states - reference) * tangent))
         metric = max(
             float(residual_norms.max()),
@@ -2318,6 +2398,7 @@ def stroboscopic_curve_dual_geometry_correction(
         ).reshape(-1)
         jacobian[state_size, :state_size] = energy_gradient.reshape(-1)
         jacobian[state_size + 1 : state_size + 3, :state_size] = geometry_jacobian
+        jacobian[state_size + 1 : state_size + 3, state_size] = geometry_time_jacobian
         jacobian[state_size + 3, :state_size] = tangent.reshape(-1)
         right_hand_side = -np.concatenate(
             [
@@ -2362,14 +2443,25 @@ def stroboscopic_curve_dual_geometry_correction(
     if best_metric != metric:
         residual_history.append(np.linalg.norm(best_mapped - best_targets, axis=1))
         energy_history.append(float(np.mean(jacobi_constant(best_states, seed.mu)) - target_jacobi))
-        geometry_history.append(
-            _smooth_dual_geometry_constraints(
+        if geometry_time_fractions is None:
+            best_geometry = _smooth_dual_geometry_constraints(
                 best_states,
                 target_y_support=target_y_support,
                 target_z_support=target_z_support,
                 sharpness=sharpness,
             )[0]
-        )
+        else:
+            best_geometry = _propagated_smooth_geometry_constraints(
+                best_states,
+                mapping_time=best_time,
+                mu=seed.mu,
+                time_fractions=geometry_time_fractions,
+                target_y_support=target_y_support,
+                target_z_support=target_z_support,
+                sharpness=sharpness,
+                max_step=max_step,
+            )[0]
+        geometry_history.append(best_geometry)
         phase_history.append(float(np.sum((best_states - reference) * tangent)))
         mapping_history.append(best_time)
         rotation_history.append(best_rotation)
