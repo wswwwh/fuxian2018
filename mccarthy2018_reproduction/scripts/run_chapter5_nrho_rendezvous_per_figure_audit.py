@@ -126,9 +126,9 @@ def _rows() -> list[dict[str, Any]]:
                     "data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv"
                 ),
                 "boundary": (
-                    "Accepted local CR3BP fixed-departure rendezvous branch row; "
-                    "not the thesis quasi-NRHO global continuation curve and not a "
-                    "BCR4BP/ephemeris high-fidelity replacement."
+                    "Accepted CR3BP fixed-departure rendezvous branch row; the "
+                    "+12 to +24 h interval is beyond the current branch fold and is "
+                    "not plotted or extrapolated."
                 ),
                 "notes": "Per-sample Fig. 5.12 rendezvous branch row from the current baseline generator.",
             }
@@ -221,11 +221,11 @@ fixed-departure CR3BP arrival-offset branch. Rows are generated from
 
 ## Boundary
 
-The accepted branch is a local CR3BP fixed-departure, fixed-time-of-flight
-arrival-offset shooting branch. It replaces the prior un-audited blue curve with
-machine-readable endpoint and delta-v evidence, but it does not replace the
-grey thesis-shaped proxy beyond the fold and does not claim BCR4BP/ephemeris
-or original McCarthy raw-data equivalence.
+The accepted branch is a CR3BP fixed-departure, fixed-time-of-flight
+arrival-offset shooting branch. The grey thesis-shaped extrapolation has been
+removed from Figure 5.12. The absent `+12` to `+24 h` interval is retained as
+an explicit branch-fold coverage boundary, not filled with proxy data. The
+result does not claim BCR4BP/ephemeris or original McCarthy raw-data equivalence.
 """,
         encoding="utf-8",
     )

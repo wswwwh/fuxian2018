@@ -497,9 +497,9 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
         {
             "figure_id": "5.12",
             "current_source_layer": "Earth-Moon NRHO fixed-departure rendezvous arrival-offset branch",
-            "current_repro_level": "CR3BP fixed-departure rendezvous branch audit",
-            "original_replacement_status": "local_cr3bp_rendezvous_branch_not_global_replacement",
-            "uses_proxy": "partial",
+            "current_repro_level": "numerical CR3BP rendezvous-branch reproduction",
+            "original_replacement_status": "computed_branch_replaces_proxy_with_explicit_fold_boundary",
+            "uses_proxy": "false",
             "primary_evidence": "data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv",
             "supporting_evidence": _rel(NRHO_RENDEZVOUS_AUDIT),
             "route_h_dependency": "none",
@@ -513,8 +513,8 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
                 f"minimum delta-v difference {metrics['rendezvous_5_12_min_delta_v_diff']} m/s; "
                 f"maximum endpoint error {metrics['rendezvous_5_12_max_endpoint_error']} km"
             ),
-            "boundary": "Local CR3BP fixed-departure rendezvous branch has endpoint evidence; grey proxy trend beyond the fold remains non-replacement context.",
-            "next_action": "Replace the remaining grey proxy region with a robust global quasi-NRHO continuation or high-fidelity ephemeris branch before thesis-equivalence claims.",
+            "boundary": "The grey extrapolation is removed. The computed branch covers -24 to +11 h; +12 to +24 h remains an explicit fold/coverage boundary rather than plotted proxy data.",
+            "next_action": "Develop a robust global quasi-NRHO continuation or high-fidelity ephemeris branch to cover the missing +12 to +24 h interval.",
         },
         {
             "figure_id": "5.13",

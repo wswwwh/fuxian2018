@@ -12,9 +12,9 @@ Total figures: 54.
 | CR3BP corrected periodic-family reproduction | 1 |
 | CR3BP endpoint-corrected NRHO transfer audit | 2 |
 | CR3BP endpoint-corrected halo-Lyapunov transfer audit | 1 |
-| CR3BP fixed-departure rendezvous branch audit | 1 |
 | Route H / DE421 geometry baseline | 2 |
 | audited Route H fixed-time source-layer | 2 |
+| numerical CR3BP rendezvous-branch reproduction | 1 |
 | numerical DG family reproduction with paper-digitization boundary | 1 |
 | numerical DG global manifold reproduction | 4 |
 | numerical DG manifold comparison | 2 |
@@ -955,16 +955,16 @@ Total figures: 54.
 | figure_id | 5.12 |
 | source_page | 109 |
 | script | figures/fig_5_12.py |
-| current_repro_level | CR3BP fixed-departure rendezvous branch audit |
-| uses_proxy | partial |
+| current_repro_level | numerical CR3BP rendezvous-branch reproduction |
+| uses_proxy | false |
 | main_data_source | data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv;data/computed/chapter5_nrho_rendezvous_per_figure_audit.csv;outputs/figures_png/fig_5_12.png;outputs/figures_pdf/fig_5_12.pdf |
-| key_physical_quantities | Earth-Moon NRHO fixed-departure rendezvous arrival-offset branch; accepted CR3BP rendezvous scan rows 36; coverage -24 to 11 h; minimum delta-v difference -6.029648133534657 m/s; maximum endpoint error 3.714687617288433e-05 km; original replacement status: local_cr3bp_rendezvous_branch_not_global_replacement |
+| key_physical_quantities | Earth-Moon NRHO fixed-departure rendezvous arrival-offset branch; accepted CR3BP rendezvous scan rows 36; coverage -24 to 11 h; minimum delta-v difference -6.029648133534657 m/s; maximum endpoint error 3.714687617288433e-05 km; original replacement status: computed_branch_replaces_proxy_with_explicit_fold_boundary |
 | residual evidence | accepted source rows: 36; Route H dependency: none; BCR4BP dependency: none |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 90688; PDF bytes 25324; boundary: Local CR3BP fixed-departure rendezvous branch has endpoint evidence; grey proxy trend beyond the fold remains non-replacement context. |
-| next_action | Replace the remaining grey proxy region with a robust global quasi-NRHO continuation or high-fidelity ephemeris branch before thesis-equivalence claims. |
+| visual_status | PNG bytes 78471; PDF bytes 25306; boundary: The grey extrapolation is removed. The computed branch covers -24 to +11 h; +12 to +24 h remains an explicit fold/coverage boundary rather than plotted proxy data. |
+| next_action | Develop a robust global quasi-NRHO continuation or high-fidelity ephemeris branch to cover the missing +12 to +24 h interval. |
 
 ### Figure 5.13
 
