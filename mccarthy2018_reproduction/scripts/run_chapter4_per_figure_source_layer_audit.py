@@ -36,6 +36,7 @@ HALO_PALC_DG = DATA / "chapter4_corrected_l1_constant_energy_halo_pseudo_arcleng
 MANIFOLD_VALIDATION = DATA / "chapter4_manifold_validation.csv"
 HALO_MANIFOLDS = DATA / "chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv"
 HALO_GLOBAL_AUDIT = DATA / "chapter4_fig43_fig44_global_manifold_audit.csv"
+VERTICAL_GLOBAL_AUDIT = DATA / "chapter4_fig45_fig48_vertical_manifold_audit.csv"
 VERTICAL_PLUS = DATA / "chapter4_corrected_vertical_curve_unstable_manifold_plus.csv"
 VERTICAL_MINUS = DATA / "chapter4_corrected_vertical_curve_unstable_manifold_minus.csv"
 VERTICAL_GLOBAL = DATA / "chapter4_corrected_vertical_global_unstable_manifold.csv"
@@ -309,55 +310,56 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
     ]
     manifold_specs = {
         "4.3": (
-            "corrected L1 quasi-halo +x unstable manifold sheet",
-            "corrected DG finite-amplitude manifold source layer",
-            "corrected_finite_manifold_not_thesis_scale_global_replacement",
+            "corrected L1 quasi-halo +x global unstable manifold at four paper snapshot times",
+            "numerical DG global manifold reproduction",
+            "computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending",
             _rel(HALO_MANIFOLDS),
-            "Continue the corrected branch to a denser thesis-scale global torus manifold.",
+            "Increase source N and digitize the paper panels for pointwise geometry comparison.",
         ),
         "4.4": (
-            "corrected L1 quasi-halo -x unstable manifold sheet",
-            "corrected DG finite-amplitude manifold source layer",
-            "corrected_finite_manifold_not_thesis_scale_global_replacement",
+            "corrected L1 quasi-halo -x global unstable manifold at four paper snapshot times",
+            "numerical DG global manifold reproduction",
+            "computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending",
             _rel(HALO_MANIFOLDS),
-            "Continue the corrected branch to a denser thesis-scale global torus manifold.",
+            "Increase source N and digitize the paper panels for pointwise geometry comparison.",
         ),
         "4.5": (
-            "corrected quasi-vertical local +x unstable manifold branch",
-            "local corrected DG manifold source layer",
-            "local_branch_not_global_sheet_replacement",
-            _rel(VERTICAL_PLUS),
-            "Promote from local branch diagnostic to continued thesis-scale vertical manifold.",
+            "corrected L1 quasi-vertical +x global unstable manifold at four paper snapshot times",
+            "numerical DG global manifold reproduction",
+            "computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending",
+            _rel(VERTICAL_GLOBAL_AUDIT),
+            "Digitize the paper panels for pointwise geometry comparison.",
         ),
         "4.6": (
-            "corrected quasi-vertical local -x unstable manifold branch",
-            "local corrected DG manifold source layer",
-            "local_branch_not_global_sheet_replacement",
-            _rel(VERTICAL_MINUS),
-            "Promote from local branch diagnostic to continued thesis-scale vertical manifold.",
+            "corrected L1 quasi-vertical -x global unstable manifold at four paper snapshot times",
+            "numerical DG global manifold reproduction",
+            "computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending",
+            _rel(VERTICAL_GLOBAL_AUDIT),
+            "Digitize the paper panels for pointwise geometry comparison.",
         ),
         "4.7": (
             "corrected quasi-halo manifold with periodic-halo comparison",
-            "corrected DG manifold source layer with proxy comparison",
+            "numerical DG manifold comparison",
             "source_layer_comparison_not_full_original_replacement",
             _rel(HALO_MANIFOLDS),
-            "Extend the corrected quasi-halo sheet across a thesis-scale continued torus family.",
+            "Digitize the paper panel for pointwise geometry comparison.",
         ),
         "4.8": (
-            "corrected quasi-vertical global unstable manifold with comparison context",
-            "corrected DG global manifold source layer with proxy comparison",
-            "global_sheet_audited_but_source_family_not_thesis_scale_complete",
-            _rel(VERTICAL_GLOBAL),
-            "Continue the source quasi-vertical torus family before treating the global sheet as thesis-equivalent.",
+            "corrected 33-node JC=3.1389 quasi-vertical global unstable manifold with periodic-halo comparison",
+            "numerical DG manifold comparison",
+            "computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending",
+            _rel(VERTICAL_GLOBAL_AUDIT),
+            "Digitize the paper panel for pointwise geometry comparison.",
         ),
     }
     for figure_id, values in manifold_specs.items():
         current_source_layer, level, replacement, primary, next_action = values
-        is_halo_global = figure_id in {"4.3", "4.4"}
-        if is_halo_global:
+        is_snapshot_global = figure_id in {"4.3", "4.4", "4.5", "4.6"}
+        if is_snapshot_global:
+            audit_path = HALO_GLOBAL_AUDIT if figure_id in {"4.3", "4.4"} else VERTICAL_GLOBAL_AUDIT
             audit_rows = [
                 row
-                for row in _read_csv(HALO_GLOBAL_AUDIT)
+                for row in _read_csv(audit_path)
                 if row.get("figure_id") == figure_id and row.get("acceptance") == "pass"
             ]
             validation_metric = _manifold_metric(figure_id)
@@ -370,11 +372,8 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
                 ),
                 "best_metric": "four exact paper snapshot times; proxy-free corrected DG manifold",
             }
-            current_source_layer = "corrected L1 quasi-halo global unstable manifold at four paper snapshot times"
-            level = "numerical DG global manifold reproduction"
-            replacement = "computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending"
-            primary = f"{_rel(HALO_MANIFOLDS)};{_rel(HALO_GLOBAL_AUDIT)}"
-            next_action = "Increase source N and digitize the paper panels for pointwise geometry comparison."
+            if _rel(audit_path) not in primary.split(";"):
+                primary = f"{primary};{_rel(audit_path)}"
         else:
             metric = _manifold_metric(figure_id)
         specs.append(
@@ -383,7 +382,7 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
                 "current_source_layer": current_source_layer,
                 "current_repro_level": level,
                 "original_replacement_status": replacement,
-                "uses_proxy": "false" if is_halo_global else "partial",
+                "uses_proxy": "false",
                 "primary_evidence": primary,
                 "supporting_evidence": f"{_rel(MANIFOLD_VALIDATION)};{halo_dg_source};{_rel(VERTICAL_DG)}",
                 "route_h_dependency": "none for original figure; Route H tracked separately",
@@ -391,9 +390,9 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
                 "manifold_dependency": primary,
                 **metric,
                 "boundary": (
-                    "The analytic torus and manifold proxy layers are removed; remaining boundaries are N=9 source resolution and missing digitized pointwise paper comparison."
-                    if is_halo_global
-                    else "Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim."
+                    "The analytic torus and manifold proxy layers are removed; the remaining boundary is a missing digitized pointwise paper comparison."
+                    if is_snapshot_global
+                    else "The synthetic comparison layers are removed; a digitized pointwise paper comparison is still missing."
                 ),
                 "next_action": next_action,
             }
@@ -489,11 +488,11 @@ def _render_markdown(rows: list[dict[str, str]]) -> None:
             "",
             "## Boundary",
             "",
-            "Chapter 4 currently has corrected numerical source-layer evidence. Full",
-            "original thesis-equivalence remains unproven for the L1 quasi-halo and",
-            "quasi-vertical global manifold figures because the original raw branch",
-            "data are unavailable and several rendered figures still retain proxy or",
-            "comparison context.",
+        "Chapter 4 now has proxy-free corrected numerical source layers for all",
+        "original Fig. 4.1-4.8 panels. Full thesis-equivalence remains unproven",
+        "because the original raw branch data and digitized pointwise panel",
+        "comparisons are unavailable; Fig. 4.1 also retains an explicit",
+        "finite-amplitude torus-geometry boundary.",
             "",
         ]
     )

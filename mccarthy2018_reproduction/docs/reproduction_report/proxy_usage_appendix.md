@@ -38,13 +38,6 @@ comparison, and several Chapter 4/5 figures retain proxy or source-layer status.
 - Fig. 3.11: `shape-match with local numerical overlay`; proxy flag `partial`; local numerical scene
 - Fig. 3.17: `audited Route H fixed-time source-layer`; proxy flag `partial`; audited Route H branch is plotted as the main numerical layer; faint reference trend proxy is retained only for visual context
 
-### Chapter 4
-
-- Fig. 4.5: `local corrected DG manifold source layer`; proxy flag `partial`; PNG bytes 1170185; PDF bytes 425848; boundary: Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim.
-- Fig. 4.6: `local corrected DG manifold source layer`; proxy flag `partial`; PNG bytes 831053; PDF bytes 420112; boundary: Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim.
-- Fig. 4.7: `corrected DG manifold source layer with proxy comparison`; proxy flag `partial`; PNG bytes 275734; PDF bytes 96192; boundary: Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim.
-- Fig. 4.8: `corrected DG global manifold source layer with proxy comparison`; proxy flag `partial`; PNG bytes 257658; PDF bytes 75622; boundary: Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim.
-
 ### Chapter 5
 
 - Fig. 5.1: `CR3BP Sun-Earth L1 long-propagation audit`; proxy flag `partial`; PNG bytes 860121; PDF bytes 236515; boundary: Local Sun-Earth L1 CR3BP center-mode propagation rows are accepted; rendered torus/context remains proxy and is not a corrected thesis Lissajous torus.

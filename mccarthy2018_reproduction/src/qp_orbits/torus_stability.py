@@ -27,6 +27,7 @@ from .quasi_torus import (
     corrected_constant_energy_curve_family,
     corrected_l1_constant_energy_halo_high_order_corrections,
     corrected_l1_constant_energy_halo_pseudo_arclength_corrections,
+    corrected_l1_constant_energy_vertical_staged_corrections,
     linear_quasi_halo_member,
     linear_quasi_vertical_member,
     stroboscopic_curve_newton_correction,
@@ -817,6 +818,20 @@ def corrected_l1_constant_energy_halo_pseudo_arclength_endpoint_dg(
     return corrected_curve_dg(corrections[-1], max_step=max_step)
 
 
+@lru_cache(maxsize=4)
+def corrected_l1_constant_energy_vertical_staged_endpoint_dg(
+    mu: float,
+    *,
+    max_step: float = 0.01,
+) -> DiscreteCurveDG:
+    """Return ``DG`` for the validated 12.66-day ``JC=3.1389`` endpoint."""
+
+    corrections = corrected_l1_constant_energy_vertical_staged_corrections(mu)
+    if not corrections:
+        raise RuntimeError("The staged quasi-vertical branch is empty")
+    return corrected_curve_dg(corrections[-1], max_step=max_step)
+
+
 def _corrected_curve_manifold_from_dg(
     mu: float,
     *,
@@ -1092,6 +1107,52 @@ def corrected_l1_constant_energy_halo_unstable_manifolds(
     )
     ordered = sorted(candidates, key=lambda sheet: float(np.mean(sheet.surface[-1, :, 0])))
     minus_x, plus_x = ordered
+    return plus_x, minus_x
+
+
+@lru_cache(maxsize=4)
+def corrected_l1_constant_energy_vertical_unstable_manifolds(
+    mu: float,
+    *,
+    time_unit_days: float,
+    snapshot_times_days: tuple[float, ...] = (8.05, 10.08, 11.77, 13.46),
+    time_samples: int = 120,
+    perturbation_scale: float = 5.0e-5,
+    max_step: float = 0.01,
+) -> tuple[CorrectedCurveManifoldSheet, CorrectedCurveManifoldSheet]:
+    """Return the +x and -x finite-amplitude quasi-vertical unstable sheets."""
+
+    if time_unit_days <= 0.0:
+        raise ValueError("time_unit_days must be positive")
+    if not snapshot_times_days or any(value <= 0.0 for value in snapshot_times_days):
+        raise ValueError("snapshot_times_days must contain positive values")
+    if any(a >= b for a, b in zip(snapshot_times_days, snapshot_times_days[1:])):
+        raise ValueError("snapshot_times_days must be strictly increasing")
+
+    dg = corrected_l1_constant_energy_vertical_staged_endpoint_dg(mu, max_step=max_step)
+    snapshot_times = np.asarray(snapshot_times_days, dtype=float) / time_unit_days
+    final_time = float(snapshot_times[-1])
+    evaluation_times = np.unique(
+        np.r_[np.linspace(0.0, final_time, time_samples), snapshot_times]
+    )
+    candidates = tuple(
+        _corrected_curve_manifold_from_dg(
+            mu,
+            dg=dg,
+            branch="unstable",
+            time_samples=evaluation_times.size,
+            perturbation_scale=perturbation_scale,
+            perturbation_sign=sign,
+            duration_periods=final_time / dg.mapping_time,
+            max_step=max_step,
+            evaluation_times=evaluation_times,
+        )
+        for sign in (-1.0, 1.0)
+    )
+    minus_x, plus_x = sorted(
+        candidates,
+        key=lambda sheet: float(np.mean(sheet.surface[-1, :, 0])),
+    )
     return plus_x, minus_x
 
 

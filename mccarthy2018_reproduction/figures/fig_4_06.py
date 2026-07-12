@@ -6,39 +6,34 @@ import matplotlib.pyplot as plt
 
 from _figure_paths import PROJECT_ROOT
 from _chapter4_plotting import (
-    add_corrected_vertical_local_growth_inset,
     add_earth_moon_labels,
-    plot_sheet,
-    plot_torus_wire,
+    plot_corrected_base_torus,
+    plot_corrected_manifold_stage,
     style_manifold_axis,
 )
 from qp_orbits.constants import SYSTEMS
 from qp_orbits.plot_style import apply_style, save_figure
 from qp_orbits.torus_stability import (
-    base_torus,
+    corrected_l1_constant_energy_vertical_unstable_manifolds,
     corrected_manifold_validation_row,
-    corrected_vertical_curve_unstable_manifold,
-    manifold_sheet,
     update_chapter4_manifold_validation,
 )
 
 
 FIGURE_ID = "4.6"
 SOURCE_PAGE = 92
-REPRO_LEVEL = "shape-match + local numerical"
+REPRO_LEVEL = "numerical manifold reproduction"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Proxy global sheet with corrected local quasi-vertical DG-manifold growth inset."
+NOTES = "Corrected JC=3.1389 DG unstable manifold at the four paper snapshot times; no proxy layers."
 
 
 def main() -> None:
     apply_style()
     system = SYSTEMS["earth_moon"]
-    torus = base_torus(system, "vertical")
-    corrected_branch = corrected_vertical_curve_unstable_manifold(
+    snapshot_days = [8.05, 10.08, 11.77, 13.46]
+    _, corrected_branch = corrected_l1_constant_energy_vertical_unstable_manifolds(
         system.mu,
-        samples=9,
-        time_samples=24,
-        perturbation_sign=-1.0,
+        time_unit_days=system.time_unit_days,
     )
     update_chapter4_manifold_validation(
         PROJECT_ROOT,
@@ -48,29 +43,21 @@ def main() -> None:
                 system,
                 figure_id=FIGURE_ID,
                 family="quasi-vertical",
-                branch="minus_x_unstable_local",
-                source_curve="corrected quasi-vertical stroboscopic curve",
-                uses_proxy_background=True,
-                validation_status="local corrected DG branch audited; global sheet remains proxy",
-                next_action="Promote from local branch diagnostic to continued thesis-scale vertical manifold",
+                branch="minus_x_unstable",
+                source_curve="JC=3.1389 quasi-vertical staged endpoint",
+                uses_proxy_background=False,
+                validation_status="corrected DG global branch audited at all four paper snapshot times",
+                next_action="Digitize the paper panels for pointwise geometry comparison",
             )
         ],
     )
-    stages = [0.14, 0.32, 0.62, 1.0]
     fig = plt.figure(figsize=(8.4, 7.4), constrained_layout=True)
-    for idx, stage in enumerate(stages, start=1):
+    for idx, elapsed_days in enumerate(snapshot_days, start=1):
         ax = fig.add_subplot(2, 2, idx, projection="3d")
-        plot_torus_wire(ax, torus)
-        plot_sheet(ax, manifold_sheet(system, family="vertical", direction="minus", stage_fraction=stage))
+        plot_corrected_base_torus(ax, corrected_branch)
+        plot_corrected_manifold_stage(ax, corrected_branch, elapsed_days=elapsed_days)
         add_earth_moon_labels(ax, include_l2=False)
         style_manifold_axis(ax, direction="minus", compact=True)
-        if idx == len(stages):
-            add_corrected_vertical_local_growth_inset(
-                ax,
-                perturbation_sign=-1.0,
-                bounds=(0.70, 0.58, 0.24, 0.22),
-                sheet=corrected_branch,
-            )
         ax.text2D(0.47, -0.10, f"({chr(96 + idx)})", transform=ax.transAxes, fontsize=12)
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)

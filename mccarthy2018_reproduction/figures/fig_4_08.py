@@ -5,41 +5,27 @@ from __future__ import annotations
 import matplotlib.pyplot as plt
 
 from _figure_paths import PROJECT_ROOT
-from _chapter4_plotting import add_earth_moon_labels, plot_sheet_wire, plot_torus_wire, style_long_axis
+from _chapter4_plotting import add_earth_moon_labels, plot_corrected_base_torus, plot_sheet_wire, style_long_axis
 from qp_orbits.constants import SYSTEMS
 from qp_orbits.manifolds import periodic_halo_manifold_sample
 from qp_orbits.plot_style import apply_style, save_figure
 from qp_orbits.torus_stability import (
-    base_torus,
+    corrected_l1_constant_energy_vertical_unstable_manifolds,
     corrected_manifold_validation_row,
-    corrected_vertical_global_unstable_manifold,
-    manifold_sheet,
     update_chapter4_manifold_validation,
 )
 
 
 FIGURE_ID = "4.8"
 SOURCE_PAGE = 93
-REPRO_LEVEL = "shape-match + local numerical"
+REPRO_LEVEL = "numerical manifold comparison"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = (
-    "Main red sheet is propagated from the corrected quasi-vertical DG unstable "
-    "eigenvector; grey sheet is retained only as a thesis-scale proxy reference."
-)
+NOTES = "Corrected JC=3.1389 quasi-vertical DG sheet and numerical periodic-halo comparison; no proxy layers."
 
 
 def main() -> None:
     apply_style()
     system = SYSTEMS["earth_moon"]
-    torus = base_torus(system, "vertical", n_major=84, n_minor=18)
-    proxy_sheet = manifold_sheet(
-        system,
-        family="vertical",
-        direction="minus",
-        stage_fraction=1.22,
-        n_curve=96,
-        n_steps=48,
-    )
     periodic_manifold = periodic_halo_manifold_sample(
         system.mu,
         point="L1",
@@ -53,7 +39,10 @@ def main() -> None:
         for curve in periodic_manifold.unstable
         if curve[:, 0].min() < 0.55 and curve[-1, 1] > 0.02
     ]
-    corrected_vertical = corrected_vertical_global_unstable_manifold(system.mu)
+    _, corrected_vertical = corrected_l1_constant_energy_vertical_unstable_manifolds(
+        system.mu,
+        time_unit_days=system.time_unit_days,
+    )
     update_chapter4_manifold_validation(
         PROJECT_ROOT,
         [
@@ -63,26 +52,17 @@ def main() -> None:
                 figure_id=FIGURE_ID,
                 family="quasi-vertical",
                 branch="earthward_global_unstable",
-                source_curve="corrected quasi-vertical stroboscopic curve",
-                uses_proxy_background=True,
-                validation_status="main corrected DG global sheet audited with periodic-halo comparison; proxy reference retained",
-                next_action="Continue the source quasi-vertical torus family before global manifold propagation",
+                source_curve="JC=3.1389 quasi-vertical staged endpoint",
+                uses_proxy_background=False,
+                validation_status="corrected DG global sheet audited with numerical periodic-halo comparison",
+                next_action="Digitize the paper panel for pointwise geometry comparison",
             )
         ],
     )
 
     fig = plt.figure(figsize=(8.1, 4.2), constrained_layout=True)
     ax = fig.add_subplot(111, projection="3d")
-    plot_sheet_wire(
-        ax,
-        proxy_sheet,
-        color="#bdbdbd",
-        alpha=0.18,
-        linewidth=0.22,
-        curve_stride=4,
-        time_stride=6,
-    )
-    plot_torus_wire(ax, torus, color="black", alpha=0.42, linewidth=0.30)
+    plot_corrected_base_torus(ax, corrected_vertical)
     plot_sheet_wire(
         ax,
         corrected_vertical,
