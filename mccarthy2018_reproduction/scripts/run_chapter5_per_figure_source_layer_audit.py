@@ -30,6 +30,7 @@ NRHO_CORRIDOR_AUDIT = DATA / "chapter5_nrho_corridor_per_figure_audit.csv"
 NRHO_TRANSFER_AUDIT = DATA / "chapter5_nrho_transfer_per_figure_audit.csv"
 NRHO_RENDEZVOUS_AUDIT = DATA / "chapter5_nrho_rendezvous_per_figure_audit.csv"
 STABLE_MANIFOLD_AUDIT = DATA / "chapter5_stable_manifold_per_figure_audit.csv"
+LISSAJOUS_TORUS_AUDIT = DATA / "chapter5_sun_earth_l1_lissajous_torus_audit.csv"
 ROUTE_H_FAMILY = DATA / "chapter3_fixed_mapping_cache_accepted_family.csv"
 ROUTE_H_VALIDATION = DATA / "chapter3_fixed_mapping_cache_accepted_validation.csv"
 CHAPTER4_ROUTE_H_FIGURE = PROJECT_ROOT / "outputs" / "figures_png" / "fig_4_route_h.png"
@@ -159,6 +160,7 @@ def _source_metrics() -> dict[str, str]:
         stable_by_figure.setdefault(row["figure_id"], []).append(row)
     halo_lyapunov_rows = [row for row in _read_csv(HALO_LYAPUNOV_TRANSFER_AUDIT) if _truthy(row.get("acceptance"))] if HALO_LYAPUNOV_TRANSFER_AUDIT.exists() else []
     nrho_corridor_rows = [row for row in _read_csv(NRHO_CORRIDOR_AUDIT) if _truthy(row.get("acceptance"))] if NRHO_CORRIDOR_AUDIT.exists() else []
+    lissajous_rows = [row for row in _read_csv(LISSAJOUS_TORUS_AUDIT) if _truthy(row.get("source_acceptance"))] if LISSAJOUS_TORUS_AUDIT.exists() else []
     return {
         "route_h_rows": route_h["rows"],
         "route_h_member": route_h["member"],
@@ -214,6 +216,12 @@ def _source_metrics() -> dict[str, str]:
         "nrho_corridor_destination_perilune": _max_field(nrho_corridor_rows, "destination_perilune_radius_km"),
         "nrho_corridor_members": _max_field(nrho_corridor_rows, "corridor_family_members"),
         "nrho_corridor_max_periodicity": _max_field(nrho_corridor_rows, "corridor_max_periodicity_error"),
+        "lissajous_source_rows": str(len(lissajous_rows)),
+        "lissajous_points": _max_field(lissajous_rows, "rendered_torus_points"),
+        "lissajous_residual": _max_field(lissajous_rows, "curve_residual_norm"),
+        "lissajous_jacobi_span": _max_field(lissajous_rows, "torus_jacobi_span"),
+        "lissajous_y_km": _max_field(lissajous_rows, "max_abs_y_km"),
+        "lissajous_z_km": _max_field(lissajous_rows, "max_abs_z_km"),
     }
 
 
@@ -496,12 +504,12 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
         },
         {
             "figure_id": "5.13",
-            "current_source_layer": "Sun-Earth stable-manifold baseline/proxy heat map",
-            "current_repro_level": "CR3BP stable-manifold periapsis audit",
+            "current_source_layer": "corrected Sun-Earth L1 Lissajous source torus plus periodic stable-manifold baseline",
+            "current_repro_level": "corrected two-frequency source layer; stable-manifold map pending",
             "original_replacement_status": "periapsis_targeted_cr3bp_not_quasi_periodic_replacement",
             "uses_proxy": "partial",
             "primary_evidence": "data/computed/chapter5_sun_earth_stable_manifold_baseline.csv",
-            "supporting_evidence": _rel(STABLE_MANIFOLD_AUDIT),
+            "supporting_evidence": f"{_rel(STABLE_MANIFOLD_AUDIT)};{_rel(LISSAJOUS_TORUS_AUDIT)};data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv",
             "route_h_dependency": "none",
             "bcr4bp_dependency": "none",
             "optimization_dependency": "none",
@@ -512,8 +520,13 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
                 f"periapsis error {metrics['stable_5_13_periapsis_error']} km; "
                 f"transfer time {metrics['stable_5_13_transfer_time']} days; "
                 f"Jacobi span {metrics['stable_5_13_jacobi_span']}"
+                f"; accepted Lissajous source rows {metrics['lissajous_source_rows']}"
+                f"; torus points {metrics['lissajous_points']}"
+                f"; curve residual {metrics['lissajous_residual']}"
+                f"; torus Jacobi span {metrics['lissajous_jacobi_span']}"
+                f"; max |y|/|z| {metrics['lissajous_y_km']}/{metrics['lissajous_z_km']} km"
             ),
-            "boundary": "Periapsis-targeted CR3BP stable-manifold evidence exists, but the displayed heat map still contains thesis-shaped proxy context and is not a full quasi-periodic Lissajous-torus manifold.",
+            "boundary": "A corrected two-frequency Lissajous source torus now exists, but the displayed heat map is still proxy context until a two-angle stable-manifold periapsis scan is propagated; the y amplitude also remains above the paper target.",
             "next_action": "Replace proxy heat-map layer with a dense computed two-angle quasi-periodic manifold scan before claiming thesis-equivalent replacement.",
         },
         {

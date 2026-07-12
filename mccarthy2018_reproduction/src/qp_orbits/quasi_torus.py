@@ -3531,13 +3531,23 @@ def resample_corrected_torus_surface(
 
     if phase_samples < 3:
         raise ValueError("phase_samples must be at least 3")
+    mapping_time = float(
+        getattr(member.correction, "mapping_time", member.correction.seed.orbit_period)
+    )
+    rotation_angle = float(
+        getattr(
+            member.correction,
+            "rotation_angle_rad",
+            member.correction.seed.rotation_angle_rad,
+        )
+    )
     phases = np.linspace(0.0, 2.0 * np.pi, phase_samples, endpoint=True)
     surface = np.empty((member.surface.shape[0], phase_samples, 3), dtype=float)
-    normalized_time = member.normalized_times / member.correction.mapping_time
+    normalized_time = member.normalized_times / mapping_time
     for time_index, fraction in enumerate(normalized_time):
         interpolation = _trigonometric_interpolation_matrix(
             member.correction.seed.phases,
-            phases - fraction * member.correction.rotation_angle_rad,
+            phases - fraction * rotation_angle,
         )
         surface[time_index] = interpolation @ member.surface[time_index]
     curve_interpolation = _trigonometric_interpolation_matrix(
@@ -3635,6 +3645,65 @@ def corrected_vertical_stroboscopic_torus(
         planar_mode_amplitude=planar_mode_amplitude,
         samples=samples,
         curve_samples=max(4 * samples, 120),
+    )
+    return _corrected_torus_from_seed(
+        seed,
+        time_samples=time_samples,
+        max_iterations=max_iterations,
+        max_step=max_step,
+    )
+
+
+@lru_cache(maxsize=4)
+def corrected_l1_vertical_lissajous_torus(
+    mu: float,
+    *,
+    vertical_orbit_amplitude: float = 0.0063,
+    planar_mode_amplitude: float = 1.0e-5,
+    samples: int = 11,
+    time_samples: int = 48,
+    continuation_step: float = 2.5e-4,
+    max_iterations: int = 40,
+    max_step: float = 0.01,
+) -> CorrectedStroboscopicTorus:
+    """Return a finite-amplitude Sun-Earth-style L1 Lissajous torus.
+
+    The vertical periodic boundary is reached by natural-parameter
+    continuation before its elliptic planar mode is corrected into an
+    invariant curve. This avoids cold-start branch jumping at amplitudes where
+    a direct vertical-orbit correction is no longer reliable.
+    """
+
+    if vertical_orbit_amplitude < 0.004:
+        raise ValueError("vertical_orbit_amplitude must be at least 0.004")
+    if continuation_step <= 0.0:
+        raise ValueError("continuation_step must be positive")
+    if samples % 2 == 0:
+        raise ValueError("samples must be odd for trigonometric interpolation")
+    amplitudes = np.linspace(
+        0.004,
+        vertical_orbit_amplitude,
+        int(np.ceil((vertical_orbit_amplitude - 0.004) / continuation_step)) + 1,
+    )
+    orbit = vertical_symmetric_family(
+        mu,
+        amplitudes,
+        point="L1",
+        max_iterations=max_iterations,
+        secant_predictor=True,
+    )[-1]
+    seed = _stroboscopic_invariant_curve_seed_from_orbit(
+        mu,
+        orbit_state=orbit.initial_state,
+        orbit_period=orbit.period,
+        orbit_jacobi=orbit.jacobi,
+        base_family="vertical",
+        base_orbit_amplitude=orbit.fixed_z0,
+        mode_component=0,
+        mode_amplitude=planar_mode_amplitude,
+        samples=samples,
+        curve_samples=max(4 * samples, 120),
+        max_step=max_step,
     )
     return _corrected_torus_from_seed(
         seed,
