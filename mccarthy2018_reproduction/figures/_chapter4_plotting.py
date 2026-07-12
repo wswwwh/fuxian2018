@@ -128,6 +128,32 @@ def plot_corrected_manifold_stage(
     )
 
 
+def plot_corrected_base_torus(ax, sheet, color: str = "black") -> None:
+    """Plot the propagated source torus associated with a corrected DG sheet."""
+
+    stop = int(np.searchsorted(sheet.times, sheet.dg.mapping_time, side="right"))
+    surface = sheet.base_surface[: max(stop, 2)]
+    ax.plot_wireframe(
+        surface[:, :, 0],
+        surface[:, :, 1],
+        surface[:, :, 2],
+        rstride=5,
+        cstride=1,
+        color=color,
+        linewidth=0.32,
+        alpha=0.58,
+    )
+    for curve_idx in range(surface.shape[1]):
+        ax.plot(
+            surface[:, curve_idx, 0],
+            surface[:, curve_idx, 1],
+            surface[:, curve_idx, 2],
+            color=color,
+            linewidth=0.45,
+            alpha=0.62,
+        )
+
+
 def _plot_corrected_local_growth_inset(ax, sheet, bounds=(0.56, 0.60, 0.36, 0.28)) -> None:
     system = SYSTEMS["earth_moon"]
     time_ratio = sheet.times / sheet.dg.correction.seed.orbit_period
@@ -175,12 +201,20 @@ def add_corrected_vertical_local_growth_inset(
     _plot_corrected_local_growth_inset(ax, sheet, bounds=bounds)
 
 
-def add_earth_moon_labels(ax, *, include_l1: bool = True, include_l2: bool = True, text_scale: float = 1.0) -> None:
+def add_earth_moon_labels(
+    ax,
+    *,
+    include_l1: bool = True,
+    include_l2: bool = True,
+    include_moon: bool = True,
+    text_scale: float = 1.0,
+) -> None:
     system = SYSTEMS["earth_moon"]
     points = compute_libration_points(system.mu)
     moon_x = 1.0 - system.mu
-    ax.scatter([moon_x], [0.0], [0.0], color="black", s=12)
-    ax.text(moon_x - 0.014, -0.012, 0.0, "Moon", fontsize=9 * text_scale)
+    if include_moon:
+        ax.scatter([moon_x], [0.0], [0.0], color="black", s=12)
+        ax.text(moon_x - 0.014, -0.012, 0.0, "Moon", fontsize=9 * text_scale)
     if include_l1:
         ax.scatter([points["L1"].x], [0.0], [0.0], color="#cc4c25", s=10)
         ax.text(points["L1"].x + 0.006, 0.004, 0.0, r"$L_1$", fontsize=9 * text_scale)

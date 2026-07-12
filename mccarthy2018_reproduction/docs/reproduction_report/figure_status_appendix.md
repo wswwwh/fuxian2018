@@ -18,11 +18,11 @@ Total figures: 54.
 | CR3BP stable-manifold periapsis audit | 1 |
 | Route H / DE421 geometry baseline | 2 |
 | audited Route H fixed-time source-layer | 2 |
-| corrected DG finite-amplitude manifold source layer | 2 |
 | corrected DG global manifold source layer with proxy comparison | 1 |
 | corrected DG manifold source layer with proxy comparison | 1 |
 | local corrected DG manifold source layer | 2 |
 | numerical DG family reproduction with paper-digitization boundary | 1 |
+| numerical DG global manifold reproduction | 2 |
 | numerical reproduction | 16 |
 | period-q multiple-shooting audit with q8 boundary | 1 |
 | physical-consistency baseline | 2 |
@@ -651,16 +651,16 @@ Total figures: 54.
 | figure_id | 4.3 |
 | source_page | 89 |
 | script | figures/fig_4_03.py |
-| current_repro_level | corrected DG finite-amplitude manifold source layer |
-| uses_proxy | partial |
-| main_data_source | data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/figures_png/fig_4_3.png;outputs/figures_pdf/fig_4_3.pdf |
-| key_physical_quantities | corrected L1 quasi-halo +x unstable manifold sheet; quasi-halo plus_x_unstable; duration 13.02 days; growth ratio 1.136088718675204; Jacobi drift 1.332267629550188e-15; original replacement status: corrected_finite_manifold_not_thesis_scale_global_replacement |
-| residual evidence | worst source residual: 9.322175255756186e-10; accepted rows: 1; DG dependency: corrected L1 DG eigenvectors and manifold validation row |
-| Jacobi evidence | 1.332267629550188e-15 |
-| periodicity evidence | manifold growth ratio: 1.136088718675204; manifold dependency: data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv |
+| current_repro_level | numerical DG global manifold reproduction |
+| uses_proxy | false |
+| main_data_source | data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv;data/computed/chapter4_fig43_fig44_global_manifold_audit.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/figures_png/fig_4_3.png;outputs/figures_pdf/fig_4_3.pdf |
+| key_physical_quantities | corrected L1 quasi-halo global unstable manifold at four paper snapshot times; four exact paper snapshot times; proxy-free corrected DG manifold; original replacement status: computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending |
+| residual evidence | worst source residual: 9.322175255756186e-10; accepted rows: 4; DG dependency: corrected L1 DG eigenvectors and manifold validation row |
+| Jacobi evidence | 2.220446049250313e-15 |
+| periodicity evidence | manifold growth ratio: 0.7991628334940111..1.136088718675205; manifold dependency: data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv;data/computed/chapter4_fig43_fig44_global_manifold_audit.csv |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 1287434; PDF bytes 507939; boundary: Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim. |
-| next_action | Continue the corrected branch to a denser thesis-scale global torus manifold. |
+| visual_status | PNG bytes 1168109; PDF bytes 205263; boundary: The analytic torus and manifold proxy layers are removed; remaining boundaries are N=9 source resolution and missing digitized pointwise paper comparison. |
+| next_action | Increase source N and digitize the paper panels for pointwise geometry comparison. |
 
 ### Figure 4.4
 
@@ -669,16 +669,16 @@ Total figures: 54.
 | figure_id | 4.4 |
 | source_page | 90 |
 | script | figures/fig_4_04.py |
-| current_repro_level | corrected DG finite-amplitude manifold source layer |
-| uses_proxy | partial |
-| main_data_source | data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/figures_png/fig_4_4.png;outputs/figures_pdf/fig_4_4.pdf |
-| key_physical_quantities | corrected L1 quasi-halo -x unstable manifold sheet; quasi-halo minus_x_unstable; duration 13.02 days; growth ratio 0.8667050797832782; Jacobi drift 1.332267629550188e-15; original replacement status: corrected_finite_manifold_not_thesis_scale_global_replacement |
-| residual evidence | worst source residual: 9.322175255756186e-10; accepted rows: 1; DG dependency: corrected L1 DG eigenvectors and manifold validation row |
-| Jacobi evidence | 1.332267629550188e-15 |
-| periodicity evidence | manifold growth ratio: 0.8667050797832782; manifold dependency: data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv |
+| current_repro_level | numerical DG global manifold reproduction |
+| uses_proxy | false |
+| main_data_source | data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv;data/computed/chapter4_fig43_fig44_global_manifold_audit.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/figures_png/fig_4_4.png;outputs/figures_pdf/fig_4_4.pdf |
+| key_physical_quantities | corrected L1 quasi-halo global unstable manifold at four paper snapshot times; four exact paper snapshot times; proxy-free corrected DG manifold; original replacement status: computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending |
+| residual evidence | worst source residual: 9.322175255756186e-10; accepted rows: 4; DG dependency: corrected L1 DG eigenvectors and manifold validation row |
+| Jacobi evidence | 2.220446049250313e-15 |
+| periodicity evidence | manifold growth ratio: 0.7934160994359211..0.9046567422262596; manifold dependency: data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv;data/computed/chapter4_fig43_fig44_global_manifold_audit.csv |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 944066; PDF bytes 523825; boundary: Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim. |
-| next_action | Continue the corrected branch to a denser thesis-scale global torus manifold. |
+| visual_status | PNG bytes 834816; PDF bytes 193877; boundary: The analytic torus and manifold proxy layers are removed; remaining boundaries are N=9 source resolution and missing digitized pointwise paper comparison. |
+| next_action | Increase source N and digitize the paper panels for pointwise geometry comparison. |
 
 ### Figure 4.5
 

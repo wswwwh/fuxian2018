@@ -40,8 +40,6 @@ comparison, and several Chapter 4/5 figures retain proxy or source-layer status.
 
 ### Chapter 4
 
-- Fig. 4.3: `corrected DG finite-amplitude manifold source layer`; proxy flag `partial`; PNG bytes 1287434; PDF bytes 507939; boundary: Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim.
-- Fig. 4.4: `corrected DG finite-amplitude manifold source layer`; proxy flag `partial`; PNG bytes 944066; PDF bytes 523825; boundary: Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim.
 - Fig. 4.5: `local corrected DG manifold source layer`; proxy flag `partial`; PNG bytes 1170185; PDF bytes 425848; boundary: Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim.
 - Fig. 4.6: `local corrected DG manifold source layer`; proxy flag `partial`; PNG bytes 831053; PDF bytes 420112; boundary: Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim.
 - Fig. 4.7: `corrected DG manifold source layer with proxy comparison`; proxy flag `partial`; PNG bytes 275734; PDF bytes 96192; boundary: Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim.

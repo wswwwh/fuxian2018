@@ -35,6 +35,7 @@ HALO_HIGH_ORDER_DG = DATA / "chapter4_corrected_l1_constant_energy_halo_high_ord
 HALO_PALC_DG = DATA / "chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv"
 MANIFOLD_VALIDATION = DATA / "chapter4_manifold_validation.csv"
 HALO_MANIFOLDS = DATA / "chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv"
+HALO_GLOBAL_AUDIT = DATA / "chapter4_fig43_fig44_global_manifold_audit.csv"
 VERTICAL_PLUS = DATA / "chapter4_corrected_vertical_curve_unstable_manifold_plus.csv"
 VERTICAL_MINUS = DATA / "chapter4_corrected_vertical_curve_unstable_manifold_minus.csv"
 VERTICAL_GLOBAL = DATA / "chapter4_corrected_vertical_global_unstable_manifold.csv"
@@ -352,21 +353,48 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
     }
     for figure_id, values in manifold_specs.items():
         current_source_layer, level, replacement, primary, next_action = values
-        metric = _manifold_metric(figure_id)
+        is_halo_global = figure_id in {"4.3", "4.4"}
+        if is_halo_global:
+            audit_rows = [
+                row
+                for row in _read_csv(HALO_GLOBAL_AUDIT)
+                if row.get("figure_id") == figure_id and row.get("acceptance") == "pass"
+            ]
+            validation_metric = _manifold_metric(figure_id)
+            metric = {
+                **validation_metric,
+                "accepted_rows": str(len(audit_rows)),
+                "jacobi_drift": _fmt(_max(audit_rows, "jacobi_drift_max")),
+                "growth_ratio": (
+                    f"{_fmt(_min(audit_rows, 'growth_ratio'))}..{_fmt(_max(audit_rows, 'growth_ratio'))}"
+                ),
+                "best_metric": "four exact paper snapshot times; proxy-free corrected DG manifold",
+            }
+            current_source_layer = "corrected L1 quasi-halo global unstable manifold at four paper snapshot times"
+            level = "numerical DG global manifold reproduction"
+            replacement = "computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending"
+            primary = f"{_rel(HALO_MANIFOLDS)};{_rel(HALO_GLOBAL_AUDIT)}"
+            next_action = "Increase source N and digitize the paper panels for pointwise geometry comparison."
+        else:
+            metric = _manifold_metric(figure_id)
         specs.append(
             {
                 "figure_id": figure_id,
                 "current_source_layer": current_source_layer,
                 "current_repro_level": level,
                 "original_replacement_status": replacement,
-                "uses_proxy": "partial",
+                "uses_proxy": "false" if is_halo_global else "partial",
                 "primary_evidence": primary,
                 "supporting_evidence": f"{_rel(MANIFOLD_VALIDATION)};{halo_dg_source};{_rel(VERTICAL_DG)}",
                 "route_h_dependency": "none for original figure; Route H tracked separately",
                 "dg_dependency": "corrected L1 DG eigenvectors and manifold validation row",
                 "manifold_dependency": primary,
                 **metric,
-                "boundary": "Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim.",
+                "boundary": (
+                    "The analytic torus and manifold proxy layers are removed; remaining boundaries are N=9 source resolution and missing digitized pointwise paper comparison."
+                    if is_halo_global
+                    else "Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim."
+                ),
                 "next_action": next_action,
             }
         )
