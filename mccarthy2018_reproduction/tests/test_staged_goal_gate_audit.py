@@ -26,7 +26,7 @@ class StagedGoalGateAuditTests(unittest.TestCase):
         goal = by_gate["STAGED-GOAL-STATUS"]
         self.assertEqual(cold_start["status"], "fail")
         self.assertEqual(jacobi_coverage["status"], "fail")
-        self.assertEqual(int(jacobi_coverage["value"]), 0)
+        self.assertEqual(int(jacobi_coverage["value"]), 1)
         self.assertEqual(chapter4["status"], "not_run_or_fail")
         self.assertGreater(float(chapter4["value"]), 0.3)
         self.assertIn("1/31", chapter4["notes"])

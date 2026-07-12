@@ -158,6 +158,8 @@ def _build_rows() -> list[dict[str, Any]]:
     chapter3_cold_start_attempts_path = data / "chapter3_fixed_mapping_cold_start_full_attempts.csv"
     chapter3_jacobi_target_path = data / "chapter3_route_h_jacobi_target_audit.csv"
     chapter3_jacobi_target_doc_path = docs / "chapter3_route_h_jacobi_target_audit.md"
+    chapter3_fixed_time_target_path = data / "chapter3_route_h_fixed_time_target_coverage_audit.csv"
+    chapter3_fixed_time_target_doc_path = docs / "chapter3_route_h_fixed_time_target_coverage_audit.md"
     chapter3_period_q_path = data / "chapter3_period_q_per_figure_audit.csv"
     chapter3_period_q_doc_path = docs / "chapter3_period_q_per_figure_audit.md"
     chapter4_route_h_dg_path = data / "chapter4_route_h_quasi_dro_dg.csv"
@@ -201,6 +203,7 @@ def _build_rows() -> list[dict[str, Any]]:
     cache_validation = _read_rows(cache_validation_path)
     chapter3_cold_start_full = _read_rows(chapter3_cold_start_full_path)
     chapter3_jacobi_targets = _read_rows(chapter3_jacobi_target_path)
+    chapter3_fixed_time_targets = _read_rows(chapter3_fixed_time_target_path)
     chapter3_period_q = _read_rows(chapter3_period_q_path)
     chapter4_route_h_dg = _read_rows(chapter4_route_h_dg_path)
     chapter4_route_h_manifold = _read_rows(chapter4_route_h_manifold_path)
@@ -295,10 +298,20 @@ def _build_rows() -> list[dict[str, Any]]:
         for row in chapter3_jacobi_targets
         if row.get("source") == "cold_start_full_checkpoint"
     ]
+    chapter3_fixed_time_strict_rows = [
+        row
+        for row in chapter3_fixed_time_targets
+        if row.get("strict_fixed_time_status") == "pass"
+    ]
+    chapter3_fixed_time_boundary_rows = [
+        row
+        for row in chapter3_fixed_time_targets
+        if row.get("paper_rounding_boundary_status") == "pass"
+    ]
     chapter3_jacobi_target_passes = (
-        len(chapter3_cold_target_rows) == 4
-        and all(row.get("status") == "pass" for row in chapter3_cold_target_rows)
-        and chapter3_jacobi_target_doc_path.exists()
+        len(chapter3_fixed_time_targets) == 4
+        and len(chapter3_fixed_time_strict_rows) == 4
+        and chapter3_fixed_time_target_doc_path.exists()
     )
     chapter3_reproducible = (
         chapter3_passes
@@ -640,17 +653,23 @@ def _build_rows() -> list[dict[str, Any]]:
             requirement="The isolated Route H cold start must cover all four Fig. 3.16 Jacobi anchors, not only a high-amplitude subset.",
             status="pass" if chapter3_jacobi_target_passes else "fail",
             metric="cold_start_jacobi_targets_within_tolerance",
-            value=sum(row.get("status") == "pass" for row in chapter3_cold_target_rows),
+            value=len(chapter3_fixed_time_strict_rows),
             threshold="4/4 at absolute error <= 5e-7",
-            evidence_artifact=f"{_artifact(chapter3_jacobi_target_path)};{_artifact(chapter3_jacobi_target_doc_path)}",
+            evidence_artifact=(
+                f"{_artifact(chapter3_jacobi_target_path)};"
+                f"{_artifact(chapter3_jacobi_target_doc_path)};"
+                f"{_artifact(chapter3_fixed_time_target_path)};"
+                f"{_artifact(chapter3_fixed_time_target_doc_path)}"
+            ),
             decision=(
                 "route_h_thesis_jacobi_range_covered"
                 if chapter3_jacobi_target_passes
-                else "continue_branch_switching_or_new_continuation_parameter"
+                else "continue_fixed_time_energy_palc_or_spectral_refinement"
             ),
             notes=(
-                f"Cold-start checkpoint target rows: {len(chapter3_cold_target_rows)}; "
-                f"passing rows: {sum(row.get('status') == 'pass' for row in chapter3_cold_target_rows)}. "
+                f"Strict fixed-time rows: {len(chapter3_fixed_time_strict_rows)}/4; "
+                f"paper-rounding boundary rows: {len(chapter3_fixed_time_boundary_rows)}/4; "
+                f"raw cold-start checkpoint target rows: {len(chapter3_cold_target_rows)}. "
                 "The historical cache also remains source-layer evidence only; cache length and maximum amplitude do not prove parameter-range coverage."
             ),
         ),
