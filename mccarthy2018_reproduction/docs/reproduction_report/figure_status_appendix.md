@@ -10,7 +10,7 @@ Total figures: 54.
 | current_repro_level | count |
 |---|---:|
 | CR3BP Sun-Earth L1 long-propagation audit | 1 |
-| CR3BP corrected NRHO corridor marker audit | 1 |
+| CR3BP corrected periodic-family reproduction | 1 |
 | CR3BP endpoint-corrected NRHO transfer audit | 2 |
 | CR3BP endpoint-corrected halo-Lyapunov transfer audit | 1 |
 | CR3BP fixed-departure rendezvous branch audit | 1 |
@@ -901,16 +901,16 @@ Total figures: 54.
 | figure_id | 5.9 |
 | source_page | 107 |
 | script | figures/fig_5_09.py |
-| current_repro_level | CR3BP corrected NRHO corridor marker audit |
-| uses_proxy | partial |
+| current_repro_level | CR3BP corrected periodic-family reproduction |
+| uses_proxy | false |
 | main_data_source | data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv;data/computed/chapter5_nrho_corridor_per_figure_audit.csv;data/computed/chapter5_bcr4bp_dynamics_audit.csv;data/computed/chapter5_bcr4bp_segment_correction_audit.csv;data/computed/chapter5_optimized_transfer_audit.csv;outputs/figures_png/fig_5_9.png;outputs/figures_pdf/fig_5_9.pdf |
-| key_physical_quantities | Earth-Moon NRHO transfer baseline with proxy quasi-NRHO surface; accepted CR3BP corridor marker rows 2; best total delta-v 47.73443414309953 m/s; worst endpoint error 2.336264914251333e-05 km; max Jacobi span 5.092193333666728e-11; perilune radii 4800.000000000002 / 12610 km; original replacement status: corrected_boundary_markers_not_torus_replacement |
+| key_physical_quantities | Earth-Moon corrected periodic-NRHO family with transfer departure markers; accepted CR3BP periodic-family marker rows 2; corrected family members 16; maximum periodicity error 1.691798846699935e-10; best total delta-v 47.73443414309953 m/s; worst endpoint error 2.336264914251333e-05 km; max Jacobi span 5.092193333666728e-11; perilune radii 4800.000000000002 / 12610 km; original replacement status: corrected_periodic_nrho_family_replaces_linear_corridor_proxy |
 | residual evidence | accepted source rows: 2; Route H dependency: indirect only; BCR4BP dependency: available as separate source-layer audit |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 281783; PDF bytes 217849; boundary: Corrected NRHO boundaries and departure markers have endpoint evidence; grey corridor remains a linear corrected-boundary bridge, not corrected torus data. |
-| next_action | Replace the grey corridor with corrected quasi-NRHO torus or BCR4BP/ephemeris corridor data before thesis-equivalence claims. |
+| visual_status | PNG bytes 272126; PDF bytes 150382; boundary: The linear corridor proxy is removed. The displayed family is corrected CR3BP periodic NRHOs; BCR4BP/ephemeris correction and pointwise thesis comparison remain pending. |
+| next_action | Correct representative family members in BCR4BP/ephemeris and compare the family geometry pointwise with the thesis panel. |
 
 ### Figure 5.10
 

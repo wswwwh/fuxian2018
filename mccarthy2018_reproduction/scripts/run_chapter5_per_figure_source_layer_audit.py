@@ -212,6 +212,8 @@ def _source_metrics() -> dict[str, str]:
         "nrho_corridor_max_jacobi_span": _max_jacobi_span(nrho_corridor_rows),
         "nrho_corridor_departure_perilune": _max_field(nrho_corridor_rows, "departure_perilune_radius_km"),
         "nrho_corridor_destination_perilune": _max_field(nrho_corridor_rows, "destination_perilune_radius_km"),
+        "nrho_corridor_members": _max_field(nrho_corridor_rows, "corridor_family_members"),
+        "nrho_corridor_max_periodicity": _max_field(nrho_corridor_rows, "corridor_max_periodicity_error"),
     }
 
 
@@ -405,10 +407,10 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
         },
         {
             "figure_id": "5.9",
-            "current_source_layer": "Earth-Moon NRHO transfer baseline with proxy quasi-NRHO surface",
-            "current_repro_level": "CR3BP corrected NRHO corridor marker audit",
-            "original_replacement_status": "corrected_boundary_markers_not_torus_replacement",
-            "uses_proxy": "partial",
+            "current_source_layer": "Earth-Moon corrected periodic-NRHO family with transfer departure markers",
+            "current_repro_level": "CR3BP corrected periodic-family reproduction",
+            "original_replacement_status": "corrected_periodic_nrho_family_replaces_linear_corridor_proxy",
+            "uses_proxy": "false",
             "primary_evidence": "data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv",
             "supporting_evidence": f"{_rel(NRHO_CORRIDOR_AUDIT)};{bcr4bp_source}",
             "route_h_dependency": "indirect only",
@@ -416,15 +418,17 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
             "optimization_dependency": "available as separate source-layer audit",
             "accepted_rows": metrics["nrho_corridor_rows"],
             "best_metric": (
-                f"accepted CR3BP corridor marker rows {metrics['nrho_corridor_rows']}; "
+                f"accepted CR3BP periodic-family marker rows {metrics['nrho_corridor_rows']}; "
+                f"corrected family members {metrics['nrho_corridor_members']}; "
+                f"maximum periodicity error {metrics['nrho_corridor_max_periodicity']}; "
                 f"best total delta-v {metrics['nrho_corridor_best_delta_v']} m/s; "
                 f"worst endpoint error {metrics['nrho_corridor_worst_endpoint_error']} km; "
                 f"max Jacobi span {metrics['nrho_corridor_max_jacobi_span']}; "
                 f"perilune radii {metrics['nrho_corridor_departure_perilune']} / "
                 f"{metrics['nrho_corridor_destination_perilune']} km"
             ),
-            "boundary": "Corrected NRHO boundaries and departure markers have endpoint evidence; grey corridor remains a linear corrected-boundary bridge, not corrected torus data.",
-            "next_action": "Replace the grey corridor with corrected quasi-NRHO torus or BCR4BP/ephemeris corridor data before thesis-equivalence claims.",
+            "boundary": "The linear corridor proxy is removed. The displayed family is corrected CR3BP periodic NRHOs; BCR4BP/ephemeris correction and pointwise thesis comparison remain pending.",
+            "next_action": "Correct representative family members in BCR4BP/ephemeris and compare the family geometry pointwise with the thesis panel.",
         },
         {
             "figure_id": "5.10",

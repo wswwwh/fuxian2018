@@ -3383,6 +3383,12 @@ def assert_chapter5_earth_moon_nrho_transfer_baseline() -> None:
     assert abs(baseline.destination_stability_index - 1.1762) < 0.01
     assert baseline.departure_periodicity_error < 1.0e-8
     assert baseline.destination_periodicity_error < 1.0e-8
+    assert len(baseline.corridor_orbits) == 16
+    assert baseline.corridor_surface.shape == (360, 16, 3)
+    assert np.all(np.diff(baseline.corridor_perilune_radius_km) > 0.0)
+    assert abs(baseline.corridor_perilune_radius_km[0] - 4_800.0) < 0.05
+    assert abs(baseline.corridor_perilune_radius_km[-1] - 12_610.0) < 0.05
+    assert np.max(baseline.corridor_periodicity_error) < 1.0e-8
     assert np.linalg.norm(
         baseline.departure_states[-1] - baseline.departure_states[0]
     ) < 1.0e-8
@@ -3462,6 +3468,29 @@ def assert_chapter5_earth_moon_nrho_transfer_baseline() -> None:
                 {
                     "kind": "orbit_summary",
                     "case": case,
+                    "x_nd": f"{orbit.initial_state[0]:.16g}",
+                    "y_nd": f"{orbit.initial_state[1]:.16g}",
+                    "z_nd": f"{orbit.initial_state[2]:.16g}",
+                    "xdot_nd": f"{orbit.initial_state[3]:.16g}",
+                    "ydot_nd": f"{orbit.initial_state[4]:.16g}",
+                    "zdot_nd": f"{orbit.initial_state[5]:.16g}",
+                    "perilune_radius_km": f"{radius:.16g}",
+                    "stability_index": f"{stability:.16g}",
+                    "periodicity_error": f"{periodicity:.16g}",
+                }
+            )
+        for index, (orbit, radius, stability, periodicity) in enumerate(
+            zip(
+                baseline.corridor_orbits,
+                baseline.corridor_perilune_radius_km,
+                baseline.corridor_stability_index,
+                baseline.corridor_periodicity_error,
+            )
+        ):
+            writer.writerow(
+                {
+                    "kind": "corridor_orbit_summary",
+                    "case": index,
                     "x_nd": f"{orbit.initial_state[0]:.16g}",
                     "y_nd": f"{orbit.initial_state[1]:.16g}",
                     "z_nd": f"{orbit.initial_state[2]:.16g}",

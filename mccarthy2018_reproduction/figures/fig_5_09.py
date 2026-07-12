@@ -12,9 +12,9 @@ from qp_orbits.plot_style import apply_style, save_figure
 
 FIGURE_ID = "5.9"
 SOURCE_PAGE = 107
-REPRO_LEVEL = "shape-match + local numerical"
+REPRO_LEVEL = "corrected numerical NRHO-family reproduction"
 SYSTEM = "Earth-Moon CR3BP corrected NRHO boundaries"
-NOTES = "Corrected 4,800/12,610 km NRHOs; grey corridor remains a quasi-NRHO surface proxy."
+NOTES = "Sixteen corrected periodic NRHOs span 4,800-12,610 km; no interpolated corridor proxy."
 
 
 def main() -> None:

@@ -133,7 +133,11 @@ class EarthMoonNRHOTransferBaseline:
     destination_orbit: SpatialSymmetricOrbit
     departure_states: np.ndarray
     destination_states: np.ndarray
+    corridor_orbits: tuple[SpatialSymmetricOrbit, ...]
     corridor_surface: np.ndarray
+    corridor_perilune_radius_km: np.ndarray
+    corridor_stability_index: np.ndarray
+    corridor_periodicity_error: np.ndarray
     departure_perilune_radius_km: float
     destination_perilune_radius_km: float
     departure_stability_index: float
@@ -752,6 +756,7 @@ def earth_moon_nrho_transfer_baseline(
     orbit_samples: int = 520,
     transfer_samples: int = 520,
     rendezvous_samples: int = 0,
+    corridor_members: int = 16,
 ) -> EarthMoonNRHOTransferBaseline:
     """Compute corrected thesis-boundary NRHOs and two direct transfers.
 
@@ -763,6 +768,8 @@ def earth_moon_nrho_transfer_baseline(
 
     if orbit_samples < 32 or transfer_samples < 32:
         raise ValueError("orbit_samples and transfer_samples must be at least 32")
+    if corridor_members < 2:
+        raise ValueError("corridor_members must be at least two")
     system = SYSTEMS["earth_moon"]
     if system.length_unit_km is None:
         raise ValueError("Earth-Moon dimensional units are required")
@@ -776,6 +783,17 @@ def earth_moon_nrho_transfer_baseline(
         target_radius=12_610.0 / system.length_unit_km,
         seed_orbit=_nrho_branch_seed(system, target_radius_km=12_610.0),
     )
+    corridor_targets_km = np.linspace(4_800.0, 12_610.0, corridor_members)
+    corridor_orbits: list[SpatialSymmetricOrbit] = [departure_orbit]
+    for target_radius_km in corridor_targets_km[1:-1]:
+        corridor_orbits.append(
+            correct_spatial_symmetric_orbit_fixed_secondary_radius(
+                system.mu,
+                target_radius=target_radius_km / system.length_unit_km,
+                seed_orbit=corridor_orbits[-1],
+            )
+        )
+    corridor_orbits.append(destination_orbit)
     departure_states = _sample_spatial_orbit(departure_orbit, orbit_samples)
     destination_states = _sample_spatial_orbit(destination_orbit, orbit_samples)
     moon = np.array([1.0 - system.mu, 0.0, 0.0], dtype=float)
@@ -784,13 +802,16 @@ def earth_moon_nrho_transfer_baseline(
     departure_monodromy = monodromy(departure_orbit)
     destination_monodromy = monodromy(destination_orbit)
 
-    corridor_coordinate = np.linspace(0.0, 1.0, 24)
-    corridor_surface = np.empty((orbit_samples, corridor_coordinate.size, 3), dtype=float)
-    for index, coordinate in enumerate(corridor_coordinate):
-        corridor_surface[:, index, :] = (
-            (1.0 - coordinate) * departure_states[:, :3]
-            + coordinate * destination_states[:, :3]
-        )
+    corridor_states = tuple(_sample_spatial_orbit(orbit, orbit_samples) for orbit in corridor_orbits)
+    corridor_surface = np.stack([states[:, :3] for states in corridor_states], axis=1)
+    corridor_monodromies = tuple(monodromy(orbit) for orbit in corridor_orbits)
+    corridor_perilune_radius_km = np.array(
+        [
+            np.min(np.linalg.norm(states[:, :3] - moon, axis=1)) * system.length_unit_km
+            for states in corridor_states
+        ],
+        dtype=float,
+    )
 
     forward = (
         _build_nrho_transfer(
@@ -826,7 +847,15 @@ def earth_moon_nrho_transfer_baseline(
         destination_orbit=destination_orbit,
         departure_states=departure_states,
         destination_states=destination_states,
+        corridor_orbits=tuple(corridor_orbits),
         corridor_surface=corridor_surface,
+        corridor_perilune_radius_km=corridor_perilune_radius_km,
+        corridor_stability_index=np.array(
+            [data.stability_index for data in corridor_monodromies], dtype=float
+        ),
+        corridor_periodicity_error=np.array(
+            [data.periodicity_error for data in corridor_monodromies], dtype=float
+        ),
         departure_perilune_radius_km=float(departure_radii.min() * system.length_unit_km),
         destination_perilune_radius_km=float(destination_radii.min() * system.length_unit_km),
         departure_stability_index=float(departure_monodromy.stability_index),
