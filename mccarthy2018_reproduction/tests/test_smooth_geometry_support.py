@@ -14,7 +14,11 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from qp_orbits.quasi_torus import _smooth_absolute_support
+from qp_orbits.quasi_torus import (
+    _regularized_least_squares_step,
+    _smooth_absolute_support,
+    _smooth_dual_geometry_constraints,
+)
 
 
 class SmoothAbsoluteSupportTests(unittest.TestCase):
@@ -61,6 +65,42 @@ class SmoothAbsoluteSupportTests(unittest.TestCase):
             _smooth_absolute_support(np.array([np.nan]))
         with self.assertRaises(ValueError):
             _smooth_absolute_support(np.array([1.0]), sharpness=0.0)
+
+    def test_dual_geometry_jacobian_uses_only_y_and_z_columns(self) -> None:
+        states = np.zeros((3, 6), dtype=float)
+        states[:, 1] = (-0.2, 0.4, 0.1)
+        states[:, 2] = (0.5, -0.1, 0.25)
+        residuals, jacobian = _smooth_dual_geometry_constraints(
+            states,
+            target_y_support=0.3,
+            target_z_support=0.45,
+            sharpness=20.0,
+        )
+
+        self.assertEqual(residuals.shape, (2,))
+        self.assertEqual(jacobian.shape, (2, states.size))
+        active_columns = set(np.flatnonzero(np.any(jacobian != 0.0, axis=0)))
+        self.assertTrue(active_columns.issubset(set(range(1, states.size, 6)) | set(range(2, states.size, 6))))
+        np.testing.assert_array_equal(jacobian[0, 2::6], 0.0)
+        np.testing.assert_array_equal(jacobian[1, 1::6], 0.0)
+
+    def test_regularization_stabilizes_a_near_null_direction(self) -> None:
+        jacobian = np.diag([1.0, 1.0e-9])
+        rhs = np.array([1.0, 1.0])
+        unregularized = _regularized_least_squares_step(
+            jacobian,
+            rhs,
+            regularization=0.0,
+        )
+        regularized = _regularized_least_squares_step(
+            jacobian,
+            rhs,
+            regularization=1.0e-6,
+        )
+
+        self.assertGreater(abs(unregularized[1]), 1.0e8)
+        self.assertLess(abs(regularized[1]), 1.0e-2)
+        self.assertAlmostEqual(regularized[0], 1.0 / 1.000001, places=12)
 
 
 if __name__ == "__main__":

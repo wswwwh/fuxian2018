@@ -73,6 +73,60 @@ def _smooth_absolute_support(
     return float(support), gradient
 
 
+def _smooth_dual_geometry_constraints(
+    states: np.ndarray,
+    *,
+    target_y_support: float,
+    target_z_support: float,
+    sharpness: float = 80.0,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Return smooth y/z support residuals and their state-block Jacobian."""
+
+    values = np.asarray(states, dtype=float)
+    if values.ndim != 2 or values.shape[1] != 6:
+        raise ValueError("states must have shape (samples, 6)")
+    targets = (float(target_y_support), float(target_z_support))
+    if any(target <= 0.0 or not np.isfinite(target) for target in targets):
+        raise ValueError("geometry support targets must be positive finite values")
+
+    residuals = np.empty(2, dtype=float)
+    jacobian = np.zeros((2, values.size), dtype=float)
+    for row, (component, target) in enumerate(zip((1, 2), targets)):
+        support, gradient = _smooth_absolute_support(
+            values[:, component],
+            sharpness=sharpness,
+        )
+        residuals[row] = support - target
+        jacobian[row, component::6] = gradient
+    return residuals, jacobian
+
+
+def _regularized_least_squares_step(
+    jacobian: np.ndarray,
+    right_hand_side: np.ndarray,
+    *,
+    regularization: float,
+    rcond: float = 1.0e-11,
+) -> np.ndarray:
+    """Solve a Tikhonov-regularized least-squares Newton step."""
+
+    matrix = np.asarray(jacobian, dtype=float)
+    rhs = np.asarray(right_hand_side, dtype=float)
+    if matrix.ndim != 2:
+        raise ValueError("jacobian must be two-dimensional")
+    if rhs.shape != (matrix.shape[0],):
+        raise ValueError("right_hand_side must match the Jacobian row count")
+    if regularization < 0.0 or not np.isfinite(regularization):
+        raise ValueError("regularization must be finite and non-negative")
+    if regularization == 0.0:
+        return np.linalg.lstsq(matrix, rhs, rcond=rcond)[0]
+    augmented = np.vstack(
+        [matrix, np.sqrt(regularization) * np.eye(matrix.shape[1])]
+    )
+    augmented_rhs = np.r_[rhs, np.zeros(matrix.shape[1], dtype=float)]
+    return np.linalg.lstsq(augmented, augmented_rhs, rcond=rcond)[0]
+
+
 def _high_order_cache_path(parameters: dict[str, float | int]) -> Path:
     """Return a versioned cache path for an expensive continuation family."""
 
