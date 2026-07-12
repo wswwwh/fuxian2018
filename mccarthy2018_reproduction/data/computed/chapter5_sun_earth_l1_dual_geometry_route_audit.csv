@@ -1,0 +1,7 @@
+route,parameter_change,accepted,best_metric,map_residual,jacobi_spread_or_residual,interpretation
+fixed_energy_amplitude,vertical_rms_amplitude_-0.1pct,false,9.124e-06,,,amplitude direction locally singular
+fixed_energy_amplitude,vertical_rms_amplitude_+0.1pct,false,1.928e-03,,,positive amplitude direction diverges
+nodewise_equal_energy,target_each_node_C_3.000703990914,false,7.463e-07,9.224e-08,7.463e-07,improves energy spread but misses strict gates
+spectral_lift_41,curve_samples_21_to_41,false,5.653e-03,5.653e-03,3.713e-06,direct lift cannot recover invariant curve
+base_orbit_amplitude,x_amplitude_0.002125_to_0.002120,false,9.378e-03,,,base-family translation leaves local branch
+base_orbit_amplitude,x_amplitude_0.002125_to_0.002115,false,2.635e-02,,,larger base-family step diverges further
