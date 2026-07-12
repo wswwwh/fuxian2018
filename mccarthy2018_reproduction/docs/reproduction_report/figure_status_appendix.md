@@ -759,7 +759,7 @@ Total figures: 54.
 | script | figures/fig_5_01.py |
 | current_repro_level | numerical corrected Lissajous propagation reproduction |
 | uses_proxy | false |
-| main_data_source | data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_audit.csv;data/computed/chapter5_sun_earth_l1_long_propagation_per_figure_audit.csv;outputs/figures_png/fig_5_1.png;outputs/figures_pdf/fig_5_1.pdf |
+| main_data_source | data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_amplitude_boundary_audit.csv;data/computed/chapter5_sun_earth_l1_long_propagation_per_figure_audit.csv;outputs/figures_png/fig_5_1.png;outputs/figures_pdf/fig_5_1.pdf |
 | key_physical_quantities | corrected Sun-Earth L1 two-frequency Lissajous torus trajectories; accepted corrected Lissajous source rows 1; torus points 3600; curve residual 2.646101981500197e-11; Jacobi span 2.220446049250313e-15; max |y|/|z| 1016592.923818082/939484.302401125 km; original replacement status: corrected_lissajous_torus_replaces_proxy_long_propagation_scene |
 | residual evidence | accepted source rows: 1; Route H dependency: none; BCR4BP dependency: none |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
@@ -975,7 +975,7 @@ Total figures: 54.
 | script | figures/fig_5_13.py |
 | current_repro_level | numerical two-angle stable-manifold reproduction |
 | uses_proxy | false |
-| main_data_source | data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_scan.csv;data/computed/chapter5_stable_manifold_per_figure_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv;data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_scan.csv;outputs/figures_png/fig_5_13.png;outputs/figures_pdf/fig_5_13.pdf |
+| main_data_source | data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_scan.csv;data/computed/chapter5_stable_manifold_per_figure_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_amplitude_boundary_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv;data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_scan.csv;outputs/figures_png/fig_5_13.png;outputs/figures_pdf/fig_5_13.pdf |
 | key_physical_quantities | corrected Sun-Earth L1 Lissajous DG two-angle stable-manifold periapsis map; accepted stable-manifold periapsis rows 1; selected phase 14.88928693528482 deg; periapsis error 0.0001116857147280825 km; transfer time 407.6352466744673 days; Jacobi span 3.126388037344441e-13; accepted Lissajous source rows 1; torus points 3600; curve residual 2.646101981500197e-11; torus Jacobi span 2.220446049250313e-15; max |y|/|z| 1016592.923818082/939484.302401125 km; accepted Lissajous manifold rows 1; propagated half-manifolds 2240; 7033-km error 0.6651363452756414 km; manifold Jacobi drift 1.012061545679899e-10; original replacement status: computed_lissajous_manifold_map_replaces_display_proxy_geometry_boundary_remains |
 | residual evidence | accepted source rows: 1; Route H dependency: none; BCR4BP dependency: none |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
@@ -993,7 +993,7 @@ Total figures: 54.
 | script | figures/fig_5_14.py |
 | current_repro_level | numerical quasi-periodic stable-manifold transfer reproduction |
 | uses_proxy | false |
-| main_data_source | data/computed/chapter5_sun_earth_l1_lissajous_leo_transfer.csv;data/computed/chapter5_sun_earth_l1_lissajous_leo_transfer_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_audit.csv;outputs/figures_png/fig_5_14.png;outputs/figures_pdf/fig_5_14.pdf |
+| main_data_source | data/computed/chapter5_sun_earth_l1_lissajous_leo_transfer.csv;data/computed/chapter5_sun_earth_l1_lissajous_leo_transfer_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_amplitude_boundary_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_audit.csv;outputs/figures_png/fig_5_14.png;outputs/figures_pdf/fig_5_14.pdf |
 | key_physical_quantities | corrected Sun-Earth L1 Lissajous DG stable-manifold LEO transfer; accepted Lissajous transfer rows 1; trajectory samples 900; periapsis error 0.665176709251682 km; transfer time 312.4576174324916 days; Jacobi span 4.067857162226574e-13; Lissajous endpoint distance 40.1720033007723 km; original replacement status: computed_lissajous_transfer_replaces_analytic_scene_high_fidelity_pending |
 | residual evidence | accepted source rows: 1; Route H dependency: none; BCR4BP dependency: none |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |

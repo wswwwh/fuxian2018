@@ -33,6 +33,7 @@ STABLE_MANIFOLD_AUDIT = DATA / "chapter5_stable_manifold_per_figure_audit.csv"
 LISSAJOUS_TORUS_AUDIT = DATA / "chapter5_sun_earth_l1_lissajous_torus_audit.csv"
 LISSAJOUS_MANIFOLD_AUDIT = DATA / "chapter5_sun_earth_l1_lissajous_stable_manifold_audit.csv"
 LISSAJOUS_LEO_TRANSFER_AUDIT = DATA / "chapter5_sun_earth_l1_lissajous_leo_transfer_audit.csv"
+LISSAJOUS_AMPLITUDE_AUDIT = DATA / "chapter5_sun_earth_l1_lissajous_amplitude_boundary_audit.csv"
 ROUTE_H_FAMILY = DATA / "chapter3_fixed_mapping_cache_accepted_family.csv"
 ROUTE_H_VALIDATION = DATA / "chapter3_fixed_mapping_cache_accepted_validation.csv"
 CHAPTER4_ROUTE_H_FIGURE = PROJECT_ROOT / "outputs" / "figures_png" / "fig_4_route_h.png"
@@ -293,7 +294,7 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
             "original_replacement_status": "corrected_lissajous_torus_replaces_proxy_long_propagation_scene",
             "uses_proxy": "false",
             "primary_evidence": "data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv",
-            "supporting_evidence": f"{_rel(LISSAJOUS_TORUS_AUDIT)};{_rel(SUN_EARTH_L1_LONG_PROP_AUDIT)}",
+            "supporting_evidence": f"{_rel(LISSAJOUS_TORUS_AUDIT)};{_rel(LISSAJOUS_AMPLITUDE_AUDIT)};{_rel(SUN_EARTH_L1_LONG_PROP_AUDIT)}",
             "route_h_dependency": "none",
             "bcr4bp_dependency": "none",
             "optimization_dependency": "none",
@@ -523,7 +524,7 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
             "original_replacement_status": "computed_lissajous_manifold_map_replaces_display_proxy_geometry_boundary_remains",
             "uses_proxy": "false",
             "primary_evidence": "data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_scan.csv",
-            "supporting_evidence": f"{_rel(STABLE_MANIFOLD_AUDIT)};{_rel(LISSAJOUS_TORUS_AUDIT)};{_rel(LISSAJOUS_MANIFOLD_AUDIT)};data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv;data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_scan.csv",
+            "supporting_evidence": f"{_rel(STABLE_MANIFOLD_AUDIT)};{_rel(LISSAJOUS_TORUS_AUDIT)};{_rel(LISSAJOUS_AMPLITUDE_AUDIT)};{_rel(LISSAJOUS_MANIFOLD_AUDIT)};data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv;data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_scan.csv",
             "route_h_dependency": "none",
             "bcr4bp_dependency": "none",
             "optimization_dependency": "none",
@@ -554,7 +555,7 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
             "original_replacement_status": "computed_lissajous_transfer_replaces_analytic_scene_high_fidelity_pending",
             "uses_proxy": "false",
             "primary_evidence": "data/computed/chapter5_sun_earth_l1_lissajous_leo_transfer.csv",
-            "supporting_evidence": f"{_rel(LISSAJOUS_LEO_TRANSFER_AUDIT)};{_rel(LISSAJOUS_TORUS_AUDIT)};{_rel(LISSAJOUS_MANIFOLD_AUDIT)}",
+            "supporting_evidence": f"{_rel(LISSAJOUS_LEO_TRANSFER_AUDIT)};{_rel(LISSAJOUS_TORUS_AUDIT)};{_rel(LISSAJOUS_AMPLITUDE_AUDIT)};{_rel(LISSAJOUS_MANIFOLD_AUDIT)}",
             "route_h_dependency": "none",
             "bcr4bp_dependency": "none",
             "optimization_dependency": "none",
