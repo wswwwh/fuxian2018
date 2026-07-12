@@ -1,0 +1,6 @@
+stage,sharpness,time_slices,y_support_step,accepted,combined_metric,map_residual
+1,80,5,-0.1pct,true,2.215e-09,2.215e-09
+2,160,5,-0.1pct,true,7.406e-09,7.406e-09
+3,320,9,-0.1pct,true,5.447e-09,5.447e-09
+4,640,9,-0.1pct,true,9.583e-09,9.583e-09
+5,1000,17,-0.1pct,false,4.966e-06,3.072e-06
