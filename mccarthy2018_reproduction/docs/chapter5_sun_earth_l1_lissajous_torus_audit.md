@@ -6,7 +6,7 @@
 - Maximum absolute y: `1016592.924` km (paper target `660000` km)
 - Maximum absolute z: `939484.302` km (paper target `940000` km)
 - Source-layer acceptance: `pass`
-- Stable-manifold periapsis-map acceptance: `pending`
+- Stable-manifold periapsis target gate: `pass`; numerical map: `70 x 16`
 
 The torus is generated from a continued L1 vertical periodic boundary and a
 corrected planar elliptic invariant curve. It is a genuine two-frequency CR3BP

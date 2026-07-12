@@ -46,7 +46,6 @@ comparison, and several Chapter 4/5 figures retain proxy or source-layer status.
 - Fig. 5.4: `proxy/schematic only`; proxy flag `true`; PNG bytes 205910; PDF bytes 17825; boundary: No numerical source-layer is required for the current schematic role.
 - Fig. 5.8: `CR3BP endpoint-corrected halo-Lyapunov transfer audit`; proxy flag `partial`; PNG bytes 470710; PDF bytes 231145; boundary: Per-figure endpoint-corrected CR3BP equal-Jacobi transfer row is accepted; the separate Route H/BCR4BP optimized source layer is still not a direct original Fig. 5.8 replacement.
 - Fig. 5.12: `CR3BP fixed-departure rendezvous branch audit`; proxy flag `partial`; PNG bytes 90688; PDF bytes 25324; boundary: Local CR3BP fixed-departure rendezvous branch has endpoint evidence; grey proxy trend beyond the fold remains non-replacement context.
-- Fig. 5.13: `corrected two-frequency source layer; stable-manifold map pending`; proxy flag `partial`; PNG bytes 245373; PDF bytes 104629; boundary: A corrected two-frequency Lissajous source torus now exists, but the displayed heat map is still proxy context until a two-angle stable-manifold periapsis scan is propagated; the y amplitude also remains above the paper target.
 - Fig. 5.14: `CR3BP stable-manifold LEO transfer audit`; proxy flag `partial`; PNG bytes 383539; PDF bytes 106849; boundary: Accepted CR3BP stable-manifold transfer-scene row exists, but the figure is not yet a BCR4BP/ephemeris or full quasi-periodic Lissajous transfer replacement.
 
 ## Figures That Must Not Be Overclaimed

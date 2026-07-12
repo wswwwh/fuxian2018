@@ -17,11 +17,11 @@ Total figures: 54.
 | CR3BP stable-manifold LEO transfer audit | 1 |
 | Route H / DE421 geometry baseline | 2 |
 | audited Route H fixed-time source-layer | 2 |
-| corrected two-frequency source layer; stable-manifold map pending | 1 |
 | numerical DG family reproduction with paper-digitization boundary | 1 |
 | numerical DG global manifold reproduction | 4 |
 | numerical DG manifold comparison | 2 |
 | numerical reproduction | 16 |
+| numerical two-angle stable-manifold reproduction | 1 |
 | period-q multiple-shooting audit with q8 boundary | 1 |
 | physical-consistency baseline | 2 |
 | proxy/schematic only | 13 |
@@ -973,16 +973,16 @@ Total figures: 54.
 | figure_id | 5.13 |
 | source_page | 111 |
 | script | figures/fig_5_13.py |
-| current_repro_level | corrected two-frequency source layer; stable-manifold map pending |
-| uses_proxy | partial |
-| main_data_source | data/computed/chapter5_sun_earth_stable_manifold_baseline.csv;data/computed/chapter5_stable_manifold_per_figure_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv;outputs/figures_png/fig_5_13.png;outputs/figures_pdf/fig_5_13.pdf |
-| key_physical_quantities | corrected Sun-Earth L1 Lissajous source torus plus periodic stable-manifold baseline; accepted stable-manifold periapsis rows 1; selected phase 14.88928693528482 deg; periapsis error 0.0001116857147280825 km; transfer time 407.6352466744673 days; Jacobi span 3.126388037344441e-13; accepted Lissajous source rows 1; torus points 3600; curve residual 2.646101981500197e-11; torus Jacobi span 2.220446049250313e-15; max |y|/|z| 1016592.923818082/939484.302401125 km; original replacement status: periapsis_targeted_cr3bp_not_quasi_periodic_replacement |
+| current_repro_level | numerical two-angle stable-manifold reproduction |
+| uses_proxy | false |
+| main_data_source | data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_scan.csv;data/computed/chapter5_stable_manifold_per_figure_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv;data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_scan.csv;outputs/figures_png/fig_5_13.png;outputs/figures_pdf/fig_5_13.pdf |
+| key_physical_quantities | corrected Sun-Earth L1 Lissajous DG two-angle stable-manifold periapsis map; accepted stable-manifold periapsis rows 1; selected phase 14.88928693528482 deg; periapsis error 0.0001116857147280825 km; transfer time 407.6352466744673 days; Jacobi span 3.126388037344441e-13; accepted Lissajous source rows 1; torus points 3600; curve residual 2.646101981500197e-11; torus Jacobi span 2.220446049250313e-15; max |y|/|z| 1016592.923818082/939484.302401125 km; accepted Lissajous manifold rows 1; propagated half-manifolds 2240; 7033-km error 0.6651363452756414 km; manifold Jacobi drift 1.012061545679899e-10; original replacement status: computed_lissajous_manifold_map_replaces_display_proxy_geometry_boundary_remains |
 | residual evidence | accepted source rows: 1; Route H dependency: none; BCR4BP dependency: none |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 245373; PDF bytes 104629; boundary: A corrected two-frequency Lissajous source torus now exists, but the displayed heat map is still proxy context until a two-angle stable-manifold periapsis scan is propagated; the y amplitude also remains above the paper target. |
-| next_action | Replace proxy heat-map layer with a dense computed two-angle quasi-periodic manifold scan before claiming thesis-equivalent replacement. |
+| visual_status | PNG bytes 82719; PDF bytes 36653; boundary: The display-function proxy is removed and the corrected two-frequency 70x16 scan reaches the 7033-km target. Remaining boundaries are the source-torus y-amplitude excess and pointwise comparison with the thesis heat map. |
+| next_action | Reduce the source-torus y-amplitude discrepancy and digitize the thesis heat map for pointwise comparison. |
 
 ### Figure 5.14
 
