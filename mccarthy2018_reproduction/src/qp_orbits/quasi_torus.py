@@ -2382,8 +2382,9 @@ def _fixed_mapping_pseudo_arclength_geometry(
     if natural_step <= 1e-12:
         raise RuntimeError("Fixed-mapping pseudo-arclength secant is degenerate")
     tangent /= natural_step
-    if tangent[-1] < 0.0:
-        tangent *= -1.0
+    # Preserve the ordered secant orientation.  The rotation number is allowed
+    # to turn at a fold; forcing its component positive would reverse the PALC
+    # direction exactly where pseudo-arclength continuation is needed.
     return current_variables, tangent, phase_direction, natural_step
 
 

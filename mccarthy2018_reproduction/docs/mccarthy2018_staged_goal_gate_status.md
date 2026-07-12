@@ -13,6 +13,7 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - Best experimental/local frontier: `10293.6651410641` km
 - Fig. 3.16 / Fig. 3.17 update allowed: `True`
 - Chapter 3 Route H full cold-start: `fail`
+- Chapter 3 Route H Fig. 3.16 Jacobi coverage: `fail`
 - Fig. 3.10 period-q per-figure audit: `pass`
 - Chapter 4 Route H DG source layer passed: `False`
 - Chapter 4 next decision: `repair_route_h_cold_start_before_chapter4`
@@ -37,6 +38,7 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - `C3-ROUTE-D-G` (chapter3): status `fail`, metric `best_accepted_projection_max_abs_z_km` = `N/A`, decision `bounded_projection_routes`
 - `C3-ROUTE-H` (chapter3): status `pass`, metric `best_strict_cache_max_abs_z_km` = `14573.10318409037`, decision `use_route_h_for_chapter3_source`
 - `C3-ROUTE-H-COLD-START` (chapter3): status `fail`, metric `cold_start_member_count` = `19`, decision `repair_fixed_mapping_cold_start_continuation`
+- `C3-ROUTE-H-JACOBI-TARGET-COVERAGE` (chapter3): status `fail`, metric `cold_start_jacobi_targets_within_tolerance` = `0`, decision `continue_branch_switching_or_new_continuation_parameter`
 - `C3-PERIOD-Q-PER-FIGURE-AUDIT` (chapter3): status `pass`, metric `strict_single_shoot_rows` = `2`, decision `use_period_q_boundary_audit`
 - `C4-UPSTREAM-TORUS-DATA` (chapter4): status `blocked_by_chapter3_cold_start`, metric `chapter3_figure_source_frontier_max_abs_z_km` = `14573.10318409037`, decision `repair_route_h_cold_start_before_chapter4`
 - `C4-ROUTE-H-DG-MANIFOLD` (chapter4): status `not_run_or_fail`, metric `worst_selected_eigen_relative_imaginary` = `0.6242638760846617`, decision `run_chapter4_route_h_dg_manifold_audit`

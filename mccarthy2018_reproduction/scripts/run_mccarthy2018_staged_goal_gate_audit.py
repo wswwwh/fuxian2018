@@ -156,6 +156,8 @@ def _build_rows() -> list[dict[str, Any]]:
     cache_validation_path = data / "chapter3_fixed_mapping_cache_accepted_validation.csv"
     chapter3_cold_start_full_path = data / "chapter3_fixed_mapping_cold_start_full_audit.csv"
     chapter3_cold_start_attempts_path = data / "chapter3_fixed_mapping_cold_start_full_attempts.csv"
+    chapter3_jacobi_target_path = data / "chapter3_route_h_jacobi_target_audit.csv"
+    chapter3_jacobi_target_doc_path = docs / "chapter3_route_h_jacobi_target_audit.md"
     chapter3_period_q_path = data / "chapter3_period_q_per_figure_audit.csv"
     chapter3_period_q_doc_path = docs / "chapter3_period_q_per_figure_audit.md"
     chapter4_route_h_dg_path = data / "chapter4_route_h_quasi_dro_dg.csv"
@@ -198,6 +200,7 @@ def _build_rows() -> list[dict[str, Any]]:
     cache_audit = _read_rows(cache_audit_path)
     cache_validation = _read_rows(cache_validation_path)
     chapter3_cold_start_full = _read_rows(chapter3_cold_start_full_path)
+    chapter3_jacobi_targets = _read_rows(chapter3_jacobi_target_path)
     chapter3_period_q = _read_rows(chapter3_period_q_path)
     chapter4_route_h_dg = _read_rows(chapter4_route_h_dg_path)
     chapter4_route_h_manifold = _read_rows(chapter4_route_h_manifold_path)
@@ -287,7 +290,21 @@ def _build_rows() -> list[dict[str, Any]]:
     chapter3_passes = figure_source_frontier >= campaign.TARGET_MIN_KM
     chapter3_cold_start_row = chapter3_cold_start_full[0] if chapter3_cold_start_full else {}
     chapter3_cold_start_passes = chapter3_cold_start_row.get("status") == "pass"
-    chapter3_reproducible = chapter3_passes and chapter3_cold_start_passes
+    chapter3_cold_target_rows = [
+        row
+        for row in chapter3_jacobi_targets
+        if row.get("source") == "cold_start_full_checkpoint"
+    ]
+    chapter3_jacobi_target_passes = (
+        len(chapter3_cold_target_rows) == 4
+        and all(row.get("status") == "pass" for row in chapter3_cold_target_rows)
+        and chapter3_jacobi_target_doc_path.exists()
+    )
+    chapter3_reproducible = (
+        chapter3_passes
+        and chapter3_cold_start_passes
+        and chapter3_jacobi_target_passes
+    )
     chapter3_period_q_strict = [
         row for row in chapter3_period_q if _as_bool(row.get("strict_acceptance"))
     ]
@@ -615,6 +632,26 @@ def _build_rows() -> list[dict[str, Any]]:
                 f"last mean Jacobi is {chapter3_cold_start_row.get('last_mean_jacobi', 'N/A')}; "
                 f"failure reason is {chapter3_cold_start_row.get('failure_reason', 'N/A')}. "
                 "The historical Route H artifact remains auditable but is not an end-to-end reproducible source."
+            ),
+        ),
+        _row(
+            scope="chapter3",
+            gate_id="C3-ROUTE-H-JACOBI-TARGET-COVERAGE",
+            requirement="The isolated Route H cold start must cover all four Fig. 3.16 Jacobi anchors, not only a high-amplitude subset.",
+            status="pass" if chapter3_jacobi_target_passes else "fail",
+            metric="cold_start_jacobi_targets_within_tolerance",
+            value=sum(row.get("status") == "pass" for row in chapter3_cold_target_rows),
+            threshold="4/4 at absolute error <= 5e-7",
+            evidence_artifact=f"{_artifact(chapter3_jacobi_target_path)};{_artifact(chapter3_jacobi_target_doc_path)}",
+            decision=(
+                "route_h_thesis_jacobi_range_covered"
+                if chapter3_jacobi_target_passes
+                else "continue_branch_switching_or_new_continuation_parameter"
+            ),
+            notes=(
+                f"Cold-start checkpoint target rows: {len(chapter3_cold_target_rows)}; "
+                f"passing rows: {sum(row.get('status') == 'pass' for row in chapter3_cold_target_rows)}. "
+                "The historical cache also remains source-layer evidence only; cache length and maximum amplitude do not prove parameter-range coverage."
             ),
         ),
         _row(
@@ -1041,6 +1078,7 @@ def _write_doc(rows: list[dict[str, Any]]) -> None:
     c3 = by_gate["C3-FIGURE-SOURCE-FRONTIER"]
     experimental = by_gate["C3-EXPERIMENTAL-FRONTIER"]
     c3_cold_start = by_gate.get("C3-ROUTE-H-COLD-START", {})
+    c3_jacobi_targets = by_gate.get("C3-ROUTE-H-JACOBI-TARGET-COVERAGE", {})
     c3_period_q = by_gate.get("C3-PERIOD-Q-PER-FIGURE-AUDIT", {})
     c4 = by_gate["C4-UPSTREAM-TORUS-DATA"]
     c4_route_h = by_gate["C4-ROUTE-H-DG-MANIFOLD"]
@@ -1096,6 +1134,7 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - Best experimental/local frontier: `{_fmt(experimental['value'])}` km
 - Fig. 3.16 / Fig. 3.17 update allowed: `{bool(c3['status'] == 'pass')}`
 - Chapter 3 Route H full cold-start: `{c3_cold_start.get('status')}`
+- Chapter 3 Route H Fig. 3.16 Jacobi coverage: `{c3_jacobi_targets.get('status')}`
 - Fig. 3.10 period-q per-figure audit: `{c3_period_q.get('status')}`
 - Chapter 4 Route H DG source layer passed: `{bool(c4_route_h['status'] == 'pass')}`
 - Chapter 4 next decision: `{c4['decision']}`
