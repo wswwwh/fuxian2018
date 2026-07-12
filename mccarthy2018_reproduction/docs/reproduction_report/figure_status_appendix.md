@@ -11,7 +11,6 @@ Total figures: 54.
 |---|---:|
 | CR3BP corrected periodic-family reproduction | 1 |
 | CR3BP endpoint-corrected NRHO transfer audit | 2 |
-| CR3BP endpoint-corrected halo-Lyapunov transfer audit | 1 |
 | Route H / DE421 geometry baseline | 2 |
 | audited Route H fixed-time source-layer | 2 |
 | numerical CR3BP rendezvous-branch reproduction | 1 |
@@ -19,6 +18,7 @@ Total figures: 54.
 | numerical DG global manifold reproduction | 4 |
 | numerical DG manifold comparison | 2 |
 | numerical corrected Lissajous propagation reproduction | 1 |
+| numerical equal-Jacobi multiple-shooting transfer reproduction | 1 |
 | numerical quasi-periodic stable-manifold transfer reproduction | 1 |
 | numerical reproduction | 16 |
 | numerical two-angle stable-manifold reproduction | 1 |
@@ -883,16 +883,16 @@ Total figures: 54.
 | figure_id | 5.8 |
 | source_page | 106 |
 | script | figures/fig_5_08.py |
-| current_repro_level | CR3BP endpoint-corrected halo-Lyapunov transfer audit |
-| uses_proxy | partial |
+| current_repro_level | numerical equal-Jacobi multiple-shooting transfer reproduction |
+| uses_proxy | false |
 | main_data_source | data/computed/chapter5_earth_moon_halo_lyapunov_transfer_baseline.csv;data/computed/chapter5_halo_lyapunov_transfer_per_figure_audit.csv;data/computed/chapter5_bcr4bp_dynamics_audit.csv;data/computed/chapter5_bcr4bp_segment_correction_audit.csv;data/computed/chapter5_optimized_transfer_audit.csv;outputs/figures_png/fig_5_8.png;outputs/figures_pdf/fig_5_8.pdf |
-| key_physical_quantities | Earth-Moon halo-to-Lyapunov CR3BP baseline plus separate Route H/BCR4BP optimized-transfer source layer; accepted CR3BP halo-Lyapunov transfer rows 1; total delta-v 294.6245071767839 m/s; endpoint error 2.083434735432931e-06 km; continuity 9.280132972015876e-12; Jacobi span 2.472244631235299e-12; boundary Jacobi difference 0; original replacement status: endpoint_corrected_cr3bp_not_high_fidelity_replacement |
+| key_physical_quantities | Earth-Moon equal-Jacobi halo-to-Lyapunov multiple-shooting transfer; accepted CR3BP halo-Lyapunov transfer rows 1; total delta-v 294.6245071767839 m/s; endpoint error 2.083434735432931e-06 km; continuity 9.280132972015876e-12; Jacobi span 2.472244631235299e-12; boundary Jacobi difference 0; original replacement status: computed_multiple_shooting_transfer_replaces_corridor_proxy_high_fidelity_pending |
 | residual evidence | accepted source rows: 1; Route H dependency: accepted Route H upstream member for separate source-layer figure; BCR4BP dependency: 4 dynamics audit rows; 3 correction rows |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 470710; PDF bytes 231145; boundary: Per-figure endpoint-corrected CR3BP equal-Jacobi transfer row is accepted; the separate Route H/BCR4BP optimized source layer is still not a direct original Fig. 5.8 replacement. |
-| next_action | Promote further only after BCR4BP/ephemeris correction or original thesis transfer data are mapped to this specific Fig. 5.8 geometry. |
+| visual_status | PNG bytes 469662; PDF bytes 39015; boundary: The linear corridor proxy is removed and replaced by the accepted transfer trajectory and patch nodes. BCR4BP/ephemeris correction and original-thesis pointwise comparison remain pending. |
+| next_action | Correct this specific 186.9-day transfer in BCR4BP/ephemeris and compare it with the thesis delta-v and geometry. |
 
 ### Figure 5.9
 

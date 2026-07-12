@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import matplotlib.pyplot as plt
 
-from _chapter5_plotting import plot_nrho_scene, plot_surface, style_nrho_axis
+from _chapter5_plotting import plot_nrho_scene, style_nrho_axis
 from _figure_paths import PROJECT_ROOT
 from qp_orbits.application_scenarios import (
     NRHOTransferScene,
@@ -15,9 +15,9 @@ from qp_orbits.plot_style import apply_style, save_figure
 
 FIGURE_ID = "5.8"
 SOURCE_PAGE = 106
-REPRO_LEVEL = "shape-match + local numerical"
+REPRO_LEVEL = "numerical equal-Jacobi multiple-shooting transfer reproduction"
 SYSTEM = "Earth-Moon CR3BP equal-Jacobi halo-to-Lyapunov transfer"
-NOTES = "Corrected equal-energy boundaries and 186.9-day multiple-shooting baseline; grey corridor remains geometric."
+NOTES = "Corrected equal-energy boundaries and 186.9-day multiple-shooting transfer with patch nodes; no proxy corridor."
 
 
 def _style_axis(ax) -> None:
@@ -36,9 +36,24 @@ def main() -> None:
     fig = plt.figure(figsize=(8.7, 4.2), constrained_layout=True)
 
     ax = fig.add_subplot(121, projection="3d")
-    plot_surface(ax, baseline.corridor_surface, alpha=0.48)
     ax.plot(halo[:, 0], halo[:, 1], halo[:, 2], color="#1f8fd4", linewidth=1.2)
     ax.plot(lyapunov[:, 0], lyapunov[:, 1], lyapunov[:, 2], color="#a71930", linewidth=1.1)
+    ax.plot(
+        baseline.transfer_states[:, 0],
+        baseline.transfer_states[:, 1],
+        baseline.transfer_states[:, 2],
+        color="#555555",
+        linewidth=0.75,
+        alpha=0.72,
+    )
+    ax.scatter(
+        baseline.patch_states[:, 0],
+        baseline.patch_states[:, 1],
+        baseline.patch_states[:, 2],
+        color="#2ca25f",
+        s=8,
+        depthshade=False,
+    )
     _style_axis(ax)
     ax.text2D(0.06, 0.84, "Northern $L_2$\nUnstable Halo", transform=ax.transAxes, fontsize=8)
     ax.text2D(0.64, 0.80, "Planar $L_2$\nLyapunov Orbit", transform=ax.transAxes, fontsize=8)

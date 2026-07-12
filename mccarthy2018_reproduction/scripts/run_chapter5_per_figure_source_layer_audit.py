@@ -406,10 +406,10 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
         },
         {
             "figure_id": "5.8",
-            "current_source_layer": "Earth-Moon halo-to-Lyapunov CR3BP baseline plus separate Route H/BCR4BP optimized-transfer source layer",
-            "current_repro_level": "CR3BP endpoint-corrected halo-Lyapunov transfer audit",
-            "original_replacement_status": "endpoint_corrected_cr3bp_not_high_fidelity_replacement",
-            "uses_proxy": "partial",
+            "current_source_layer": "Earth-Moon equal-Jacobi halo-to-Lyapunov multiple-shooting transfer",
+            "current_repro_level": "numerical equal-Jacobi multiple-shooting transfer reproduction",
+            "original_replacement_status": "computed_multiple_shooting_transfer_replaces_corridor_proxy_high_fidelity_pending",
+            "uses_proxy": "false",
             "primary_evidence": "data/computed/chapter5_earth_moon_halo_lyapunov_transfer_baseline.csv",
             "supporting_evidence": f"{_rel(HALO_LYAPUNOV_TRANSFER_AUDIT)};{bcr4bp_source}",
             "route_h_dependency": "accepted Route H upstream member for separate source-layer figure",
@@ -424,8 +424,8 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
                 f"Jacobi span {metrics['halo_lyapunov_jacobi_span']}; "
                 f"boundary Jacobi difference {metrics['halo_lyapunov_boundary_jacobi']}"
             ),
-            "boundary": "Per-figure endpoint-corrected CR3BP equal-Jacobi transfer row is accepted; the separate Route H/BCR4BP optimized source layer is still not a direct original Fig. 5.8 replacement.",
-            "next_action": "Promote further only after BCR4BP/ephemeris correction or original thesis transfer data are mapped to this specific Fig. 5.8 geometry.",
+            "boundary": "The linear corridor proxy is removed and replaced by the accepted transfer trajectory and patch nodes. BCR4BP/ephemeris correction and original-thesis pointwise comparison remain pending.",
+            "next_action": "Correct this specific 186.9-day transfer in BCR4BP/ephemeris and compare it with the thesis delta-v and geometry.",
         },
         {
             "figure_id": "5.9",

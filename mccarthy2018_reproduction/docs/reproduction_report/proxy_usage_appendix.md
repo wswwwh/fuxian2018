@@ -43,7 +43,6 @@ comparison, and several Chapter 4/5 figures retain proxy or source-layer status.
 - Fig. 5.2: `proxy/schematic only`; proxy flag `true`; PNG bytes 87543; PDF bytes 13167; boundary: No numerical source-layer is required for the current schematic role.
 - Fig. 5.3: `proxy/schematic only`; proxy flag `true`; PNG bytes 64008; PDF bytes 12487; boundary: No numerical source-layer is required for the current schematic role.
 - Fig. 5.4: `proxy/schematic only`; proxy flag `true`; PNG bytes 205910; PDF bytes 17825; boundary: No numerical source-layer is required for the current schematic role.
-- Fig. 5.8: `CR3BP endpoint-corrected halo-Lyapunov transfer audit`; proxy flag `partial`; PNG bytes 470710; PDF bytes 231145; boundary: Per-figure endpoint-corrected CR3BP equal-Jacobi transfer row is accepted; the separate Route H/BCR4BP optimized source layer is still not a direct original Fig. 5.8 replacement.
 
 ## Figures That Must Not Be Overclaimed
 
