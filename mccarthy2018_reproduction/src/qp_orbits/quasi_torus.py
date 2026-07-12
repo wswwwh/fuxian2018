@@ -487,6 +487,36 @@ class FreeEnergyCurveCorrection:
 
 
 @dataclass(frozen=True)
+class DualGeometryCurveCorrection:
+    """Regularized free-time/free-rotation correction with y/z support targets."""
+
+    seed: StroboscopicInvariantCurveSeed
+    corrected_states: np.ndarray
+    corrected_mapped_states: np.ndarray
+    corrected_target_states: np.ndarray
+    corrected_points: np.ndarray
+    corrected_mapped_points: np.ndarray
+    corrected_target_points: np.ndarray
+    interpolation_matrix: np.ndarray
+    rotation_angle_rad: float
+    mapping_time: float
+    target_jacobi: float
+    target_y_support: float
+    target_z_support: float
+    residual_history: np.ndarray
+    energy_residual_history: np.ndarray
+    geometry_residual_history: np.ndarray
+    phase_residual_history: np.ndarray
+    correction_norm_history: np.ndarray
+    mapping_time_history: np.ndarray
+    rotation_history: np.ndarray
+
+    @property
+    def final_residual_norms(self) -> np.ndarray:
+        return self.residual_history[-1]
+
+
+@dataclass(frozen=True)
 class FixedJacobiFreeTimeRotationCurveCorrection:
     """Experimental Route B curve correction with fixed mean Jacobi and free time/rho."""
 
@@ -632,6 +662,7 @@ class CorrectedStroboscopicTorus:
         | FreeRotationCurveCorrection
         | FreeMappingTimeCurveCorrection
         | FreeEnergyCurveCorrection
+        | DualGeometryCurveCorrection
         | PseudoArclengthCurveCorrection
         | FixedFrequencyPseudoArclengthCorrection
         | FixedFrequencyEnergyCurveCorrection
@@ -2161,6 +2192,211 @@ def stroboscopic_curve_free_energy_correction(
     )
 
 
+def stroboscopic_curve_dual_geometry_correction(
+    seed: StroboscopicInvariantCurveSeed,
+    *,
+    target_jacobi: float,
+    target_y_support: float,
+    target_z_support: float,
+    initial_states: np.ndarray,
+    initial_mapping_time: float,
+    initial_rotation_angle_rad: float,
+    phase_reference_states: np.ndarray | None = None,
+    sharpness: float = 80.0,
+    regularization: float = 1.0e-6,
+    geometry_residual_scale: float = 1.0,
+    max_iterations: int = 24,
+    tolerance: float = 1.0e-9,
+    constraint_tolerance: float = 1.0e-9,
+    max_step: float = 0.01,
+    max_state_step: float = 5.0e-5,
+    max_mapping_time_step: float = 0.005,
+    max_rotation_step: float = 0.005,
+    rcond: float = 1.0e-11,
+) -> DualGeometryCurveCorrection:
+    """Correct one curve with smooth y/z support and mean-energy targets."""
+
+    states = np.array(initial_states, dtype=float, copy=True)
+    if states.shape != seed.initial_states.shape:
+        raise ValueError("initial_states must match the seed curve shape")
+    reference = states.copy() if phase_reference_states is None else np.array(
+        phase_reference_states, dtype=float, copy=True
+    )
+    if reference.shape != states.shape:
+        raise ValueError("phase_reference_states must match the seed curve shape")
+    if initial_mapping_time <= 0.0:
+        raise ValueError("initial_mapping_time must be positive")
+    if geometry_residual_scale <= 0.0 or not np.isfinite(geometry_residual_scale):
+        raise ValueError("geometry_residual_scale must be positive and finite")
+
+    mapping_time = float(initial_mapping_time)
+    rotation = float(initial_rotation_angle_rad % (2.0 * np.pi))
+    tangent = np.roll(reference, -1, axis=0) - np.roll(reference, 1, axis=0)
+    tangent_norm = float(np.linalg.norm(tangent))
+    if tangent_norm <= 1.0e-14:
+        raise RuntimeError("Phase reference has a degenerate curve tangent")
+    tangent /= tangent_norm
+
+    residual_history: list[np.ndarray] = []
+    energy_history: list[float] = []
+    geometry_history: list[np.ndarray] = []
+    phase_history: list[float] = []
+    correction_history: list[np.ndarray] = []
+    mapping_history: list[float] = []
+    rotation_history: list[float] = []
+    best_metric = np.inf
+    best: tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, float, float] | None = None
+
+    for _ in range(max_iterations + 1):
+        interpolation = _trigonometric_interpolation_matrix(
+            seed.phases, seed.phases + rotation
+        )
+        interpolation_derivative = _trigonometric_interpolation_derivative_matrix(
+            seed.phases, seed.phases + rotation
+        )
+        mapped, stms = _stroboscopic_map_and_stms(
+            states,
+            period=mapping_time,
+            mu=seed.mu,
+            max_step=max_step,
+        )
+        targets = interpolation @ states
+        residuals = mapped - targets
+        residual_norms = np.linalg.norm(residuals, axis=1)
+        energy_values = jacobi_constant(states, seed.mu)
+        energy_residual = float(np.mean(energy_values) - target_jacobi)
+        energy_gradient = _jacobi_gradient(states, seed.mu) / states.shape[0]
+        geometry_residuals, geometry_jacobian = _smooth_dual_geometry_constraints(
+            states,
+            target_y_support=target_y_support,
+            target_z_support=target_z_support,
+            sharpness=sharpness,
+        )
+        phase_residual = float(np.sum((states - reference) * tangent))
+        metric = max(
+            float(residual_norms.max()),
+            abs(energy_residual),
+            float(np.max(np.abs(geometry_residuals))),
+            abs(phase_residual),
+        )
+        residual_history.append(residual_norms)
+        energy_history.append(energy_residual)
+        geometry_history.append(geometry_residuals.copy())
+        phase_history.append(phase_residual)
+        mapping_history.append(mapping_time)
+        rotation_history.append(rotation)
+        if metric < best_metric:
+            best_metric = metric
+            best = (
+                states.copy(), mapped.copy(), targets.copy(), interpolation.copy(),
+                mapping_time, rotation,
+            )
+        if (
+            residual_norms.max() < tolerance
+            and abs(energy_residual) < constraint_tolerance
+            and np.max(np.abs(geometry_residuals)) < constraint_tolerance
+            and abs(phase_residual) < constraint_tolerance
+        ):
+            break
+        if len(residual_history) > max_iterations:
+            break
+
+        sample_count = states.shape[0]
+        state_size = states.size
+        jacobian = np.zeros((state_size + 4, state_size + 2), dtype=float)
+        for row in range(sample_count):
+            for col in range(sample_count):
+                block = -interpolation[row, col] * np.eye(6)
+                if row == col:
+                    block = block + stms[row]
+                jacobian[6 * row : 6 * row + 6, 6 * col : 6 * col + 6] = block
+            jacobian[6 * row : 6 * row + 6, state_size] = cr3bp_rhs(
+                mapping_time, mapped[row], seed.mu
+            )
+        jacobian[:state_size, state_size + 1] = -(
+            interpolation_derivative @ states
+        ).reshape(-1)
+        jacobian[state_size, :state_size] = energy_gradient.reshape(-1)
+        jacobian[state_size + 1 : state_size + 3, :state_size] = geometry_jacobian
+        jacobian[state_size + 3, :state_size] = tangent.reshape(-1)
+        right_hand_side = -np.concatenate(
+            [
+                residuals.reshape(-1),
+                np.array([energy_residual]),
+                geometry_residuals,
+                np.array([phase_residual]),
+            ]
+        )
+        row_scale = np.ones(state_size + 4, dtype=float)
+        row_scale[state_size + 1 : state_size + 3] = geometry_residual_scale
+        delta = _regularized_least_squares_step(
+            row_scale[:, None] * jacobian,
+            row_scale * right_hand_side,
+            regularization=regularization,
+            rcond=rcond,
+        )
+        state_delta = delta[:state_size].reshape(sample_count, 6)
+        mapping_delta = float(delta[state_size])
+        rotation_delta = float(delta[state_size + 1])
+        scale = 1.0
+        block_norms = np.linalg.norm(state_delta, axis=1)
+        if block_norms.max() > max_state_step:
+            scale = min(scale, max_state_step / float(block_norms.max()))
+        if abs(mapping_delta) > max_mapping_time_step:
+            scale = min(scale, max_mapping_time_step / abs(mapping_delta))
+        if abs(rotation_delta) > max_rotation_step:
+            scale = min(scale, max_rotation_step / abs(rotation_delta))
+        state_delta *= scale
+        mapping_delta *= scale
+        rotation_delta *= scale
+        correction_history.append(np.linalg.norm(state_delta, axis=1))
+        states += state_delta
+        mapping_time += mapping_delta
+        rotation = float((rotation + rotation_delta) % (2.0 * np.pi))
+        if mapping_time <= 0.0:
+            raise RuntimeError("Dual-geometry correction produced non-positive time")
+
+    if best is None:
+        raise RuntimeError("Dual-geometry correction did not evaluate a candidate")
+    best_states, best_mapped, best_targets, best_interpolation, best_time, best_rotation = best
+    if best_metric != metric:
+        residual_history.append(np.linalg.norm(best_mapped - best_targets, axis=1))
+        energy_history.append(float(np.mean(jacobi_constant(best_states, seed.mu)) - target_jacobi))
+        geometry_history.append(
+            _smooth_dual_geometry_constraints(
+                best_states,
+                target_y_support=target_y_support,
+                target_z_support=target_z_support,
+                sharpness=sharpness,
+            )[0]
+        )
+        phase_history.append(float(np.sum((best_states - reference) * tangent)))
+        mapping_history.append(best_time)
+        rotation_history.append(best_rotation)
+    return DualGeometryCurveCorrection(
+        seed=seed,
+        corrected_states=best_states,
+        corrected_mapped_states=best_mapped,
+        corrected_target_states=best_targets,
+        corrected_points=_project_to_mode_plane(best_states, seed.orbit_state, seed.mode_basis),
+        corrected_mapped_points=_project_to_mode_plane(best_mapped, seed.orbit_state, seed.mode_basis),
+        corrected_target_points=_project_to_mode_plane(best_targets, seed.orbit_state, seed.mode_basis),
+        interpolation_matrix=best_interpolation,
+        rotation_angle_rad=best_rotation,
+        mapping_time=best_time,
+        target_jacobi=float(target_jacobi),
+        target_y_support=float(target_y_support),
+        target_z_support=float(target_z_support),
+        residual_history=np.asarray(residual_history),
+        energy_residual_history=np.asarray(energy_history),
+        geometry_residual_history=np.asarray(geometry_history),
+        phase_residual_history=np.asarray(phase_history),
+        correction_norm_history=np.asarray(correction_history),
+        mapping_time_history=np.asarray(mapping_history),
+        rotation_history=np.asarray(rotation_history),
+    )
+
+
 def stroboscopic_curve_fixed_jacobi_free_time_rotation_correction(
     seed: StroboscopicInvariantCurveSeed,
     *,
@@ -3550,6 +3786,7 @@ def _sweep_corrected_curve_correction(
             (
                 FreeMappingTimeCurveCorrection,
                 FreeEnergyCurveCorrection,
+                DualGeometryCurveCorrection,
                 PseudoArclengthCurveCorrection,
                 FixedFrequencyPseudoArclengthCorrection,
                 FixedFrequencyEnergyCurveCorrection,
@@ -3590,6 +3827,7 @@ def sweep_corrected_curve_correction(
         | FreeRotationCurveCorrection
         | FreeMappingTimeCurveCorrection
         | FreeEnergyCurveCorrection
+        | DualGeometryCurveCorrection
         | PseudoArclengthCurveCorrection
         | FixedFrequencyPseudoArclengthCorrection
         | FixedFrequencyEnergyCurveCorrection
