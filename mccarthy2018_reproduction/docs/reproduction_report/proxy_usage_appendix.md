@@ -40,7 +40,6 @@ comparison, and several Chapter 4/5 figures retain proxy or source-layer status.
 
 ### Chapter 4
 
-- Fig. 4.2: `shape-match with corrected DG numerical overlay`; proxy flag `partial`; PNG bytes 128900; PDF bytes 22226; boundary: The stability trend is corrected local family evidence, not the original thesis-scale raw DG family.
 - Fig. 4.3: `corrected DG finite-amplitude manifold source layer`; proxy flag `partial`; PNG bytes 1287434; PDF bytes 507939; boundary: Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim.
 - Fig. 4.4: `corrected DG finite-amplitude manifold source layer`; proxy flag `partial`; PNG bytes 944066; PDF bytes 523825; boundary: Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim.
 - Fig. 4.5: `local corrected DG manifold source layer`; proxy flag `partial`; PNG bytes 1170185; PDF bytes 425848; boundary: Corrected numerical manifold evidence exists, but proxy/background context and missing original raw branch data prevent a full thesis-equivalence claim.

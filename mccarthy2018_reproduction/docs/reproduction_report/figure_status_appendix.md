@@ -22,12 +22,12 @@ Total figures: 54.
 | corrected DG global manifold source layer with proxy comparison | 1 |
 | corrected DG manifold source layer with proxy comparison | 1 |
 | local corrected DG manifold source layer | 2 |
+| numerical DG family reproduction with paper-digitization boundary | 1 |
 | numerical reproduction | 16 |
 | period-q multiple-shooting audit with q8 boundary | 1 |
 | physical-consistency baseline | 2 |
 | proxy/schematic only | 13 |
 | quantitative DG reproduction with torus-geometry boundary | 1 |
-| shape-match with corrected DG numerical overlay | 1 |
 | shape-match with local numerical overlay | 2 |
 
 ## Figure-Level Entries
@@ -633,16 +633,16 @@ Total figures: 54.
 | figure_id | 4.2 |
 | source_page | 87 |
 | script | figures/fig_4_02.py |
-| current_repro_level | shape-match with corrected DG numerical overlay |
-| uses_proxy | partial |
-| main_data_source | data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/figures_png/fig_4_2.png;outputs/figures_pdf/fig_4_2.pdf |
-| key_physical_quantities | corrected L1 quasi-halo / quasi-vertical DG stability families; halo residual <= 6.598221200700891e-12; vertical residual <= 2.025472152207718e-10; original replacement status: source_layer_not_full_family_replacement |
-| residual evidence | worst source residual: 2.025472152207718e-10; accepted rows: 1044; DG dependency: 216 halo rows; 396 high-order rows; 378 PALC rows; 54 vertical rows |
+| current_repro_level | numerical DG family reproduction with paper-digitization boundary |
+| uses_proxy | false |
+| main_data_source | data/computed/chapter4_fig42_stability_family_audit.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;outputs/figures_png/fig_4_2.png;outputs/figures_pdf/fig_4_2.pdf |
+| key_physical_quantities | accepted L1 constant-energy quasi-halo DG stability family; mapping time <= 12.42459244000286 days; stability index <= 776.6642040417618; original replacement status: computed_family_replaces_proxy_curve_pointwise_paper_comparison_pending |
+| residual evidence | worst source residual: 9.322175255756186e-10; accepted rows: 16; DG dependency: 216 halo rows; 396 high-order rows; 378 PALC rows; 54 vertical rows |
 | Jacobi evidence | N/A |
 | periodicity evidence | manifold growth ratio: N/A; manifold dependency: none |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 128900; PDF bytes 22226; boundary: The stability trend is corrected local family evidence, not the original thesis-scale raw DG family. |
-| next_action | Continue corrected families or compare against original stability indices if source data is found. |
+| visual_status | PNG bytes 86249; PDF bytes 16527; boundary: The analytic proxy curve has been removed and the accepted N=9/15/21 DG family reaches its mapping-time fold; direct digitization of the paper curve is still required for a pointwise visual-equivalence score. |
+| next_action | Digitize the paper curve and compare it pointwise against the accepted DG family without extrapolating beyond the computed fold. |
 
 ### Figure 4.3
 

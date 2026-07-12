@@ -28,6 +28,7 @@ CURVE_DG = DATA / "chapter4_corrected_curve_dg.csv"
 FIG41_AUDIT = DATA / "chapter4_fig41_reported_precision_audit.csv"
 FIG41_SPECTRUM = DATA / "chapter4_fig41_reported_precision_spectrum.csv"
 FIG41_STATES = DATA / "chapter4_fig41_reported_precision_states.csv"
+FIG42_AUDIT = DATA / "chapter4_fig42_stability_family_audit.csv"
 VERTICAL_DG = DATA / "chapter4_corrected_vertical_curve_dg.csv"
 HALO_DG_FAMILY = DATA / "chapter4_corrected_l1_constant_energy_halo_dg_family.csv"
 HALO_HIGH_ORDER_DG = DATA / "chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv"
@@ -190,6 +191,8 @@ def _metrics() -> dict[str, str]:
     curve_dg = _read_csv(CURVE_DG)
     fig41 = _read_csv(FIG41_AUDIT)
     fig41_pass = [row for row in fig41 if row.get("acceptance") == "pass"]
+    fig42 = _read_csv(FIG42_AUDIT)
+    fig42_pass = [row for row in fig42 if row.get("kind") == "quasi_halo" and row.get("acceptance") == "pass"]
     vertical_dg = _read_csv(VERTICAL_DG)
     halo_dg = _read_csv(HALO_DG_FAMILY)
     halo_high = _read_csv(HALO_HIGH_ORDER_DG)
@@ -202,6 +205,10 @@ def _metrics() -> dict[str, str]:
         "fig41_jacobi_span": _fmt(_max(fig41_pass, "curve_jacobi_span")),
         "fig41_nu_error": _fmt(_max(fig41_pass, "stability_index_error")),
         "fig41_ring_span": _fmt(_max(fig41_pass, "unstable_ring_relative_span")),
+        "fig42_pass_rows": str(len(fig42_pass)),
+        "fig42_max_time": _fmt(_max(fig42_pass, "mapping_time_days")),
+        "fig42_max_nu": _fmt(_max(fig42_pass, "stability_index")),
+        "fig42_residual": _fmt(_max(fig42_pass, "curve_residual_norm")),
         "curve_dg_rows": str(len(curve_dg)),
         "curve_dg_residual": _fmt(_max(curve_dg, "curve_residual_norm")),
         "curve_dg_det_error": _fmt(abs((_max(curve_dg, "determinant") or 1.0) - 1.0)),
@@ -274,12 +281,12 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
         },
         {
             "figure_id": "4.2",
-            "current_source_layer": "corrected L1 quasi-halo / quasi-vertical DG stability families",
-            "current_repro_level": "shape-match with corrected DG numerical overlay",
-            "original_replacement_status": "source_layer_not_full_family_replacement",
-            "uses_proxy": "partial",
-            "primary_evidence": halo_dg_source,
-            "supporting_evidence": _rel(VERTICAL_DG),
+            "current_source_layer": "accepted L1 constant-energy quasi-halo DG stability family",
+            "current_repro_level": "numerical DG family reproduction with paper-digitization boundary",
+            "original_replacement_status": "computed_family_replaces_proxy_curve_pointwise_paper_comparison_pending",
+            "uses_proxy": "false",
+            "primary_evidence": _rel(FIG42_AUDIT),
+            "supporting_evidence": halo_dg_source,
             "route_h_dependency": "none",
             "dg_dependency": (
                 f"{metrics['halo_dg_rows']} halo rows; {metrics['halo_high_order_rows']} "
@@ -287,21 +294,16 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
                 f"{metrics['vertical_dg_rows']} vertical rows"
             ),
             "manifold_dependency": "none",
-            "accepted_rows": str(
-                int(metrics["halo_dg_rows"])
-                + int(metrics["halo_high_order_rows"])
-                + int(metrics["halo_palc_rows"])
-                + int(metrics["vertical_dg_rows"])
-            ),
-            "worst_residual": _max_fmt(metrics["halo_dg_residual"], metrics["vertical_dg_residual"]),
+            "accepted_rows": metrics["fig42_pass_rows"],
+            "worst_residual": metrics["fig42_residual"],
             "jacobi_drift": "N/A",
             "growth_ratio": "N/A",
             "best_metric": (
-                f"halo residual <= {metrics['halo_dg_residual']}; vertical residual <= "
-                f"{metrics['vertical_dg_residual']}"
+                f"mapping time <= {metrics['fig42_max_time']} days; stability index <= "
+                f"{metrics['fig42_max_nu']}"
             ),
-            "boundary": "The stability trend is corrected local family evidence, not the original thesis-scale raw DG family.",
-            "next_action": "Continue corrected families or compare against original stability indices if source data is found.",
+            "boundary": "The analytic proxy curve has been removed and the accepted N=9/15/21 DG family reaches its mapping-time fold; direct digitization of the paper curve is still required for a pointwise visual-equivalence score.",
+            "next_action": "Digitize the paper curve and compare it pointwise against the accepted DG family without extrapolating beyond the computed fold.",
         },
     ]
     manifold_specs = {
