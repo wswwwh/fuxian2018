@@ -14,6 +14,7 @@
 - Internally strict fixed-time anchors: `3/4`
 - Projection artifacts present: `4/4`
 - Curve-state target groups present: `4/4`
+- Independently revalidated targets: `4/4`
 
 ## Reproduction Chain
 

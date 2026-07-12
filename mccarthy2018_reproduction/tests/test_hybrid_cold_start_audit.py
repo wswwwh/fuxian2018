@@ -25,6 +25,7 @@ class HybridColdStartAuditTests(unittest.TestCase):
         self.assertEqual(int(row["paper_precision_target_count"]), 4)
         self.assertGreaterEqual(int(row["strict_fixed_time_target_count"]), 3)
         self.assertEqual(int(row["state_target_count"]), 4)
+        self.assertEqual(int(row["independently_revalidated_target_count"]), 4)
 
 
 if __name__ == "__main__":

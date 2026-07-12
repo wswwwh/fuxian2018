@@ -20,6 +20,7 @@ ATTEMPTS_PATH = DATA / "chapter3_fixed_mapping_cold_start_full_attempts.csv"
 COLD_AUDIT_PATH = DATA / "chapter3_fixed_mapping_cold_start_full_audit.csv"
 COVERAGE_PATH = DATA / "chapter3_route_h_fixed_time_target_coverage_audit.csv"
 TARGET_STATES_PATH = DATA / "chapter3_route_h_fixed_time_target_states.csv"
+REVALIDATION_PATH = DATA / "chapter3_route_h_target_state_revalidation.csv"
 CHECKPOINT_PATH = (
     PROJECT_ROOT
     / "outputs"
@@ -42,6 +43,7 @@ FIELDS = (
     "strict_fixed_time_target_count",
     "projection_artifact_count",
     "state_target_count",
+    "independently_revalidated_target_count",
     "chain_reproducible",
     "boundary",
 )
@@ -96,6 +98,8 @@ def build_row() -> dict[str, object]:
     projection_count = sum(path.is_file() for path in projection_paths)
     target_states = _read(TARGET_STATES_PATH)
     state_target_count = len({row["target_jacobi"] for row in target_states})
+    revalidation = _read(REVALIDATION_PATH)
+    revalidated_count = sum(row.get("status") == "pass" for row in revalidation)
     chain_reproducible = bool(
         zero_attempts
         and controlled_fold
@@ -108,6 +112,8 @@ def build_row() -> dict[str, object]:
         and strict_count >= 3
         and projection_count == 4
         and state_target_count == 4
+        and len(revalidation) == 4
+        and revalidated_count == 4
     )
     return {
         "status": "pass" if chain_reproducible else "fail",
@@ -122,6 +128,7 @@ def build_row() -> dict[str, object]:
         "strict_fixed_time_target_count": strict_count,
         "projection_artifact_count": projection_count,
         "state_target_count": state_target_count,
+        "independently_revalidated_target_count": revalidated_count,
         "chain_reproducible": chain_reproducible,
         "boundary": (
             "The monolithic natural/rotation continuation still terminates at its fold. "
@@ -154,6 +161,7 @@ def _write(row: dict[str, object]) -> None:
 - Internally strict fixed-time anchors: `{row['strict_fixed_time_target_count']}/4`
 - Projection artifacts present: `{row['projection_artifact_count']}/4`
 - Curve-state target groups present: `{row['state_target_count']}/4`
+- Independently revalidated targets: `{row['independently_revalidated_target_count']}/4`
 
 ## Reproduction Chain
 
