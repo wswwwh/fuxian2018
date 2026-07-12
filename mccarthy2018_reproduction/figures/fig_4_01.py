@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import csv
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -9,41 +10,44 @@ from _figure_paths import PROJECT_ROOT
 from _chapter4_plotting import add_earth_moon_labels
 from qp_orbits.constants import SYSTEMS
 from qp_orbits.plot_style import apply_style, save_figure
-from qp_orbits.torus_stability import (
-    chapter4_quasi_halo_orbit,
-    corrected_stroboscopic_curve_dg,
-    dg_eigenvalue_loops,
-    display_scaled_corrected_dg_spectrum,
-)
-
-
 FIGURE_ID = "4.1"
 SOURCE_PAGE = 86
-REPRO_LEVEL = "shape-match"
+REPRO_LEVEL = "numerical reproduction"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Proxy thesis-scale torus with display-scaled corrected local DG eigenvalue markers."
+NOTES = "N=25 corrected L2 quasi-halo at paper-reported JC precision with raw DG spectrum."
+
+
+def _read_rows(path):
+    with path.open(newline="", encoding="utf-8") as stream:
+        return list(csv.DictReader(stream))
 
 
 def main() -> None:
     apply_style()
-    system = SYSTEMS["earth_moon"]
-    member = chapter4_quasi_halo_orbit(system)
-    loops = dg_eigenvalue_loops(samples=28)
-    corrected_spectrum = display_scaled_corrected_dg_spectrum(
-        corrected_stroboscopic_curve_dg(system.mu, samples=15)
+    _ = SYSTEMS["earth_moon"]
+    state_rows = _read_rows(
+        PROJECT_ROOT / "data" / "computed" / "chapter4_fig41_reported_precision_states.csv"
     )
+    spectrum_rows = _read_rows(
+        PROJECT_ROOT / "data" / "computed" / "chapter4_fig41_reported_precision_spectrum.csv"
+    )
+    time_count = 1 + max(int(row["time_index"]) for row in state_rows)
+    curve_count = 1 + max(int(row["curve_index"]) for row in state_rows)
+    surface = np.array(
+        [[float(row[name]) for name in ("x", "y", "z")] for row in state_rows]
+    ).reshape(time_count, curve_count, 3)
 
     fig = plt.figure(figsize=(8.2, 3.65), constrained_layout=True)
     ax3d = fig.add_subplot(1, 2, 1, projection="3d")
-    surface = member.surface
     ax3d.plot_surface(surface[:, :, 0], surface[:, :, 1], surface[:, :, 2], color="#168bd2",
                       edgecolor="none", linewidth=0, alpha=0.72, shade=True)
-    curve = member.invariant_curve
+    curve = surface[0]
     ax3d.plot(curve[:, 0], curve[:, 1], curve[:, 2], color="#168bd2", linewidth=1.4)
+    ax3d.plot(surface[:, 0, 0], surface[:, 0, 1], surface[:, 0, 2], color="#168bd2", linewidth=1.6)
     add_earth_moon_labels(ax3d, include_l1=False, include_l2=False)
-    ax3d.set_xlim(0.94, 1.04)
-    ax3d.set_ylim(-0.06, 0.06)
-    ax3d.set_zlim(0.0, 0.18)
+    ax3d.set_xlim(0.982, 1.030)
+    ax3d.set_ylim(-0.052, 0.052)
+    ax3d.set_zlim(-0.195, 0.018)
     ax3d.set_xlabel("X [nd]", labelpad=-6)
     ax3d.set_ylabel("Y [nd]", labelpad=-6)
     ax3d.set_zlabel("Z [nd]", labelpad=-6)
@@ -52,23 +56,16 @@ def main() -> None:
     ax3d.tick_params(labelsize=8, pad=-2)
 
     ax = fig.add_subplot(1, 2, 2)
-    for name, color, size in [("outer", "#b2182b", 18), ("middle", "black", 16), ("inner", "#168bd2", 16)]:
-        values = loops[name]
-        closed = np.append(values, values[0])
-        ax.plot(np.real(closed), np.imag(closed), color=color, linewidth=1.4)
-        ax.scatter(np.real(values), np.imag(values), color=color, s=size)
-    for name, color in [("unstable", "#ef8a62"), ("unit", "0.35"), ("stable", "#56b4e9")]:
-        values = corrected_spectrum[name]
-        ax.scatter(
-            np.real(values),
-            np.imag(values),
-            marker="x",
-            color=color,
-            s=14,
-            linewidths=0.7,
-            alpha=0.85,
-            zorder=4,
+    colors = {"unstable": "#b2182b", "unit": "0.25", "stable": "#168bd2"}
+    for name in ("unstable", "unit", "stable"):
+        values = np.array(
+            [complex(float(row["real"]), float(row["imag"])) for row in spectrum_rows if row["classification"] == name]
         )
+        if name != "unit":
+            ordered = values[np.argsort(np.angle(values))]
+            closed = np.append(ordered, ordered[0])
+            ax.plot(np.real(closed), np.imag(closed), color=colors[name], linewidth=1.0, alpha=0.8)
+        ax.scatter(np.real(values), np.imag(values), color=colors[name], s=14)
     ax.axhline(0.0, color="0.82", linewidth=0.8)
     ax.axvline(0.0, color="0.82", linewidth=0.8)
     ax.set_xlabel(r"$\mathrm{Re}(\lambda)$")

@@ -25,6 +25,9 @@ FIGURES_PDF = PROJECT_ROOT / "outputs" / "figures_pdf"
 
 FIGURE_VALIDATION = DATA / "figure_validation_table.csv"
 CURVE_DG = DATA / "chapter4_corrected_curve_dg.csv"
+FIG41_AUDIT = DATA / "chapter4_fig41_reported_precision_audit.csv"
+FIG41_SPECTRUM = DATA / "chapter4_fig41_reported_precision_spectrum.csv"
+FIG41_STATES = DATA / "chapter4_fig41_reported_precision_states.csv"
 VERTICAL_DG = DATA / "chapter4_corrected_vertical_curve_dg.csv"
 HALO_DG_FAMILY = DATA / "chapter4_corrected_l1_constant_energy_halo_dg_family.csv"
 HALO_HIGH_ORDER_DG = DATA / "chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv"
@@ -185,6 +188,8 @@ def _route_h_metrics() -> dict[str, str]:
 
 def _metrics() -> dict[str, str]:
     curve_dg = _read_csv(CURVE_DG)
+    fig41 = _read_csv(FIG41_AUDIT)
+    fig41_pass = [row for row in fig41 if row.get("acceptance") == "pass"]
     vertical_dg = _read_csv(VERTICAL_DG)
     halo_dg = _read_csv(HALO_DG_FAMILY)
     halo_high = _read_csv(HALO_HIGH_ORDER_DG)
@@ -192,6 +197,11 @@ def _metrics() -> dict[str, str]:
     manifold_rows = _read_csv(MANIFOLD_VALIDATION)
     route_h = _route_h_metrics()
     return {
+        "fig41_pass_rows": str(len(fig41_pass)),
+        "fig41_residual": _fmt(_max(fig41_pass, "curve_residual_norm")),
+        "fig41_jacobi_span": _fmt(_max(fig41_pass, "curve_jacobi_span")),
+        "fig41_nu_error": _fmt(_max(fig41_pass, "stability_index_error")),
+        "fig41_ring_span": _fmt(_max(fig41_pass, "unstable_ring_relative_span")),
         "curve_dg_rows": str(len(curve_dg)),
         "curve_dg_residual": _fmt(_max(curve_dg, "curve_residual_norm")),
         "curve_dg_det_error": _fmt(abs((_max(curve_dg, "determinant") or 1.0) - 1.0)),
@@ -242,25 +252,25 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
     specs = [
         {
             "figure_id": "4.1",
-            "current_source_layer": "corrected L2 quasi-halo discrete-curve DG spectrum",
-            "current_repro_level": "shape-match with corrected DG numerical overlay",
-            "original_replacement_status": "source_layer_not_thesis_scale_replacement",
-            "uses_proxy": "partial",
-            "primary_evidence": _rel(CURVE_DG),
-            "supporting_evidence": _rel(MANIFOLD_VALIDATION),
+            "current_source_layer": "N=25 corrected L2 quasi-halo DG at paper-reported Jacobi precision",
+            "current_repro_level": "quantitative DG reproduction with torus-geometry boundary",
+            "original_replacement_status": "dg_target_reproduced_geometry_not_yet_thesis_equivalent",
+            "uses_proxy": "false",
+            "primary_evidence": f"{_rel(FIG41_AUDIT)};{_rel(FIG41_SPECTRUM)}",
+            "supporting_evidence": _rel(FIG41_STATES),
             "route_h_dependency": "none",
-            "dg_dependency": f"{metrics['curve_dg_rows']} corrected DG eigenvalue rows",
+            "dg_dependency": "150 raw DG eigenvalues; 25 unstable, 100 unit, 25 stable",
             "manifold_dependency": "none",
-            "accepted_rows": metrics["curve_dg_rows"],
-            "worst_residual": metrics["curve_dg_residual"],
-            "jacobi_drift": "N/A",
+            "accepted_rows": metrics["fig41_pass_rows"],
+            "worst_residual": metrics["fig41_residual"],
+            "jacobi_drift": metrics["fig41_jacobi_span"],
             "growth_ratio": "N/A",
             "best_metric": (
-                f"curve residual <= {metrics['curve_dg_residual']}; determinant error approx "
-                f"{metrics['curve_dg_det_error']}"
+                f"nu error {metrics['fig41_nu_error']}; unstable-ring relative span "
+                f"{metrics['fig41_ring_span']}; N=25"
             ),
-            "boundary": "Current DG spectrum is corrected numerical evidence, but display scaling and original raw thesis branch data remain unavailable.",
-            "next_action": "Use corrected DG rows for source-layer claims; only promote to exact thesis replacement with original branch-scale comparison.",
+            "boundary": "The raw N=25 DG spectrum and nu=1.3837 target are reproduced at an internal Jacobi value that rounds to the paper's 3.044, but the accepted member is a near-periodic small-amplitude torus and does not yet prove the finite-amplitude geometry in panel (a).",
+            "next_action": "Continue a finite-amplitude L2 quasi-halo branch while retaining the reported-precision Jacobi and DG stability gates before claiming full panel replacement.",
         },
         {
             "figure_id": "4.2",

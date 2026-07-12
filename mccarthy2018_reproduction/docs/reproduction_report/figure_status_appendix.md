@@ -26,7 +26,8 @@ Total figures: 54.
 | period-q multiple-shooting audit with q8 boundary | 1 |
 | physical-consistency baseline | 2 |
 | proxy/schematic only | 13 |
-| shape-match with corrected DG numerical overlay | 2 |
+| quantitative DG reproduction with torus-geometry boundary | 1 |
+| shape-match with corrected DG numerical overlay | 1 |
 | shape-match with local numerical overlay | 2 |
 
 ## Figure-Level Entries
@@ -614,16 +615,16 @@ Total figures: 54.
 | figure_id | 4.1 |
 | source_page | 86 |
 | script | figures/fig_4_01.py |
-| current_repro_level | shape-match with corrected DG numerical overlay |
-| uses_proxy | partial |
-| main_data_source | data/computed/chapter4_corrected_curve_dg.csv;data/computed/chapter4_manifold_validation.csv;outputs/figures_png/fig_4_1.png;outputs/figures_pdf/fig_4_1.pdf |
-| key_physical_quantities | corrected L2 quasi-halo discrete-curve DG spectrum; curve residual <= 6.123769645778951e-11; determinant error approx 1.430574991800881e-09; original replacement status: source_layer_not_thesis_scale_replacement |
-| residual evidence | worst source residual: 6.123769645778951e-11; accepted rows: 90; DG dependency: 90 corrected DG eigenvalue rows |
-| Jacobi evidence | N/A |
+| current_repro_level | quantitative DG reproduction with torus-geometry boundary |
+| uses_proxy | false |
+| main_data_source | data/computed/chapter4_fig41_reported_precision_audit.csv;data/computed/chapter4_fig41_reported_precision_spectrum.csv;data/computed/chapter4_fig41_reported_precision_states.csv;outputs/figures_png/fig_4_1.png;outputs/figures_pdf/fig_4_1.pdf |
+| key_physical_quantities | N=25 corrected L2 quasi-halo DG at paper-reported Jacobi precision; nu error 1.61084451932858e-06; unstable-ring relative span 9.995639762656813e-07; N=25; original replacement status: dg_target_reproduced_geometry_not_yet_thesis_equivalent |
+| residual evidence | worst source residual: 1.994777522724045e-11; accepted rows: 1; DG dependency: 150 raw DG eigenvalues; 25 unstable, 100 unit, 25 stable |
+| Jacobi evidence | 3.641531520770513e-14 |
 | periodicity evidence | manifold growth ratio: N/A; manifold dependency: none |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 304877; PDF bytes 71095; boundary: Current DG spectrum is corrected numerical evidence, but display scaling and original raw thesis branch data remain unavailable. |
-| next_action | Use corrected DG rows for source-layer claims; only promote to exact thesis replacement with original branch-scale comparison. |
+| visual_status | PNG bytes 230222; PDF bytes 62157; boundary: The raw N=25 DG spectrum and nu=1.3837 target are reproduced at an internal Jacobi value that rounds to the paper's 3.044, but the accepted member is a near-periodic small-amplitude torus and does not yet prove the finite-amplitude geometry in panel (a). |
+| next_action | Continue a finite-amplitude L2 quasi-halo branch while retaining the reported-precision Jacobi and DG stability gates before claiming full panel replacement. |
 
 ### Figure 4.2
 

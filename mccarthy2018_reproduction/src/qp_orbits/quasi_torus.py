@@ -29,6 +29,7 @@ from .periodic_orbits import (
     planar_lyapunov_linear_guess,
     propagate_periodic_orbit,
     spatial_symmetric_family,
+    spatial_symmetric_pseudo_arclength_family,
     target_spatial_orbit_jacobi,
     vertical_symmetric_family,
 )
@@ -930,37 +931,111 @@ def stroboscopic_spatial_frequency_seed(
     )
 
 
+@lru_cache(maxsize=2)
+def _l2_folded_halo_family(mu: float) -> tuple:
+    """Return the corrected low-period L2 halo branch through its fold."""
+
+    natural = spatial_symmetric_family(
+        mu,
+        np.array([0.001, 0.004, 0.008, 0.014, 0.024, 0.040, 0.060, 0.070, 0.075]),
+        point="L2",
+        seed_x_amplitude=-0.002,
+        family_label="halo",
+        max_iterations=40,
+    )
+    return tuple(
+        spatial_symmetric_pseudo_arclength_family(
+            natural[-2:],
+            members=175,
+            step_size=0.01,
+            max_iterations=60,
+            max_delta_norm=0.10,
+        )
+    )
+
+
 def stroboscopic_spatial_jacobi_seed(
     mu: float,
     *,
     target_jacobi: float = 3.1389,
     family_label: str,
+    point: str = "L1",
     mode_component: int,
     mode_amplitude: float,
     samples: int = 11,
     curve_samples: int = 240,
 ) -> StroboscopicInvariantCurveSeed:
-    """Target an L1 periodic boundary at fixed Jacobi constant and seed a curve."""
+    """Target an L1/L2 periodic boundary at fixed Jacobi constant and seed a curve."""
 
     label = family_label.lower()
     if label not in {"halo", "vertical"}:
         raise ValueError("family_label must be 'halo' or 'vertical'")
+    point_name = point.upper()
+    if point_name not in {"L1", "L2"}:
+        raise ValueError("point must be 'L1' or 'L2'")
     vertical_mode = label == "vertical"
     z_amplitudes = (
         np.r_[np.arange(0.005, 0.0201, 0.0025), np.arange(0.025, 0.1051, 0.005)]
         if vertical_mode
         else np.arange(0.005, 0.0601, 0.005)
     )
-    targeted = target_spatial_orbit_jacobi(
-        mu,
-        target_jacobi=target_jacobi,
-        z_amplitudes=z_amplitudes,
-        point="L1",
-        family_label=label,
-        vertical_mode=vertical_mode,
-        seed_x_amplitude=0.002,
-    )
-    orbit = targeted.orbit
+    if point_name == "L2" and label == "halo":
+        folded = _l2_folded_halo_family(mu)
+        errors = np.array([item.jacobi - target_jacobi for item in folded])
+        crossings = np.flatnonzero(errors[:-1] * errors[1:] <= 0.0)
+        if crossings.size == 0:
+            raise ValueError("folded L2 halo branch does not bracket the target Jacobi constant")
+        crossing = min(
+            (int(index) for index in crossings),
+            key=lambda index: folded[index].fixed_z0 + folded[index + 1].fixed_z0,
+        )
+        orbit_a, orbit_b = folded[crossing], folded[crossing + 1]
+        error_a, error_b = errors[crossing], errors[crossing + 1]
+        orbit = orbit_a if abs(error_a) <= abs(error_b) else orbit_b
+        for _ in range(12):
+            if abs(error_b - error_a) > np.finfo(float).eps:
+                trial_z = orbit_a.fixed_z0 - error_a * (
+                    orbit_b.fixed_z0 - orbit_a.fixed_z0
+                ) / (error_b - error_a)
+            else:
+                trial_z = 0.5 * (orbit_a.fixed_z0 + orbit_b.fixed_z0)
+            low_z, high_z = sorted((orbit_a.fixed_z0, orbit_b.fixed_z0))
+            if not low_z < trial_z < high_z:
+                trial_z = 0.5 * (orbit_a.fixed_z0 + orbit_b.fixed_z0)
+            nearby = orbit_a if abs(trial_z - orbit_a.fixed_z0) <= abs(trial_z - orbit_b.fixed_z0) else orbit_b
+            trial = correct_spatial_symmetric_orbit(
+                mu,
+                z0=float(trial_z),
+                point="L2",
+                seed_x_amplitude=-0.002,
+                seed_orbit=nearby,
+                family_label="halo",
+                max_iterations=40,
+            )
+            trial_error = trial.jacobi - target_jacobi
+            orbit = trial
+            if abs(trial_error) <= 1.0e-11:
+                break
+            if error_a * trial_error <= 0.0:
+                orbit_b, error_b = trial, trial_error
+            else:
+                orbit_a, error_a = trial, trial_error
+        else:
+            raise RuntimeError(
+                "folded L2 halo Jacobi targeting did not converge; "
+                f"best error={orbit.jacobi - target_jacobi:.3e}"
+            )
+    else:
+        targeted = target_spatial_orbit_jacobi(
+            mu,
+            target_jacobi=target_jacobi,
+            z_amplitudes=z_amplitudes,
+            point=point_name,
+            family_label=label,
+            vertical_mode=vertical_mode,
+            seed_x_amplitude=-0.002 if point_name == "L2" else 0.002,
+        )
+        orbit = targeted.orbit
     return _stroboscopic_invariant_curve_seed_from_orbit(
         mu,
         orbit_state=orbit.initial_state,
