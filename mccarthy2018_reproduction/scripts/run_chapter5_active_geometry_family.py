@@ -46,6 +46,7 @@ def main() -> None:
     parser.add_argument("--time-slices", type=int, default=33)
     parser.add_argument("--phase-samples", type=int, default=128)
     parser.add_argument("--initial-relative-y-step", type=float)
+    parser.add_argument("--max-z-correction-km", type=float, default=250.0)
     args = parser.parse_args()
     if args.additional_members < 0:
         raise ValueError("additional-members must be non-negative")
@@ -57,6 +58,8 @@ def main() -> None:
         raise ValueError("time-slices and phase-samples must be at least three")
     if args.initial_relative_y_step is not None and args.initial_relative_y_step <= 0.0:
         raise ValueError("initial-relative-y-step must be positive")
+    if args.max_z_correction_km < 0.0:
+        raise ValueError("max-z-correction-km must be non-negative")
     system = SYSTEMS["sun_earth"]
     seed_data = np.load(SEED_SOURCE)
     data = np.load(CHECKPOINT)
@@ -116,9 +119,14 @@ def main() -> None:
     initial_full_z_km = float(
         np.max(np.abs(initial_surface[:, :, 2])) * system.length_unit_km
     )
-    z_event_target = initial_z_support + (
-        args.z_target_km - initial_full_z_km
-    ) / system.length_unit_km
+    z_correction_km = float(
+        np.clip(
+            args.z_target_km - initial_full_z_km,
+            -args.max_z_correction_km,
+            args.max_z_correction_km,
+        )
+    )
+    z_event_target = initial_z_support + z_correction_km / system.length_unit_km
     last = identity
     for _ in range(args.additional_members):
         correction = None
@@ -225,6 +233,7 @@ def main() -> None:
         ),
         "event_time_slices": args.time_slices,
         "event_phase_samples": args.phase_samples,
+        "batch_z_correction_km": z_correction_km,
     }
     with OUTPUT.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=list(row))
@@ -242,6 +251,7 @@ def main() -> None:
 - Closure residual: `{row['closure_residual']:.3e}`
 - z target error: `{row['z_target_error_km']:+.3f}` km
 - Event grid: `{args.time_slices} x {args.phase_samples}`
+- Applied batch z correction: `{z_correction_km:+.3f}` km
 - Target pair accepted: `false`
 
 The family uses active-event relocation after every accepted member and an
