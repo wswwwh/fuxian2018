@@ -163,6 +163,106 @@ def _propagated_smooth_geometry_constraints(
     return residuals, state_jacobian, time_jacobian
 
 
+def _propagated_active_geometry_constraints(
+    initial_states: np.ndarray,
+    *,
+    source_phases: np.ndarray,
+    mapping_time: float,
+    rotation_angle_rad: float,
+    mu: float,
+    time_fractions: np.ndarray,
+    phase_samples: int,
+    target_y_support: float,
+    target_z_support: float,
+    max_step: float = 0.01,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Constrain active propagated y/z maxima and return STM sensitivities."""
+
+    states = np.asarray(initial_states, dtype=float)
+    phases = np.asarray(source_phases, dtype=float)
+    fractions = np.asarray(time_fractions, dtype=float)
+    if states.ndim != 2 or states.shape[1] != 6:
+        raise ValueError("initial_states must have shape (samples, 6)")
+    if phases.shape != (states.shape[0],):
+        raise ValueError("source_phases must match the state sample count")
+    if phase_samples < 3:
+        raise ValueError("phase_samples must be at least three")
+    if mapping_time <= 0.0 or not np.isfinite(mapping_time):
+        raise ValueError("mapping_time must be positive and finite")
+    if fractions.ndim != 1 or fractions.size < 1:
+        raise ValueError("time_fractions must be a non-empty vector")
+    if np.any(fractions < 0.0) or np.any(fractions > 1.0) or np.any(np.diff(fractions) < 0.0):
+        raise ValueError("time_fractions must be sorted within [0, 1]")
+
+    times = mapping_time * fractions
+    solution = integrate_states_and_stms(
+        states,
+        (0.0, mapping_time),
+        mu,
+        t_eval=times,
+        max_step=max_step,
+    )
+    if not solution.success:
+        raise RuntimeError(solution.message)
+    values = solution.y.T.reshape(fractions.size, states.shape[0], 42)
+    propagated = values[:, :, :6]
+    stms = values[:, :, 6:].reshape(fractions.size, states.shape[0], 6, 6)
+    dense_phases = np.linspace(0.0, 2.0 * np.pi, phase_samples, endpoint=False)
+    surfaces = np.empty((fractions.size, phase_samples, 2), dtype=float)
+    interpolations = []
+    interpolation_derivatives = []
+    for time_index, fraction in enumerate(fractions):
+        query = dense_phases - fraction * rotation_angle_rad
+        interpolation = _trigonometric_interpolation_matrix(phases, query)
+        derivative = _trigonometric_interpolation_derivative_matrix(phases, query)
+        interpolations.append(interpolation)
+        interpolation_derivatives.append(derivative)
+        surfaces[time_index, :, 0] = interpolation @ propagated[time_index, :, 1]
+        surfaces[time_index, :, 1] = interpolation @ propagated[time_index, :, 2]
+
+    residuals = np.empty(2, dtype=float)
+    state_jacobian = np.zeros((2, states.size), dtype=float)
+    time_jacobian = np.zeros(2, dtype=float)
+    rotation_jacobian = np.zeros(2, dtype=float)
+    events = np.empty((2, 4), dtype=float)
+    for row, (component, target) in enumerate(
+        zip((1, 2), (target_y_support, target_z_support))
+    ):
+        active_flat = int(np.argmax(np.abs(surfaces[:, :, row])))
+        time_index, phase_index = np.unravel_index(
+            active_flat, surfaces[:, :, row].shape
+        )
+        coordinate = float(surfaces[time_index, phase_index, row])
+        sign = 1.0 if coordinate >= 0.0 else -1.0
+        residuals[row] = abs(coordinate) - target
+        weights = interpolations[time_index][phase_index]
+        for sample_index, weight in enumerate(weights):
+            start = 6 * sample_index
+            state_jacobian[row, start : start + 6] = (
+                sign * weight * stms[time_index, sample_index, component, :]
+            )
+            time_jacobian[row] += (
+                sign
+                * weight
+                * fractions[time_index]
+                * cr3bp_rhs(
+                    times[time_index],
+                    propagated[time_index, sample_index],
+                    mu,
+                )[component]
+            )
+        rotation_jacobian[row] = (
+            -sign
+            * fractions[time_index]
+            * float(
+                interpolation_derivatives[time_index][phase_index]
+                @ propagated[time_index, :, component]
+            )
+        )
+        events[row] = (time_index, phase_index, sign, coordinate)
+    return residuals, state_jacobian, time_jacobian, rotation_jacobian, events
+
+
 def _regularized_least_squares_step(
     jacobian: np.ndarray,
     right_hand_side: np.ndarray,
@@ -2265,6 +2365,7 @@ def stroboscopic_curve_dual_geometry_correction(
     initial_rotation_angle_rad: float,
     phase_reference_states: np.ndarray | None = None,
     geometry_time_fractions: np.ndarray | None = None,
+    active_geometry_phase_samples: int | None = None,
     sharpness: float = 80.0,
     regularization: float = 1.0e-6,
     geometry_residual_scale: float = 1.0,
@@ -2330,7 +2431,31 @@ def stroboscopic_curve_dual_geometry_correction(
         energy_residual = float(np.mean(energy_values) - target_jacobi)
         energy_gradient = _jacobi_gradient(states, seed.mu) / states.shape[0]
         geometry_time_jacobian = np.zeros(2, dtype=float)
-        if geometry_time_fractions is None:
+        geometry_rotation_jacobian = np.zeros(2, dtype=float)
+        if active_geometry_phase_samples is not None:
+            if geometry_time_fractions is None:
+                raise ValueError(
+                    "geometry_time_fractions are required for active geometry"
+                )
+            (
+                geometry_residuals,
+                geometry_jacobian,
+                geometry_time_jacobian,
+                geometry_rotation_jacobian,
+                _,
+            ) = _propagated_active_geometry_constraints(
+                states,
+                source_phases=seed.phases,
+                mapping_time=mapping_time,
+                rotation_angle_rad=rotation,
+                mu=seed.mu,
+                time_fractions=geometry_time_fractions,
+                phase_samples=active_geometry_phase_samples,
+                target_y_support=target_y_support,
+                target_z_support=target_z_support,
+                max_step=max_step,
+            )
+        elif geometry_time_fractions is None:
             geometry_residuals, geometry_jacobian = _smooth_dual_geometry_constraints(
                 states,
                 target_y_support=target_y_support,
@@ -2399,6 +2524,9 @@ def stroboscopic_curve_dual_geometry_correction(
         jacobian[state_size, :state_size] = energy_gradient.reshape(-1)
         jacobian[state_size + 1 : state_size + 3, :state_size] = geometry_jacobian
         jacobian[state_size + 1 : state_size + 3, state_size] = geometry_time_jacobian
+        jacobian[state_size + 1 : state_size + 3, state_size + 1] = (
+            geometry_rotation_jacobian
+        )
         jacobian[state_size + 3, :state_size] = tangent.reshape(-1)
         right_hand_side = -np.concatenate(
             [
@@ -2443,7 +2571,20 @@ def stroboscopic_curve_dual_geometry_correction(
     if best_metric != metric:
         residual_history.append(np.linalg.norm(best_mapped - best_targets, axis=1))
         energy_history.append(float(np.mean(jacobi_constant(best_states, seed.mu)) - target_jacobi))
-        if geometry_time_fractions is None:
+        if active_geometry_phase_samples is not None:
+            best_geometry = _propagated_active_geometry_constraints(
+                best_states,
+                source_phases=seed.phases,
+                mapping_time=best_time,
+                rotation_angle_rad=best_rotation,
+                mu=seed.mu,
+                time_fractions=geometry_time_fractions,
+                phase_samples=active_geometry_phase_samples,
+                target_y_support=target_y_support,
+                target_z_support=target_z_support,
+                max_step=max_step,
+            )[0]
+        elif geometry_time_fractions is None:
             best_geometry = _smooth_dual_geometry_constraints(
                 best_states,
                 target_y_support=target_y_support,

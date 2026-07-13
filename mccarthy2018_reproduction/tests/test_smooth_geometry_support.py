@@ -17,6 +17,7 @@ if str(SRC) not in sys.path:
 from qp_orbits.quasi_torus import (
     _regularized_least_squares_step,
     _propagated_smooth_geometry_constraints,
+    _propagated_active_geometry_constraints,
     _smooth_absolute_support,
     _smooth_dual_geometry_constraints,
 )
@@ -154,6 +155,65 @@ class SmoothAbsoluteSupportTests(unittest.TestCase):
             time_jacobian, numerical_time, rtol=3.0e-5, atol=3.0e-8
         )
         self.assertEqual(residuals.shape, (2,))
+
+    def test_active_event_jacobian_matches_finite_difference(self) -> None:
+        phases = np.linspace(0.0, 2.0 * np.pi, 5, endpoint=False)
+        states = np.zeros((5, 6), dtype=float)
+        states[:, 0] = 0.83 + 0.002 * np.cos(phases)
+        states[:, 1] = 0.025 * np.sin(phases)
+        states[:, 2] = 0.012 * np.cos(phases)
+        states[:, 4] = 0.11
+        kwargs = {
+            "source_phases": phases,
+            "mapping_time": 0.03,
+            "rotation_angle_rad": 0.17,
+            "mu": 0.012150585609624,
+            "time_fractions": np.array([0.0, 0.5, 1.0]),
+            "phase_samples": 17,
+            "target_y_support": 0.02,
+            "target_z_support": 0.01,
+            "max_step": 0.01,
+        }
+        residuals, state_jacobian, time_jacobian, rotation_jacobian, events = (
+            _propagated_active_geometry_constraints(states, **kwargs)
+        )
+        step = 1.0e-7
+        for sample, component in ((1, 1), (3, 2), (2, 4)):
+            upper = states.copy()
+            lower = states.copy()
+            upper[sample, component] += step
+            lower[sample, component] -= step
+            upper_residuals = _propagated_active_geometry_constraints(
+                upper, **kwargs
+            )[0]
+            lower_residuals = _propagated_active_geometry_constraints(
+                lower, **kwargs
+            )[0]
+            numerical = (upper_residuals - lower_residuals) / (2.0 * step)
+            np.testing.assert_allclose(
+                state_jacobian[:, 6 * sample + component],
+                numerical,
+                rtol=3.0e-5,
+                atol=3.0e-8,
+            )
+        for key, analytic in (
+            ("mapping_time", time_jacobian),
+            ("rotation_angle_rad", rotation_jacobian),
+        ):
+            upper_kwargs = dict(kwargs, **{key: kwargs[key] + step})
+            lower_kwargs = dict(kwargs, **{key: kwargs[key] - step})
+            upper_residuals = _propagated_active_geometry_constraints(
+                states, **upper_kwargs
+            )[0]
+            lower_residuals = _propagated_active_geometry_constraints(
+                states, **lower_kwargs
+            )[0]
+            numerical = (upper_residuals - lower_residuals) / (2.0 * step)
+            np.testing.assert_allclose(
+                analytic, numerical, rtol=4.0e-5, atol=4.0e-8
+            )
+        self.assertEqual(residuals.shape, (2,))
+        self.assertEqual(events.shape, (2, 4))
 
 
 if __name__ == "__main__":

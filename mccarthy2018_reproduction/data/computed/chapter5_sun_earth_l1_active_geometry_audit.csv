@@ -1,0 +1,4 @@
+case,time_slices,phase_samples,y_target_step,accepted,combined_metric,full_max_y_km,full_max_z_km,jacobi_span,closure_residual
+source,17,64,0,true,1.8851592501851965e-09,1117501.3467147257,935663.4516908167,1.310879239824203e-06,1.885152898174175e-09
+active_event_step_1,17,64,-0.01pct,true,8.264073368465859e-09,1117390.1086407874,935802.8653394718,1.2548409848989195e-06,8.263441837254075e-09
+active_event_step_2_trial,17,64,-0.1pct,false,6.588628305036551e-06,,,,
