@@ -44,6 +44,7 @@ def metric(correction) -> float:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--additional-members", type=int, default=0)
+    parser.add_argument("--y-target-km", type=float, default=660000.0)
     parser.add_argument("--z-target-km", type=float, default=940000.0)
     parser.add_argument("--max-relative-y-step", type=float, default=1.5e-4)
     parser.add_argument("--time-slices", type=int, default=33)
@@ -69,6 +70,8 @@ def main() -> None:
     args = parser.parse_args()
     if args.additional_members < 0:
         raise ValueError("additional-members must be non-negative")
+    if args.y_target_km <= 0.0:
+        raise ValueError("y-target-km must be positive")
     if args.z_target_km <= 0.0:
         raise ValueError("z-target-km must be positive")
     if args.max_relative_y_step <= 0.0:
@@ -495,7 +498,9 @@ def main() -> None:
                 f"full_z_progress={full_z_progress_fraction:.3f} "
                 f"predictor={predictor_scale:.3e} curve={curve_metric:.3e} "
                 f"initial_curve={initial_curve_metric:.3e} "
-                f"energy={energy_metric:.3e} geometry={geometry_metric:.3e} "
+                f"energy={energy_metric:.3e} "
+                f"energy_signed={float(candidate.energy_residual_history[-1]):+.3e} "
+                f"geometry={geometry_metric:.3e} "
                 f"geometry_y={geometry_y_metric:+.3e} "
                 f"geometry_z={geometry_z_metric:+.3e} phase={phase_metric:.3e}",
                 flush=True,
@@ -548,12 +553,15 @@ def main() -> None:
     event_z_km = float((1.0 + final_event_residuals[1]) * system.length_unit_km)
     full_y_km = float(np.max(np.abs(surface[:, :, 1])) * system.length_unit_km)
     full_z_km = float(np.max(np.abs(surface[:, :, 2])) * system.length_unit_km)
+    target_pair_accepted = full_y_km <= args.y_target_km and full_z_km <= args.z_target_km
     row = {
         "accepted_members": accepted,
         "last_step": float(np.load(CHECKPOINT)["step"]),
         "combined_metric": metric(last),
         "max_abs_y_km": full_y_km,
         "max_abs_z_km": full_z_km,
+        "y_target_km": args.y_target_km,
+        "y_target_error_km": full_y_km - args.y_target_km,
         "event_max_abs_y_km": event_y_km,
         "event_max_abs_z_km": event_z_km,
         "event_to_full_y_gap_km": full_y_km - event_y_km,
@@ -585,6 +593,7 @@ def main() -> None:
         "jacobi_target": target_jacobi,
         "jacobi_target_change": target_jacobi - initial_checkpoint_jacobi,
         "jacobi_target_offset": args.jacobi_target_offset,
+        "target_pair_accepted": target_pair_accepted,
     }
     with OUTPUT.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=list(row))
@@ -598,6 +607,7 @@ def main() -> None:
 - Combined metric: `{row['combined_metric']:.3e}`
 - Full-torus max |y|: `{row['max_abs_y_km']:.3f}` km
 - Full-torus max |z|: `{row['max_abs_z_km']:.3f}` km
+- y target error: `{row['y_target_error_km']:+.3f}` km
 - Event-grid max |y|: `{row['event_max_abs_y_km']:.3f}` km
 - Event-grid max |z|: `{row['event_max_abs_z_km']:.3f}` km
 - Event-to-full y gap: `{row['event_to_full_y_gap_km']:+.3f}` km
@@ -624,7 +634,7 @@ def main() -> None:
 - Active Jacobi target: `{target_jacobi:.15f}`
 - Batch Jacobi-target change: `{target_jacobi - initial_checkpoint_jacobi:+.3e}`
 - Per-member Jacobi-target offset: `{args.jacobi_target_offset:+.3e}`
-- Target pair accepted: `false`
+- Target pair accepted: `{target_pair_accepted}`
 
 The family uses active-event relocation after every accepted member and an
 adaptive trust step capped at `{args.max_relative_y_step:.3e}`. Run this script with
