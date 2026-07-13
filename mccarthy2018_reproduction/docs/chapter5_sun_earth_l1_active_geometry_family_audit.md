@@ -1,18 +1,18 @@
 # Chapter 5 active-event geometry family audit
 
-- Accepted family members: `283`
+- Accepted family members: `288`
 - Last relative y-event step: `2.857e-03`
-- Combined metric: `1.308e-09`
-- Full-torus max |y|: `909771.081` km
-- Full-torus max |z|: `939934.241` km
-- y target error: `+249771.081` km
-- Event-grid max |y|: `909765.786` km
-- Event-grid max |z|: `939977.043` km
-- Event-to-full y gap: `+5.295` km
-- Event-to-full z gap: `-42.802` km
-- Jacobi span: `7.718e-10`
-- Closure residual: `4.547e-11`
-- z target error: `-65.759` km
+- Combined metric: `7.596e-09`
+- Full-torus max |y|: `896207.785` km
+- Full-torus max |z|: `939964.535` km
+- y target error: `+236207.785` km
+- Event-grid max |y|: `896201.003` km
+- Event-grid max |z|: `939976.917` km
+- Event-to-full y gap: `+6.782` km
+- Event-to-full z gap: `-12.382` km
+- Jacobi span: `6.130e-10`
+- Closure residual: `1.883e-09`
+- z target error: `-35.465` km
 - Event grid: `129 x 256`
 - Applied per-member z correction: `+0.000` km
 - Per-candidate correction iteration cap: `60`
@@ -29,8 +29,8 @@
 - Validate full-torus progress: `True`
 - Last full-torus y-progress fraction: `1.000`
 - Last full-torus z-progress fraction: `1.000`
-- Active Jacobi target: `3.000717989751510`
-- Batch Jacobi-target change: `+1.601e-07`
+- Active Jacobi target: `3.000718820563225`
+- Batch Jacobi-target change: `+8.308e-07`
 - Per-member Jacobi-target offset: `+1.700e-07`
 - Target pair accepted: `False`
 
