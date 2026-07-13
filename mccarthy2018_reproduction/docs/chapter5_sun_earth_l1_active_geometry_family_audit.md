@@ -1,20 +1,20 @@
 # Chapter 5 active-event geometry family audit
 
-- Accepted family members: `306`
-- Last relative y-event step: `2.857e-03`
-- Combined metric: `5.083e-09`
-- Full-torus max |y|: `849057.381` km
-- Full-torus max |z|: `940015.422` km
-- y target error: `+189057.381` km
-- Event-grid max |y|: `849023.236` km
-- Event-grid max |z|: `939976.331` km
-- Event-to-full y gap: `+34.146` km
-- Event-to-full z gap: `+39.091` km
-- Jacobi span: `2.450e-10`
-- Closure residual: `5.874e-10`
-- z target error: `+15.422` km
+- Accepted family members: `311`
+- Last relative y-event step: `1.500e-03`
+- Combined metric: `9.992e-09`
+- Full-torus max |y|: `837682.981` km
+- Full-torus max |z|: `939993.939` km
+- y target error: `+177682.981` km
+- Event-grid max |y|: `837622.339` km
+- Event-grid max |z|: `939976.105` km
+- Event-to-full y gap: `+60.641` km
+- Event-to-full z gap: `+17.834` km
+- Jacobi span: `1.938e-10`
+- Closure residual: `9.461e-10`
+- z target error: `-6.061` km
 - Event grid: `129 x 256`
-- Applied per-member z correction: `-0.000` km
+- Applied per-member z correction: `+0.000` km
 - Per-candidate correction iteration cap: `60`
 - Minimum realized y-progress fraction: `0.500`
 - Minimum realized z-progress fraction: `0.500`
@@ -27,11 +27,11 @@
 - Project predictor into z-constraint nullspace: `True`
 - Smooth preconditioner sharpness: `1.000e+08`
 - Validate full-torus progress: `True`
-- Last full-torus y-progress fraction: `0.996`
+- Last full-torus y-progress fraction: `1.007`
 - Last full-torus z-progress fraction: `1.000`
-- Active Jacobi target: `3.000721542522046`
-- Batch Jacobi-target change: `+7.237e-07`
-- Per-member Jacobi-target offset: `+1.500e-07`
+- Active Jacobi target: `3.000722184535566`
+- Batch Jacobi-target change: `+7.001e-08`
+- Per-member Jacobi-target offset: `+8.000e-08`
 - Target pair accepted: `False`
 
 The family uses active-event relocation after every accepted member and an
