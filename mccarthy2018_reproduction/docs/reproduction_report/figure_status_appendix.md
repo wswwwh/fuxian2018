@@ -975,14 +975,14 @@ Total figures: 54.
 | script | figures/fig_5_13.py |
 | current_repro_level | numerical two-angle stable-manifold reproduction |
 | uses_proxy | false |
-| main_data_source | data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_scan.csv;data/computed/chapter5_stable_manifold_per_figure_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_amplitude_boundary_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv;data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_scan.csv;outputs/figures_png/fig_5_13.png;outputs/figures_pdf/fig_5_13.pdf |
-| key_physical_quantities | corrected Sun-Earth L1 Lissajous DG two-angle stable-manifold periapsis map; accepted stable-manifold periapsis rows 1; selected phase 14.88928693528482 deg; periapsis error 0.0001116857147280825 km; transfer time 407.6352466744673 days; Jacobi span 3.126388037344441e-13; accepted Lissajous source rows 1; torus points 3600; curve residual 2.646101981500197e-11; torus Jacobi span 2.220446049250313e-15; max |y|/|z| 1016592.923818082/939484.302401125 km; accepted Lissajous manifold rows 1; propagated half-manifolds 2240; 7033-km error 0.6651363452756414 km; manifold Jacobi drift 1.012061545679899e-10; original replacement status: computed_lissajous_manifold_map_replaces_display_proxy_geometry_boundary_remains |
+| main_data_source | data/computed/chapter5_active_geometry_stable_manifold_tight_target_audit.csv;data/computed/chapter5_sun_earth_l1_active_geometry_family_audit.csv;docs/chapter5_active_geometry_application_independent_rerun_audit.md;data/computed/chapter5_active_geometry_stable_manifold_tight_target_audit.csv;outputs/figures_png/fig_5_13.png;outputs/figures_pdf/fig_5_13.pdf |
+| key_physical_quantities | accepted active-geometry Sun-Earth L1 two-frequency torus DG tight stable-manifold periapsis map; accepted active-geometry family rows 1 (468 members, 33024 points); full max |y|/|z| 659439.4314289853/939944.3046133927 km; target errors -560.568571014679/-55.69538660731632 km; Jacobi span 1.028190865781653e-10; closure 3.254302889494484e-09; target pair True; tight scan rows 1; phase (48, 62) deg; 7033-km periapsis 7034.029835374918 km; error 1.029835374917639 km; propagated trajectories 162; manifold Jacobi drift 1.508171365571798e-10; original replacement status: computed_lissajous_manifold_map_replaces_display_proxy_geometry_boundary_remains |
 | residual evidence | accepted source rows: 1; Route H dependency: none; BCR4BP dependency: none |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 82719; PDF bytes 36653; boundary: The display-function proxy is removed and the corrected two-frequency 70x16 scan reaches the 7033-km target. Remaining boundaries are the source-torus y-amplitude excess and pointwise comparison with the thesis heat map. |
-| next_action | Reduce the source-torus y-amplitude discrepancy and digitize the thesis heat map for pointwise comparison. |
+| visual_status | PNG bytes 82719; PDF bytes 36653; boundary: The display-function proxy is removed and the accepted 129x256 full-torus geometry plus 9x9 tight scan reaches the 7033-km target. Remaining boundaries are high-fidelity BCR4BP/ephemeris correction and pointwise comparison with the thesis heat map. |
+| next_action | Use the active-geometry CR3BP source layer as the current target-mode result; add BCR4BP/ephemeris correction and digitize the thesis heat map before claiming full thesis equivalence. |
 
 ### Figure 5.14
 
@@ -993,11 +993,11 @@ Total figures: 54.
 | script | figures/fig_5_14.py |
 | current_repro_level | numerical quasi-periodic stable-manifold transfer reproduction |
 | uses_proxy | false |
-| main_data_source | data/computed/chapter5_sun_earth_l1_lissajous_leo_transfer.csv;data/computed/chapter5_sun_earth_l1_lissajous_leo_transfer_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_amplitude_boundary_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_audit.csv;outputs/figures_png/fig_5_14.png;outputs/figures_pdf/fig_5_14.pdf |
-| key_physical_quantities | corrected Sun-Earth L1 Lissajous DG stable-manifold LEO transfer; accepted Lissajous transfer rows 1; trajectory samples 900; periapsis error 0.665176709251682 km; transfer time 312.4576174324916 days; Jacobi span 4.067857162226574e-13; Lissajous endpoint distance 40.1720033007723 km; original replacement status: computed_lissajous_transfer_replaces_analytic_scene_high_fidelity_pending |
+| main_data_source | data/computed/chapter5_active_geometry_leo_transfer_audit.csv;data/computed/chapter5_sun_earth_l1_active_geometry_family_audit.csv;data/computed/chapter5_active_geometry_stable_manifold_tight_target_audit.csv;docs/chapter5_active_geometry_application_independent_rerun_audit.md;outputs/figures_png/fig_5_14.png;outputs/figures_pdf/fig_5_14.pdf |
+| key_physical_quantities | accepted active-geometry Sun-Earth L1 stable-manifold LEO transfer; accepted active-geometry transfer rows 1; trajectory samples 900; periapsis 7034.028970727035 km; target error 1.028970727034903 km; transfer time 433.0873004386989 days; Jacobi span 5.497824417943775e-13; Lissajous endpoint distance 38.49009323646132 km; original replacement status: computed_lissajous_transfer_replaces_analytic_scene_high_fidelity_pending |
 | residual evidence | accepted source rows: 1; Route H dependency: none; BCR4BP dependency: none |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 289385; PDF bytes 80747; boundary: The analytic transfer and torus scene is removed. The accepted CR3BP trajectory reaches the corrected Lissajous torus and 7033-km periapsis; BCR4BP/ephemeris correction remains pending. |
-| next_action | Correct this specific Lissajous stable-manifold transfer in BCR4BP/ephemeris and compare against thesis timing and geometry. |
+| visual_status | PNG bytes 289385; PDF bytes 80747; boundary: The analytic transfer and torus scene is removed. The accepted active-geometry CR3BP trajectory reaches the 7033-km periapsis target and records the 185-km LEO endpoint; BCR4BP/ephemeris correction remains pending. |
+| next_action | Correct this specific active-geometry stable-manifold transfer in BCR4BP/ephemeris and compare against thesis timing and geometry. |

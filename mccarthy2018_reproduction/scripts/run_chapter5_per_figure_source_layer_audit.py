@@ -34,6 +34,10 @@ LISSAJOUS_TORUS_AUDIT = DATA / "chapter5_sun_earth_l1_lissajous_torus_audit.csv"
 LISSAJOUS_MANIFOLD_AUDIT = DATA / "chapter5_sun_earth_l1_lissajous_stable_manifold_audit.csv"
 LISSAJOUS_LEO_TRANSFER_AUDIT = DATA / "chapter5_sun_earth_l1_lissajous_leo_transfer_audit.csv"
 LISSAJOUS_AMPLITUDE_AUDIT = DATA / "chapter5_sun_earth_l1_lissajous_amplitude_boundary_audit.csv"
+ACTIVE_GEOMETRY_FAMILY_AUDIT = DATA / "chapter5_sun_earth_l1_active_geometry_family_audit.csv"
+ACTIVE_GEOMETRY_MANIFOLD_AUDIT = DATA / "chapter5_active_geometry_stable_manifold_tight_target_audit.csv"
+ACTIVE_GEOMETRY_LEO_TRANSFER_AUDIT = DATA / "chapter5_active_geometry_leo_transfer_audit.csv"
+ACTIVE_GEOMETRY_APPLICATION_RERUN = DOCS / "chapter5_active_geometry_application_independent_rerun_audit.md"
 ROUTE_H_FAMILY = DATA / "chapter3_fixed_mapping_cache_accepted_family.csv"
 ROUTE_H_VALIDATION = DATA / "chapter3_fixed_mapping_cache_accepted_validation.csv"
 CHAPTER4_ROUTE_H_FIGURE = PROJECT_ROOT / "outputs" / "figures_png" / "fig_4_route_h.png"
@@ -166,6 +170,9 @@ def _source_metrics() -> dict[str, str]:
     lissajous_rows = [row for row in _read_csv(LISSAJOUS_TORUS_AUDIT) if _truthy(row.get("source_acceptance"))] if LISSAJOUS_TORUS_AUDIT.exists() else []
     lissajous_manifold_rows = [row for row in _read_csv(LISSAJOUS_MANIFOLD_AUDIT) if _truthy(row.get("acceptance"))] if LISSAJOUS_MANIFOLD_AUDIT.exists() else []
     lissajous_leo_rows = [row for row in _read_csv(LISSAJOUS_LEO_TRANSFER_AUDIT) if _truthy(row.get("acceptance"))] if LISSAJOUS_LEO_TRANSFER_AUDIT.exists() else []
+    active_family_rows = _read_csv(ACTIVE_GEOMETRY_FAMILY_AUDIT) if ACTIVE_GEOMETRY_FAMILY_AUDIT.exists() else []
+    active_manifold_rows = [row for row in _read_csv(ACTIVE_GEOMETRY_MANIFOLD_AUDIT) if _truthy(row.get("acceptance"))] if ACTIVE_GEOMETRY_MANIFOLD_AUDIT.exists() else []
+    active_leo_rows = [row for row in _read_csv(ACTIVE_GEOMETRY_LEO_TRANSFER_AUDIT) if _truthy(row.get("acceptance"))] if ACTIVE_GEOMETRY_LEO_TRANSFER_AUDIT.exists() else []
     return {
         "route_h_rows": route_h["rows"],
         "route_h_member": route_h["member"],
@@ -237,6 +244,35 @@ def _source_metrics() -> dict[str, str]:
         "lissajous_leo_periapsis_error": _max_field(lissajous_leo_rows, "periapsis_target_error_km"),
         "lissajous_leo_jacobi_span": _max_field(lissajous_leo_rows, "jacobi_span"),
         "lissajous_leo_endpoint": _max_field(lissajous_leo_rows, "lissajous_endpoint_distance_km"),
+        "active_geometry_source_rows": str(len(active_family_rows)),
+        "active_geometry_points": (
+            str(int(active_family_rows[0]["event_time_slices"]) * int(active_family_rows[0]["event_phase_samples"]))
+            if active_family_rows else "N/A"
+        ),
+        "active_geometry_members": _max_field(active_family_rows, "accepted_members"),
+        "active_geometry_y_km": _max_field(active_family_rows, "max_abs_y_km"),
+        "active_geometry_z_km": _max_field(active_family_rows, "max_abs_z_km"),
+        "active_geometry_y_error": _max_field(active_family_rows, "y_target_error_km"),
+        "active_geometry_z_error": _max_field(active_family_rows, "z_target_error_km"),
+        "active_geometry_jacobi_span": _max_field(active_family_rows, "jacobi_span"),
+        "active_geometry_closure": _max_field(active_family_rows, "closure_residual"),
+        "active_geometry_target_pair": (
+            active_family_rows[0].get("target_pair_accepted", "false") if active_family_rows else "false"
+        ),
+        "active_manifold_rows": str(len(active_manifold_rows)),
+        "active_manifold_trajectories": _max_field(active_manifold_rows, "manifold_trajectories"),
+        "active_manifold_target": _max_field(active_manifold_rows, "best_7033_radius_km"),
+        "active_manifold_target_error": _max_field(active_manifold_rows, "best_7033_error_km"),
+        "active_manifold_jacobi_drift": _max_field(active_manifold_rows, "maximum_jacobi_drift"),
+        "active_manifold_phase0": _max_field(active_manifold_rows, "best_theta0_deg"),
+        "active_manifold_phase1": _max_field(active_manifold_rows, "best_theta1_deg"),
+        "active_leo_rows": str(len(active_leo_rows)),
+        "active_leo_samples": _max_field(active_leo_rows, "trajectory_samples"),
+        "active_leo_time": _max_field(active_leo_rows, "transfer_time_days"),
+        "active_leo_periapsis": _max_field(active_leo_rows, "periapsis_radius_km"),
+        "active_leo_periapsis_error": _max_field(active_leo_rows, "periapsis_target_error_km"),
+        "active_leo_jacobi_span": _max_field(active_leo_rows, "jacobi_span"),
+        "active_leo_endpoint": _max_field(active_leo_rows, "lissajous_endpoint_distance_km"),
     }
 
 
@@ -519,57 +555,56 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
         },
         {
             "figure_id": "5.13",
-            "current_source_layer": "corrected Sun-Earth L1 Lissajous DG two-angle stable-manifold periapsis map",
+            "current_source_layer": "accepted active-geometry Sun-Earth L1 two-frequency torus DG tight stable-manifold periapsis map",
             "current_repro_level": "numerical two-angle stable-manifold reproduction",
             "original_replacement_status": "computed_lissajous_manifold_map_replaces_display_proxy_geometry_boundary_remains",
             "uses_proxy": "false",
-            "primary_evidence": "data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_scan.csv",
-            "supporting_evidence": f"{_rel(STABLE_MANIFOLD_AUDIT)};{_rel(LISSAJOUS_TORUS_AUDIT)};{_rel(LISSAJOUS_AMPLITUDE_AUDIT)};{_rel(LISSAJOUS_MANIFOLD_AUDIT)};data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv;data/computed/chapter5_sun_earth_l1_lissajous_stable_manifold_scan.csv",
+            "primary_evidence": _rel(ACTIVE_GEOMETRY_MANIFOLD_AUDIT),
+            "supporting_evidence": f"{_rel(ACTIVE_GEOMETRY_FAMILY_AUDIT)};{_rel(ACTIVE_GEOMETRY_APPLICATION_RERUN)};{_rel(ACTIVE_GEOMETRY_MANIFOLD_AUDIT)}",
             "route_h_dependency": "none",
             "bcr4bp_dependency": "none",
             "optimization_dependency": "none",
-            "accepted_rows": metrics["stable_5_13_rows"],
+            "accepted_rows": metrics["active_manifold_rows"],
             "best_metric": (
-                f"accepted stable-manifold periapsis rows {metrics['stable_5_13_rows']}; "
-                f"selected phase {metrics['stable_5_13_phase']} deg; "
-                f"periapsis error {metrics['stable_5_13_periapsis_error']} km; "
-                f"transfer time {metrics['stable_5_13_transfer_time']} days; "
-                f"Jacobi span {metrics['stable_5_13_jacobi_span']}"
-                f"; accepted Lissajous source rows {metrics['lissajous_source_rows']}"
-                f"; torus points {metrics['lissajous_points']}"
-                f"; curve residual {metrics['lissajous_residual']}"
-                f"; torus Jacobi span {metrics['lissajous_jacobi_span']}"
-                f"; max |y|/|z| {metrics['lissajous_y_km']}/{metrics['lissajous_z_km']} km"
-                f"; accepted Lissajous manifold rows {metrics['lissajous_manifold_rows']}"
-                f"; propagated half-manifolds {metrics['lissajous_manifold_trajectories']}"
-                f"; 7033-km error {metrics['lissajous_manifold_target_error']} km"
-                f"; manifold Jacobi drift {metrics['lissajous_manifold_jacobi_drift']}"
+                f"accepted active-geometry family rows {metrics['active_geometry_source_rows']} "
+                f"({metrics['active_geometry_members']} members, {metrics['active_geometry_points']} points); "
+                f"full max |y|/|z| {metrics['active_geometry_y_km']}/{metrics['active_geometry_z_km']} km; "
+                f"target errors {metrics['active_geometry_y_error']}/{metrics['active_geometry_z_error']} km; "
+                f"Jacobi span {metrics['active_geometry_jacobi_span']}; closure {metrics['active_geometry_closure']}; "
+                f"target pair {metrics['active_geometry_target_pair']}; "
+                f"tight scan rows {metrics['active_manifold_rows']}; "
+                f"phase ({metrics['active_manifold_phase0']}, {metrics['active_manifold_phase1']}) deg; "
+                f"7033-km periapsis {metrics['active_manifold_target']} km; "
+                f"error {metrics['active_manifold_target_error']} km; "
+                f"propagated trajectories {metrics['active_manifold_trajectories']}; "
+                f"manifold Jacobi drift {metrics['active_manifold_jacobi_drift']}"
             ),
-            "boundary": "The display-function proxy is removed and the corrected two-frequency 70x16 scan reaches the 7033-km target. Remaining boundaries are the source-torus y-amplitude excess and pointwise comparison with the thesis heat map.",
-            "next_action": "Reduce the source-torus y-amplitude discrepancy and digitize the thesis heat map for pointwise comparison.",
+            "boundary": "The display-function proxy is removed and the accepted 129x256 full-torus geometry plus 9x9 tight scan reaches the 7033-km target. Remaining boundaries are high-fidelity BCR4BP/ephemeris correction and pointwise comparison with the thesis heat map.",
+            "next_action": "Use the active-geometry CR3BP source layer as the current target-mode result; add BCR4BP/ephemeris correction and digitize the thesis heat map before claiming full thesis equivalence.",
         },
         {
             "figure_id": "5.14",
-            "current_source_layer": "corrected Sun-Earth L1 Lissajous DG stable-manifold LEO transfer",
+            "current_source_layer": "accepted active-geometry Sun-Earth L1 stable-manifold LEO transfer",
             "current_repro_level": "numerical quasi-periodic stable-manifold transfer reproduction",
             "original_replacement_status": "computed_lissajous_transfer_replaces_analytic_scene_high_fidelity_pending",
             "uses_proxy": "false",
-            "primary_evidence": "data/computed/chapter5_sun_earth_l1_lissajous_leo_transfer.csv",
-            "supporting_evidence": f"{_rel(LISSAJOUS_LEO_TRANSFER_AUDIT)};{_rel(LISSAJOUS_TORUS_AUDIT)};{_rel(LISSAJOUS_AMPLITUDE_AUDIT)};{_rel(LISSAJOUS_MANIFOLD_AUDIT)}",
+            "primary_evidence": _rel(ACTIVE_GEOMETRY_LEO_TRANSFER_AUDIT),
+            "supporting_evidence": f"{_rel(ACTIVE_GEOMETRY_FAMILY_AUDIT)};{_rel(ACTIVE_GEOMETRY_MANIFOLD_AUDIT)};{_rel(ACTIVE_GEOMETRY_APPLICATION_RERUN)}",
             "route_h_dependency": "none",
             "bcr4bp_dependency": "none",
             "optimization_dependency": "none",
-            "accepted_rows": metrics["lissajous_leo_rows"],
+            "accepted_rows": metrics["active_leo_rows"],
             "best_metric": (
-                f"accepted Lissajous transfer rows {metrics['lissajous_leo_rows']}; "
-                f"trajectory samples {metrics['lissajous_leo_samples']}; "
-                f"periapsis error {metrics['lissajous_leo_periapsis_error']} km; "
-                f"transfer time {metrics['lissajous_leo_time']} days; "
-                f"Jacobi span {metrics['lissajous_leo_jacobi_span']}; "
-                f"Lissajous endpoint distance {metrics['lissajous_leo_endpoint']} km"
+                f"accepted active-geometry transfer rows {metrics['active_leo_rows']}; "
+                f"trajectory samples {metrics['active_leo_samples']}; "
+                f"periapsis {metrics['active_leo_periapsis']} km; "
+                f"target error {metrics['active_leo_periapsis_error']} km; "
+                f"transfer time {metrics['active_leo_time']} days; "
+                f"Jacobi span {metrics['active_leo_jacobi_span']}; "
+                f"Lissajous endpoint distance {metrics['active_leo_endpoint']} km"
             ),
-            "boundary": "The analytic transfer and torus scene is removed. The accepted CR3BP trajectory reaches the corrected Lissajous torus and 7033-km periapsis; BCR4BP/ephemeris correction remains pending.",
-            "next_action": "Correct this specific Lissajous stable-manifold transfer in BCR4BP/ephemeris and compare against thesis timing and geometry.",
+            "boundary": "The analytic transfer and torus scene is removed. The accepted active-geometry CR3BP trajectory reaches the 7033-km periapsis target and records the 185-km LEO endpoint; BCR4BP/ephemeris correction remains pending.",
+            "next_action": "Correct this specific active-geometry stable-manifold transfer in BCR4BP/ephemeris and compare against thesis timing and geometry.",
         },
         {
             "figure_id": "5.bcr4bp_optimized_transfer",

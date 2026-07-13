@@ -68,6 +68,14 @@ P2 当前证据：accepted=468 环面上的粗扫和 1° 细化均已保存；9�
 - 重新生成 PNG/PDF、报告附录、教师版摘要和 artifact manifest；检查每一行是否能追溯到脚本、参数、数值文件和独立复核。
 - 做一次从干净缓存/新进程的全量 smoke + 关键章节 full audit。只有总门槛全部通过才把项目标为完成；否则输出带边界的阶段性报告。
 
+P4 初始审计检查点（2026-07-14）：
+
+- `data/reproduction_targets.csv` 与 `data/computed/figure_validation_table.csv` 已重新生成并校验为 `54/54` 对齐；54 个 PNG 和 54 个 PDF 均存在且非空。
+- `scripts/validate_reproduction_smoke.py` 通过：`targets_v0=13`、`targets_v2=41`、`current_numerical=16`、`current_open=25`；Route H hybrid cold-start 仍为 pass，单体 cold-start 仍保留 fail。
+- Fig. 5.13/5.14 的逐图证据已改为 active-geometry 成员 468、全环面 `129 x 256`、tight stable-manifold `9 x 9` 和 LEO transfer 审计；目标模式的 CR3BP 几何门控通过，但 BCR4BP/DE421 和论文面板逐点对比仍是 boundary。
+- `scripts/run_figure_evidence_gap_audit.py` 进一步给出保守证据分类：`accepted=7`、`boundary=30`、`diagnostic=5`、`proxy=12`，54 行的脚本/数据/PNG/PDF 路径均存在；该表只记录证据缺口，不新增科学主张。
+- 因为仍有 25 个图行带 boundary/open 条件，当前结论是“54/54 工程覆盖 + 可审计 source-layer”，不是完整论文数值等价复现；下一步优先按 `figure_validation_table.csv` 的 `next_action` 消化高影响 boundary。
+
 ## 4. 停止与切换规则
 
 - 若连续多个批次无法保持 full-torus 正进度，先保存失败证据并调节步长、Jacobi 偏置和 z 修正；不放宽残差或网格门限。
