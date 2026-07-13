@@ -43,8 +43,8 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - `C3-ROUTE-H-HYBRID-COLD-START` (chapter3): status `pass`, metric `hybrid_fixed_time_targets_at_paper_precision` = `4`, decision `use_hybrid_route_h_cold_start_chain`
 - `C3-PERIOD-Q-PER-FIGURE-AUDIT` (chapter3): status `pass`, metric `strict_single_shoot_rows` = `2`, decision `use_period_q_boundary_audit`
 - `C4-UPSTREAM-TORUS-DATA` (chapter4): status `ready_for_regeneration`, metric `chapter3_figure_source_frontier_max_abs_z_km` = `14573.10318409037`, decision `regenerate_chapter4_from_route_h_source`
-- `C4-ROUTE-H-DG-MANIFOLD` (chapter4): status `not_run_or_fail`, metric `worst_selected_eigen_relative_imaginary` = `0.6242638760846617`, decision `run_chapter4_route_h_dg_manifold_audit`
-- `C4-ROUTE-H-FIGURE-SOURCE` (chapter4): status `not_run_or_fail`, metric `route_h_figure_png_bytes` = `539093`, decision `run_fig_4_route_h_quasi_dro`
+- `C4-ROUTE-H-DG-MANIFOLD` (chapter4): status `not_run_or_fail`, metric `worst_selected_eigen_relative_imaginary` = `0.6242638760846673`, decision `run_chapter4_route_h_dg_manifold_audit`
+- `C4-ROUTE-H-FIGURE-SOURCE` (chapter4): status `not_run_or_fail`, metric `route_h_figure_png_bytes` = `345125`, decision `run_fig_4_route_h_quasi_dro`
 - `C4-PER-FIGURE-SOURCE-LAYER-AUDIT` (chapter4): status `pass`, metric `original_chapter4_figure_rows` = `8`, decision `use_per_figure_chapter4_status_table`
 - `C5-UPSTREAM-HIGH-FIDELITY-DATA` (chapter5): status `blocked_by_chapter4`, metric `chapter3_figure_source_frontier_max_abs_z_km` = `14573.10318409037`, decision `wait_for_chapter4_regeneration`
 - `C5-ROUTE-H-DE421-BASELINE` (chapter5): status `pass`, metric `fig_5_6_png_bytes` = `746932`, decision `route_h_de421_baseline_available`
@@ -63,7 +63,7 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 Route H contributes accepted fixed-time figure-source
 members above 10,500 km, but the current Chapter 4 source-layer DG/manifold probe
 does not pass the nearly-real hyperbolic-direction gate. The worst selected-eigenvalue
-relative imaginary part is `0.6242638760846617` against the `<= 1e-6`
+relative imaginary part is `0.6242638760846673` against the `<= 1e-6`
 threshold. Existing `fig_4_route_h` artifacts are diagnostic outputs and must not be
 treated as accepted Chapter 4 figure-source evidence until the DG/manifold audit is
 regenerated with a valid real hyperbolic direction. Original Fig. 4.1-4.8 replacement

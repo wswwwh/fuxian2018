@@ -12,30 +12,34 @@ existing Fig. 4.3-4.8 proxy backgrounds, because those figures currently target
 L1 quasi-halo and quasi-vertical manifolds, while Route H is the Chapter 3
 quasi-DRO family.
 
+The strict real-hyperbolic gate is applied before a manifold probe is allowed.
+The companion scan in `data/computed/chapter4_real_hyperbolic_scan.csv` found
+only member `68` passing both stable and unstable relative-imaginary tolerances
+(`1e-6`) among the 31 accepted Route H members above 10,500 km.  The other 30
+members have Fourier-shifted complex hyperbolic pairs and remain boundary
+evidence; their magnitude-only reciprocal pairs are not promoted to real
+manifold directions.
+
 ## Inputs And Parameters
 
 - Accepted Route H members above 10,500 km: `31`
-- Representative members audited here: `[17, 32, 68]`
+- Strict real-hyperbolic member(s) audited here: `[68]`
 - DG / manifold integration max step: `0.02`
 
 ## DG Outcome
 
-- DG rows written: `3`
+- DG rows written: `1`
 - Best audited Route H z amplitude: `13404.127728695737` km
-- Worst determinant error from one: `7.212e-13`
-- Worst real stable/unstable reciprocity error: `7.550e-15`
+- Worst determinant error from one: `2.391e-13`
+- Worst real stable/unstable reciprocity error: `3.442e-15`
 
-- member `17`: z `10969.6755386` km, DG dimension `270`, max multiplier `1.06657`, det error `7.212e-13`
-- member `32`: z `12673.1654626` km, DG dimension `270`, max multiplier `1.10602`, det error `4.374e-13`
 - member `68`: z `13404.1277287` km, DG dimension `270`, max multiplier `1.01737`, det error `2.391e-13`
 
 ## Local Manifold Probe
 
-- Manifold probe rows written: `3`
-- Worst probe Jacobi drift: `1.776e-15`
+- Manifold probe rows written: `1`
+- Worst probe Jacobi drift: `8.882e-16`
 
-- member `17`: duration `0.1` maps, Jacobi drift `1.776e-15`, growth ratio `1.00055`
-- member `32`: duration `0.1` maps, Jacobi drift `1.776e-15`, growth ratio `1.08284`
 - member `68`: duration `0.1` maps, Jacobi drift `8.882e-16`, growth ratio `0.948261`
 
 ## Outputs
@@ -47,13 +51,15 @@ quasi-DRO family.
 
 ## Decision
 
-Chapter 4 is now unblocked at the Route H source/DG compatibility layer:
-accepted high-amplitude quasi-DRO corrections can be converted into DG spectra
-and local unstable manifold probes without proxy source curves. A regenerated
-Route H source-layer figure is available as `fig_4_route_h` after running
-`figures/fig_4_route_h_quasi_dro.py`.
+Member `68` passes the strict Route H source/DG compatibility and local
+manifold-probe gates without a proxy source curve.  This is not a three-member
+cross-amplitude promotion: the companion scan passes only `1/31`, so the Route H
+branch remains a boundary/source-layer result for the original Chapter 4
+manifold claim.  The regenerated source-layer figure is available as
+`fig_4_route_h` after running `figures/fig_4_route_h_quasi_dro.py`.
 
-The next implementation step is a dedicated figure-source decision: either add
-new quasi-DRO torus/manifold figures from this Route H branch, or separately
-continue the Chapter 4 L1 quasi-halo and quasi-vertical families to thesis-scale
-amplitudes before replacing Fig. 4.3-4.8 proxy backgrounds.
+Separately, the original L1 quasi-halo/quasi-vertical Fig. 4.3-4.8 audits have
+eight of eight requested snapshot rows accepted with proxy-free propagation.
+Those rows remain numerical source-layer replacements with an explicit
+pointwise paper-panel digitization boundary; they do not imply that the Route H
+three-member gate has passed.

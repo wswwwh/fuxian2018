@@ -318,10 +318,18 @@ existing Fig. 4.3-4.8 proxy backgrounds, because those figures currently target
 L1 quasi-halo and quasi-vertical manifolds, while Route H is the Chapter 3
 quasi-DRO family.
 
+The strict real-hyperbolic gate is applied before a manifold probe is allowed.
+The companion scan in `data/computed/chapter4_real_hyperbolic_scan.csv` found
+only member `68` passing both stable and unstable relative-imaginary tolerances
+(`1e-6`) among the 31 accepted Route H members above 10,500 km.  The other 30
+members have Fourier-shifted complex hyperbolic pairs and remain boundary
+evidence; their magnitude-only reciprocal pairs are not promoted to real
+manifold directions.
+
 ## Inputs And Parameters
 
 - Accepted Route H members above 10,500 km: `{len(accepted_indices)}`
-- Representative members audited here: `{selected_indices}`
+- Strict real-hyperbolic member(s) audited here: `{selected_indices}`
 - DG / manifold integration max step: `{max_step}`
 
 ## DG Outcome
@@ -349,16 +357,18 @@ quasi-DRO family.
 
 ## Decision
 
-Chapter 4 is now unblocked at the Route H source/DG compatibility layer:
-accepted high-amplitude quasi-DRO corrections can be converted into DG spectra
-and local unstable manifold probes without proxy source curves. A regenerated
-Route H source-layer figure is available as `fig_4_route_h` after running
-`figures/fig_4_route_h_quasi_dro.py`.
+Member `68` passes the strict Route H source/DG compatibility and local
+manifold-probe gates without a proxy source curve.  This is not a three-member
+cross-amplitude promotion: the companion scan passes only `1/31`, so the Route H
+branch remains a boundary/source-layer result for the original Chapter 4
+manifold claim.  The regenerated source-layer figure is available as
+`fig_4_route_h` after running `figures/fig_4_route_h_quasi_dro.py`.
 
-The next implementation step is a dedicated figure-source decision: either add
-new quasi-DRO torus/manifold figures from this Route H branch, or separately
-continue the Chapter 4 L1 quasi-halo and quasi-vertical families to thesis-scale
-amplitudes before replacing Fig. 4.3-4.8 proxy backgrounds.
+Separately, the original L1 quasi-halo/quasi-vertical Fig. 4.3-4.8 audits have
+eight of eight requested snapshot rows accepted with proxy-free propagation.
+Those rows remain numerical source-layer replacements with an explicit
+pointwise paper-panel digitization boundary; they do not imply that the Route H
+three-member gate has passed.
 """,
         encoding="utf-8",
     )

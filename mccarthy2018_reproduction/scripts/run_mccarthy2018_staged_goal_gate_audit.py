@@ -400,8 +400,16 @@ def _build_rows() -> list[dict[str, Any]]:
         default=None,
     )
     chapter4_worst_selected_eigen_relative_imaginary = max(
-        chapter4_selected_eigen_relative_imaginary,
-        default=None,
+        [
+            max(
+                _as_float(row.get("minimum_unstable_relative_imaginary"), default=float("nan")),
+                _as_float(row.get("minimum_stable_relative_imaginary"), default=float("nan")),
+            )
+            for row in chapter4_real_hyperbolic_scan
+            if np.isfinite(_as_float(row.get("minimum_unstable_relative_imaginary"), default=float("nan")))
+            or np.isfinite(_as_float(row.get("minimum_stable_relative_imaginary"), default=float("nan")))
+        ],
+        default=max(chapter4_selected_eigen_relative_imaginary, default=None),
     )
     chapter4_route_h_figure_passes = (
         chapter4_route_h_dg_passes
@@ -777,7 +785,7 @@ def _build_rows() -> list[dict[str, Any]]:
             evidence_artifact=f"{_artifact(chapter4_route_h_dg_path)};{_artifact(chapter4_route_h_manifold_path)};{_artifact(chapter4_real_hyperbolic_scan_path)}",
             decision="route_h_source_layer_ready" if chapter4_route_h_dg_passes else "run_chapter4_route_h_dg_manifold_audit",
             notes=(
-                f"Worst selected-eigenvalue relative imaginary part is "
+                f"Worst scanned hyperbolic relative imaginary part is "
                 f"{chapter4_worst_selected_eigen_relative_imaginary}; worst determinant error is "
                 f"{chapter4_worst_determinant_error}; worst manifold Jacobi drift is "
                 f"{chapter4_worst_manifold_jacobi}. Real-hyperbolic coverage is "

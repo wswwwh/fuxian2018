@@ -8,7 +8,7 @@
 当前事实基线（以仓库 CSV/Markdown 为准）：
 
 - Chapter 3 Route H 已有超过 10,500 km 的图源层证据；混合 cold-start 可复核，但单体 cold-start 仍保留失败证据，不能声称所有路径完全可重建。
-- Chapter 4 的原图级 DG/manifold 重建仍需从 Route H 高振幅源重新生成；近实双曲方向门控尚未全部通过。
+- Chapter 4 的原图级 L1 quasi-halo/quasi-vertical DG/manifold 源层已无 proxy 且 4.3–4.8 的 8/8 纸面快照行通过局部门控，但逐点论文面板数字化仍缺失。Route H 严格扫描的 31 个高振幅成员中只有成员 68 通过近实双曲门控，因此 Route H 的三成员跨振幅升级仍是 boundary。
 - Chapter 5 已有 DE421/BCR4BP、转移和 stable-manifold 的 source-layer 基线，但 Fig. 5.13/5.14 所需的高振幅 Sun–Earth L1 两频环面仍未达到论文目标。
 
 ## 2. 目标模式的硬目标（当前主线）
@@ -57,8 +57,10 @@ P2 当前证据：accepted=468 环面上的粗扫和 1° 细化均已保存；9�
 
 ### P3：重建 Chapter 4 原图级 DG/manifold
 
-- 以 Chapter 3 Route H 接受成员为上游，重新计算 DG、特征值/特征向量、正负流形和快照。
-- 逐成员要求近实双曲方向、eigenpair residual、determinant/reciprocity、Jacobi 漂移和传播方向一致；至少覆盖 3 个跨 2,000 km 的成员后，才允许升级 Chapter 4 状态。
+- 先运行 `scripts/run_chapter4_real_hyperbolic_scan.py`，用相对虚部 `1e-6`、determinant 误差 `<1e-9`、复数互易误差 `<1e-8` 锁定可用于实特征向量流形的 Route H 成员。
+- 当前扫描结果为 `1/31` 通过，只有成员 68 可重建 DG 和局部不稳定流形；成员 17、32 等旧 CSV 中的复数双曲对已降级为 boundary，不再冒充 real manifold。
+- 原始 Fig. 4.3–4.8 已分别完成 L1 quasi-halo/quasi-vertical 直接传播审计：8/8 指定快照行通过、Jacobi 漂移 `<=2.22e-15`、无 proxy 背景；但源曲线分辨率和论文面板逐点数字化仍是 boundary。
+- 因此 P3 的阶段结论是“原图数值源层已打通，Route H 三成员跨振幅门控未通过”；只有覆盖至少 3 个跨 2,000 km 且近实双曲门控均通过后，才可升级为完整 Chapter 4 复现。
 
 ### P4：逐图收尾与最终验收
 
@@ -70,6 +72,7 @@ P2 当前证据：accepted=468 环面上的粗扫和 1° 细化均已保存；9�
 
 - 若连续多个批次无法保持 full-torus 正进度，先保存失败证据并调节步长、Jacobi 偏置和 z 修正；不放宽残差或网格门限。
 - 若有界尝试后仍无法达到 `660,000/940,000 km`，将当前结果正式标为 `boundary`，再启动 Route B（Fourier/collocation torus BVP）或 Route A（原始数据/高分辨率图源检索），而不是把局部结果写成原图复现。
+- 若 Route H 近实双曲扫描仍只有少数成员通过，保留复数 Fourier-shifted 模式和失败扫描作为 boundary；不得放宽 `1e-6` 门限或用复特征向量替代论文所需的实流形方向。下一候选路径是增加曲线分辨率/谱提升或转向 L1 直接源层，而不是升级旧局部探针。
 - Chapter 5 应用图在上游环面和 Chapter 4 DG 门控未通过前，只能作为 source-layer/baseline；不得宣称已经完成论文级应用复现。
 
 ## 5. 交付清单
