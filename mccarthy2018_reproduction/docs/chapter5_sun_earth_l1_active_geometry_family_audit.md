@@ -1,18 +1,18 @@
 # Chapter 5 active-event geometry family audit
 
-- Accepted family members: `344`
+- Accepted family members: `349`
 - Last relative y-event step: `1.714e-03`
-- Combined metric: `8.570e-09`
-- Full-torus max |y|: `789446.452` km
-- Full-torus max |z|: `939936.004` km
-- y target error: `+129446.452` km
-- Event-grid max |y|: `789343.157` km
-- Event-grid max |z|: `939975.483` km
-- Event-to-full y gap: `+103.295` km
-- Event-to-full z gap: `-39.479` km
-- Jacobi span: `4.614e-11`
-- Closure residual: `4.406e-09`
-- z target error: `-63.996` km
+- Combined metric: `5.724e-09`
+- Full-torus max |y|: `782358.125` km
+- Full-torus max |z|: `939929.015` km
+- y target error: `+122358.125` km
+- Event-grid max |y|: `782264.566` km
+- Event-grid max |z|: `939975.255` km
+- Event-to-full y gap: `+93.560` km
+- Event-to-full z gap: `-46.240` km
+- Jacobi span: `9.141e-12`
+- Closure residual: `5.722e-09`
+- z target error: `-70.985` km
 - Event grid: `129 x 256`
 - Applied per-member z correction: `+0.000` km
 - Per-candidate correction iteration cap: `60`
@@ -27,11 +27,11 @@
 - Project predictor into z-constraint nullspace: `True`
 - Smooth preconditioner sharpness: `1.000e+08`
 - Validate full-torus progress: `True`
-- Last full-torus y-progress fraction: `1.003`
+- Last full-torus y-progress fraction: `1.000`
 - Last full-torus z-progress fraction: `1.000`
-- Active Jacobi target: `3.000724720274139`
-- Batch Jacobi-target change: `+3.630e-07`
-- Per-member Jacobi-target offset: `+8.000e-08`
+- Active Jacobi target: `3.000725064008563`
+- Batch Jacobi-target change: `+6.009e-08`
+- Per-member Jacobi-target offset: `+7.000e-08`
 - Target pair accepted: `False`
 
 The family uses active-event relocation after every accepted member and an
