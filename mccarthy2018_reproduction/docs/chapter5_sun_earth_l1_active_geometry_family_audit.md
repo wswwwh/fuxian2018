@@ -27,10 +27,10 @@
 - Project predictor into z-constraint nullspace: `True`
 - Smooth preconditioner sharpness: `1.000e+08`
 - Validate full-torus progress: `True`
-- Last full-torus y-progress fraction: `0.998`
-- Last full-torus z-progress fraction: `1.000`
+- Last full-torus y-progress fraction: `nan`
+- Last full-torus z-progress fraction: `nan`
 - Active Jacobi target: `3.000730359287173`
-- Batch Jacobi-target change: `+2.443e-08`
+- Batch Jacobi-target change: `+0.000e+00`
 - Per-member Jacobi-target offset: `+3.000e-08`
 - Target pair accepted: `True`
 

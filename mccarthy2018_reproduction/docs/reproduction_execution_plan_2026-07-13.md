@@ -53,6 +53,8 @@
 - 复核约 7,033 km 近地点候选，并构造 185 km LEO 端点；记录端点误差、Jacobi 漂移、积分步长和失败样本。
 - 输出 stable-manifold/LEO 的 CSV、NPZ、PNG、PDF 与独立复核 Markdown；未通过的点保留为 boundary/diagnostic。
 
+P2 当前证据：accepted=468 环面上的粗扫和 1° 细化均已保存；9×9、0.25° tight scan 的 best periapsis 为 `7034.029835 km`、最大 Jacobi 漂移 `1.508e-10`，LEO 转移为 `7034.028971 km`、Jacobi span `5.498e-13`，两者均 `acceptance=true`。tight scan 与 LEO 均在独立进程重跑后得到一致哈希；PNG/PDF/NPZ 已生成。外部 DE421/BCR4BP 修正仍明确标为 high-fidelity boundary。
+
 ### P3：重建 Chapter 4 原图级 DG/manifold
 
 - 以 Chapter 3 Route H 接受成员为上游，重新计算 DG、特征值/特征向量、正负流形和快照。

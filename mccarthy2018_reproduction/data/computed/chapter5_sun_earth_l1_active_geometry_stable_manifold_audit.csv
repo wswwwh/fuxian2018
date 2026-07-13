@@ -1,0 +1,2 @@
+figure_id,source_model,active_checkpoint_members,theta0_samples,theta1_samples,manifold_trajectories,stable_eigenvalue_real,stable_eigenvalue_imag,stable_eigenvalue_abs,minimum_periapsis_radius_km,maximum_periapsis_radius_km,best_7033_radius_km,best_7033_error_km,best_theta0_deg,best_theta1_deg,maximum_jacobi_drift,acceptance
+5.13,accepted active-geometry Sun-Earth L1 two-frequency torus DG stable manifold,468,70,16,2240,0.0008428004957377855,0.0,0.0008428004957377855,1369.8087113072563,649122.284957939,7804.936535873355,771.9365358733548,60.0,67.5,2.39105624189051e-10,false
