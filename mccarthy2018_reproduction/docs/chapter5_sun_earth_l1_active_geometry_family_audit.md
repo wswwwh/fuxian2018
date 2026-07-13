@@ -1,13 +1,13 @@
 # Chapter 5 active-event geometry family audit
 
-- Accepted family members: `128`
-- Last relative y-event step: `1.216e-05`
-- Combined metric: `8.748e-09`
-- Full-torus max |y|: `1095105.884` km
-- Full-torus max |z|: `944647.404` km
-- Jacobi span: `4.767e-08`
-- Closure residual: `8.748e-09`
-- z target error: `+4647.404` km
+- Accepted family members: `158`
+- Last relative y-event step: `5.253e-05`
+- Combined metric: `6.811e-09`
+- Full-torus max |y|: `1093979.060` km
+- Full-torus max |z|: `945297.578` km
+- Jacobi span: `4.875e-08`
+- Closure residual: `6.811e-09`
+- z target error: `+5297.578` km
 - Event grid: `33 x 128`
 - Applied batch z correction: `-0.000` km
 - Target pair accepted: `false`
