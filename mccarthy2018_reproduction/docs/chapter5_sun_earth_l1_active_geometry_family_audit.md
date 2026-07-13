@@ -1,12 +1,12 @@
 # Chapter 5 active-event geometry family audit
 
-- Accepted family members: `15`
-- Last relative y-event step: `1.500e-04`
-- Combined metric: `4.807e-09`
-- Full-torus max |y|: `1115340.086` km
-- Full-torus max |z|: `936704.236` km
-- Jacobi span: `6.212e-07`
-- Closure residual: `4.806e-09`
+- Accepted family members: `35`
+- Last relative y-event step: `1.429e-04`
+- Combined metric: `9.521e-09`
+- Full-torus max |y|: `1111844.318` km
+- Full-torus max |z|: `937982.549` km
+- Jacobi span: `2.655e-07`
+- Closure residual: `9.523e-09`
 - Target pair accepted: `false`
 
 The family uses active-event relocation after every accepted member and an
