@@ -43,6 +43,9 @@ def main() -> None:
     parser.add_argument("--additional-members", type=int, default=0)
     parser.add_argument("--z-target-km", type=float, default=940000.0)
     parser.add_argument("--max-relative-y-step", type=float, default=1.5e-4)
+    parser.add_argument("--time-slices", type=int, default=33)
+    parser.add_argument("--phase-samples", type=int, default=128)
+    parser.add_argument("--initial-relative-y-step", type=float)
     args = parser.parse_args()
     if args.additional_members < 0:
         raise ValueError("additional-members must be non-negative")
@@ -50,6 +53,10 @@ def main() -> None:
         raise ValueError("z-target-km must be positive")
     if args.max_relative_y_step <= 0.0:
         raise ValueError("max-relative-y-step must be positive")
+    if args.time_slices < 3 or args.phase_samples < 3:
+        raise ValueError("time-slices and phase-samples must be at least three")
+    if args.initial_relative_y_step is not None and args.initial_relative_y_step <= 0.0:
+        raise ValueError("initial-relative-y-step must be positive")
     system = SYSTEMS["sun_earth"]
     seed_data = np.load(SEED_SOURCE)
     data = np.load(CHECKPOINT)
@@ -66,8 +73,12 @@ def main() -> None:
     rotation = float(data["rotation"])
     target_jacobi = float(data["jacobi"])
     accepted = int(data["accepted"])
-    step = min(args.max_relative_y_step, float(data["step"]) * 1.05)
-    fractions = np.linspace(0.0, 1.0, 17)
+    step = (
+        min(args.max_relative_y_step, args.initial_relative_y_step)
+        if args.initial_relative_y_step is not None
+        else min(args.max_relative_y_step, float(data["step"]) * 1.05)
+    )
+    fractions = np.linspace(0.0, 1.0, args.time_slices)
     initial_residuals, _, _, _, _ = _propagated_active_geometry_constraints(
         states,
         source_phases=seed.phases,
@@ -75,7 +86,7 @@ def main() -> None:
         rotation_angle_rad=rotation,
         mu=system.mu,
         time_fractions=fractions,
-        phase_samples=64,
+        phase_samples=args.phase_samples,
         target_y_support=1.0,
         target_z_support=1.0,
         max_step=0.005,
@@ -90,7 +101,7 @@ def main() -> None:
         initial_mapping_time=mapping_time,
         initial_rotation_angle_rad=rotation,
         geometry_time_fractions=fractions,
-        active_geometry_phase_samples=64,
+        active_geometry_phase_samples=args.phase_samples,
         max_iterations=2,
         tolerance=1.0e-8,
         constraint_tolerance=1.0e-8,
@@ -119,7 +130,7 @@ def main() -> None:
                 rotation_angle_rad=rotation,
                 mu=system.mu,
                 time_fractions=fractions,
-                phase_samples=64,
+                phase_samples=args.phase_samples,
                 target_y_support=1.0,
                 target_z_support=1.0,
                 max_step=0.005,
@@ -135,7 +146,7 @@ def main() -> None:
                 initial_rotation_angle_rad=rotation,
                 phase_reference_states=states,
                 geometry_time_fractions=fractions,
-                active_geometry_phase_samples=64,
+                active_geometry_phase_samples=args.phase_samples,
                 regularization=1.0e-8,
                 geometry_residual_scale=10.0,
                 max_iterations=60,
@@ -177,7 +188,7 @@ def main() -> None:
             rotation_angle_rad=rotation,
             mu=system.mu,
             time_fractions=fractions,
-            phase_samples=64,
+            phase_samples=args.phase_samples,
             target_y_support=1.0,
             target_z_support=1.0,
             max_step=0.005,
@@ -191,7 +202,7 @@ def main() -> None:
             initial_mapping_time=mapping_time,
             initial_rotation_angle_rad=rotation,
             geometry_time_fractions=fractions,
-            active_geometry_phase_samples=64,
+            active_geometry_phase_samples=args.phase_samples,
             max_iterations=2,
             tolerance=1.0e-8,
             constraint_tolerance=1.0e-8,
@@ -212,6 +223,8 @@ def main() -> None:
             np.max(np.abs(surface[:, :, 2])) * system.length_unit_km
             - args.z_target_km
         ),
+        "event_time_slices": args.time_slices,
+        "event_phase_samples": args.phase_samples,
     }
     with OUTPUT.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=list(row))
@@ -228,6 +241,7 @@ def main() -> None:
 - Jacobi span: `{row['jacobi_span']:.3e}`
 - Closure residual: `{row['closure_residual']:.3e}`
 - z target error: `{row['z_target_error_km']:+.3f}` km
+- Event grid: `{args.time_slices} x {args.phase_samples}`
 - Target pair accepted: `false`
 
 The family uses active-event relocation after every accepted member and an

@@ -1,2 +1,2 @@
-accepted_members,last_step,combined_metric,max_abs_y_km,max_abs_z_km,jacobi_span,closure_residual,z_target_km,z_target_error_km
-85,0.0002857142857142857,6.689548323412107e-09,1102402.7031664294,941771.47965084,6.480518921492262e-08,6.689327064937655e-09,940000.0,1771.4796508400468
+accepted_members,last_step,combined_metric,max_abs_y_km,max_abs_z_km,jacobi_span,closure_residual,z_target_km,z_target_error_km,event_time_slices,event_phase_samples
+115,7.478212280273439e-07,6.19949522375131e-09,1095243.0539899545,944544.1376613934,4.719358193128187e-08,6.2002517820563185e-09,940000.0,4544.137661393383,33,128
