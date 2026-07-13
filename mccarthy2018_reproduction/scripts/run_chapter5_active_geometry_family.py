@@ -41,9 +41,15 @@ def metric(correction) -> float:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--additional-members", type=int, default=0)
+    parser.add_argument("--z-target-km", type=float, default=940000.0)
+    parser.add_argument("--max-relative-y-step", type=float, default=1.5e-4)
     args = parser.parse_args()
     if args.additional_members < 0:
         raise ValueError("additional-members must be non-negative")
+    if args.z_target_km <= 0.0:
+        raise ValueError("z-target-km must be positive")
+    if args.max_relative_y_step <= 0.0:
+        raise ValueError("max-relative-y-step must be positive")
     system = SYSTEMS["sun_earth"]
     seed_data = np.load(SEED_SOURCE)
     data = np.load(CHECKPOINT)
@@ -60,9 +66,49 @@ def main() -> None:
     rotation = float(data["rotation"])
     target_jacobi = float(data["jacobi"])
     accepted = int(data["accepted"])
-    step = min(1.5e-4, float(data["step"]) * 1.05)
+    step = min(args.max_relative_y_step, float(data["step"]) * 1.05)
     fractions = np.linspace(0.0, 1.0, 17)
-    last = None
+    initial_residuals, _, _, _, _ = _propagated_active_geometry_constraints(
+        states,
+        source_phases=seed.phases,
+        mapping_time=mapping_time,
+        rotation_angle_rad=rotation,
+        mu=system.mu,
+        time_fractions=fractions,
+        phase_samples=64,
+        target_y_support=1.0,
+        target_z_support=1.0,
+        max_step=0.005,
+    )
+    initial_y_support, initial_z_support = 1.0 + initial_residuals
+    identity = stroboscopic_curve_dual_geometry_correction(
+        seed,
+        target_jacobi=target_jacobi,
+        target_y_support=initial_y_support,
+        target_z_support=initial_z_support,
+        initial_states=states,
+        initial_mapping_time=mapping_time,
+        initial_rotation_angle_rad=rotation,
+        geometry_time_fractions=fractions,
+        active_geometry_phase_samples=64,
+        max_iterations=2,
+        tolerance=1.0e-8,
+        constraint_tolerance=1.0e-8,
+        max_step=0.005,
+    )
+    initial_torus = sweep_corrected_curve_correction(
+        identity, time_samples=128, max_step=0.0025
+    )
+    initial_surface, _ = resample_corrected_torus_surface(
+        initial_torus, phase_samples=256
+    )
+    initial_full_z_km = float(
+        np.max(np.abs(initial_surface[:, :, 2])) * system.length_unit_km
+    )
+    z_event_target = initial_z_support + (
+        args.z_target_km - initial_full_z_km
+    ) / system.length_unit_km
+    last = identity
     for _ in range(args.additional_members):
         correction = None
         for _retry in range(5):
@@ -83,7 +129,7 @@ def main() -> None:
                 seed,
                 target_jacobi=target_jacobi,
                 target_y_support=(1.0 - step) * y_support,
-                target_z_support=z_support,
+                target_z_support=z_event_target,
                 initial_states=states,
                 initial_mapping_time=mapping_time,
                 initial_rotation_angle_rad=rotation,
@@ -111,7 +157,7 @@ def main() -> None:
         rotation = correction.rotation_angle_rad
         accepted += 1
         last = correction
-        step = min(1.5e-4, step * 1.05)
+        step = min(args.max_relative_y_step, step * 1.05)
         np.savez_compressed(
             CHECKPOINT,
             states=states,
@@ -140,7 +186,7 @@ def main() -> None:
             seed,
             target_jacobi=target_jacobi,
             target_y_support=1.0 + residuals[0],
-            target_z_support=1.0 + residuals[1],
+            target_z_support=z_event_target,
             initial_states=states,
             initial_mapping_time=mapping_time,
             initial_rotation_angle_rad=rotation,
@@ -161,6 +207,11 @@ def main() -> None:
         "max_abs_z_km": float(np.max(np.abs(surface[:, :, 2])) * system.length_unit_km),
         "jacobi_span": float(np.ptp(torus.jacobi_values)),
         "closure_residual": float(np.max(np.linalg.norm(torus.closure_residuals, axis=1))),
+        "z_target_km": args.z_target_km,
+        "z_target_error_km": float(
+            np.max(np.abs(surface[:, :, 2])) * system.length_unit_km
+            - args.z_target_km
+        ),
     }
     with OUTPUT.open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=list(row))
@@ -176,10 +227,11 @@ def main() -> None:
 - Full-torus max |z|: `{row['max_abs_z_km']:.3f}` km
 - Jacobi span: `{row['jacobi_span']:.3e}`
 - Closure residual: `{row['closure_residual']:.3e}`
+- z target error: `{row['z_target_error_km']:+.3f}` km
 - Target pair accepted: `false`
 
 The family uses active-event relocation after every accepted member and an
-adaptive trust step capped at `1.5e-4`. Run this script with
+adaptive trust step capped at `{args.max_relative_y_step:.3e}`. Run this script with
 `--additional-members N` to continue from the committed checkpoint without
 replaying the accepted prefix.
 """,
