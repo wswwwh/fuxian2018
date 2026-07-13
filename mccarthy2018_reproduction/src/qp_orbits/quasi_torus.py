@@ -263,6 +263,107 @@ def _propagated_active_geometry_constraints(
     return residuals, state_jacobian, time_jacobian, rotation_jacobian, events
 
 
+def _propagated_dense_smooth_geometry_constraints(
+    initial_states: np.ndarray,
+    *,
+    source_phases: np.ndarray,
+    mapping_time: float,
+    rotation_angle_rad: float,
+    mu: float,
+    time_fractions: np.ndarray,
+    phase_samples: int,
+    target_y_support: float,
+    target_z_support: float,
+    sharpness: float = 1.0e8,
+    max_step: float = 0.01,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Return dense smooth-max geometry residuals and STM sensitivities."""
+
+    states = np.asarray(initial_states, dtype=float)
+    phases = np.asarray(source_phases, dtype=float)
+    fractions = np.asarray(time_fractions, dtype=float)
+    if states.ndim != 2 or states.shape[1] != 6:
+        raise ValueError("initial_states must have shape (samples, 6)")
+    if phases.shape != (states.shape[0],):
+        raise ValueError("source_phases must match the state sample count")
+    if phase_samples < 3:
+        raise ValueError("phase_samples must be at least three")
+    if mapping_time <= 0.0 or not np.isfinite(mapping_time):
+        raise ValueError("mapping_time must be positive and finite")
+    if fractions.ndim != 1 or fractions.size < 1:
+        raise ValueError("time_fractions must be a non-empty vector")
+    if np.any(fractions < 0.0) or np.any(fractions > 1.0) or np.any(np.diff(fractions) < 0.0):
+        raise ValueError("time_fractions must be sorted within [0, 1]")
+
+    times = mapping_time * fractions
+    solution = integrate_states_and_stms(
+        states,
+        (0.0, mapping_time),
+        mu,
+        t_eval=times,
+        max_step=max_step,
+    )
+    if not solution.success:
+        raise RuntimeError(solution.message)
+    values = solution.y.T.reshape(fractions.size, states.shape[0], 42)
+    propagated = values[:, :, :6]
+    stms = values[:, :, 6:].reshape(fractions.size, states.shape[0], 6, 6)
+    dense_phases = np.linspace(0.0, 2.0 * np.pi, phase_samples, endpoint=False)
+    interpolations: list[np.ndarray] = []
+    interpolation_derivatives: list[np.ndarray] = []
+    surfaces = np.empty((fractions.size, phase_samples, 2), dtype=float)
+    for time_index, fraction in enumerate(fractions):
+        query = dense_phases - fraction * rotation_angle_rad
+        interpolation = _trigonometric_interpolation_matrix(phases, query)
+        derivative = _trigonometric_interpolation_derivative_matrix(phases, query)
+        interpolations.append(interpolation)
+        interpolation_derivatives.append(derivative)
+        surfaces[time_index, :, 0] = interpolation @ propagated[time_index, :, 1]
+        surfaces[time_index, :, 1] = interpolation @ propagated[time_index, :, 2]
+
+    residuals = np.empty(2, dtype=float)
+    state_jacobian = np.zeros((2, states.size), dtype=float)
+    time_jacobian = np.zeros(2, dtype=float)
+    rotation_jacobian = np.zeros(2, dtype=float)
+    for row, (component, target) in enumerate(
+        zip((1, 2), (target_y_support, target_z_support))
+    ):
+        support, surface_gradient = _smooth_absolute_support(
+            surfaces[:, :, row],
+            sharpness=sharpness,
+        )
+        residuals[row] = support - target
+        for time_index, fraction in enumerate(fractions):
+            interpolation = interpolations[time_index]
+            phase_gradient = surface_gradient[time_index]
+            source_weights = phase_gradient @ interpolation
+            for sample_index, weight in enumerate(source_weights):
+                start = 6 * sample_index
+                state_jacobian[row, start : start + 6] += (
+                    weight * stms[time_index, sample_index, component, :]
+                )
+                time_jacobian[row] += (
+                    weight
+                    * fraction
+                    * cr3bp_rhs(
+                        times[time_index],
+                        propagated[time_index, sample_index],
+                        mu,
+                    )[component]
+                )
+            rotation_jacobian[row] += (
+                -fraction
+                * float(
+                    phase_gradient
+                    @ (
+                        interpolation_derivatives[time_index]
+                        @ propagated[time_index, :, component]
+                    )
+                )
+            )
+    return residuals, state_jacobian, time_jacobian, rotation_jacobian
+
+
 def _regularized_least_squares_step(
     jacobian: np.ndarray,
     right_hand_side: np.ndarray,
@@ -2082,6 +2183,22 @@ def _jacobi_gradient(states: np.ndarray, mu: float) -> np.ndarray:
     return gradients
 
 
+def _project_constraint_nullspace(
+    direction: np.ndarray,
+    gradient: np.ndarray,
+) -> np.ndarray:
+    """Remove the component of a direction normal to one constraint."""
+
+    values = np.asarray(direction, dtype=float)
+    normal = np.asarray(gradient, dtype=float)
+    if values.shape != normal.shape:
+        raise ValueError("direction and gradient must have matching shapes")
+    denominator = float(np.dot(normal, normal))
+    if denominator <= 1.0e-30:
+        raise RuntimeError("Constraint gradient is degenerate")
+    return values - normal * (float(np.dot(normal, values)) / denominator)
+
+
 def stroboscopic_curve_free_energy_correction(
     seed: StroboscopicInvariantCurveSeed,
     *,
@@ -2366,8 +2483,10 @@ def stroboscopic_curve_dual_geometry_correction(
     phase_reference_states: np.ndarray | None = None,
     geometry_time_fractions: np.ndarray | None = None,
     active_geometry_phase_samples: int | None = None,
+    dense_smooth_geometry_phase_samples: int | None = None,
     sharpness: float = 80.0,
     regularization: float = 1.0e-6,
+    energy_residual_scale: float = 1.0,
     geometry_residual_scale: float = 1.0,
     max_iterations: int = 24,
     tolerance: float = 1.0e-9,
@@ -2376,6 +2495,7 @@ def stroboscopic_curve_dual_geometry_correction(
     max_state_step: float = 5.0e-5,
     max_mapping_time_step: float = 0.005,
     max_rotation_step: float = 0.005,
+    correction_damping: float = 1.0,
     rcond: float = 1.0e-11,
 ) -> DualGeometryCurveCorrection:
     """Correct one curve with smooth y/z support and mean-energy targets."""
@@ -2390,8 +2510,17 @@ def stroboscopic_curve_dual_geometry_correction(
         raise ValueError("phase_reference_states must match the seed curve shape")
     if initial_mapping_time <= 0.0:
         raise ValueError("initial_mapping_time must be positive")
+    if energy_residual_scale <= 0.0 or not np.isfinite(energy_residual_scale):
+        raise ValueError("energy_residual_scale must be positive and finite")
     if geometry_residual_scale <= 0.0 or not np.isfinite(geometry_residual_scale):
         raise ValueError("geometry_residual_scale must be positive and finite")
+    if not 0.0 < correction_damping <= 1.0:
+        raise ValueError("correction_damping must be in (0, 1]")
+    if (
+        active_geometry_phase_samples is not None
+        and dense_smooth_geometry_phase_samples is not None
+    ):
+        raise ValueError("active and dense-smooth geometry modes are mutually exclusive")
 
     mapping_time = float(initial_mapping_time)
     rotation = float(initial_rotation_angle_rad % (2.0 * np.pi))
@@ -2410,6 +2539,7 @@ def stroboscopic_curve_dual_geometry_correction(
     rotation_history: list[float] = []
     best_metric = np.inf
     best: tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, float, float] | None = None
+    best_evaluation_index = -1
 
     for _ in range(max_iterations + 1):
         interpolation = _trigonometric_interpolation_matrix(
@@ -2455,6 +2585,29 @@ def stroboscopic_curve_dual_geometry_correction(
                 target_z_support=target_z_support,
                 max_step=max_step,
             )
+        elif dense_smooth_geometry_phase_samples is not None:
+            if geometry_time_fractions is None:
+                raise ValueError(
+                    "geometry_time_fractions are required for dense smooth geometry"
+                )
+            (
+                geometry_residuals,
+                geometry_jacobian,
+                geometry_time_jacobian,
+                geometry_rotation_jacobian,
+            ) = _propagated_dense_smooth_geometry_constraints(
+                states,
+                source_phases=seed.phases,
+                mapping_time=mapping_time,
+                rotation_angle_rad=rotation,
+                mu=seed.mu,
+                time_fractions=geometry_time_fractions,
+                phase_samples=dense_smooth_geometry_phase_samples,
+                target_y_support=target_y_support,
+                target_z_support=target_z_support,
+                sharpness=sharpness,
+                max_step=max_step,
+            )
         elif geometry_time_fractions is None:
             geometry_residuals, geometry_jacobian = _smooth_dual_geometry_constraints(
                 states,
@@ -2480,8 +2633,8 @@ def stroboscopic_curve_dual_geometry_correction(
         phase_residual = float(np.sum((states - reference) * tangent))
         metric = max(
             float(residual_norms.max()),
-            abs(energy_residual),
-            float(np.max(np.abs(geometry_residuals))),
+            energy_residual_scale * abs(energy_residual),
+            geometry_residual_scale * float(np.max(np.abs(geometry_residuals))),
             abs(phase_residual),
         )
         residual_history.append(residual_norms)
@@ -2492,6 +2645,7 @@ def stroboscopic_curve_dual_geometry_correction(
         rotation_history.append(rotation)
         if metric < best_metric:
             best_metric = metric
+            best_evaluation_index = len(residual_history) - 1
             best = (
                 states.copy(), mapped.copy(), targets.copy(), interpolation.copy(),
                 mapping_time, rotation,
@@ -2537,6 +2691,7 @@ def stroboscopic_curve_dual_geometry_correction(
             ]
         )
         row_scale = np.ones(state_size + 4, dtype=float)
+        row_scale[state_size] = energy_residual_scale
         row_scale[state_size + 1 : state_size + 3] = geometry_residual_scale
         delta = _regularized_least_squares_step(
             row_scale[:, None] * jacobian,
@@ -2555,6 +2710,7 @@ def stroboscopic_curve_dual_geometry_correction(
             scale = min(scale, max_mapping_time_step / abs(mapping_delta))
         if abs(rotation_delta) > max_rotation_step:
             scale = min(scale, max_rotation_step / abs(rotation_delta))
+        scale *= correction_damping
         state_delta *= scale
         mapping_delta *= scale
         rotation_delta *= scale
@@ -2568,7 +2724,7 @@ def stroboscopic_curve_dual_geometry_correction(
     if best is None:
         raise RuntimeError("Dual-geometry correction did not evaluate a candidate")
     best_states, best_mapped, best_targets, best_interpolation, best_time, best_rotation = best
-    if best_metric != metric:
+    if best_evaluation_index != len(residual_history) - 1:
         residual_history.append(np.linalg.norm(best_mapped - best_targets, axis=1))
         energy_history.append(float(np.mean(jacobi_constant(best_states, seed.mu)) - target_jacobi))
         if active_geometry_phase_samples is not None:
@@ -2582,6 +2738,20 @@ def stroboscopic_curve_dual_geometry_correction(
                 phase_samples=active_geometry_phase_samples,
                 target_y_support=target_y_support,
                 target_z_support=target_z_support,
+                max_step=max_step,
+            )[0]
+        elif dense_smooth_geometry_phase_samples is not None:
+            best_geometry = _propagated_dense_smooth_geometry_constraints(
+                best_states,
+                source_phases=seed.phases,
+                mapping_time=best_time,
+                rotation_angle_rad=best_rotation,
+                mu=seed.mu,
+                time_fractions=geometry_time_fractions,
+                phase_samples=dense_smooth_geometry_phase_samples,
+                target_y_support=target_y_support,
+                target_z_support=target_z_support,
+                sharpness=sharpness,
                 max_step=max_step,
             )[0]
         elif geometry_time_fractions is None:

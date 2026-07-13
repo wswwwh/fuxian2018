@@ -15,9 +15,11 @@ if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
 from qp_orbits.quasi_torus import (
+    _project_constraint_nullspace,
     _regularized_least_squares_step,
     _propagated_smooth_geometry_constraints,
     _propagated_active_geometry_constraints,
+    _propagated_dense_smooth_geometry_constraints,
     _smooth_absolute_support,
     _smooth_dual_geometry_constraints,
 )
@@ -103,6 +105,17 @@ class SmoothAbsoluteSupportTests(unittest.TestCase):
         self.assertGreater(abs(unregularized[1]), 1.0e8)
         self.assertLess(abs(regularized[1]), 1.0e-2)
         self.assertAlmostEqual(regularized[0], 1.0 / 1.000001, places=12)
+
+    def test_constraint_nullspace_projection_removes_normal_component(self) -> None:
+        direction = np.array([1.0, -2.0, 0.5, 3.0])
+        gradient = np.array([0.5, 1.0, -1.5, 0.25])
+        projected = _project_constraint_nullspace(direction, gradient)
+
+        self.assertAlmostEqual(float(np.dot(projected, gradient)), 0.0, places=14)
+        np.testing.assert_allclose(
+            direction - projected,
+            gradient * (np.dot(direction, gradient) / np.dot(gradient, gradient)),
+        )
 
     def test_propagated_geometry_jacobian_matches_finite_difference(self) -> None:
         states = np.array(
@@ -214,6 +227,67 @@ class SmoothAbsoluteSupportTests(unittest.TestCase):
             )
         self.assertEqual(residuals.shape, (2,))
         self.assertEqual(events.shape, (2, 4))
+
+    def test_dense_smooth_event_jacobian_matches_finite_difference(self) -> None:
+        phases = np.linspace(0.0, 2.0 * np.pi, 5, endpoint=False)
+        states = np.zeros((5, 6), dtype=float)
+        states[:, 0] = 0.83 + 0.002 * np.cos(phases)
+        states[:, 1] = 0.025 * np.sin(phases)
+        states[:, 2] = 0.012 * np.cos(phases)
+        states[:, 4] = 0.11
+        kwargs = {
+            "source_phases": phases,
+            "mapping_time": 0.03,
+            "rotation_angle_rad": 0.17,
+            "mu": 0.012150585609624,
+            "time_fractions": np.array([0.0, 0.5, 1.0]),
+            "phase_samples": 17,
+            "target_y_support": 0.02,
+            "target_z_support": 0.01,
+            "sharpness": 250.0,
+            "max_step": 0.01,
+        }
+        _, state_jacobian, time_jacobian, rotation_jacobian = (
+            _propagated_dense_smooth_geometry_constraints(states, **kwargs)
+        )
+        step = 1.0e-7
+        for sample, component in ((1, 1), (3, 2)):
+            upper = states.copy()
+            lower = states.copy()
+            upper[sample, component] += step
+            lower[sample, component] -= step
+            upper_residuals = _propagated_dense_smooth_geometry_constraints(
+                upper, **kwargs
+            )[0]
+            lower_residuals = _propagated_dense_smooth_geometry_constraints(
+                lower, **kwargs
+            )[0]
+            numerical = (upper_residuals - lower_residuals) / (2.0 * step)
+            np.testing.assert_allclose(
+                state_jacobian[:, 6 * sample + component],
+                numerical,
+                rtol=4.0e-5,
+                atol=4.0e-8,
+            )
+        for key, analytic in (
+            ("mapping_time", time_jacobian),
+            ("rotation_angle_rad", rotation_jacobian),
+        ):
+            upper_kwargs = dict(kwargs, **{key: kwargs[key] + step})
+            lower_kwargs = dict(kwargs, **{key: kwargs[key] - step})
+            upper_residuals = _propagated_dense_smooth_geometry_constraints(
+                states, **upper_kwargs
+            )[0]
+            lower_residuals = _propagated_dense_smooth_geometry_constraints(
+                states, **lower_kwargs
+            )[0]
+            numerical = (upper_residuals - lower_residuals) / (2.0 * step)
+            np.testing.assert_allclose(
+                analytic,
+                numerical,
+                rtol=5.0e-5,
+                atol=5.0e-8,
+            )
 
 
 if __name__ == "__main__":
