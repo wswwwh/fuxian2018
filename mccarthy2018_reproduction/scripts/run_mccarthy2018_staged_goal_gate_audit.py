@@ -183,6 +183,17 @@ def _build_rows() -> list[dict[str, Any]]:
     chapter5_nrho_corridor_doc_path = docs / "chapter5_nrho_corridor_per_figure_audit.md"
     chapter5_nrho_transfer_path = data / "chapter5_nrho_transfer_per_figure_audit.csv"
     chapter5_nrho_transfer_doc_path = docs / "chapter5_nrho_transfer_per_figure_audit.md"
+    chapter5_fig510_bcr4bp_path = data / "chapter5_fig510_bcr4bp_transfer_audit.csv"
+    chapter5_fig510_bcr4bp_doc_path = docs / "chapter5_fig510_bcr4bp_transfer_audit.md"
+    chapter5_fig510_bcr4bp_rerun_path = (
+        docs / "chapter5_fig510_bcr4bp_independent_rerun_audit.md"
+    )
+    chapter5_fig510_bcr4bp_png = (
+        PROJECT_ROOT / "outputs" / "diagnostics" / "fig_5_10_bcr4bp_extension.png"
+    )
+    chapter5_fig510_bcr4bp_pdf = (
+        PROJECT_ROOT / "outputs" / "diagnostics" / "fig_5_10_bcr4bp_extension.pdf"
+    )
     chapter5_nrho_rendezvous_path = data / "chapter5_nrho_rendezvous_per_figure_audit.csv"
     chapter5_nrho_rendezvous_doc_path = docs / "chapter5_nrho_rendezvous_per_figure_audit.md"
     chapter5_stable_manifold_path = data / "chapter5_stable_manifold_per_figure_audit.csv"
@@ -218,6 +229,7 @@ def _build_rows() -> list[dict[str, Any]]:
     chapter5_halo_lyapunov = _read_rows(chapter5_halo_lyapunov_path)
     chapter5_nrho_corridor = _read_rows(chapter5_nrho_corridor_path)
     chapter5_nrho_transfer = _read_rows(chapter5_nrho_transfer_path)
+    chapter5_fig510_bcr4bp = _read_rows(chapter5_fig510_bcr4bp_path)
     chapter5_nrho_rendezvous = _read_rows(chapter5_nrho_rendezvous_path)
     chapter5_stable_manifold = _read_rows(chapter5_stable_manifold_path)
     chapter5_per_figure = _read_rows(chapter5_per_figure_path)
@@ -531,6 +543,40 @@ def _build_rows() -> list[dict[str, Any]]:
         and {row.get("figure_id") for row in chapter5_nrho_transfer_accepted} >= {"5.10", "5.11"}
         and chapter5_nrho_transfer_doc_path.exists()
     )
+    chapter5_fig510_bcr4bp_numerical = [
+        row
+        for row in chapter5_fig510_bcr4bp
+        if _as_bool(row.get("numerical_acceptance"))
+    ]
+    chapter5_fig510_bcr4bp_paper = [
+        row
+        for row in chapter5_fig510_bcr4bp
+        if _as_bool(row.get("paper_equivalence"))
+    ]
+    chapter5_fig510_bcr4bp_max_endpoint = max(
+        (
+            _as_float(row.get("independent_endpoint_error_km"), 1.0)
+            for row in chapter5_fig510_bcr4bp_numerical
+        ),
+        default=1.0,
+    )
+    chapter5_fig510_bcr4bp_passes = (
+        len(chapter5_fig510_bcr4bp) == 2
+        and len(chapter5_fig510_bcr4bp_numerical) == 2
+        and not chapter5_fig510_bcr4bp_paper
+        and {row.get("case_id") for row in chapter5_fig510_bcr4bp} == {"1", "2"}
+        and all(
+            row.get("segment_time_origin") == "absolute"
+            for row in chapter5_fig510_bcr4bp
+        )
+        and chapter5_fig510_bcr4bp_max_endpoint <= 1.0e-3
+        and chapter5_fig510_bcr4bp_doc_path.exists()
+        and chapter5_fig510_bcr4bp_rerun_path.exists()
+        and chapter5_fig510_bcr4bp_png.exists()
+        and chapter5_fig510_bcr4bp_pdf.exists()
+        and chapter5_fig510_bcr4bp_png.stat().st_size > 0
+        and chapter5_fig510_bcr4bp_pdf.stat().st_size > 0
+    )
     chapter5_nrho_rendezvous_accepted = [
         row for row in chapter5_nrho_rendezvous if _as_bool(row.get("acceptance"))
     ]
@@ -569,6 +615,7 @@ def _build_rows() -> list[dict[str, Any]]:
         and chapter5_route_h_de421_passes
         and chapter5_readiness_passes
         and chapter5_optimization_passes
+        and chapter5_fig510_bcr4bp_passes
         and chapter5_per_figure_audit_passes
     )
     rows: list[dict[str, Any]] = [
@@ -1017,6 +1064,43 @@ def _build_rows() -> list[dict[str, Any]]:
         ),
         _row(
             scope="chapter5",
+            gate_id="C5-FIG510-BCR4BP-TRANSFER-AUDIT",
+            requirement=(
+                "Figure 5.10 should have two DE421-initialized planar BCR4BP "
+                "corrections with independent propagation, absolute-time segment "
+                "validation, deterministic rerun evidence, and a separate paper-equivalence gate."
+            ),
+            status="pass" if chapter5_fig510_bcr4bp_passes else "not_run_or_incomplete",
+            metric="numerically_accepted_bcr4bp_cases",
+            value=len(chapter5_fig510_bcr4bp_numerical),
+            threshold=(
+                "2/2 numerical, 0/2 paper equivalent, independent endpoint <= 1e-3 km, "
+                "absolute segment time, nonempty PNG/PDF, deterministic rerun"
+            ),
+            evidence_artifact=(
+                f"{_artifact(chapter5_fig510_bcr4bp_path)};"
+                f"{_artifact(chapter5_fig510_bcr4bp_doc_path)};"
+                f"{_artifact(chapter5_fig510_bcr4bp_rerun_path)};"
+                f"{_artifact(chapter5_fig510_bcr4bp_png)};"
+                f"{_artifact(chapter5_fig510_bcr4bp_pdf)}"
+            ),
+            decision=(
+                "use_fig510_bcr4bp_extension_with_paper_boundary"
+                if chapter5_fig510_bcr4bp_passes
+                else "run_chapter5_fig510_bcr4bp_transfer_audit"
+            ),
+            notes=(
+                f"Numerical acceptance is {len(chapter5_fig510_bcr4bp_numerical)}/2; "
+                f"paper equivalence is {len(chapter5_fig510_bcr4bp_paper)}/2; "
+                f"maximum independent endpoint error is "
+                f"{_fmt(chapter5_fig510_bcr4bp_max_endpoint)} km. Passing this gate "
+                "accepts the project BCR4BP extension only; the project-selected epoch, "
+                "CR3BP NRHO boundary states, impulse mismatch, and missing pointwise "
+                "thesis geometry remain explicit boundaries."
+            ),
+        ),
+        _row(
+            scope="chapter5",
             gate_id="C5-NRHO-RENDEZVOUS-PER-FIGURE-AUDIT",
             requirement="Figure 5.12 should have a per-figure fixed-departure rendezvous branch with arrival-offset coverage, delta-v variation, and endpoint residual evidence before being promoted beyond proxy overlay status.",
             status="pass" if chapter5_nrho_rendezvous_passes else "not_run_or_incomplete",
@@ -1151,6 +1235,7 @@ def _write_doc(rows: list[dict[str, Any]]) -> None:
     c5_halo_lyapunov = by_gate.get("C5-HALO-LYAPUNOV-PER-FIGURE-TRANSFER-AUDIT", {})
     c5_nrho_corridor = by_gate.get("C5-NRHO-CORRIDOR-PER-FIGURE-AUDIT", {})
     c5_nrho_transfer = by_gate.get("C5-NRHO-PER-FIGURE-TRANSFER-AUDIT", {})
+    c5_fig510_bcr4bp = by_gate.get("C5-FIG510-BCR4BP-TRANSFER-AUDIT", {})
     c5_nrho_rendezvous = by_gate.get("C5-NRHO-RENDEZVOUS-PER-FIGURE-AUDIT", {})
     c5_stable_manifold = by_gate.get("C5-STABLE-MANIFOLD-PER-FIGURE-AUDIT", {})
     c5_per_figure = by_gate.get("C5-PER-FIGURE-SOURCE-LAYER-AUDIT", {})
@@ -1207,6 +1292,7 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - Chapter 5 halo-Lyapunov per-figure transfer audit: `{c5_halo_lyapunov.get('status')}`
 - Chapter 5 NRHO corridor per-figure audit: `{c5_nrho_corridor.get('status')}`
 - Chapter 5 NRHO per-figure transfer audit: `{c5_nrho_transfer.get('status')}`
+- Chapter 5 Fig. 5.10 BCR4BP transfer audit: `{c5_fig510_bcr4bp.get('status')}`
 - Chapter 5 NRHO rendezvous per-figure audit: `{c5_nrho_rendezvous.get('status')}`
 - Chapter 5 stable-manifold per-figure audit: `{c5_stable_manifold.get('status')}`
 - Chapter 5 per-figure source-layer audit: `{c5_per_figure.get('status')}`
@@ -1262,6 +1348,11 @@ For Fig. 5.10 and Fig. 5.11 specifically, the CR3BP endpoint-corrected transfer
 rows are recorded in `data/computed/chapter5_nrho_transfer_per_figure_audit.csv`
 and `docs/chapter5_nrho_transfer_per_figure_audit.md`; these rows strengthen
 the per-figure transfer evidence without claiming BCR4BP/ephemeris equivalence.
+Fig. 5.10 additionally has a dedicated DE421-initialized planar BCR4BP audit in
+`data/computed/chapter5_fig510_bcr4bp_transfer_audit.csv`, with strict saved
+trajectories, independent rerun evidence, and diagnostic PNG/PDF artifacts.
+Its numerical extension gate passes 2/2 while paper equivalence remains 0/2;
+the latter is an explicit boundary rather than a failed numerical propagation.
 For Fig. 5.12, the CR3BP fixed-departure rendezvous arrival-offset branch is
 recorded in `data/computed/chapter5_nrho_rendezvous_per_figure_audit.csv` and
 `docs/chapter5_nrho_rendezvous_per_figure_audit.md`; this replaces the prior

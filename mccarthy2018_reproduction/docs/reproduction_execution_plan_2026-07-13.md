@@ -76,7 +76,9 @@ P4 初始审计检查点（2026-07-14）：
 - `scripts/run_figure_evidence_gap_audit.py` 进一步给出保守证据分类：`accepted=7`、`boundary=30`、`diagnostic=5`、`proxy=12`，54 行的脚本/数据/PNG/PDF 路径均存在；该表只记录证据缺口，不新增科学主张。
 - Fig. 4.2 已从 PDF 第 103 页 xref 473 无损提取 `1517 x 682` 原生面板：1054 个蓝线像素列、13 个共同区间计算点，覆盖 `89.026651%`，稳定性指数 RMSE `0.371003`、最大绝对误差 `0.510882`，均低于 `+/-1.953125` 数字化不确定度；`full_curve_coverage=false`，尾段缺口 `0.049450` 天保持为 boundary。
 - Fig. 4.3–4.8 的 canonical 行已收紧为“内部动力学门通过、论文投影几何未验证且当前明显不匹配”；后续必须先扩展全局流形，再拟合/锁定论文相机做 projection-space Chamfer/coverage 审计，不能把静态 3D 图称为状态空间逐点数字化。
-- Fig. 4.2 数字化脚本在两个独立 Python 进程中复跑，原生图、标定 CSV、数字化点、逐点对比、摘要、Markdown 和诊断 PNG 的 SHA256 均保持一致；`unittest discover` 25/25 通过，54 图 smoke、目标表 `--check` 和 `git diff --check` 通过。
+- Fig. 4.2 数字化脚本在两个独立 Python 进程中复跑，原生图、标定 CSV、数字化点、逐点对比、摘要、Markdown 和诊断 PNG 的 SHA256 均保持一致；加入 Fig. 5.10 BCR4BP 回归门后，`unittest discover` 34/34、54 图 smoke、目标表 `--check` 和 `git diff --check` 均通过。
+- Fig. 5.10 已新增 DE421 初始化的平面 Earth–Moon BCR4BP 两案例专用审计：项目历元为 `2020-06-15T00:00:00Z`，初始太阳相位 `1.2408947569934152 rad`，并修复太阳角速度归一化中遗漏的 `2*pi`。23 天与 12.4 天案例均通过独立重传播、容差散布、绝对时间分段和月面净空门，最大独立终端误差 `4.819078e-05 km`；错误地把每段时间重置为零会产生至少 `100.774 km` 缺陷，已作为非自治负对照保留。
+- Fig. 5.10 的 BCR4BP 总脉冲分别为 `72.628142 m/s` 与 `89.049947 m/s`，相对论文总量误差为 `-9.7787%` 与 `+2.8290%`。因此数值扩展门为 `2/2`，论文等价门明确为 `0/2`；canonical 论文风格主图仍保留 CR3BP，BCR4BP 轨迹与误差只放入独立诊断 PNG/PDF，不将项目自选历元和 CR3BP 边界状态误报为论文高保真初值。
 - 因为仍有 25 个图行带 boundary/open 条件，当前结论是“54/54 工程覆盖 + 可审计 source-layer”，不是完整论文数值等价复现；下一步优先按 `figure_validation_table.csv` 的 `next_action` 消化高影响 boundary。
 
 ## 4. 停止与切换规则
@@ -84,7 +86,7 @@ P4 初始审计检查点（2026-07-14）：
 - 若连续多个批次无法保持 full-torus 正进度，先保存失败证据并调节步长、Jacobi 偏置和 z 修正；不放宽残差或网格门限。
 - 若有界尝试后仍无法达到 `660,000/940,000 km`，将当前结果正式标为 `boundary`，再启动 Route B（Fourier/collocation torus BVP）或 Route A（原始数据/高分辨率图源检索），而不是把局部结果写成原图复现。
 - 若 Route H 近实双曲扫描仍只有少数成员通过，保留复数 Fourier-shifted 模式和失败扫描作为 boundary；不得放宽 `1e-6` 门限或用复特征向量替代论文所需的实流形方向。下一轮优先把 `chapter3_route_h_fixed_time_target_states.csv` 的 N57/N81/N105 三个严格论文锚点接入跨 N 重校正/DG 扫描，并保留 member 68 为阳性控制；若仍失败则转向准周期 cocycle 的实不变子束求解。
-- Chapter 5 后续按图高保真优先处理 Fig. 5.10：现有 Earth–Moon BCR4BP 单段速度校正器可覆盖 23 天和 12.4 天两案；必须同时记录历元/太阳相位、独立终端误差、两次脉冲和论文差值，并把它标作高保真扩展而非原论文 CR3BP 数值等价。
+- Chapter 5 的 Fig. 5.10 已完成上述 BCR4BP 专用数值扩展；下一步不再重复单段数值校正，而是优先追索论文特定历元/原始初值，把两端替换为高保真校正 NRHO，并优化两次脉冲分配。若无法获得论文边界条件，则永久保留 `paper_equivalence=false`，再把同样的非自治审计框架扩展到 Fig. 5.11 或其他高影响应用图。
 
 ## 5. 交付清单
 

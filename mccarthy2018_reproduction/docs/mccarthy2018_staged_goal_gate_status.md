@@ -25,6 +25,7 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - Chapter 5 halo-Lyapunov per-figure transfer audit: `pass`
 - Chapter 5 NRHO corridor per-figure audit: `pass`
 - Chapter 5 NRHO per-figure transfer audit: `pass`
+- Chapter 5 Fig. 5.10 BCR4BP transfer audit: `pass`
 - Chapter 5 NRHO rendezvous per-figure audit: `pass`
 - Chapter 5 stable-manifold per-figure audit: `pass`
 - Chapter 5 per-figure source-layer audit: `pass`
@@ -47,13 +48,14 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - `C4-ROUTE-H-FIGURE-SOURCE` (chapter4): status `not_run_or_fail`, metric `route_h_figure_png_bytes` = `345125`, decision `run_fig_4_route_h_quasi_dro`
 - `C4-PER-FIGURE-SOURCE-LAYER-AUDIT` (chapter4): status `pass`, metric `original_chapter4_figure_rows` = `8`, decision `use_per_figure_chapter4_status_table`
 - `C5-UPSTREAM-HIGH-FIDELITY-DATA` (chapter5): status `blocked_by_chapter4`, metric `chapter3_figure_source_frontier_max_abs_z_km` = `14573.10318409037`, decision `wait_for_chapter4_regeneration`
-- `C5-ROUTE-H-DE421-BASELINE` (chapter5): status `pass`, metric `fig_5_6_png_bytes` = `746932`, decision `route_h_de421_baseline_available`
+- `C5-ROUTE-H-DE421-BASELINE` (chapter5): status `pass`, metric `fig_5_6_png_bytes` = `588057`, decision `route_h_de421_baseline_available`
 - `C5-HIGH-FIDELITY-OPTIMIZATION` (chapter5): status `pass`, metric `missing_high_fidelity_capabilities` = `0`, decision `chapter5_high_fidelity_optimization_source_layer_ready`
 - `C5-HALO-LYAPUNOV-PER-FIGURE-TRANSFER-AUDIT` (chapter5): status `pass`, metric `accepted_halo_lyapunov_transfer_rows` = `1`, decision `use_halo_lyapunov_per_figure_transfer_row`
 - `C5-SUN-EARTH-L1-LONG-PROPAGATION-AUDIT` (chapter5): status `pass`, metric `accepted_l1_long_propagation_rows` = `5`, decision `use_l1_long_propagation_per_figure_rows`
 - `C5-NRHO-CORRIDOR-PER-FIGURE-AUDIT` (chapter5): status `pass`, metric `accepted_nrho_corridor_marker_rows` = `2`, decision `use_nrho_corridor_per_figure_marker_rows`
 - `C5-STABLE-MANIFOLD-PER-FIGURE-AUDIT` (chapter5): status `pass`, metric `accepted_stable_manifold_rows` = `2`, decision `use_stable_manifold_per_figure_rows`
 - `C5-NRHO-PER-FIGURE-TRANSFER-AUDIT` (chapter5): status `pass`, metric `accepted_nrho_transfer_rows` = `4`, decision `use_nrho_per_figure_transfer_rows`
+- `C5-FIG510-BCR4BP-TRANSFER-AUDIT` (chapter5): status `pass`, metric `numerically_accepted_bcr4bp_cases` = `2`, decision `use_fig510_bcr4bp_extension_with_paper_boundary`
 - `C5-NRHO-RENDEZVOUS-PER-FIGURE-AUDIT` (chapter5): status `pass`, metric `accepted_nrho_rendezvous_rows` = `36`, decision `use_nrho_rendezvous_per_figure_branch`
 - `C5-PER-FIGURE-SOURCE-LAYER-AUDIT` (chapter5): status `pass`, metric `original_chapter5_figure_rows` = `14`, decision `use_per_figure_chapter5_status_table`
 - `STAGED-GOAL-STATUS` (goal): status `chapter3_passed_chapter4_ready`, metric `chapter3_gate_passes` = `True`, decision `continue_to_chapter4_regeneration`
@@ -111,6 +113,11 @@ For Fig. 5.10 and Fig. 5.11 specifically, the CR3BP endpoint-corrected transfer
 rows are recorded in `data/computed/chapter5_nrho_transfer_per_figure_audit.csv`
 and `docs/chapter5_nrho_transfer_per_figure_audit.md`; these rows strengthen
 the per-figure transfer evidence without claiming BCR4BP/ephemeris equivalence.
+Fig. 5.10 additionally has a dedicated DE421-initialized planar BCR4BP audit in
+`data/computed/chapter5_fig510_bcr4bp_transfer_audit.csv`, with strict saved
+trajectories, independent rerun evidence, and diagnostic PNG/PDF artifacts.
+Its numerical extension gate passes 2/2 while paper equivalence remains 0/2;
+the latter is an explicit boundary rather than a failed numerical propagation.
 For Fig. 5.12, the CR3BP fixed-departure rendezvous arrival-offset branch is
 recorded in `data/computed/chapter5_nrho_rendezvous_per_figure_audit.csv` and
 `docs/chapter5_nrho_rendezvous_per_figure_audit.md`; this replaces the prior

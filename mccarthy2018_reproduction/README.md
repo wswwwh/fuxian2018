@@ -204,13 +204,19 @@ The current implementation is the first verified layer of the reproduction plan:
   1.5425 and 1.1762. Figure 5.10 uses position-matched CR3BP arcs at the thesis
   flight times: the 23-day local solution costs 47.734 m/s, while the 12.4-day
   solution costs 86.566 m/s. These are local direct-shooting baselines, not the
-  thesis optimized quasi-NRHO-arc solutions. Figure 5.11 applies exact CR3BP
-  symmetry to those arcs. Figure 5.12 overlays a converged fixed-departure,
+  thesis optimized quasi-NRHO-arc solutions. A dedicated DE421-initialized
+  planar BCR4BP extension now corrects both cases and independently repropagates
+  them to maximum endpoint error 4.82e-5 km. Its total impulses are 72.628 and
+  89.050 m/s: the numerical gate passes 2/2, but the thesis impulse/model/
+  geometry gate remains 0/2. The BCR4BP result is therefore a diagnostic
+  high-fidelity extension, not a replacement for the canonical CR3BP panel.
+  Figure 5.11 applies exact CR3BP symmetry to those arcs. Figure 5.12 overlays a
+  converged fixed-departure,
   fixed-TOF arrival branch from -24 to +11 hours; the remaining grey trend is
   retained as a proxy because the velocity-only shooting branch folds near
   +12 hours. The grey quasi-NRHO surface in Figure 5.9 also remains geometric.
   Higher-amplitude continuation,
-  BCR4BP/ephemeris validation,
+  thesis-specific BCR4BP/full-ephemeris validation,
   long-horizon correction, and optimized transfer solutions are still pending.
 
 The full quasi-periodic torus correction, torus-map stability, eigenvector

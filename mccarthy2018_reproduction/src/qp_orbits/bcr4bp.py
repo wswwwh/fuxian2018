@@ -71,7 +71,12 @@ def earth_moon_bcr4bp_parameters(system: CR3BPSystem) -> BCR4BPParameters:
     time_unit_s = system.time_unit_days * 86400.0
     sun_mass_parameter = SUN_GM_KM3_S2 * time_unit_s**2 / system.length_unit_km**3
     sun_distance = MEAN_SUN_DISTANCE_KM / system.length_unit_km
-    sun_angular_rate = system.time_unit_days / MEAN_SIDEREAL_YEAR_DAYS - 1.0
+    # CR3BP normalized time uses one Earth-Moon radian per time unit, so the
+    # inertial solar rate must also be converted from cycles/year to
+    # radians/normalized-time before subtracting the rotating-frame rate 1.
+    sun_angular_rate = (
+        2.0 * np.pi * system.time_unit_days / MEAN_SIDEREAL_YEAR_DAYS - 1.0
+    )
     return BCR4BPParameters(
         mu=system.mu,
         sun_mass_parameter=float(sun_mass_parameter),
@@ -130,6 +135,7 @@ def integrate_bcr4bp(
     rtol: float = 1e-11,
     atol: float = 1e-13,
     max_step: float = np.inf,
+    dense_output: bool = False,
 ):
     """Integrate a BCR4BP trajectory with SciPy's DOP853 solver."""
 
@@ -142,6 +148,7 @@ def integrate_bcr4bp(
         rtol=rtol,
         atol=atol,
         max_step=max_step,
+        dense_output=dense_output,
     )
 
 

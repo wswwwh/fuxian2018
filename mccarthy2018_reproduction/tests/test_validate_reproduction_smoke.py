@@ -79,6 +79,10 @@ class ReproductionSmokeCliTests(unittest.TestCase):
         self.assertIn("route_h_hybrid_cold_start_status=pass", result.stdout)
         self.assertIn("staged_goal_status=", result.stdout)
         self.assertIn("fig42_digitized_status=", result.stdout)
+        self.assertIn(
+            "fig510_bcr4bp_numerical=2/2 paper_equivalence=0/2",
+            result.stdout,
+        )
         self.assertIn("png=54 pdf=54", result.stdout)
 
     def test_target_registry_matches_its_generator(self) -> None:

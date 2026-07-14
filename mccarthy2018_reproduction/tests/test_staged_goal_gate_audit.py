@@ -24,6 +24,7 @@ class StagedGoalGateAuditTests(unittest.TestCase):
         cold_start = by_gate["C3-ROUTE-H-COLD-START"]
         hybrid_cold_start = by_gate["C3-ROUTE-H-HYBRID-COLD-START"]
         jacobi_coverage = by_gate["C3-ROUTE-H-JACOBI-TARGET-COVERAGE"]
+        fig510_bcr4bp = by_gate["C5-FIG510-BCR4BP-TRANSFER-AUDIT"]
         goal = by_gate["STAGED-GOAL-STATUS"]
         self.assertEqual(cold_start["status"], "fail")
         self.assertEqual(hybrid_cold_start["status"], "pass")
@@ -32,6 +33,9 @@ class StagedGoalGateAuditTests(unittest.TestCase):
         self.assertEqual(chapter4["status"], "not_run_or_fail")
         self.assertGreater(float(chapter4["value"]), 0.3)
         self.assertIn("1/31", chapter4["notes"])
+        self.assertEqual(fig510_bcr4bp["status"], "pass")
+        self.assertEqual(int(fig510_bcr4bp["value"]), 2)
+        self.assertIn("paper equivalence is 0/2", fig510_bcr4bp["notes"])
         self.assertEqual(
             goal["status"],
             "chapter3_passed_chapter4_ready",

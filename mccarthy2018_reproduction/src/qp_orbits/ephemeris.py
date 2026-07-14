@@ -35,6 +35,27 @@ class DE421FrameSeries:
 
 
 @dataclass(frozen=True)
+class DE421BCR4BPGeometry:
+    """DE421 initial geometry expressed in the Earth-Moon rotating frame."""
+
+    epoch_utc: str
+    earth_moon_frame: np.ndarray
+    earth_moon_vector_km: np.ndarray
+    earth_moon_distance_km: float
+    sun_barycenter_vector_km: np.ndarray
+    sun_rotating_vector_km: np.ndarray
+    sun_distance_km: float
+    sun_distance_nd: float
+    sun_planar_distance_km: float
+    sun_planar_distance_nd: float
+    sun_phase_rad: float
+    sun_elevation_rad: float
+    frame_orthogonality_error: float
+    frame_determinant: float
+    earth_moon_barycenter_spk_error_km: float
+
+
+@dataclass(frozen=True)
 class DE421QuasiDROScene:
     """Corrected CR3BP quasi-DRO embedded in the DE421 Sun-Moon frame."""
 
@@ -148,6 +169,91 @@ def de421_frame_series(
         earth_moon_distances_km=np.linalg.norm(earth_moon_position, axis=1),
         sun_moon_distances_km=np.linalg.norm(sun_moon_position, axis=1),
         orthogonality_error=float(np.max(np.abs(errors))),
+    )
+
+
+def de421_bcr4bp_initial_geometry(
+    kernel_path: str | Path,
+    *,
+    epoch_utc: str | datetime,
+    system: CR3BPSystem,
+) -> DE421BCR4BPGeometry:
+    """Return DE421 Sun geometry for initializing a planar BCR4BP model.
+
+    The phase is measured from the instantaneous Earth-to-Moon axis toward the
+    transverse axis of the osculating Earth-Moon frame.  The returned elevation
+    records the out-of-plane component that the planar BCR4BP approximation
+    intentionally omits.
+    """
+
+    try:
+        from skyfield.api import load
+    except ImportError as exc:
+        raise RuntimeError("skyfield is required for DE421 geometry") from exc
+
+    kernel = Path(kernel_path)
+    if not kernel.is_file():
+        raise FileNotFoundError(f"DE421 kernel not found: {kernel}")
+    if system.length_unit_km is None:
+        raise ValueError("dimensional Earth-Moon length unit is required")
+
+    epoch = _parse_epoch_utc(epoch_utc)
+    timescale = load.timescale()
+    skyfield_time = timescale.from_datetime(epoch)
+    ephemeris = load(str(kernel))
+    try:
+        earth_state = ephemeris["earth"].at(skyfield_time)
+        moon_state = ephemeris["moon"].at(skyfield_time)
+        sun_state = ephemeris["sun"].at(skyfield_time)
+        earth_moon_barycenter_state = ephemeris["earth barycenter"].at(skyfield_time)
+        earth_position = np.asarray(earth_state.position.km, dtype=float).reshape(3)
+        moon_position = np.asarray(moon_state.position.km, dtype=float).reshape(3)
+        sun_position = np.asarray(sun_state.position.km, dtype=float).reshape(3)
+        earth_moon_barycenter_spk = np.asarray(
+            earth_moon_barycenter_state.position.km,
+            dtype=float,
+        ).reshape(3)
+        earth_velocity = np.asarray(earth_state.velocity.km_per_s, dtype=float).reshape(3)
+        moon_velocity = np.asarray(moon_state.velocity.km_per_s, dtype=float).reshape(3)
+    finally:
+        ephemeris.close()
+
+    earth_moon_vector = moon_position - earth_position
+    earth_moon_velocity = moon_velocity - earth_velocity
+    frame = _orbital_frames(
+        earth_moon_vector[None, :],
+        earth_moon_velocity[None, :],
+        label="Earth-Moon",
+    )[0]
+    earth_moon_barycenter = earth_position + system.mu * earth_moon_vector
+    sun_barycenter_vector = sun_position - earth_moon_barycenter
+    sun_rotating_vector = frame.T @ sun_barycenter_vector
+    sun_distance = float(np.linalg.norm(sun_barycenter_vector))
+    if not np.isfinite(sun_distance) or sun_distance <= 0.0:
+        raise RuntimeError("invalid DE421 Sun-barycenter distance")
+    phase = float(np.arctan2(sun_rotating_vector[1], sun_rotating_vector[0]))
+    planar_distance = float(np.linalg.norm(sun_rotating_vector[:2]))
+    elevation = float(np.arcsin(np.clip(sun_rotating_vector[2] / sun_distance, -1.0, 1.0)))
+    frame_error = float(np.max(np.abs(frame.T @ frame - np.eye(3))))
+    barycenter_error = float(
+        np.linalg.norm(earth_moon_barycenter - earth_moon_barycenter_spk)
+    )
+    return DE421BCR4BPGeometry(
+        epoch_utc=epoch.isoformat().replace("+00:00", "Z"),
+        earth_moon_frame=frame,
+        earth_moon_vector_km=earth_moon_vector,
+        earth_moon_distance_km=float(np.linalg.norm(earth_moon_vector)),
+        sun_barycenter_vector_km=sun_barycenter_vector,
+        sun_rotating_vector_km=sun_rotating_vector,
+        sun_distance_km=sun_distance,
+        sun_distance_nd=sun_distance / system.length_unit_km,
+        sun_planar_distance_km=planar_distance,
+        sun_planar_distance_nd=planar_distance / system.length_unit_km,
+        sun_phase_rad=phase,
+        sun_elevation_rad=elevation,
+        frame_orthogonality_error=frame_error,
+        frame_determinant=float(np.linalg.det(frame)),
+        earth_moon_barycenter_spk_error_km=barycenter_error,
     )
 
 

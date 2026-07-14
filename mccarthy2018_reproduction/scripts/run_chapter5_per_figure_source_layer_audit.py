@@ -24,6 +24,18 @@ SUN_EARTH_L1_LONG_PROP_AUDIT = DATA / "chapter5_sun_earth_l1_long_propagation_pe
 READINESS_AUDIT = DATA / "chapter5_high_fidelity_optimization_readiness_audit.csv"
 BCR4BP_DYNAMICS_AUDIT = DATA / "chapter5_bcr4bp_dynamics_audit.csv"
 BCR4BP_CORRECTION_AUDIT = DATA / "chapter5_bcr4bp_segment_correction_audit.csv"
+FIG510_BCR4BP_AUDIT = DATA / "chapter5_fig510_bcr4bp_transfer_audit.csv"
+FIG510_BCR4BP_TRAJECTORIES = DATA / "chapter5_fig510_bcr4bp_transfer_trajectories.csv"
+FIG510_BCR4BP_REPORT = DOCS / "chapter5_fig510_bcr4bp_transfer_audit.md"
+FIG510_BCR4BP_RERUN_REPORT = (
+    DOCS / "chapter5_fig510_bcr4bp_independent_rerun_audit.md"
+)
+FIG510_BCR4BP_DIAGNOSTIC_PNG = (
+    PROJECT_ROOT / "outputs" / "diagnostics" / "fig_5_10_bcr4bp_extension.png"
+)
+FIG510_BCR4BP_DIAGNOSTIC_PDF = (
+    PROJECT_ROOT / "outputs" / "diagnostics" / "fig_5_10_bcr4bp_extension.pdf"
+)
 OPTIMIZED_TRANSFER_AUDIT = DATA / "chapter5_optimized_transfer_audit.csv"
 HALO_LYAPUNOV_TRANSFER_AUDIT = DATA / "chapter5_halo_lyapunov_transfer_per_figure_audit.csv"
 NRHO_CORRIDOR_AUDIT = DATA / "chapter5_nrho_corridor_per_figure_audit.csv"
@@ -173,6 +185,17 @@ def _source_metrics() -> dict[str, str]:
     active_family_rows = _read_csv(ACTIVE_GEOMETRY_FAMILY_AUDIT) if ACTIVE_GEOMETRY_FAMILY_AUDIT.exists() else []
     active_manifold_rows = [row for row in _read_csv(ACTIVE_GEOMETRY_MANIFOLD_AUDIT) if _truthy(row.get("acceptance"))] if ACTIVE_GEOMETRY_MANIFOLD_AUDIT.exists() else []
     active_leo_rows = [row for row in _read_csv(ACTIVE_GEOMETRY_LEO_TRANSFER_AUDIT) if _truthy(row.get("acceptance"))] if ACTIVE_GEOMETRY_LEO_TRANSFER_AUDIT.exists() else []
+    fig510_bcr4bp_all = _read_csv(FIG510_BCR4BP_AUDIT) if FIG510_BCR4BP_AUDIT.exists() else []
+    fig510_bcr4bp_rows = [
+        row for row in fig510_bcr4bp_all if _truthy(row.get("numerical_acceptance"))
+    ]
+    fig510_bcr4bp_paper_rows = [
+        row for row in fig510_bcr4bp_all if _truthy(row.get("paper_equivalence"))
+    ]
+    fig510_bcr4bp_ordered = sorted(
+        fig510_bcr4bp_all,
+        key=lambda row: int(row["case_id"]),
+    )
     return {
         "route_h_rows": route_h["rows"],
         "route_h_member": route_h["member"],
@@ -199,6 +222,32 @@ def _source_metrics() -> dict[str, str]:
         "nrho_5_11_worst_endpoint_error": _worst_endpoint_error(nrho_by_figure.get("5.11", [])),
         "nrho_5_10_max_jacobi_span": _max_jacobi_span(nrho_by_figure.get("5.10", [])),
         "nrho_5_11_max_jacobi_span": _max_jacobi_span(nrho_by_figure.get("5.11", [])),
+        "fig510_bcr4bp_rows": str(len(fig510_bcr4bp_rows)),
+        "fig510_bcr4bp_paper_rows": str(len(fig510_bcr4bp_paper_rows)),
+        "fig510_bcr4bp_max_endpoint_km": _max_field(
+            fig510_bcr4bp_rows,
+            "independent_endpoint_error_km",
+        ),
+        "fig510_bcr4bp_max_segment_km": _max_field(
+            fig510_bcr4bp_rows,
+            "segment_max_position_defect_km",
+        ),
+        "fig510_bcr4bp_reset_control_km": _min_field(
+            fig510_bcr4bp_rows,
+            "reset_time_negative_control_position_defect_km",
+        ),
+        "fig510_bcr4bp_total_delta_v": "/".join(
+            f"{float(row['total_delta_v_m_s']):.6f}"
+            for row in fig510_bcr4bp_ordered
+        ) or "N/A",
+        "fig510_bcr4bp_paper_relative_error": "/".join(
+            f"{100.0 * float(row['total_delta_v_relative_error']):+.4f}%"
+            for row in fig510_bcr4bp_ordered
+        ) or "N/A",
+        "fig510_bcr4bp_sun_phase_deg": _max_field(
+            fig510_bcr4bp_all,
+            "sun_phase_deg",
+        ),
         "rendezvous_5_12_rows": str(len(rendezvous_by_figure.get("5.12", []))),
         "rendezvous_5_12_left_coverage": _min_field(rendezvous_by_figure.get("5.12", []), "arrival_offset_hours"),
         "rendezvous_5_12_right_coverage": _max_field(rendezvous_by_figure.get("5.12", []), "arrival_offset_hours"),
@@ -491,24 +540,40 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
         },
         {
             "figure_id": "5.10",
-            "current_source_layer": "Earth-Moon NRHO direct-transfer CR3BP baseline",
-            "current_repro_level": "CR3BP endpoint-corrected NRHO transfer audit",
-            "original_replacement_status": "endpoint_corrected_cr3bp_not_high_fidelity_replacement",
+            "current_source_layer": "Earth-Moon NRHO CR3BP transfers plus DE421-initialized planar BCR4BP correction",
+            "current_repro_level": "CR3BP transfer reproduction with numerical BCR4BP extension and paper-equivalence boundary",
+            "original_replacement_status": "cr3bp_transfer_plus_bcr4bp_extension_accepted_paper_equivalence_false",
             "uses_proxy": "false",
-            "primary_evidence": "data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv",
-            "supporting_evidence": f"{_rel(NRHO_TRANSFER_AUDIT)};{bcr4bp_source}",
-            "route_h_dependency": "indirect only",
-            "bcr4bp_dependency": "available as separate source-layer audit",
-            "optimization_dependency": "available as separate source-layer audit",
-            "accepted_rows": metrics["nrho_5_10_rows"],
-            "best_metric": (
-                f"accepted CR3BP direct-shooting rows {metrics['nrho_5_10_rows']}; "
-                f"best total delta-v {metrics['nrho_5_10_best_delta_v']} m/s; "
-                f"worst endpoint error {metrics['nrho_5_10_worst_endpoint_error']} km; "
-                f"max Jacobi span {metrics['nrho_5_10_max_jacobi_span']}"
+            "primary_evidence": (
+                f"{_rel(FIG510_BCR4BP_AUDIT)};"
+                f"{_rel(FIG510_BCR4BP_TRAJECTORIES)};"
+                "data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv"
             ),
-            "boundary": "Per-figure endpoint-corrected CR3BP transfer rows are accepted, but the figure is not yet a BCR4BP/ephemeris high-fidelity thesis replacement.",
-            "next_action": "Promote further only after the specific Fig. 5.10 transfer is corrected in BCR4BP/ephemeris and compared to thesis delta-v.",
+            "supporting_evidence": (
+                f"{_rel(NRHO_TRANSFER_AUDIT)};{_rel(FIG510_BCR4BP_REPORT)};"
+                f"{_rel(FIG510_BCR4BP_RERUN_REPORT)};"
+                f"{_exists_rel(FIG510_BCR4BP_DIAGNOSTIC_PNG)};"
+                f"{_exists_rel(FIG510_BCR4BP_DIAGNOSTIC_PDF)};{bcr4bp_source}"
+            ),
+            "route_h_dependency": "indirect only",
+            "bcr4bp_dependency": (
+                f"dedicated numerical correction {metrics['fig510_bcr4bp_rows']}/2; "
+                f"paper equivalence {metrics['fig510_bcr4bp_paper_rows']}/2"
+            ),
+            "optimization_dependency": "velocity-corrected endpoint match accepted; thesis impulse agreement remains open",
+            "accepted_rows": metrics["fig510_bcr4bp_rows"],
+            "best_metric": (
+                f"BCR4BP numerical acceptance {metrics['fig510_bcr4bp_rows']}/2; "
+                f"paper equivalence {metrics['fig510_bcr4bp_paper_rows']}/2; "
+                f"independent endpoint <= {metrics['fig510_bcr4bp_max_endpoint_km']} km; "
+                f"absolute-time segment defect <= {metrics['fig510_bcr4bp_max_segment_km']} km; "
+                f"reset-time negative control >= {metrics['fig510_bcr4bp_reset_control_km']} km; "
+                f"total delta-v case 1/2 {metrics['fig510_bcr4bp_total_delta_v']} m/s; "
+                f"paper-relative error {metrics['fig510_bcr4bp_paper_relative_error']}; "
+                f"DE421 initial Sun phase {metrics['fig510_bcr4bp_sun_phase_deg']} deg"
+            ),
+            "boundary": "The dedicated planar BCR4BP extension is numerically accepted, but it uses a project-selected DE421 epoch and CR3BP NRHO boundary states. The canonical thesis-style panel remains CR3BP; full ephemeris dynamics, thesis-specific initial states, impulse agreement, and pointwise geometry remain open, so paper_equivalence=false.",
+            "next_action": "Recover thesis-specific epoch and initial states if available, replace both endpoints with high-fidelity corrected NRHOs, and optimize the impulse split before any paper-equivalence claim.",
         },
         {
             "figure_id": "5.11",

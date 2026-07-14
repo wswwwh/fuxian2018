@@ -11,14 +11,14 @@ used by the CR3BP code.
 - `mu`: `0.012150585609624`
 - `sun_mass_parameter`: `328827.8707340966`
 - `sun_distance`: `389.1724003642039`
-- `sun_angular_rate`: `-0.9881124589745958`
+- `sun_angular_rate`: `-0.9253083768906855`
 
 ## Gate Rows
 
 - `C5-BCR4BP-CR3BP-REDUCTION`: status `pass`, metric `max_rhs_difference` = `0`, acceptance `true`
 - `C5-BCR4BP-BARYCENTER-TIDE`: status `pass`, metric `barycenter_solar_acceleration_norm` = `0`, acceptance `true`
 - `C5-BCR4BP-FINITE-RHS`: status `pass`, metric `finite_rhs_samples` = `9`, acceptance `true`
-- `C5-BCR4BP-ROUTE-H-SHORT-PROPAGATION`: status `pass`, metric `route_h_short_propagation_state_span` = `0.04327122149725018`, acceptance `true`
+- `C5-BCR4BP-ROUTE-H-SHORT-PROPAGATION`: status `pass`, metric `route_h_short_propagation_state_span` = `0.04327160583983275`, acceptance `true`
 
 ## Decision
 

@@ -12,6 +12,10 @@ from pathlib import Path
 EXPECTED_FIGURE_COUNT = 54
 EXPECTED_V0_COUNT = 13
 EXPECTED_V2_COUNT = 41
+EXPECTED_FIG510_EPOCH = "2020-06-15T00:00:00Z"
+EXPECTED_DE421_SHA256 = (
+    "A20A7139DA04CBC462454634918E9A9CA69127044E2CC9D4F9C16E238D2DEEDC"
+)
 ALLOWED_SOURCE_TYPES = {"explicit", "derived", "digitized", "assumption"}
 REQUIRED_TARGET_COLUMNS = {
     "figure_id",
@@ -197,6 +201,9 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
     route_gate = gate_by_id.get("C3-ROUTE-H")
     if not route_gate or route_gate["status"] != "pass":
         raise SmokeFailure("C3-ROUTE-H gate is not pass")
+    fig510_gate = gate_by_id.get("C5-FIG510-BCR4BP-TRANSFER-AUDIT")
+    if not fig510_gate or fig510_gate["status"] != "pass":
+        raise SmokeFailure("C5-FIG510-BCR4BP-TRANSFER-AUDIT gate is not pass")
 
     fig42_rows = read_csv(
         project_root
@@ -222,6 +229,94 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
     if fig42_tail <= 0.0:
         raise SmokeFailure("Fig. 4.2 uncovered fold tail is missing")
 
+    fig510_rows = read_csv(
+        project_root
+        / "data"
+        / "computed"
+        / "chapter5_fig510_bcr4bp_transfer_audit.csv",
+        project_root,
+    )
+    if len(fig510_rows) != 2 or {row["case_id"] for row in fig510_rows} != {"1", "2"}:
+        raise SmokeFailure("Fig. 5.10 BCR4BP audit must contain cases 1 and 2")
+    fig510_by_case = {row["case_id"]: row for row in fig510_rows}
+    expected_tof = {"1": 23.0, "2": 12.4}
+    for case_id, row in fig510_by_case.items():
+        if row.get("epoch_utc") != EXPECTED_FIG510_EPOCH:
+            raise SmokeFailure(f"Fig. 5.10 case {case_id} DE421 epoch changed")
+        if row.get("kernel_sha256") != EXPECTED_DE421_SHA256:
+            raise SmokeFailure(f"Fig. 5.10 case {case_id} DE421 kernel hash changed")
+        if row.get("source_model") != "DE421-initialized planar Earth-Moon BCR4BP":
+            raise SmokeFailure(f"Fig. 5.10 case {case_id} source model is not BCR4BP")
+        if abs(float(row["time_of_flight_days"]) - expected_tof[case_id]) > 1.0e-12:
+            raise SmokeFailure(f"Fig. 5.10 case {case_id} time of flight changed")
+        if row.get("segment_time_origin") != "absolute":
+            raise SmokeFailure(f"Fig. 5.10 case {case_id} segment time is not absolute")
+        if row.get("numerical_acceptance") != "true":
+            raise SmokeFailure(f"Fig. 5.10 case {case_id} numerical gate is not accepted")
+        if row.get("paper_equivalence") != "false":
+            raise SmokeFailure(f"Fig. 5.10 case {case_id} paper boundary is not explicit")
+        if row.get("paper_model_geometry_match") != "false":
+            raise SmokeFailure(f"Fig. 5.10 case {case_id} model boundary is not explicit")
+        if float(row["independent_endpoint_error_km"]) > 1.0e-3:
+            raise SmokeFailure(f"Fig. 5.10 case {case_id} endpoint error exceeds 1e-3 km")
+        if float(row["segment_max_position_defect_km"]) > 1.0e-3:
+            raise SmokeFailure(f"Fig. 5.10 case {case_id} segment defect exceeds 1e-3 km")
+        if float(row["reset_time_negative_control_position_defect_km"]) <= 1.0:
+            raise SmokeFailure(f"Fig. 5.10 case {case_id} reset-time negative control is weak")
+        if row.get("minimum_moon_radius_method") != (
+            "strict_DOP853_dense_output_all_sampled_local_minima"
+        ):
+            raise SmokeFailure(f"Fig. 5.10 case {case_id} lunar-clearance method changed")
+        minimum_time = float(row["minimum_moon_radius_time_nd"])
+        if not 0.0 <= minimum_time <= float(row["time_of_flight_nd"]):
+            raise SmokeFailure(f"Fig. 5.10 case {case_id} lunar-clearance time is invalid")
+        if float(row["minimum_moon_radius_km"]) <= 1737.4:
+            raise SmokeFailure(f"Fig. 5.10 case {case_id} intersects the Moon")
+        impulse_sum = float(row["departure_delta_v_m_s"]) + float(
+            row["arrival_delta_v_m_s"]
+        )
+        if abs(impulse_sum - float(row["total_delta_v_m_s"])) > 1.0e-9:
+            raise SmokeFailure(f"Fig. 5.10 case {case_id} delta-v sum is inconsistent")
+
+    fig510_phase = max(float(row["sun_phase_rad"]) for row in fig510_rows)
+    if max(abs(float(row["sun_phase_rad"]) - fig510_phase) for row in fig510_rows) > 1.0e-14:
+        raise SmokeFailure("Fig. 5.10 cases do not share the audited initial Sun phase")
+    if abs(fig510_phase - 1.2408947569934152) > 1.0e-12:
+        raise SmokeFailure(f"Fig. 5.10 initial Sun phase changed: {fig510_phase}")
+
+    chapter5_rows = read_csv(
+        project_root
+        / "data"
+        / "computed"
+        / "chapter5_per_figure_source_layer_audit.csv",
+        project_root,
+    )
+    fig510_source = next(
+        (row for row in chapter5_rows if row.get("figure_id") == "5.10"),
+        None,
+    )
+    if not fig510_source:
+        raise SmokeFailure("Fig. 5.10 per-figure source-layer row is missing")
+    if fig510_source.get("accepted_rows") != "2":
+        raise SmokeFailure("Fig. 5.10 per-figure source layer is not 2/2 accepted")
+    if "chapter5_fig510_bcr4bp_transfer_audit.csv" not in fig510_source.get(
+        "primary_evidence", ""
+    ):
+        raise SmokeFailure("Fig. 5.10 dedicated BCR4BP audit is not canonical evidence")
+    if "paper_equivalence=false" not in fig510_source.get("boundary", ""):
+        raise SmokeFailure("Fig. 5.10 per-figure paper-equivalence boundary is missing")
+    if "paper_equivalence_false" not in fig510_source.get(
+        "original_replacement_status", ""
+    ):
+        raise SmokeFailure("Fig. 5.10 replacement status overclaims paper equivalence")
+    for diagnostic_name in (
+        "fig_5_10_bcr4bp_extension.png",
+        "fig_5_10_bcr4bp_extension.pdf",
+    ):
+        diagnostic = project_root / "outputs" / "diagnostics" / diagnostic_name
+        if not diagnostic.is_file() or diagnostic.stat().st_size == 0:
+            raise SmokeFailure(f"missing or empty Fig. 5.10 diagnostic: {diagnostic_name}")
+
     png_count = require_nonempty_outputs(project_root, target_ids, "png")
     pdf_count = require_nonempty_outputs(project_root, target_ids, "pdf")
     level_counts = Counter(row["current_repro_level"] for row in validation_rows)
@@ -243,6 +338,15 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
         "fig42_digitized_coverage": fig42_coverage,
         "fig42_digitized_rmse": fig42_rmse,
         "fig42_tail_days": fig42_tail,
+        "fig510_bcr4bp_numerical": sum(
+            row["numerical_acceptance"] == "true" for row in fig510_rows
+        ),
+        "fig510_bcr4bp_paper_equivalence": sum(
+            row["paper_equivalence"] == "true" for row in fig510_rows
+        ),
+        "fig510_bcr4bp_endpoint_km": max(
+            float(row["independent_endpoint_error_km"]) for row in fig510_rows
+        ),
         "png": png_count,
         "pdf": pdf_count,
     }
@@ -292,6 +396,11 @@ def main() -> int:
         f"coverage={summary['fig42_digitized_coverage']:.6f} "
         f"rmse={summary['fig42_digitized_rmse']:.6f} "
         f"tail_days={summary['fig42_tail_days']:.6f}"
+    )
+    print(
+        f"fig510_bcr4bp_numerical={summary['fig510_bcr4bp_numerical']}/2 "
+        f"paper_equivalence={summary['fig510_bcr4bp_paper_equivalence']}/2 "
+        f"endpoint_km={summary['fig510_bcr4bp_endpoint_km']:.6e}"
     )
     print(f"png={summary['png']} pdf={summary['pdf']}")
     return 0

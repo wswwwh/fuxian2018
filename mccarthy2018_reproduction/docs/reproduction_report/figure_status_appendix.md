@@ -10,7 +10,8 @@ Total figures: 54.
 | current_repro_level | count |
 |---|---:|
 | CR3BP corrected periodic-family reproduction | 1 |
-| CR3BP endpoint-corrected NRHO transfer audit | 2 |
+| CR3BP endpoint-corrected NRHO transfer audit | 1 |
+| CR3BP transfer reproduction with numerical BCR4BP extension and paper-equivalence boundary | 1 |
 | Route H / DE421 geometry baseline | 2 |
 | audited Route H fixed-time source-layer | 2 |
 | numerical CR3BP rendezvous-branch reproduction | 1 |
@@ -919,16 +920,16 @@ Total figures: 54.
 | figure_id | 5.10 |
 | source_page | 108 |
 | script | figures/fig_5_10.py |
-| current_repro_level | CR3BP endpoint-corrected NRHO transfer audit |
+| current_repro_level | CR3BP transfer reproduction with numerical BCR4BP extension and paper-equivalence boundary |
 | uses_proxy | false |
-| main_data_source | data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv;data/computed/chapter5_nrho_transfer_per_figure_audit.csv;data/computed/chapter5_bcr4bp_dynamics_audit.csv;data/computed/chapter5_bcr4bp_segment_correction_audit.csv;data/computed/chapter5_optimized_transfer_audit.csv;outputs/figures_png/fig_5_10.png;outputs/figures_pdf/fig_5_10.pdf |
-| key_physical_quantities | Earth-Moon NRHO direct-transfer CR3BP baseline; accepted CR3BP direct-shooting rows 2; best total delta-v 47.73443414309953 m/s; worst endpoint error 2.336264914251333e-05 km; max Jacobi span 5.092193333666728e-11; original replacement status: endpoint_corrected_cr3bp_not_high_fidelity_replacement |
-| residual evidence | accepted source rows: 2; Route H dependency: indirect only; BCR4BP dependency: available as separate source-layer audit |
+| main_data_source | data/computed/chapter5_fig510_bcr4bp_transfer_audit.csv;data/computed/chapter5_fig510_bcr4bp_transfer_trajectories.csv;data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv;data/computed/chapter5_nrho_transfer_per_figure_audit.csv;docs/chapter5_fig510_bcr4bp_transfer_audit.md;docs/chapter5_fig510_bcr4bp_independent_rerun_audit.md;outputs/diagnostics/fig_5_10_bcr4bp_extension.png;outputs/diagnostics/fig_5_10_bcr4bp_extension.pdf;data/computed/chapter5_bcr4bp_dynamics_audit.csv;data/computed/chapter5_bcr4bp_segment_correction_audit.csv;data/computed/chapter5_optimized_transfer_audit.csv;outputs/figures_png/fig_5_10.png;outputs/figures_pdf/fig_5_10.pdf |
+| key_physical_quantities | Earth-Moon NRHO CR3BP transfers plus DE421-initialized planar BCR4BP correction; BCR4BP numerical acceptance 2/2; paper equivalence 0/2; independent endpoint <= 4.819078391415363e-05 km; absolute-time segment defect <= 1.213619191095553e-07 km; reset-time negative control >= 100.7737248812684 km; total delta-v case 1/2 72.628142/89.049947 m/s; paper-relative error -9.7787%/+2.8290%; DE421 initial Sun phase 71.09803239563459 deg; original replacement status: cr3bp_transfer_plus_bcr4bp_extension_accepted_paper_equivalence_false |
+| residual evidence | accepted source rows: 2; Route H dependency: indirect only; BCR4BP dependency: dedicated numerical correction 2/2; paper equivalence 0/2 |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 319371; PDF bytes 23033; boundary: Per-figure endpoint-corrected CR3BP transfer rows are accepted, but the figure is not yet a BCR4BP/ephemeris high-fidelity thesis replacement. |
-| next_action | Promote further only after the specific Fig. 5.10 transfer is corrected in BCR4BP/ephemeris and compared to thesis delta-v. |
+| visual_status | PNG bytes 319371; PDF bytes 23033; boundary: The dedicated planar BCR4BP extension is numerically accepted, but it uses a project-selected DE421 epoch and CR3BP NRHO boundary states. The canonical thesis-style panel remains CR3BP; full ephemeris dynamics, thesis-specific initial states, impulse agreement, and pointwise geometry remain open, so paper_equivalence=false. |
+| next_action | Recover thesis-specific epoch and initial states if available, replace both endpoints with high-fidelity corrected NRHOs, and optimize the impulse split before any paper-equivalence claim. |
 
 ### Figure 5.11
 
