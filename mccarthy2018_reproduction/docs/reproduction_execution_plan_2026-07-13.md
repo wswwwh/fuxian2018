@@ -8,8 +8,8 @@
 当前事实基线（以仓库 CSV/Markdown 为准）：
 
 - Chapter 3 Route H 已有超过 10,500 km 的图源层证据；混合 cold-start 可复核，但单体 cold-start 仍保留失败证据，不能声称所有路径完全可重建。
-- Chapter 4 的原图级 L1 quasi-halo/quasi-vertical DG/manifold 源层已无 proxy 且 4.3–4.8 的 8/8 纸面快照行通过局部门控，但逐点论文面板数字化仍缺失。Route H 严格扫描的 31 个高振幅成员中只有成员 68 通过近实双曲门控，因此 Route H 的三成员跨振幅升级仍是 boundary。
-- Chapter 5 已有 DE421/BCR4BP、转移和 stable-manifold 的 source-layer 基线，但 Fig. 5.13/5.14 所需的高振幅 Sun–Earth L1 两频环面仍未达到论文目标。
+- Chapter 4 的 Fig. 4.2 已完成 PDF 原生图二维数字化并在共同区间通过逐点误差门，但计算分支仍缺论文末端约 0.04945 天。Fig. 4.3–4.8 的 8/8 快照行仅证明内部动力学质量；当前 contact sheet 显示全局到达范围/拓扑与论文存在明显差异，单视角 3D 图只能做锁定相机后的投影空间审计。Route H 严格扫描的 31 个高振幅成员中只有成员 68 通过近实双曲门控，因此三成员跨振幅升级仍是 boundary。
+- Chapter 5 Fig. 5.13/5.14 的 active-geometry Sun–Earth L1 两频环面、约 7,033 km 近地点和 185 km LEO 端点已通过 CR3BP 目标门；BCR4BP/DE421 按图校正和论文图逐点对照仍未完成。
 
 ## 2. 目标模式的硬目标（当前主线）
 
@@ -59,8 +59,8 @@ P2 当前证据：accepted=468 环面上的粗扫和 1° 细化均已保存；9�
 
 - 先运行 `scripts/run_chapter4_real_hyperbolic_scan.py`，用相对虚部 `1e-6`、determinant 误差 `<1e-9`、复数互易误差 `<1e-8` 锁定可用于实特征向量流形的 Route H 成员。
 - 当前扫描结果为 `1/31` 通过，只有成员 68 可重建 DG 和局部不稳定流形；成员 17、32 等旧 CSV 中的复数双曲对已降级为 boundary，不再冒充 real manifold。
-- 原始 Fig. 4.3–4.8 已分别完成 L1 quasi-halo/quasi-vertical 直接传播审计：8/8 指定快照行通过、Jacobi 漂移 `<=2.22e-15`、无 proxy 背景；但源曲线分辨率和论文面板逐点数字化仍是 boundary。
-- 因此 P3 的阶段结论是“原图数值源层已打通，Route H 三成员跨振幅门控未通过”；只有覆盖至少 3 个跨 2,000 km 且近实双曲门控均通过后，才可升级为完整 Chapter 4 复现。
+- 原始 Fig. 4.3–4.8 已分别完成 L1 quasi-halo/quasi-vertical 直接传播审计：8/8 指定快照行通过、Jacobi 漂移 `<=2.22e-15`、无 proxy 背景；这些 `pass` 现已明确拆解为内部动力学门，而非论文几何门。当前终端范围（例如 4.3 的 `x=0.904216..0.908818`、4.6/4.8 的 `x=0.784378..0.837716`）不足以复现论文中的 Moon-side/Earthward 全局卷曲结构。
+- 因此 P3 的阶段结论是“局部/有限时长数值源层已打通，但原图全局投影几何和 Route H 三成员门均未通过”；只有延伸到论文尺度并通过锁定相机的投影空间审计，同时 Route H 覆盖至少 3 个跨 2,000 km 且近实双曲门控均通过后，才可升级为完整 Chapter 4 复现。
 
 ### P4：逐图收尾与最终验收
 
@@ -74,14 +74,17 @@ P4 初始审计检查点（2026-07-14）：
 - `scripts/validate_reproduction_smoke.py` 通过：`targets_v0=13`、`targets_v2=41`、`current_numerical=16`、`current_open=25`；Route H hybrid cold-start 仍为 pass，单体 cold-start 仍保留 fail。
 - Fig. 5.13/5.14 的逐图证据已改为 active-geometry 成员 468、全环面 `129 x 256`、tight stable-manifold `9 x 9` 和 LEO transfer 审计；目标模式的 CR3BP 几何门控通过，但 BCR4BP/DE421 和论文面板逐点对比仍是 boundary。
 - `scripts/run_figure_evidence_gap_audit.py` 进一步给出保守证据分类：`accepted=7`、`boundary=30`、`diagnostic=5`、`proxy=12`，54 行的脚本/数据/PNG/PDF 路径均存在；该表只记录证据缺口，不新增科学主张。
+- Fig. 4.2 已从 PDF 第 103 页 xref 473 无损提取 `1517 x 682` 原生面板：1054 个蓝线像素列、13 个共同区间计算点，覆盖 `89.026651%`，稳定性指数 RMSE `0.371003`、最大绝对误差 `0.510882`，均低于 `+/-1.953125` 数字化不确定度；`full_curve_coverage=false`，尾段缺口 `0.049450` 天保持为 boundary。
+- Fig. 4.3–4.8 的 canonical 行已收紧为“内部动力学门通过、论文投影几何未验证且当前明显不匹配”；后续必须先扩展全局流形，再拟合/锁定论文相机做 projection-space Chamfer/coverage 审计，不能把静态 3D 图称为状态空间逐点数字化。
+- Fig. 4.2 数字化脚本在两个独立 Python 进程中复跑，原生图、标定 CSV、数字化点、逐点对比、摘要、Markdown 和诊断 PNG 的 SHA256 均保持一致；`unittest discover` 25/25 通过，54 图 smoke、目标表 `--check` 和 `git diff --check` 通过。
 - 因为仍有 25 个图行带 boundary/open 条件，当前结论是“54/54 工程覆盖 + 可审计 source-layer”，不是完整论文数值等价复现；下一步优先按 `figure_validation_table.csv` 的 `next_action` 消化高影响 boundary。
 
 ## 4. 停止与切换规则
 
 - 若连续多个批次无法保持 full-torus 正进度，先保存失败证据并调节步长、Jacobi 偏置和 z 修正；不放宽残差或网格门限。
 - 若有界尝试后仍无法达到 `660,000/940,000 km`，将当前结果正式标为 `boundary`，再启动 Route B（Fourier/collocation torus BVP）或 Route A（原始数据/高分辨率图源检索），而不是把局部结果写成原图复现。
-- 若 Route H 近实双曲扫描仍只有少数成员通过，保留复数 Fourier-shifted 模式和失败扫描作为 boundary；不得放宽 `1e-6` 门限或用复特征向量替代论文所需的实流形方向。下一候选路径是增加曲线分辨率/谱提升或转向 L1 直接源层，而不是升级旧局部探针。
-- Chapter 5 应用图在上游环面和 Chapter 4 DG 门控未通过前，只能作为 source-layer/baseline；不得宣称已经完成论文级应用复现。
+- 若 Route H 近实双曲扫描仍只有少数成员通过，保留复数 Fourier-shifted 模式和失败扫描作为 boundary；不得放宽 `1e-6` 门限或用复特征向量替代论文所需的实流形方向。下一轮优先把 `chapter3_route_h_fixed_time_target_states.csv` 的 N57/N81/N105 三个严格论文锚点接入跨 N 重校正/DG 扫描，并保留 member 68 为阳性控制；若仍失败则转向准周期 cocycle 的实不变子束求解。
+- Chapter 5 后续按图高保真优先处理 Fig. 5.10：现有 Earth–Moon BCR4BP 单段速度校正器可覆盖 23 天和 12.4 天两案；必须同时记录历元/太阳相位、独立终端误差、两次脉冲和论文差值，并把它标作高保真扩展而非原论文 CR3BP 数值等价。
 
 ## 5. 交付清单
 

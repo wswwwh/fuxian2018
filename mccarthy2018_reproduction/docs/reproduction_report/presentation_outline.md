@@ -33,6 +33,10 @@ Do not call this original McCarthy raw branch data.
   orbit.
 - Chapter 4 Route H source-layer evidence is not the same as full replacement
   of original L1 quasi-halo/quasi-vertical global manifold figures.
+- Fig. 4.2 passes the native-image pointwise gate over 89% of the thesis curve,
+  but the final fold tail is still uncovered.
+- Fig. 4.3-4.8 pass internal dynamics checks only; current projection geometry
+  visibly lacks the thesis-scale global reach/topology.
 - Chapter 5 source-layer BCR4BP/optimization audits do not replace every thesis
   application figure.
 

@@ -163,25 +163,21 @@ The current implementation is the first verified layer of the reproduction plan:
   endpoint `JC=3.02868`, `T=17.256` days. Figure 3.12 and Figure 3.14 render
   propagated corrected tori, while Figures 3.13 and 3.15 use only numerical
   family data.
-  Figures 4.1-4.8 retain thesis-scale DG/stability/manifold proxy figure data, with
-  Figures 4.7-4.8 now overlaying corrected periodic-halo eigenvector manifold
-  trajectories. A real STM/interpolation `DG` matrix is now computed for the
-  corrected small-amplitude stroboscopic curve, Figure 4.1 overlays its
-  display-scaled local eigenspectrum markers, and local stable/unstable
-  manifold sheets are propagated from `DG` eigenvectors. Figure 4.2 now
-  overlays eleven representative `DG` samples from the staged quasi-halo
-  branch, covering `T=12.022482..12.397983` days and
-  `nu=618.827567..766.042821`. Near-real stable/unstable multipliers are
-  selected by branch magnitude after filtering their imaginary parts, avoiding
-  confusion with real center modes on the high-order grids. Figures 4.3-4.4
-  still use the 12.097-day branch
-  endpoint for their purely real unstable-eigenvector sheets at 7.79, 9.75,
-  11.39, and 13.02 days;
-  the two branches reach mean terminal x values 0.906231 and 0.845993.
-  Figures 4.5-4.6 use the corrected quasi-vertical curve and its two opposite
-  unstable eigenvector branches. Figure 4.8 now includes
-  a global CR3BP propagation of the local quasi-vertical `DG` unstable sheet;
-  extending this result to a thesis-scale continued torus remains pending.
+  Figures 4.1-4.8 use corrected DG/manifold source data rather than analytic
+  background proxies, but their paper-facing status is split explicitly.
+  Figure 4.1 reproduces the reported-precision DG spectrum while retaining a
+  finite-amplitude torus-geometry boundary. Figure 4.2 has 16 accepted N=9/15/21
+  quasi-halo rows and a native-PDF digitization audit: 13 common-interval points,
+  89.026651% thesis-time coverage, stability-index RMSE 0.371003, and maximum
+  error 0.510882. The overlap passes its +/-1.953125 reading uncertainty, but
+  the computed branch stops 0.049450 days before the thesis endpoint, so full
+  curve coverage remains false. Figures 4.3-4.8 pass internal snapshot-time,
+  residual, Jacobi-drift, and local-growth gates only. Current contact sheets
+  show material global-reach/topology mismatches (for example, Fig. 4.3 ends at
+  x=0.904216..0.908818 and Fig. 4.6/4.8 at x=0.784378..0.837716). Their static
+  single-view 3D panels cannot support a state-space pointwise claim; the next
+  paper-facing gate is extended global propagation plus a locked-camera
+  projection-space geometry audit.
   Figure 5.1 now overlays local CR3BP-propagated Sun-Earth L1 Lissajous-seed
   arcs on the proxy long-propagation scene. Figures 5.2-5.4 reproduce the
   formula and frame-geometry schematics used by the thesis. Figure 5.8 now uses

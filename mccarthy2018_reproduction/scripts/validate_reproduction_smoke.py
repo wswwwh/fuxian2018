@@ -198,6 +198,30 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
     if not route_gate or route_gate["status"] != "pass":
         raise SmokeFailure("C3-ROUTE-H gate is not pass")
 
+    fig42_rows = read_csv(
+        project_root
+        / "data"
+        / "computed"
+        / "chapter4_fig42_digitized_comparison_audit.csv",
+        project_root,
+    )
+    if len(fig42_rows) != 1:
+        raise SmokeFailure("Fig. 4.2 digitized comparison audit must contain one row")
+    fig42 = fig42_rows[0]
+    if fig42.get("pointwise_overlap_acceptance") != "true":
+        raise SmokeFailure("Fig. 4.2 pointwise overlap is not accepted")
+    if fig42.get("full_curve_coverage") != "false":
+        raise SmokeFailure("Fig. 4.2 fold-tail boundary is not recorded explicitly")
+    fig42_coverage = float(fig42["reference_time_coverage_fraction"])
+    fig42_rmse = float(fig42["pointwise_rmse_nu"])
+    fig42_tail = float(fig42["computed_tail_time_gap_days"])
+    if fig42_coverage < 0.85:
+        raise SmokeFailure(f"Fig. 4.2 digitized coverage is below 85%: {fig42_coverage}")
+    if fig42_rmse > float(fig42["estimated_y_uncertainty_nu"]):
+        raise SmokeFailure(f"Fig. 4.2 pointwise RMSE exceeds uncertainty: {fig42_rmse}")
+    if fig42_tail <= 0.0:
+        raise SmokeFailure("Fig. 4.2 uncovered fold tail is missing")
+
     png_count = require_nonempty_outputs(project_root, target_ids, "png")
     pdf_count = require_nonempty_outputs(project_root, target_ids, "pdf")
     level_counts = Counter(row["current_repro_level"] for row in validation_rows)
@@ -215,6 +239,10 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
         "route_h_cold_start_status": cold_start_rows[0]["status"],
         "route_h_hybrid_cold_start_status": hybrid_cold_start_rows[0]["status"],
         "staged_goal_status": goal_gate["status"],
+        "fig42_digitized_status": fig42["overall_status"],
+        "fig42_digitized_coverage": fig42_coverage,
+        "fig42_digitized_rmse": fig42_rmse,
+        "fig42_tail_days": fig42_tail,
         "png": png_count,
         "pdf": pdf_count,
     }
@@ -259,6 +287,12 @@ def main() -> int:
         f"{summary['route_h_hybrid_cold_start_status']}"
     )
     print(f"staged_goal_status={summary['staged_goal_status']}")
+    print(
+        f"fig42_digitized_status={summary['fig42_digitized_status']} "
+        f"coverage={summary['fig42_digitized_coverage']:.6f} "
+        f"rmse={summary['fig42_digitized_rmse']:.6f} "
+        f"tail_days={summary['fig42_tail_days']:.6f}"
+    )
     print(f"png={summary['png']} pdf={summary['pdf']}")
     return 0
 

@@ -65,10 +65,30 @@ high-instability closure validation path or alternate accepted audit is added.
 
 ## C. Chapter 4 DG/manifold audit
 
-Chapter 4 has corrected source-curve residuals, DG eigenvector propagation, and
-Jacobi drift evidence. The Route H quasi-DRO source-layer figure is available,
-but original thesis-scale L1 quasi-halo/quasi-vertical global manifold
-replacement remains a separate task.
+Fig. 4.2 now has a native-PDF pointwise comparison (page 103, xref
+473). The common interval passes the digitization uncertainty gate:
+
+| Fig. 4.2 metric | value |
+|---|---:|
+| accepted corrected quasi-halo rows | `16` |
+| overlap comparison rows | `13` |
+| thesis-time coverage | `0.8902665099213599` |
+| pointwise RMSE in stability index | `0.3710034126027414` |
+| maximum absolute error | `0.5108820184630076` |
+| missing fold tail | `0.04945011318863024` days |
+| overlap acceptance | `true` |
+| full-curve coverage | `false` |
+
+This closes the missing 2D digitization subtask over the overlap, not the full
+curve. No values are extrapolated beyond the accepted DG fold.
+
+
+Chapter 4 also has corrected source-curve residuals, DG eigenvector propagation,
+and Jacobi drift evidence. For Fig. 4.3-4.8 these are internal dynamics gates,
+not paper-geometry acceptance. Current contact sheets show material
+global-reach/topology mismatches, and the single-view 3D panels can support only
+a future locked-camera projection-space audit. The Route H quasi-DRO
+source-layer figure remains separate from the original L1 manifold figures.
 
 ## D. Chapter 5 source-layer audit
 

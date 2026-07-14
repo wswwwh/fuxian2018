@@ -366,9 +366,10 @@ manifold claim.  The regenerated source-layer figure is available as
 
 Separately, the original L1 quasi-halo/quasi-vertical Fig. 4.3-4.8 audits have
 eight of eight requested snapshot rows accepted with proxy-free propagation.
-Those rows remain numerical source-layer replacements with an explicit
-pointwise paper-panel digitization boundary; they do not imply that the Route H
-three-member gate has passed.
+Those rows pass internal dynamics gates only. Current contact sheets show
+material global-reach/topology mismatches, and the single-view 3D panels still
+require extended propagation plus a locked-camera projection-space audit; they
+do not imply that the paper geometry or Route H three-member gate has passed.
 """,
         encoding="utf-8",
     )

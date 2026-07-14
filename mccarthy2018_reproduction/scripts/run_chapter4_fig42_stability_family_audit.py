@@ -154,8 +154,12 @@ The plotted family is assembled only from accepted corrected DG rows at N=9,
 15, and 21. One N=21 spectral-lift transition row is rejected by the unstable-ring
 dispersion gate. The former analytic/proxy curve is excluded. The N=21 branch approaches a
 mapping-time fold near 12.4246 days; this audit does not extrapolate beyond the
-accepted continuation. A direct digitization of the paper curve remains useful
-for a pointwise visual-equivalence score, but is not substituted for dynamics.
+accepted continuation. The separate native-PDF audit in
+`data/computed/chapter4_fig42_digitized_comparison_audit.csv` supplies the
+pointwise paper comparison over the shared interval. It remains
+lower-authority image evidence and does not substitute for dynamics. Full
+curve coverage stays false until the accepted corrected branch covers the
+digitized fold tail.
 """,
         encoding="utf-8",
     )

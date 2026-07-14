@@ -29,6 +29,22 @@ FIG41_AUDIT = DATA / "chapter4_fig41_reported_precision_audit.csv"
 FIG41_SPECTRUM = DATA / "chapter4_fig41_reported_precision_spectrum.csv"
 FIG41_STATES = DATA / "chapter4_fig41_reported_precision_states.csv"
 FIG42_AUDIT = DATA / "chapter4_fig42_stability_family_audit.csv"
+FIG42_DIGITIZED_AUDIT = DATA / "chapter4_fig42_digitized_comparison_audit.csv"
+FIG42_DIGITIZED_POINTS = (
+    PROJECT_ROOT / "data" / "digitized" / "fig_4_2_digitized_points.csv"
+)
+FIG42_DIGITIZED_COMPARISON = (
+    PROJECT_ROOT / "data" / "digitized" / "fig_4_2_computed_vs_digitized.csv"
+)
+FIG42_NATIVE_REFERENCE = (
+    PROJECT_ROOT / "outputs" / "reference_pages" / "fig_4_2_reference_native.png"
+)
+FIG42_DIAGNOSTIC = (
+    PROJECT_ROOT / "outputs" / "diagnostics" / "fig_4_2_digitized_comparison.png"
+)
+FIG42_INDEPENDENT_RERUN = (
+    PROJECT_ROOT / "docs" / "chapter4_fig42_digitized_independent_rerun_audit.md"
+)
 VERTICAL_DG = DATA / "chapter4_corrected_vertical_curve_dg.csv"
 HALO_DG_FAMILY = DATA / "chapter4_corrected_l1_constant_energy_halo_dg_family.csv"
 HALO_HIGH_ORDER_DG = DATA / "chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv"
@@ -195,6 +211,8 @@ def _metrics() -> dict[str, str]:
     fig41_pass = [row for row in fig41 if row.get("acceptance") == "pass"]
     fig42 = _read_csv(FIG42_AUDIT)
     fig42_pass = [row for row in fig42 if row.get("kind") == "quasi_halo" and row.get("acceptance") == "pass"]
+    fig42_digitized_rows = _read_csv(FIG42_DIGITIZED_AUDIT)
+    fig42_digitized = fig42_digitized_rows[0] if fig42_digitized_rows else {}
     vertical_dg = _read_csv(VERTICAL_DG)
     halo_dg = _read_csv(HALO_DG_FAMILY)
     halo_high = _read_csv(HALO_HIGH_ORDER_DG)
@@ -211,6 +229,24 @@ def _metrics() -> dict[str, str]:
         "fig42_max_time": _fmt(_max(fig42_pass, "mapping_time_days")),
         "fig42_max_nu": _fmt(_max(fig42_pass, "stability_index")),
         "fig42_residual": _fmt(_max(fig42_pass, "curve_residual_norm")),
+        "fig42_digitized_status": fig42_digitized.get("overall_status", "not_run"),
+        "fig42_digitized_overlap_rows": fig42_digitized.get("overlap_comparison_rows", "0"),
+        "fig42_digitized_coverage": fig42_digitized.get(
+            "reference_time_coverage_fraction", "N/A"
+        ),
+        "fig42_digitized_rmse": fig42_digitized.get("pointwise_rmse_nu", "N/A"),
+        "fig42_digitized_max_error": fig42_digitized.get(
+            "pointwise_max_abs_error_nu", "N/A"
+        ),
+        "fig42_digitized_tail_days": fig42_digitized.get(
+            "computed_tail_time_gap_days", "N/A"
+        ),
+        "fig42_digitized_overlap_acceptance": fig42_digitized.get(
+            "pointwise_overlap_acceptance", "false"
+        ),
+        "fig42_digitized_full_coverage": fig42_digitized.get(
+            "full_curve_coverage", "false"
+        ),
         "curve_dg_rows": str(len(curve_dg)),
         "curve_dg_residual": _fmt(_max(curve_dg, "curve_residual_norm")),
         "curve_dg_det_error": _fmt(abs((_max(curve_dg, "determinant") or 1.0) - 1.0)),
@@ -283,12 +319,27 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
         },
         {
             "figure_id": "4.2",
-            "current_source_layer": "accepted L1 constant-energy quasi-halo DG stability family",
-            "current_repro_level": "numerical DG family reproduction with paper-digitization boundary",
-            "original_replacement_status": "computed_family_replaces_proxy_curve_pointwise_paper_comparison_pending",
+            "current_source_layer": (
+                "accepted L1 constant-energy quasi-halo DG stability family plus "
+                "native-PDF digitized reference"
+            ),
+            "current_repro_level": (
+                "numerical DG family reproduction with digitized overlap pass and "
+                "fold-tail boundary"
+            ),
+            "original_replacement_status": (
+                "pointwise_paper_overlap_pass_full_curve_fold_tail_pending"
+            ),
             "uses_proxy": "false",
-            "primary_evidence": _rel(FIG42_AUDIT),
-            "supporting_evidence": halo_dg_source,
+            "primary_evidence": (
+                f"{_rel(FIG42_AUDIT)};{_rel(FIG42_DIGITIZED_AUDIT)};"
+                f"{_rel(FIG42_DIGITIZED_COMPARISON)}"
+            ),
+            "supporting_evidence": (
+                f"{halo_dg_source};{_rel(FIG42_DIGITIZED_POINTS)};"
+                f"{_rel(FIG42_NATIVE_REFERENCE)};{_rel(FIG42_DIAGNOSTIC)};"
+                f"{_rel(FIG42_INDEPENDENT_RERUN)}"
+            ),
             "route_h_dependency": "none",
             "dg_dependency": (
                 f"{metrics['halo_dg_rows']} halo rows; {metrics['halo_high_order_rows']} "
@@ -301,55 +352,65 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
             "jacobi_drift": "N/A",
             "growth_ratio": "N/A",
             "best_metric": (
-                f"mapping time <= {metrics['fig42_max_time']} days; stability index <= "
-                f"{metrics['fig42_max_nu']}"
+                f"digitized overlap {metrics['fig42_digitized_overlap_rows']} rows; "
+                f"coverage {metrics['fig42_digitized_coverage']}; RMSE/max stability-index "
+                f"error {metrics['fig42_digitized_rmse']}/{metrics['fig42_digitized_max_error']}; "
+                f"overlap acceptance {metrics['fig42_digitized_overlap_acceptance']}"
             ),
-            "boundary": "The analytic proxy curve has been removed and the accepted N=9/15/21 DG family reaches its mapping-time fold; direct digitization of the paper curve is still required for a pointwise visual-equivalence score.",
-            "next_action": "Digitize the paper curve and compare it pointwise against the accepted DG family without extrapolating beyond the computed fold.",
+            "boundary": (
+                "The native-PDF curve has been digitized and the common interval passes "
+                "the pointwise uncertainty gate. Full curve coverage remains false: the "
+                f"accepted DG branch stops {metrics['fig42_digitized_tail_days']} days before "
+                "the digitized thesis endpoint; no tail values are extrapolated."
+            ),
+            "next_action": (
+                "Continue the corrected N>=21 branch through or around the fold to cover "
+                "the remaining digitized thesis tail, then rerun the pointwise audit."
+            ),
         },
     ]
     manifold_specs = {
         "4.3": (
             "corrected L1 quasi-halo +x global unstable manifold at four paper snapshot times",
-            "numerical DG global manifold reproduction",
-            "computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending",
+            "numerical DG manifold dynamics with projection-geometry boundary",
+            "internal_dynamics_pass_projection_geometry_mismatch_boundary",
             _rel(HALO_MANIFOLDS),
-            "Increase source N and digitize the paper panels for pointwise geometry comparison.",
+            "Extend the global manifold to the thesis-scale reach, lock the paper camera, and run a projection-space geometry audit.",
         ),
         "4.4": (
             "corrected L1 quasi-halo -x global unstable manifold at four paper snapshot times",
-            "numerical DG global manifold reproduction",
-            "computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending",
+            "numerical DG manifold dynamics with projection-geometry boundary",
+            "internal_dynamics_pass_projection_geometry_mismatch_boundary",
             _rel(HALO_MANIFOLDS),
-            "Increase source N and digitize the paper panels for pointwise geometry comparison.",
+            "Extend the Earthward global manifold, lock the paper camera, and run a projection-space geometry audit.",
         ),
         "4.5": (
             "corrected L1 quasi-vertical +x global unstable manifold at four paper snapshot times",
-            "numerical DG global manifold reproduction",
-            "computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending",
+            "numerical DG manifold dynamics with projection-geometry boundary",
+            "internal_dynamics_pass_projection_geometry_mismatch_boundary",
             _rel(VERTICAL_GLOBAL_AUDIT),
-            "Digitize the paper panels for pointwise geometry comparison.",
+            "Extend the +x global manifold beyond the Moon-side reach, lock the paper camera, and run a projection-space geometry audit.",
         ),
         "4.6": (
             "corrected L1 quasi-vertical -x global unstable manifold at four paper snapshot times",
-            "numerical DG global manifold reproduction",
-            "computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending",
+            "numerical DG manifold dynamics with projection-geometry boundary",
+            "internal_dynamics_pass_projection_geometry_mismatch_boundary",
             _rel(VERTICAL_GLOBAL_AUDIT),
-            "Digitize the paper panels for pointwise geometry comparison.",
+            "Extend the Earthward global manifold to the thesis-scale reach, lock the paper camera, and run a projection-space geometry audit.",
         ),
         "4.7": (
             "corrected quasi-halo manifold with periodic-halo comparison",
-            "numerical DG manifold comparison",
-            "source_layer_comparison_not_full_original_replacement",
+            "numerical DG manifold comparison dynamics with projection-geometry boundary",
+            "internal_dynamics_pass_projection_geometry_mismatch_boundary",
             _rel(HALO_MANIFOLDS),
-            "Digitize the paper panel for pointwise geometry comparison.",
+            "Reproduce the dense global quasi-halo/periodic-halo topology under a locked paper camera before projection-space comparison.",
         ),
         "4.8": (
             "corrected 33-node JC=3.1389 quasi-vertical global unstable manifold with periodic-halo comparison",
-            "numerical DG manifold comparison",
-            "computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending",
+            "numerical DG manifold comparison dynamics with projection-geometry boundary",
+            "internal_dynamics_pass_projection_geometry_mismatch_boundary",
             _rel(VERTICAL_GLOBAL_AUDIT),
-            "Digitize the paper panel for pointwise geometry comparison.",
+            "Reproduce the dense Earthward quasi-vertical/periodic topology under a locked paper camera before projection-space comparison.",
         ),
     }
     for figure_id, values in manifold_specs.items():
@@ -376,6 +437,25 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
                 primary = f"{primary};{_rel(audit_path)}"
         else:
             metric = _manifold_metric(figure_id)
+        reference = PROJECT_ROOT / "outputs" / "reference_pages" / f"fig_{figure_id.replace('.', '_')}_reference.png"
+        contact_sheet = (
+            PROJECT_ROOT
+            / "outputs"
+            / "comparison_contact_sheets"
+            / f"fig_{figure_id.replace('.', '_')}_comparison.png"
+        )
+        supporting = (
+            f"{_rel(MANIFOLD_VALIDATION)};{halo_dg_source};{_rel(VERTICAL_DG)};"
+            f"{_rel(reference)};{_rel(contact_sheet)}"
+        )
+        terminal_reach = {
+            "4.3": "terminal x=0.904216..0.908818, short of the Moon-side global reach visible in the thesis",
+            "4.4": "terminal x=0.841718..0.849797, while the thesis shows a much larger Earthward return",
+            "4.5": "terminal x=0.889300..0.916987, short of the Moon-side folded sheet visible in the thesis",
+            "4.6": "terminal x=0.784378..0.837716, while the thesis extends far Earthward",
+            "4.7": "the quasi-halo source remains the local terminal x=0.841718..0.849797 branch and lacks the thesis topology/density",
+            "4.8": "the quasi-vertical source remains the local terminal x=0.784378..0.837716 branch and lacks the thesis Earthward reach",
+        }[figure_id]
         specs.append(
             {
                 "figure_id": figure_id,
@@ -384,15 +464,18 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
                 "original_replacement_status": replacement,
                 "uses_proxy": "false",
                 "primary_evidence": primary,
-                "supporting_evidence": f"{_rel(MANIFOLD_VALIDATION)};{halo_dg_source};{_rel(VERTICAL_DG)}",
+                "supporting_evidence": supporting,
                 "route_h_dependency": "none for original figure; Route H tracked separately",
                 "dg_dependency": "corrected L1 DG eigenvectors and manifold validation row",
                 "manifold_dependency": primary,
                 **metric,
                 "boundary": (
-                    "The analytic torus and manifold proxy layers are removed; the remaining boundary is a missing digitized pointwise paper comparison."
-                    if is_snapshot_global
-                    else "The synthetic comparison layers are removed; a digitized pointwise paper comparison is still missing."
+                    "The internal dynamics gate passes for snapshot time, residual, "
+                    "Jacobi drift, and local growth, and no analytic proxy layer is used. "
+                    "Thesis projection geometry is not validated and the current contact "
+                    f"sheet shows a material global-reach/topology mismatch: {terminal_reach}. "
+                    "Because this is a single-view 3D panel, image digitization can only "
+                    "support a locked-camera projection-space audit, not a 3D pointwise claim."
                 ),
                 "next_action": next_action,
             }
@@ -488,11 +571,14 @@ def _render_markdown(rows: list[dict[str, str]]) -> None:
             "",
             "## Boundary",
             "",
-        "Chapter 4 now has proxy-free corrected numerical source layers for all",
-        "original Fig. 4.1-4.8 panels. Full thesis-equivalence remains unproven",
-        "because the original raw branch data and digitized pointwise panel",
-        "comparisons are unavailable; Fig. 4.1 also retains an explicit",
-        "finite-amplitude torus-geometry boundary.",
+        "Chapter 4 has proxy-free corrected numerical source layers for all",
+        "original Fig. 4.1-4.8 panels, but this is not full thesis equivalence.",
+        "Fig. 4.2 passes a native-image pointwise gate over the common interval",
+        "while retaining an explicit fold-tail coverage boundary. Fig. 4.3-4.8",
+        "pass internal dynamics gates only; their contact sheets show material",
+        "global-reach/topology mismatches, and their single-view 3D panels require",
+        "a locked-camera projection-space audit rather than a 3D pointwise claim.",
+        "Fig. 4.1 also retains a finite-amplitude torus-geometry boundary.",
             "",
         ]
     )

@@ -83,6 +83,12 @@ def main() -> None:
                     "terminal_x_min": min(float(row["x"]) for row in snapshot),
                     "terminal_x_max": max(float(row["x"]) for row in snapshot),
                     "uses_proxy_background": meta["uses_proxy_background"],
+                    "dynamics_acceptance": "pass" if accepted else "fail",
+                    "paper_projection_acceptance": "not_run_or_fail",
+                    "paper_geometry_boundary": (
+                        "single-view 3D projection not calibrated; contact sheet shows "
+                        "material global-reach/topology mismatch"
+                    ),
                     "acceptance": "pass" if accepted else "fail",
                 }
             )
@@ -106,15 +112,23 @@ def main() -> None:
 - Source-curve energy span: `{max(float(row['source_curve_energy_span']) for row in rows):.6e}`
 - Growth-ratio range: `{min(float(row['growth_ratio']) for row in rows):.6f}` to `{max(float(row['growth_ratio']) for row in rows):.6f}`
 - Proxy background: `false`
-- Overall acceptance: `{'pass' if len(passed) == len(rows) else 'fail'}`
+- Internal dynamics acceptance: `{'pass' if len(passed) == len(rows) else 'fail'}`
+- Paper projection acceptance: `not_run_or_fail`
 
 Both half-manifolds are propagated directly from the real unstable eigenvector
 of the corrected `JC=3.1389` quasi-halo DG. The four panels use the paper's
 reported elapsed times exactly. No analytic torus or synthetic manifold sheet
 is used. The source-curve energy span is retained as a separate N=9 resolution
-boundary rather than mislabeled as propagation drift. Remaining uncertainty is
-the N=9 source-curve resolution and the lack
-of a digitized pointwise comparison against the paper panels.
+boundary rather than mislabeled as propagation drift.
+
+The `acceptance` column is an internal dynamics gate only. It does not validate
+the paper geometry. The current comparison contact sheets show a material
+global-reach/topology mismatch: Fig. 4.3 ends at x=0.904216..0.908818 and Fig.
+4.4 at x=0.841718..0.849797, while the thesis panels show much larger Moon-side
+and Earthward global structures. A static single-view 3D bitmap cannot yield a
+defensible 3D pointwise error. The remaining paper-facing task is therefore to
+extend the manifolds and perform a locked-camera projection-space geometry
+audit; digitization will measure the gap rather than automatically close it.
 """,
         encoding="utf-8",
     )

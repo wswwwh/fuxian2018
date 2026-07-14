@@ -24,6 +24,7 @@ ROUTE_H_FAMILY = DATA / "chapter3_fixed_mapping_cache_accepted_family.csv"
 ROUTE_H_AUDIT = DATA / "chapter3_fixed_mapping_cache_audit.csv"
 STAGED_GATE = DATA / "mccarthy2018_staged_goal_gate_status.csv"
 CHAPTER4_PER_FIGURE_AUDIT = DATA / "chapter4_per_figure_source_layer_audit.csv"
+CHAPTER4_FIG42_DIGITIZED_AUDIT = DATA / "chapter4_fig42_digitized_comparison_audit.csv"
 CHAPTER5_PER_FIGURE_AUDIT = DATA / "chapter5_per_figure_source_layer_audit.csv"
 CHAPTER3_PERIOD_Q_PER_FIGURE_AUDIT = DATA / "chapter3_period_q_per_figure_audit.csv"
 
@@ -649,6 +650,33 @@ of every McCarthy 2018 thesis figure.
 
 
 def _write_numerical_audit(summary: dict[str, float | int | str]) -> None:
+    fig42_rows = (
+        _read_csv(CHAPTER4_FIG42_DIGITIZED_AUDIT)
+        if CHAPTER4_FIG42_DIGITIZED_AUDIT.exists()
+        else []
+    )
+    fig42 = fig42_rows[0] if fig42_rows else {}
+    fig42_section = (
+        f"""Fig. 4.2 now has a native-PDF pointwise comparison (page 103, xref
+473). The common interval passes the digitization uncertainty gate:
+
+| Fig. 4.2 metric | value |
+|---|---:|
+| accepted corrected quasi-halo rows | `{fig42.get('accepted_quasi_rows', 'N/A')}` |
+| overlap comparison rows | `{fig42.get('overlap_comparison_rows', 'N/A')}` |
+| thesis-time coverage | `{fig42.get('reference_time_coverage_fraction', 'N/A')}` |
+| pointwise RMSE in stability index | `{fig42.get('pointwise_rmse_nu', 'N/A')}` |
+| maximum absolute error | `{fig42.get('pointwise_max_abs_error_nu', 'N/A')}` |
+| missing fold tail | `{fig42.get('computed_tail_time_gap_days', 'N/A')}` days |
+| overlap acceptance | `{fig42.get('pointwise_overlap_acceptance', 'false')}` |
+| full-curve coverage | `{fig42.get('full_curve_coverage', 'false')}` |
+
+This closes the missing 2D digitization subtask over the overlap, not the full
+curve. No values are extrapolated beyond the accepted DG fold.
+"""
+        if fig42
+        else "Fig. 4.2 native-image pointwise comparison is not available."
+    )
     if CHAPTER3_PERIOD_Q_PER_FIGURE_AUDIT.exists():
         period_q_rows = _read_csv(CHAPTER3_PERIOD_Q_PER_FIGURE_AUDIT)
         strict_rows = [row for row in period_q_rows if _as_bool(row.get("strict_acceptance"))]
@@ -746,10 +774,14 @@ branch states, tables, author code, or another direct high-authority comparison.
 
 ## C. Chapter 4 DG/manifold audit
 
-Chapter 4 has corrected source-curve residuals, DG eigenvector propagation, and
-Jacobi drift evidence. The Route H quasi-DRO source-layer figure is available,
-but original thesis-scale L1 quasi-halo/quasi-vertical global manifold
-replacement remains a separate task.
+{fig42_section}
+
+Chapter 4 also has corrected source-curve residuals, DG eigenvector propagation,
+and Jacobi drift evidence. For Fig. 4.3-4.8 these are internal dynamics gates,
+not paper-geometry acceptance. Current contact sheets show material
+global-reach/topology mismatches, and the single-view 3D panels can support only
+a future locked-camera projection-space audit. The Route H quasi-DRO
+source-layer figure remains separate from the original L1 manifold figures.
 
 ## D. Chapter 5 source-layer audit
 
@@ -799,6 +831,10 @@ Do not call this original McCarthy raw branch data.
   orbit.
 - Chapter 4 Route H source-layer evidence is not the same as full replacement
   of original L1 quasi-halo/quasi-vertical global manifold figures.
+- Fig. 4.2 passes the native-image pointwise gate over 89% of the thesis curve,
+  but the final fold tail is still uncovered.
+- Fig. 4.3-4.8 pass internal dynamics checks only; current projection geometry
+  visibly lacks the thesis-scale global reach/topology.
 - Chapter 5 source-layer BCR4BP/optimization audits do not replace every thesis
   application figure.
 

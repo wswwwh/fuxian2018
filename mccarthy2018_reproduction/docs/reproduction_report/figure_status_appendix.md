@@ -14,9 +14,9 @@ Total figures: 54.
 | Route H / DE421 geometry baseline | 2 |
 | audited Route H fixed-time source-layer | 2 |
 | numerical CR3BP rendezvous-branch reproduction | 1 |
-| numerical DG family reproduction with paper-digitization boundary | 1 |
-| numerical DG global manifold reproduction | 4 |
-| numerical DG manifold comparison | 2 |
+| numerical DG family reproduction with digitized overlap pass and fold-tail boundary | 1 |
+| numerical DG manifold comparison dynamics with projection-geometry boundary | 2 |
+| numerical DG manifold dynamics with projection-geometry boundary | 4 |
 | numerical corrected Lissajous propagation reproduction | 1 |
 | numerical equal-Jacobi multiple-shooting transfer reproduction | 1 |
 | numerical quasi-periodic stable-manifold transfer reproduction | 1 |
@@ -631,16 +631,16 @@ Total figures: 54.
 | figure_id | 4.2 |
 | source_page | 87 |
 | script | figures/fig_4_02.py |
-| current_repro_level | numerical DG family reproduction with paper-digitization boundary |
+| current_repro_level | numerical DG family reproduction with digitized overlap pass and fold-tail boundary |
 | uses_proxy | false |
-| main_data_source | data/computed/chapter4_fig42_stability_family_audit.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;outputs/figures_png/fig_4_2.png;outputs/figures_pdf/fig_4_2.pdf |
-| key_physical_quantities | accepted L1 constant-energy quasi-halo DG stability family; mapping time <= 12.42459244000286 days; stability index <= 776.6642040417618; original replacement status: computed_family_replaces_proxy_curve_pointwise_paper_comparison_pending |
+| main_data_source | data/computed/chapter4_fig42_stability_family_audit.csv;data/computed/chapter4_fig42_digitized_comparison_audit.csv;data/digitized/fig_4_2_computed_vs_digitized.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/digitized/fig_4_2_digitized_points.csv;outputs/reference_pages/fig_4_2_reference_native.png;outputs/diagnostics/fig_4_2_digitized_comparison.png;docs/chapter4_fig42_digitized_independent_rerun_audit.md;outputs/figures_png/fig_4_2.png;outputs/figures_pdf/fig_4_2.pdf |
+| key_physical_quantities | accepted L1 constant-energy quasi-halo DG stability family plus native-PDF digitized reference; digitized overlap 13 rows; coverage 0.8902665099213599; RMSE/max stability-index error 0.3710034126027414/0.5108820184630076; overlap acceptance true; original replacement status: pointwise_paper_overlap_pass_full_curve_fold_tail_pending |
 | residual evidence | worst source residual: 9.322175255756186e-10; accepted rows: 16; DG dependency: 216 halo rows; 396 high-order rows; 378 PALC rows; 54 vertical rows |
 | Jacobi evidence | N/A |
 | periodicity evidence | manifold growth ratio: N/A; manifold dependency: none |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 86249; PDF bytes 16527; boundary: The analytic proxy curve has been removed and the accepted N=9/15/21 DG family reaches its mapping-time fold; direct digitization of the paper curve is still required for a pointwise visual-equivalence score. |
-| next_action | Digitize the paper curve and compare it pointwise against the accepted DG family without extrapolating beyond the computed fold. |
+| visual_status | PNG bytes 86249; PDF bytes 16527; boundary: The native-PDF curve has been digitized and the common interval passes the pointwise uncertainty gate. Full curve coverage remains false: the accepted DG branch stops 0.04945011318863024 days before the digitized thesis endpoint; no tail values are extrapolated. |
+| next_action | Continue the corrected N>=21 branch through or around the fold to cover the remaining digitized thesis tail, then rerun the pointwise audit. |
 
 ### Figure 4.3
 
@@ -649,16 +649,16 @@ Total figures: 54.
 | figure_id | 4.3 |
 | source_page | 89 |
 | script | figures/fig_4_03.py |
-| current_repro_level | numerical DG global manifold reproduction |
+| current_repro_level | numerical DG manifold dynamics with projection-geometry boundary |
 | uses_proxy | false |
-| main_data_source | data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv;data/computed/chapter4_fig43_fig44_global_manifold_audit.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/figures_png/fig_4_3.png;outputs/figures_pdf/fig_4_3.pdf |
-| key_physical_quantities | corrected L1 quasi-halo +x global unstable manifold at four paper snapshot times; four exact paper snapshot times; proxy-free corrected DG manifold; original replacement status: computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending |
+| main_data_source | data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv;data/computed/chapter4_fig43_fig44_global_manifold_audit.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/reference_pages/fig_4_3_reference.png;outputs/comparison_contact_sheets/fig_4_3_comparison.png;outputs/figures_png/fig_4_3.png;outputs/figures_pdf/fig_4_3.pdf |
+| key_physical_quantities | corrected L1 quasi-halo +x global unstable manifold at four paper snapshot times; four exact paper snapshot times; proxy-free corrected DG manifold; original replacement status: internal_dynamics_pass_projection_geometry_mismatch_boundary |
 | residual evidence | worst source residual: 9.322175255756186e-10; accepted rows: 4; DG dependency: corrected L1 DG eigenvectors and manifold validation row |
 | Jacobi evidence | 2.220446049250313e-15 |
 | periodicity evidence | manifold growth ratio: 0.7991628334940111..1.136088718675205; manifold dependency: data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv;data/computed/chapter4_fig43_fig44_global_manifold_audit.csv |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 1168109; PDF bytes 205263; boundary: The analytic torus and manifold proxy layers are removed; the remaining boundary is a missing digitized pointwise paper comparison. |
-| next_action | Increase source N and digitize the paper panels for pointwise geometry comparison. |
+| visual_status | PNG bytes 1168109; PDF bytes 205263; boundary: The internal dynamics gate passes for snapshot time, residual, Jacobi drift, and local growth, and no analytic proxy layer is used. Thesis projection geometry is not validated and the current contact sheet shows a material global-reach/topology mismatch: terminal x=0.904216..0.908818, short of the Moon-side global reach visible in the thesis. Because this is a single-view 3D panel, image digitization can only support a locked-camera projection-space audit, not a 3D pointwise claim. |
+| next_action | Extend the global manifold to the thesis-scale reach, lock the paper camera, and run a projection-space geometry audit. |
 
 ### Figure 4.4
 
@@ -667,16 +667,16 @@ Total figures: 54.
 | figure_id | 4.4 |
 | source_page | 90 |
 | script | figures/fig_4_04.py |
-| current_repro_level | numerical DG global manifold reproduction |
+| current_repro_level | numerical DG manifold dynamics with projection-geometry boundary |
 | uses_proxy | false |
-| main_data_source | data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv;data/computed/chapter4_fig43_fig44_global_manifold_audit.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/figures_png/fig_4_4.png;outputs/figures_pdf/fig_4_4.pdf |
-| key_physical_quantities | corrected L1 quasi-halo -x global unstable manifold at four paper snapshot times; four exact paper snapshot times; proxy-free corrected DG manifold; original replacement status: computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending |
+| main_data_source | data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv;data/computed/chapter4_fig43_fig44_global_manifold_audit.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/reference_pages/fig_4_4_reference.png;outputs/comparison_contact_sheets/fig_4_4_comparison.png;outputs/figures_png/fig_4_4.png;outputs/figures_pdf/fig_4_4.pdf |
+| key_physical_quantities | corrected L1 quasi-halo -x global unstable manifold at four paper snapshot times; four exact paper snapshot times; proxy-free corrected DG manifold; original replacement status: internal_dynamics_pass_projection_geometry_mismatch_boundary |
 | residual evidence | worst source residual: 9.322175255756186e-10; accepted rows: 4; DG dependency: corrected L1 DG eigenvectors and manifold validation row |
 | Jacobi evidence | 2.220446049250313e-15 |
 | periodicity evidence | manifold growth ratio: 0.7934160994359211..0.9046567422262596; manifold dependency: data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv;data/computed/chapter4_fig43_fig44_global_manifold_audit.csv |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 834816; PDF bytes 193877; boundary: The analytic torus and manifold proxy layers are removed; the remaining boundary is a missing digitized pointwise paper comparison. |
-| next_action | Increase source N and digitize the paper panels for pointwise geometry comparison. |
+| visual_status | PNG bytes 834816; PDF bytes 193877; boundary: The internal dynamics gate passes for snapshot time, residual, Jacobi drift, and local growth, and no analytic proxy layer is used. Thesis projection geometry is not validated and the current contact sheet shows a material global-reach/topology mismatch: terminal x=0.841718..0.849797, while the thesis shows a much larger Earthward return. Because this is a single-view 3D panel, image digitization can only support a locked-camera projection-space audit, not a 3D pointwise claim. |
+| next_action | Extend the Earthward global manifold, lock the paper camera, and run a projection-space geometry audit. |
 
 ### Figure 4.5
 
@@ -685,16 +685,16 @@ Total figures: 54.
 | figure_id | 4.5 |
 | source_page | 91 |
 | script | figures/fig_4_05.py |
-| current_repro_level | numerical DG global manifold reproduction |
+| current_repro_level | numerical DG manifold dynamics with projection-geometry boundary |
 | uses_proxy | false |
-| main_data_source | data/computed/chapter4_fig45_fig48_vertical_manifold_audit.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/figures_png/fig_4_5.png;outputs/figures_pdf/fig_4_5.pdf |
-| key_physical_quantities | corrected L1 quasi-vertical +x global unstable manifold at four paper snapshot times; four exact paper snapshot times; proxy-free corrected DG manifold; original replacement status: computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending |
+| main_data_source | data/computed/chapter4_fig45_fig48_vertical_manifold_audit.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/reference_pages/fig_4_5_reference.png;outputs/comparison_contact_sheets/fig_4_5_comparison.png;outputs/figures_png/fig_4_5.png;outputs/figures_pdf/fig_4_5.pdf |
+| key_physical_quantities | corrected L1 quasi-vertical +x global unstable manifold at four paper snapshot times; four exact paper snapshot times; proxy-free corrected DG manifold; original replacement status: internal_dynamics_pass_projection_geometry_mismatch_boundary |
 | residual evidence | worst source residual: 4.982185846358393e-10; accepted rows: 4; DG dependency: corrected L1 DG eigenvectors and manifold validation row |
 | Jacobi evidence | 2.220446049250313e-15 |
 | periodicity evidence | manifold growth ratio: 0.9611117371277423..1.165278829376934; manifold dependency: data/computed/chapter4_fig45_fig48_vertical_manifold_audit.csv |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 1466066; PDF bytes 778686; boundary: The analytic torus and manifold proxy layers are removed; the remaining boundary is a missing digitized pointwise paper comparison. |
-| next_action | Digitize the paper panels for pointwise geometry comparison. |
+| visual_status | PNG bytes 1466066; PDF bytes 778686; boundary: The internal dynamics gate passes for snapshot time, residual, Jacobi drift, and local growth, and no analytic proxy layer is used. Thesis projection geometry is not validated and the current contact sheet shows a material global-reach/topology mismatch: terminal x=0.889300..0.916987, short of the Moon-side folded sheet visible in the thesis. Because this is a single-view 3D panel, image digitization can only support a locked-camera projection-space audit, not a 3D pointwise claim. |
+| next_action | Extend the +x global manifold beyond the Moon-side reach, lock the paper camera, and run a projection-space geometry audit. |
 
 ### Figure 4.6
 
@@ -703,16 +703,16 @@ Total figures: 54.
 | figure_id | 4.6 |
 | source_page | 92 |
 | script | figures/fig_4_06.py |
-| current_repro_level | numerical DG global manifold reproduction |
+| current_repro_level | numerical DG manifold dynamics with projection-geometry boundary |
 | uses_proxy | false |
-| main_data_source | data/computed/chapter4_fig45_fig48_vertical_manifold_audit.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/figures_png/fig_4_6.png;outputs/figures_pdf/fig_4_6.pdf |
-| key_physical_quantities | corrected L1 quasi-vertical -x global unstable manifold at four paper snapshot times; four exact paper snapshot times; proxy-free corrected DG manifold; original replacement status: computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending |
+| main_data_source | data/computed/chapter4_fig45_fig48_vertical_manifold_audit.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/reference_pages/fig_4_6_reference.png;outputs/comparison_contact_sheets/fig_4_6_comparison.png;outputs/figures_png/fig_4_6.png;outputs/figures_pdf/fig_4_6.pdf |
+| key_physical_quantities | corrected L1 quasi-vertical -x global unstable manifold at four paper snapshot times; four exact paper snapshot times; proxy-free corrected DG manifold; original replacement status: internal_dynamics_pass_projection_geometry_mismatch_boundary |
 | residual evidence | worst source residual: 4.982185846358393e-10; accepted rows: 4; DG dependency: corrected L1 DG eigenvectors and manifold validation row |
 | Jacobi evidence | 1.77635683940025e-15 |
 | periodicity evidence | manifold growth ratio: 0.8655154043045946..1.106496467389491; manifold dependency: data/computed/chapter4_fig45_fig48_vertical_manifold_audit.csv |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 745973; PDF bytes 755467; boundary: The analytic torus and manifold proxy layers are removed; the remaining boundary is a missing digitized pointwise paper comparison. |
-| next_action | Digitize the paper panels for pointwise geometry comparison. |
+| visual_status | PNG bytes 745973; PDF bytes 755467; boundary: The internal dynamics gate passes for snapshot time, residual, Jacobi drift, and local growth, and no analytic proxy layer is used. Thesis projection geometry is not validated and the current contact sheet shows a material global-reach/topology mismatch: terminal x=0.784378..0.837716, while the thesis extends far Earthward. Because this is a single-view 3D panel, image digitization can only support a locked-camera projection-space audit, not a 3D pointwise claim. |
+| next_action | Extend the Earthward global manifold to the thesis-scale reach, lock the paper camera, and run a projection-space geometry audit. |
 
 ### Figure 4.7
 
@@ -721,16 +721,16 @@ Total figures: 54.
 | figure_id | 4.7 |
 | source_page | 93 |
 | script | figures/fig_4_07.py |
-| current_repro_level | numerical DG manifold comparison |
+| current_repro_level | numerical DG manifold comparison dynamics with projection-geometry boundary |
 | uses_proxy | false |
-| main_data_source | data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/figures_png/fig_4_7.png;outputs/figures_pdf/fig_4_7.pdf |
-| key_physical_quantities | corrected quasi-halo manifold with periodic-halo comparison; quasi-halo earthward_minus_x_unstable; duration 13.02 days; growth ratio 0.8667050797832782; Jacobi drift 1.332267629550188e-15; original replacement status: source_layer_comparison_not_full_original_replacement |
+| main_data_source | data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/reference_pages/fig_4_7_reference.png;outputs/comparison_contact_sheets/fig_4_7_comparison.png;outputs/figures_png/fig_4_7.png;outputs/figures_pdf/fig_4_7.pdf |
+| key_physical_quantities | corrected quasi-halo manifold with periodic-halo comparison; quasi-halo earthward_minus_x_unstable; duration 13.02 days; growth ratio 0.8667050797832782; Jacobi drift 1.332267629550188e-15; original replacement status: internal_dynamics_pass_projection_geometry_mismatch_boundary |
 | residual evidence | worst source residual: 9.322175255756186e-10; accepted rows: 1; DG dependency: corrected L1 DG eigenvectors and manifold validation row |
 | Jacobi evidence | 1.332267629550188e-15 |
 | periodicity evidence | manifold growth ratio: 0.8667050797832782; manifold dependency: data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 187321; PDF bytes 66859; boundary: The synthetic comparison layers are removed; a digitized pointwise paper comparison is still missing. |
-| next_action | Digitize the paper panel for pointwise geometry comparison. |
+| visual_status | PNG bytes 187321; PDF bytes 66859; boundary: The internal dynamics gate passes for snapshot time, residual, Jacobi drift, and local growth, and no analytic proxy layer is used. Thesis projection geometry is not validated and the current contact sheet shows a material global-reach/topology mismatch: the quasi-halo source remains the local terminal x=0.841718..0.849797 branch and lacks the thesis topology/density. Because this is a single-view 3D panel, image digitization can only support a locked-camera projection-space audit, not a 3D pointwise claim. |
+| next_action | Reproduce the dense global quasi-halo/periodic-halo topology under a locked paper camera before projection-space comparison. |
 
 ### Figure 4.8
 
@@ -739,16 +739,16 @@ Total figures: 54.
 | figure_id | 4.8 |
 | source_page | 93 |
 | script | figures/fig_4_08.py |
-| current_repro_level | numerical DG manifold comparison |
+| current_repro_level | numerical DG manifold comparison dynamics with projection-geometry boundary |
 | uses_proxy | false |
-| main_data_source | data/computed/chapter4_fig45_fig48_vertical_manifold_audit.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/figures_png/fig_4_8.png;outputs/figures_pdf/fig_4_8.pdf |
-| key_physical_quantities | corrected 33-node JC=3.1389 quasi-vertical global unstable manifold with periodic-halo comparison; quasi-vertical earthward_global_unstable; duration 13.46 days; growth ratio 0.8655154043045946; Jacobi drift 1.77635683940025e-15; original replacement status: computed_global_manifold_replaces_proxy_pointwise_paper_comparison_pending |
+| main_data_source | data/computed/chapter4_fig45_fig48_vertical_manifold_audit.csv;data/computed/chapter4_manifold_validation.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_dg_family.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_high_order_dg.csv;data/computed/chapter4_corrected_l1_constant_energy_halo_pseudo_arclength_dg.csv;data/computed/chapter4_corrected_vertical_curve_dg.csv;outputs/reference_pages/fig_4_8_reference.png;outputs/comparison_contact_sheets/fig_4_8_comparison.png;outputs/figures_png/fig_4_8.png;outputs/figures_pdf/fig_4_8.pdf |
+| key_physical_quantities | corrected 33-node JC=3.1389 quasi-vertical global unstable manifold with periodic-halo comparison; quasi-vertical earthward_global_unstable; duration 13.46 days; growth ratio 0.8655154043045946; Jacobi drift 1.77635683940025e-15; original replacement status: internal_dynamics_pass_projection_geometry_mismatch_boundary |
 | residual evidence | worst source residual: 4.982185846358393e-10; accepted rows: 1; DG dependency: corrected L1 DG eigenvectors and manifold validation row |
 | Jacobi evidence | 1.77635683940025e-15 |
 | periodicity evidence | manifold growth ratio: 0.8655154043045946; manifold dependency: data/computed/chapter4_fig45_fig48_vertical_manifold_audit.csv |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 214589; PDF bytes 184164; boundary: The synthetic comparison layers are removed; a digitized pointwise paper comparison is still missing. |
-| next_action | Digitize the paper panel for pointwise geometry comparison. |
+| visual_status | PNG bytes 214589; PDF bytes 184164; boundary: The internal dynamics gate passes for snapshot time, residual, Jacobi drift, and local growth, and no analytic proxy layer is used. Thesis projection geometry is not validated and the current contact sheet shows a material global-reach/topology mismatch: the quasi-vertical source remains the local terminal x=0.784378..0.837716 branch and lacks the thesis Earthward reach. Because this is a single-view 3D panel, image digitization can only support a locked-camera projection-space audit, not a 3D pointwise claim. |
+| next_action | Reproduce the dense Earthward quasi-vertical/periodic topology under a locked paper camera before projection-space comparison. |
 
 ### Figure 5.1
 
