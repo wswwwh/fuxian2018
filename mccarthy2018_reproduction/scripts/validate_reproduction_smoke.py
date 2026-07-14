@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import sys
 from collections import Counter
 from pathlib import Path
@@ -45,6 +46,14 @@ def read_csv(path: Path, project_root: Path) -> list[dict[str, str]]:
         raise SmokeFailure(f"missing required file: {relative}")
     with path.open(newline="", encoding="utf-8") as stream:
         return list(csv.DictReader(stream))
+
+
+def sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest().upper()
 
 
 def require_unique_ids(rows: list[dict[str, str]], label: str) -> list[str]:
@@ -229,6 +238,140 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
     if fig42_tail <= 0.0:
         raise SmokeFailure("Fig. 4.2 uncovered fold tail is missing")
 
+    chapter4_fixed_time_rows: list[dict[str, str]] = []
+    for audit_name, npz_name, generator_name, schema_version in (
+        (
+            "chapter4_fig43_fig44_global_manifold_audit.csv",
+            "chapter4_fig43_fig44_global_manifold_audit.npz",
+            "run_chapter4_fig43_fig44_global_manifold_audit.py",
+            "chapter4_fig43_fig44_fixed_time_audit_v2",
+        ),
+        (
+            "chapter4_fig45_fig48_vertical_manifold_audit.csv",
+            "chapter4_fig45_fig48_vertical_manifold_audit.npz",
+            "run_chapter4_fig45_fig48_vertical_manifold_audit.py",
+            "fixed_time_vertical_manifold_audit_v2",
+        ),
+    ):
+        rows = read_csv(
+            project_root / "data" / "computed" / audit_name,
+            project_root,
+        )
+        if len(rows) != 8:
+            raise SmokeFailure(f"{audit_name} must contain eight panel rows")
+        npz_path = project_root / "data" / "computed" / npz_name
+        generator_path = project_root / "scripts" / generator_name
+        core_path = project_root / "src" / "qp_orbits" / "torus_stability.py"
+        for artifact in (npz_path, generator_path, core_path):
+            if not artifact.is_file():
+                raise SmokeFailure(
+                    "missing Chapter 4 fixed-time fingerprint source: "
+                    f"{artifact.relative_to(project_root).as_posix()}"
+                )
+        expected_fingerprint = {
+            "artifact_fingerprint_version": "1",
+            "npz_schema_version": schema_version,
+            "npz_sha256": sha256(npz_path),
+            "generator_sha256": sha256(generator_path),
+            "core_torus_stability_sha256": sha256(core_path),
+        }
+        if any(
+            any(row.get(field) != value for field, value in expected_fingerprint.items())
+            for row in rows
+        ):
+            raise SmokeFailure(
+                f"{audit_name} fingerprint is stale relative to NPZ/code"
+            )
+        chapter4_fixed_time_rows.extend(rows)
+    if any(
+        row.get("acceptance") != "pass"
+        or row.get("numerical_acceptance") != "pass"
+        or row.get("configuration_reach_acceptance") != "pass"
+        or row.get("overall_acceptance") != "pass"
+        or row.get("local_linearization_gate") != "pass"
+        or row.get("linear_reference_method")
+        != "base_trajectory_STM_first_order"
+        or row.get("far_field_linearization_status") != "diagnostic_only"
+        for row in chapter4_fixed_time_rows
+    ):
+        raise SmokeFailure(
+            "Chapter 4 fixed-time numerical/configuration audit is not 16/16 pass"
+        )
+    if any(
+        row.get("paper_projection_acceptance") != "not_run"
+        or row.get("paper_3d_equivalence") != "false"
+        or row.get("epsilon_selection_status")
+        != "project_visualization_parameter_uncalibrated"
+        for row in chapter4_fixed_time_rows
+    ):
+        raise SmokeFailure("Chapter 4 fixed-time paper boundary is not explicit")
+
+    chapter4_source_rows = read_csv(
+        project_root
+        / "data"
+        / "computed"
+        / "chapter4_per_figure_source_layer_audit.csv",
+        project_root,
+    )
+    fixed_time_source_rows = [
+        row
+        for row in chapter4_source_rows
+        if row.get("figure_id") in {"4.3", "4.4", "4.5", "4.6"}
+    ]
+    if len(fixed_time_source_rows) != 4:
+        raise SmokeFailure("Chapter 4 fixed-time per-figure mapping must contain four rows")
+    if any(
+        row.get("accepted_rows") != "4"
+        or row.get("original_replacement_status")
+            != "numerical_fixed_time_manifold_and_configuration_reach_pass_projection_pending_boundary"
+        for row in fixed_time_source_rows
+    ):
+        raise SmokeFailure("Chapter 4 fixed-time per-figure status is inconsistent")
+
+    projection_rows = read_csv(
+        project_root
+        / "data"
+        / "computed"
+        / "chapter4_fig43_fig46_projection_diagnostic.csv",
+        project_root,
+    )
+    if len(projection_rows) != 16:
+        raise SmokeFailure("Chapter 4 projection diagnostic must contain 16 panel rows")
+    if any(
+        row.get("status") != "diagnostic_only"
+        or row.get("paper_projection_acceptance") != "not_run"
+        or row.get("paper_3d_equivalence") != "false"
+        for row in projection_rows
+    ):
+        raise SmokeFailure("Chapter 4 diagnostic-only projection boundary regressed")
+    source_hashes: dict[Path, str] = {}
+    for row in projection_rows:
+        for source_field, hash_field in (
+            ("paper_source", "paper_source_sha256"),
+            ("reproduction_source", "reproduction_source_sha256"),
+        ):
+            source = (project_root / row[source_field]).resolve()
+            try:
+                source.relative_to(project_root)
+            except ValueError as error:
+                raise SmokeFailure(
+                    f"Chapter 4 projection source escapes project root: {source}"
+                ) from error
+            if not source.is_file():
+                raise SmokeFailure(
+                    f"Chapter 4 projection source is missing: {row[source_field]}"
+                )
+            if source not in source_hashes:
+                source_hashes[source] = sha256(source)
+            current_hash = source_hashes[source]
+            if current_hash != row.get(hash_field):
+                raise SmokeFailure(
+                    f"Chapter 4 projection source hash is stale: {row[source_field]}"
+                )
+    projection_alerts = sum(
+        row.get("failure_items", "none") != "none" for row in projection_rows
+    )
+
     fig510_rows = read_csv(
         project_root
         / "data"
@@ -338,6 +481,9 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
         "fig42_digitized_coverage": fig42_coverage,
         "fig42_digitized_rmse": fig42_rmse,
         "fig42_tail_days": fig42_tail,
+        "chapter4_fixed_time_rows": len(chapter4_fixed_time_rows),
+        "chapter4_projection_rows": len(projection_rows),
+        "chapter4_projection_alerts": projection_alerts,
         "fig510_bcr4bp_numerical": sum(
             row["numerical_acceptance"] == "true" for row in fig510_rows
         ),
@@ -396,6 +542,12 @@ def main() -> int:
         f"coverage={summary['fig42_digitized_coverage']:.6f} "
         f"rmse={summary['fig42_digitized_rmse']:.6f} "
         f"tail_days={summary['fig42_tail_days']:.6f}"
+    )
+    print(
+        f"chapter4_fixed_time={summary['chapter4_fixed_time_rows']}/16 "
+        f"projection_diagnostic_rows={summary['chapter4_projection_rows']} "
+        f"projection_alerts={summary['chapter4_projection_alerts']} "
+        "paper_projection=not_run"
     )
     print(
         f"fig510_bcr4bp_numerical={summary['fig510_bcr4bp_numerical']}/2 "

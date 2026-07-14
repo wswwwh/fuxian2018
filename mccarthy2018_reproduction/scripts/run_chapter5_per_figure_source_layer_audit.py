@@ -27,6 +27,7 @@ BCR4BP_CORRECTION_AUDIT = DATA / "chapter5_bcr4bp_segment_correction_audit.csv"
 FIG510_BCR4BP_AUDIT = DATA / "chapter5_fig510_bcr4bp_transfer_audit.csv"
 FIG510_BCR4BP_TRAJECTORIES = DATA / "chapter5_fig510_bcr4bp_transfer_trajectories.csv"
 FIG510_BCR4BP_REPORT = DOCS / "chapter5_fig510_bcr4bp_transfer_audit.md"
+FIG510_PUBLIC_SOURCE_NOTE = DOCS / "chapter5_fig510_public_source_anchors.md"
 FIG510_BCR4BP_RERUN_REPORT = (
     DOCS / "chapter5_fig510_bcr4bp_independent_rerun_audit.md"
 )
@@ -551,6 +552,7 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
             ),
             "supporting_evidence": (
                 f"{_rel(NRHO_TRANSFER_AUDIT)};{_rel(FIG510_BCR4BP_REPORT)};"
+                f"{_rel(FIG510_PUBLIC_SOURCE_NOTE)};"
                 f"{_rel(FIG510_BCR4BP_RERUN_REPORT)};"
                 f"{_exists_rel(FIG510_BCR4BP_DIAGNOSTIC_PNG)};"
                 f"{_exists_rel(FIG510_BCR4BP_DIAGNOSTIC_PDF)};{bcr4bp_source}"
@@ -572,8 +574,8 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
                 f"paper-relative error {metrics['fig510_bcr4bp_paper_relative_error']}; "
                 f"DE421 initial Sun phase {metrics['fig510_bcr4bp_sun_phase_deg']} deg"
             ),
-            "boundary": "The dedicated planar BCR4BP extension is numerically accepted, but it uses a project-selected DE421 epoch and CR3BP NRHO boundary states. The canonical thesis-style panel remains CR3BP; full ephemeris dynamics, thesis-specific initial states, impulse agreement, and pointwise geometry remain open, so paper_equivalence=false.",
-            "next_action": "Recover thesis-specific epoch and initial states if available, replace both endpoints with high-fidelity corrected NRHOs, and optimize the impulse split before any paper-equivalence claim.",
+            "boundary": "The dedicated planar BCR4BP extension is numerically accepted, but Figure 5.10 is an autonomous CR3BP case, so epoch is not applicable to the paper result and the project date belongs only to the extension. The paper-specific quasi-NRHO member, intersection phases, raw boundary states, impulse agreement, and pointwise geometry remain open, so paper_equivalence=false.",
+            "next_action": "Continue the rp=8065 km, frequency-ratio=5.0305 constant-frequency quasi-NRHO family, recover the two intersection phases and boundary states, then optimize the impulse split and run a locked-projection audit.",
         },
         {
             "figure_id": "5.11",

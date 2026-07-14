@@ -214,8 +214,9 @@ use.
 - `docs/chapter3_route_b_stage_summary.md`
 - `docs/chapter3_route_b_artifact_index.md`
 - `docs/external_reproduction_resources.md`
-- `docs/stage_report_reproduction_status.md`
-- `docs/next_reproduction_roadmap.md`
+- `docs/reproduction_execution_plan_2026-07-13.md`
+- `docs/stage_report_reproduction_status.md` (historical provenance only)
+- `docs/next_reproduction_roadmap.md` (historical provenance only)
 
 ### tasks
 

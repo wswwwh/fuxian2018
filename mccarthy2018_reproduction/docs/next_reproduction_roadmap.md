@@ -1,4 +1,13 @@
-# Next Reproduction Roadmap
+# Next Reproduction Roadmap (Historical Pre-Route-H Snapshot)
+
+> Superseded on 2026-07-14. This file preserves the planning state before the
+> Route H accepted-cache breakthrough and must not be used as the current
+> execution plan. Use `docs/reproduction_execution_plan_2026-07-13.md`,
+> `data/computed/figure_validation_table.csv`, and
+> `data/computed/mccarthy2018_staged_goal_gate_status.csv` instead. Route H now
+> reaches 14,573.103 km; Figs. 4.3-4.6 have fixed-time full-torus/STM audits;
+> Chapter 5 has source-layer audits but remains gated by incomplete Chapter 4
+> and paper-equivalence evidence.
 
 This roadmap defines the next phase after the current 54-figure first-pass
 coverage, Fig. 3.10 audit, Chapter 4 DG manifold audit, and Chapter 3 quasi-DRO

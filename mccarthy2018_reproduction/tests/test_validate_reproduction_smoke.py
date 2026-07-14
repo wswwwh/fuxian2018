@@ -80,6 +80,12 @@ class ReproductionSmokeCliTests(unittest.TestCase):
         self.assertIn("staged_goal_status=", result.stdout)
         self.assertIn("fig42_digitized_status=", result.stdout)
         self.assertIn(
+            "chapter4_fixed_time=16/16 projection_diagnostic_rows=16",
+            result.stdout,
+        )
+        self.assertIn("projection_alerts=", result.stdout)
+        self.assertIn("paper_projection=not_run", result.stdout)
+        self.assertIn(
             "fig510_bcr4bp_numerical=2/2 paper_equivalence=0/2",
             result.stdout,
         )

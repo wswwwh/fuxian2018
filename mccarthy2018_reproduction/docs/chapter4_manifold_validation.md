@@ -1,93 +1,62 @@
 # Chapter 4 Manifold Validation
 
-This note records the numerical audit layer added for the Chapter 4 DG
-manifold figures. The audit table is
-`data/computed/chapter4_manifold_validation.csv`.
+This note summarizes the current Chapter 4 manifold evidence. The canonical
+machine-readable sources are:
 
-## Current status
+- `data/computed/chapter4_manifold_validation.csv`;
+- `data/computed/chapter4_fig43_fig44_global_manifold_audit.csv` and `.npz`;
+- `data/computed/chapter4_fig45_fig48_vertical_manifold_audit.csv` and `.npz`;
+- `data/computed/chapter4_fig43_fig46_projection_diagnostic.csv`.
 
-Figures 4.1-4.2 remain stability-shape figures with corrected local DG samples
-over proxy or display-scaled context. They are not global manifold
-reproductions.
+## Figures 4.3-4.6
 
-Route H now adds a separate high-amplitude quasi-DRO source-layer audit for
-Chapter 4. The accepted Chapter 3 fixed-mapping cache members can be converted
-to DG spectra and short local unstable manifold probes; see
-`data/computed/chapter4_route_h_quasi_dro_dg.csv`,
-`data/computed/chapter4_route_h_quasi_dro_manifold_probe.csv`, and
-`docs/chapter4_route_h_quasi_dro_dg_manifold_audit.md`. The regenerated
-source-layer figure is `outputs/figures_png/fig_4_route_h.png` with a PDF copy
-under `outputs/figures_pdf/`. This does not yet replace the existing
-Fig. 4.3-4.8 backgrounds because those figures are L1 quasi-halo and
-quasi-vertical manifold figures, not quasi-DRO figures.
+The former `surface[:stop]` history-prefix construction has been removed.
+Each red surface is now the full perturbed torus evaluated over
+`tau + [0,T0]`, while the black departure histories over `[0,tau]` are stored
+and plotted separately. The periodic curve axis is explicitly closed before
+Matplotlib renders the surface seam. No analytic proxy background is used.
 
-Figures 4.3-4.6 still retain proxy manifold backgrounds. The corrected DG
-eigenvector propagation is now audited separately for the actual local or
-finite-amplitude branch used in each figure:
+| Figure | Source | K/M/N | Final configuration reach | Max combined Jacobi drift | Local STM max relative error |
+|---|---|---:|---:|---:|---:|
+| 4.3 | quasi-halo +x | 4/121/9 | `xmax=1.060688` | `3.177e-12` | `4.679e-05` |
+| 4.4 | quasi-halo -x | 4/121/9 | `xmin=0.661348` | `2.220e-15` | `4.677e-05` |
+| 4.5 | quasi-vertical +x | 4/121/33 | `xmax=1.195293` | `4.812e-11` | `7.223e-05` |
+| 4.6 | quasi-vertical -x | 4/121/33 | `xmin=0.242478` | `4.441e-15` | `7.221e-05` |
 
-- Fig. 4.3: quasi-halo +x unstable finite-amplitude DG sheet.
-- Fig. 4.4: quasi-halo -x unstable finite-amplitude DG sheet.
-- Fig. 4.5: quasi-vertical +x local unstable DG branch.
-- Fig. 4.6: quasi-vertical -x local unstable DG branch.
+The first-order reference is computed from the actual base-trajectory state
+transition matrix, `epsilon*||Phi(t,0)d||`. Numerical acceptance checks the
+local history region where the predicted state separation is at most
+`100*epsilon`; its maximum relative error must be at most `1e-3`. Far-field
+nonlinear/STM ratios are retained as diagnostics only because a globally
+propagated nonlinear manifold is expected to leave the linear neighborhood.
+No fractional-time power of a discrete DG multiplier is used as a continuous
+growth model.
 
-Figures 4.7-4.8 use corrected DG propagation as the main red sheet and retain a
-grey proxy only as a thesis-scale reference:
+The shared validation rows distinguish the final paper snapshot anchor from
+the largest absolute propagation time. The halo rows anchor at `13.02` days
+but extend through `25.117007` days after adding one mapping interval; the
+vertical rows anchor at `13.46` days and extend through `26.124797` days.
+Combined Jacobi drift includes both history and snapshot samples.
 
-- Fig. 4.7: quasi-halo DG unstable sheet with periodic halo comparison.
-- Fig. 4.8: quasi-vertical global DG unstable sheet with periodic halo comparison.
+## Acceptance boundary
 
-## Audit metrics
+All 16 panel rows pass the project numerical gates and the current
+configuration-reach checks. The reach checks depend on the project-selected
+`epsilon=4.5e-7`, which is not a paper-reported or projection-calibrated value;
+they are therefore not paper-level physical acceptance. The 16-panel bitmap
+comparison remains `diagnostic_only`, with 14 alerts,
+`paper_projection_acceptance=not_run`, and `paper_3d_equivalence=false`.
 
-| Figure | Corrected branch | Residual | Jacobi drift | Growth vs expected | Terminal x range | Proxy retained |
-| --- | --- | ---: | ---: | ---: | ---: | --- |
-| 4.3 | quasi-halo plus-x unstable | 9.32e-10 | 1.33e-15 | 2.539e3 / 2.235e3 | 0.9042..0.9088 | yes |
-| 4.4 | quasi-halo minus-x unstable | 9.32e-10 | 1.33e-15 | 1.937e3 / 2.235e3 | 0.8417..0.8498 | yes |
-| 4.5 | quasi-vertical plus-x local unstable | 2.03e-10 | 8.88e-16 | 3.362e3 / 3.361e3 | 0.837004..0.837024 | yes |
-| 4.6 | quasi-vertical minus-x local unstable | 2.03e-10 | 8.88e-16 | 3.359e3 / 3.361e3 | 0.836807..0.836826 | yes |
-| 4.7 | quasi-halo earthward unstable | 9.32e-10 | 1.33e-15 | 1.937e3 / 2.235e3 | 0.8417..0.8498 | yes |
-| 4.8 | quasi-vertical earthward global unstable | 2.03e-10 | 1.87e-14 | 1.561e7 / 6.547e8 | -0.59318..-0.59307 | yes |
-
-The local quasi-vertical branches in Figs. 4.5-4.6 match the one-map DG growth
-prediction to within about 4e-4 relative error. The finite-amplitude quasi-halo
-branches in Figs. 4.3-4.4 and 4.7 remain physically consistent but show
-asymmetric finite-amplitude growth ratios of 1.14 and 0.87. This is expected
-because the propagated separation is measured against a nonlinear CR3BP
-trajectory after a finite perturbation of 5e-5 nd, not an infinitesimal tangent
-vector.
-
-Fig. 4.8 is deliberately a longer global propagation. Its mean growth ratio is
-about 2.38e-2 relative to the linear DG expectation over 2.5 mapping intervals.
-The Jacobi drift remains small, so the discrepancy is interpreted as nonlinear
-growth saturation and projection away from the local eigenvector model during
-long propagation, not as an energy-conservation failure.
-
-## Baseline assessment
-
-The corrected sheets and branches are now usable as physical-consistency
-baselines for local DG eigenvector propagation. They check the source-curve
-residual, selected real unstable multiplier, finite perturbation size, elapsed
-time, state-separation growth, Jacobi drift, and terminal spatial bounds.
-
-They should not be labelled as thesis-level numerical reproduction yet. The
-current figure computation still uses a small number of corrected curve
-samples, a single endpoint or local vertical curve, and proxy visual
-backgrounds for the thesis-scale torus manifold geometry. Route H removes the
-upstream high-amplitude quasi-DRO source/DG blocker, but it does not by itself
-reproduce the L1 quasi-halo/quasi-vertical dense global manifold sheets shown in
-the thesis.
+Figures 4.7-4.8 retain the legacy comparison semantics and have not been
+migrated to this fixed-time evidence chain. The separate Route H quasi-DRO
+source-layer scan has only 1/31 real-hyperbolic members and remains a boundary;
+it is not an original L1 quasi-halo/quasi-vertical Figure 4.3-4.8 replacement.
 
 ## Next steps
 
-1. Continue the corrected quasi-halo and quasi-vertical torus families to the
-   thesis-scale amplitudes used in Chapter 4.
-2. Decide whether to add new Route H quasi-DRO torus/manifold figures or keep
-   the Chapter 4 figure set strictly aligned to the L1 quasi-halo and
-   quasi-vertical thesis figures.
-3. Compute DG spectra and selected unstable eigenvectors at each continued
-   member, not only the local curve or endpoint member.
-4. Propagate manifold sheets over dense phase and continuation samples with
-   automated Jacobi-drift and growth-ratio thresholds.
-5. Replace the proxy backgrounds in Figs. 4.3-4.8 only after the continued
-   torus-scale sheets exist.
-6. Add figure-level checks that compare topology, terminal bounds, and
-   periodic-halo intersections against thesis data when extractable.
+1. Calibrate epsilon and the locked paper camera from axis ticks and Moon
+   position, then run a held-out projection-space audit.
+2. Migrate Figures 4.7-4.8 to fixed-time manifold semantics without borrowing
+   the Figure 4.5-4.6 acceptance rows.
+3. Improve Route H real invariant-bundle coverage from 1/31 to the staged
+   three-member, 2,000-km-span requirement before promoting that source layer.

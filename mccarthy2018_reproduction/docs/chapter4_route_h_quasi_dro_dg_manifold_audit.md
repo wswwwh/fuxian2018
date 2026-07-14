@@ -7,10 +7,11 @@ from `data/computed/chapter3_fixed_mapping_cache_audit.csv` as Chapter 4 source
 data.  It computes McCarthy-style discrete-curve DG spectra and a short local
 unstable manifold probe directly from the cached correction objects.
 
-It is an upstream Chapter 4 source-layer audit.  It does not yet replace the
-existing Fig. 4.3-4.8 proxy backgrounds, because those figures currently target
-L1 quasi-halo and quasi-vertical manifolds, while Route H is the Chapter 3
-quasi-DRO family.
+It is an upstream Chapter 4 source-layer audit and does not replace the
+original Fig. 4.3-4.8 L1 quasi-halo/quasi-vertical figures. Route H is the
+Chapter 3 quasi-DRO family; its evidence chain remains separate. Figs. 4.3-4.6
+now have their own proxy-free fixed-time audits, while Figs. 4.7-4.8 retain a
+legacy comparison boundary.
 
 The strict real-hyperbolic gate is applied before a manifold probe is allowed.
 The companion scan in `data/computed/chapter4_real_hyperbolic_scan.csv` found
@@ -58,9 +59,11 @@ branch remains a boundary/source-layer result for the original Chapter 4
 manifold claim.  The regenerated source-layer figure is available as
 `fig_4_route_h` after running `figures/fig_4_route_h_quasi_dro.py`.
 
-Separately, the original L1 quasi-halo/quasi-vertical Fig. 4.3-4.8 audits have
-eight of eight requested snapshot rows accepted with proxy-free propagation.
-Those rows pass internal dynamics gates only. Current contact sheets show
-material global-reach/topology mismatches, and the single-view 3D panels still
-require extended propagation plus a locked-camera projection-space audit; they
-do not imply that the paper geometry or Route H three-member gate has passed.
+Separately, original Figs. 4.3-4.6 have 16/16 project numerical and
+epsilon-dependent configuration-reach rows accepted with proxy-free fixed-time
+propagation. Their local first-order reference uses base-trajectory STMs;
+far-field ratios remain diagnostic. The epsilon value is uncalibrated and the
+16-panel projection audit remains diagnostic-only with paper acceptance not run,
+so these rows do not imply paper physical/3D equivalence. Figs. 4.7-4.8 retain
+legacy comparison semantics, and none of this promotes the Route H
+three-member gate beyond its current 1/31 coverage.

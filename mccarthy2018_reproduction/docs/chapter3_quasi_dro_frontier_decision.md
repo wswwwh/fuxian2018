@@ -3,8 +3,10 @@
 ## Scope
 
 This document records the current decision state for the Fig. 3.16 / Fig. 3.17
-high-amplitude fixed-time quasi-DRO upgrade. It uses only current audit
-artifacts and does not update the figure source branch.
+high-amplitude fixed-time quasi-DRO upgrade. Route H is the current Chapter 3
+source layer; downstream Chapter 4/5 status is governed by
+`data/computed/mccarthy2018_staged_goal_gate_status.csv`, not by older prose in
+this decision record.
 
 ## Current Audited Frontier
 
@@ -178,7 +180,8 @@ Decision:
 - Strictly accepted rows: `31`
 - Exported monotone accepted family members: `30`
 - Strictly accepted rows above 10,500 km: `31`
-- Strictly accepted rows above 11,000 km: `30`
+- Strictly accepted cache rows above 11,000 km: `30`
+- Exported validation rows above 11,000 km: `29`
 - Best exported accepted member: `14573.1031841 km`
 - Blocking evidence resolved: the earlier staged gate audit did not include the
   fixed-mapping cache. Route H revalidates that cache under the current seven
@@ -194,25 +197,30 @@ minimum and the 11,000 km stretch target.
 Fig. 3.16 / Fig. 3.17 can be regenerated from
 `data/computed/chapter3_fixed_mapping_cache_accepted_family.csv` and
 `data/computed/chapter3_fixed_mapping_cache_accepted_validation.csv`, subject to
-the figure scripts being updated to use this Route H source. Chapter 4
-torus-scale DG/manifold work is now unblocked at the Route H source/DG layer.
-Chapter 5 has a Route H / DE421-oriented baseline for Figs. 5.6-5.7, but the
-high-fidelity/optimization layer remains gated.
+the figure scripts now using this Route H source. Chapter 4 source data is
+available, but the stricter Route H real-hyperbolic DG/manifold gate remains a
+boundary: only `1/31` members pass, below the required three-member, 2,000-km
+span. Independently, original Figs. 4.3-4.6 now have proxy-free fixed-time
+full-torus numerical audits; paper projection/3D equivalence remains open.
+Chapter 5 has Route H / DE421-oriented source-layer evidence, but its upstream
+high-fidelity gate remains `blocked_by_chapter4`.
 
 The staged gate audit in
 `data/computed/mccarthy2018_staged_goal_gate_status.csv` records the current
 machine-readable decision: Fig. 3.16 / Fig. 3.17 update `True`, Chapter 4
-Route H DG source-layer status `pass`, and Chapter 5 regeneration `False`.
+upstream torus data `ready_for_regeneration`, the Route H DG/manifold gate
+`not_run_or_fail` at `1/31` coverage, and Chapter 5 upstream status
+`blocked_by_chapter4`.
 
 ## Next Viable Route
 
 The next task is no longer another Chapter 3 continuation route. It is source
 promotion and downstream regeneration:
 
-1. Update Fig. 3.16 / Fig. 3.17 generation to use the Route H accepted family.
-2. Make the Chapter 4 figure-source decision: add Route H quasi-DRO
-   torus/manifold figures, or separately continue the L1 quasi-halo and
-   quasi-vertical families before replacing Fig. 4.3-4.8 proxy backgrounds.
+1. Keep Fig. 3.16 / Fig. 3.17 bound to the Route H accepted family and preserve
+   the hybrid-vs-monolithic cold-start boundary.
+2. Raise Route H real-hyperbolic coverage beyond `1/31`; separately calibrate
+   the paper projection for fixed-time Figs. 4.3-4.6 and migrate Figs. 4.7-4.8.
 3. Use the Route H Chapter 5 baseline only as a DE421-oriented geometry layer
    until BCR4BP/ephemeris multiple-shooting or optimized-transfer audit rows
    exist.

@@ -52,7 +52,12 @@ HALO_PALC_DG = DATA / "chapter4_corrected_l1_constant_energy_halo_pseudo_arcleng
 MANIFOLD_VALIDATION = DATA / "chapter4_manifold_validation.csv"
 HALO_MANIFOLDS = DATA / "chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv"
 HALO_GLOBAL_AUDIT = DATA / "chapter4_fig43_fig44_global_manifold_audit.csv"
+HALO_GLOBAL_STATES = DATA / "chapter4_fig43_fig44_global_manifold_audit.npz"
 VERTICAL_GLOBAL_AUDIT = DATA / "chapter4_fig45_fig48_vertical_manifold_audit.csv"
+VERTICAL_GLOBAL_STATES = DATA / "chapter4_fig45_fig48_vertical_manifold_audit.npz"
+FIG43_FIG46_PROJECTION_DIAGNOSTIC = (
+    DATA / "chapter4_fig43_fig46_projection_diagnostic.csv"
+)
 VERTICAL_PLUS = DATA / "chapter4_corrected_vertical_curve_unstable_manifold_plus.csv"
 VERTICAL_MINUS = DATA / "chapter4_corrected_vertical_curve_unstable_manifold_minus.csv"
 VERTICAL_GLOBAL = DATA / "chapter4_corrected_vertical_global_unstable_manifold.csv"
@@ -285,6 +290,82 @@ def _manifold_metric(figure_id: str) -> dict[str, str]:
     }
 
 
+def _first_available_max(
+    rows: list[dict[str, str]], *fields: str
+) -> tuple[str, float | None]:
+    for field in fields:
+        value = _max(rows, field)
+        if value is not None:
+            return field, value
+    return fields[0], None
+
+
+def _first_available_min(
+    rows: list[dict[str, str]], *fields: str
+) -> tuple[str, float | None]:
+    for field in fields:
+        value = _min(rows, field)
+        if value is not None:
+            return field, value
+    return fields[0], None
+
+
+def _fixed_time_snapshot_metric(
+    figure_id: str,
+    audit_path: Path,
+) -> dict[str, str]:
+    all_rows = [
+        row for row in _read_csv(audit_path) if row.get("figure_id") == figure_id
+    ]
+    accepted = [row for row in all_rows if row.get("acceptance") == "pass"]
+    first = accepted[0] if accepted else (all_rows[0] if all_rows else {})
+    jacobi_field, jacobi_drift = _first_available_max(
+        accepted,
+        "combined_history_snapshot_jacobi_drift_max",
+        "jacobi_drift_max",
+    )
+    independent_field, independent_error = _first_available_max(
+        accepted,
+        "batched_vs_independent_max_abs_error",
+        "batched_vs_independent_state_max_abs_error",
+    )
+    if figure_id in {"4.3", "4.5"}:
+        reach_field, configuration_reach = _first_available_max(
+            accepted,
+            "snapshot_x_max",
+            "surface_x_max",
+        )
+    else:
+        reach_field, configuration_reach = _first_available_min(
+            accepted,
+            "snapshot_x_min",
+            "surface_x_min",
+        )
+    growth_min = _min(accepted, "growth_ratio")
+    growth_max = _max(accepted, "growth_ratio")
+    local_linear_error = _max(
+        accepted,
+        "local_linearization_max_relative_error",
+    )
+    accepted_ratio = f"{len(accepted)}/{len(all_rows)}"
+    snapshot_count = first.get("snapshot_count", "N/A")
+    phase_samples = first.get("phase_samples", "N/A")
+    curve_samples = first.get("curve_samples", "N/A")
+    return {
+        "accepted_rows": str(len(accepted)),
+        "worst_residual": _fmt(_max(accepted, "source_curve_residual")),
+        "jacobi_drift": _fmt(jacobi_drift),
+        "growth_ratio": f"{_fmt(growth_min)}..{_fmt(growth_max)}",
+        "best_metric": (
+            f"accepted {accepted_ratio}; K={snapshot_count}/M={phase_samples}/"
+            f"N={curve_samples}; configuration reach {reach_field}={_fmt(configuration_reach)}; "
+            f"local STM max relative error={_fmt(local_linear_error)}; "
+            f"max J drift ({jacobi_field})={_fmt(jacobi_drift)}; max independent "
+            f"error ({independent_field})={_fmt(independent_error)}"
+        ),
+    }
+
+
 def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
     route_h_source = f"{_rel(ROUTE_H_FAMILY)};{_rel(ROUTE_H_VALIDATION)}"
     halo_dg_source = f"{_rel(HALO_DG_FAMILY)};{_rel(HALO_HIGH_ORDER_DG)};{_rel(HALO_PALC_DG)}"
@@ -371,32 +452,32 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
     ]
     manifold_specs = {
         "4.3": (
-            "corrected L1 quasi-halo +x global unstable manifold at four paper snapshot times",
-            "numerical DG manifold dynamics with projection-geometry boundary",
-            "internal_dynamics_pass_projection_geometry_mismatch_boundary",
-            _rel(HALO_MANIFOLDS),
-            "Extend the global manifold to the thesis-scale reach, lock the paper camera, and run a projection-space geometry audit.",
+            "corrected L1 quasi-halo +x fixed-time full-torus unstable-manifold snapshots at four paper times",
+            "numerical fixed-time manifold with configuration-reach pass and projection boundary",
+            "numerical_fixed_time_manifold_and_configuration_reach_pass_projection_pending_boundary",
+            _rel(HALO_GLOBAL_AUDIT),
+            "Lock the thesis camera by fitting axis ticks and Moon position, then evaluate a held-out red-mask projection audit before any paper-equivalence claim.",
         ),
         "4.4": (
-            "corrected L1 quasi-halo -x global unstable manifold at four paper snapshot times",
-            "numerical DG manifold dynamics with projection-geometry boundary",
-            "internal_dynamics_pass_projection_geometry_mismatch_boundary",
-            _rel(HALO_MANIFOLDS),
-            "Extend the Earthward global manifold, lock the paper camera, and run a projection-space geometry audit.",
+            "corrected L1 quasi-halo -x fixed-time full-torus unstable-manifold snapshots at four paper times",
+            "numerical fixed-time manifold with configuration-reach pass and projection boundary",
+            "numerical_fixed_time_manifold_and_configuration_reach_pass_projection_pending_boundary",
+            _rel(HALO_GLOBAL_AUDIT),
+            "Lock the thesis camera by fitting axis ticks and Moon position, then evaluate a held-out red-mask projection audit before any paper-equivalence claim.",
         ),
         "4.5": (
-            "corrected L1 quasi-vertical +x global unstable manifold at four paper snapshot times",
-            "numerical DG manifold dynamics with projection-geometry boundary",
-            "internal_dynamics_pass_projection_geometry_mismatch_boundary",
+            "corrected L1 quasi-vertical +x fixed-time full-torus unstable-manifold snapshots at four paper times",
+            "numerical fixed-time manifold with configuration-reach pass and projection boundary",
+            "numerical_fixed_time_manifold_and_configuration_reach_pass_projection_pending_boundary",
             _rel(VERTICAL_GLOBAL_AUDIT),
-            "Extend the +x global manifold beyond the Moon-side reach, lock the paper camera, and run a projection-space geometry audit.",
+            "Lock the thesis camera by fitting axis ticks and Moon position, then evaluate a held-out red-mask projection audit before any paper-equivalence claim.",
         ),
         "4.6": (
-            "corrected L1 quasi-vertical -x global unstable manifold at four paper snapshot times",
-            "numerical DG manifold dynamics with projection-geometry boundary",
-            "internal_dynamics_pass_projection_geometry_mismatch_boundary",
+            "corrected L1 quasi-vertical -x fixed-time full-torus unstable-manifold snapshots at four paper times",
+            "numerical fixed-time manifold with configuration-reach pass and projection boundary",
+            "numerical_fixed_time_manifold_and_configuration_reach_pass_projection_pending_boundary",
             _rel(VERTICAL_GLOBAL_AUDIT),
-            "Extend the Earthward global manifold to the thesis-scale reach, lock the paper camera, and run a projection-space geometry audit.",
+            "Lock the thesis camera by fitting axis ticks and Moon position, then evaluate a held-out red-mask projection audit before any paper-equivalence claim.",
         ),
         "4.7": (
             "corrected quasi-halo manifold with periodic-halo comparison",
@@ -409,7 +490,7 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
             "corrected 33-node JC=3.1389 quasi-vertical global unstable manifold with periodic-halo comparison",
             "numerical DG manifold comparison dynamics with projection-geometry boundary",
             "internal_dynamics_pass_projection_geometry_mismatch_boundary",
-            _rel(VERTICAL_GLOBAL_AUDIT),
+            _rel(VERTICAL_GLOBAL),
             "Reproduce the dense Earthward quasi-vertical/periodic topology under a locked paper camera before projection-space comparison.",
         ),
     }
@@ -418,23 +499,16 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
         is_snapshot_global = figure_id in {"4.3", "4.4", "4.5", "4.6"}
         if is_snapshot_global:
             audit_path = HALO_GLOBAL_AUDIT if figure_id in {"4.3", "4.4"} else VERTICAL_GLOBAL_AUDIT
-            audit_rows = [
-                row
-                for row in _read_csv(audit_path)
-                if row.get("figure_id") == figure_id and row.get("acceptance") == "pass"
-            ]
-            validation_metric = _manifold_metric(figure_id)
-            metric = {
-                **validation_metric,
-                "accepted_rows": str(len(audit_rows)),
-                "jacobi_drift": _fmt(_max(audit_rows, "jacobi_drift_max")),
-                "growth_ratio": (
-                    f"{_fmt(_min(audit_rows, 'growth_ratio'))}..{_fmt(_max(audit_rows, 'growth_ratio'))}"
-                ),
-                "best_metric": "four exact paper snapshot times; proxy-free corrected DG manifold",
-            }
-            if _rel(audit_path) not in primary.split(";"):
-                primary = f"{primary};{_rel(audit_path)}"
+            states_path = (
+                HALO_GLOBAL_STATES
+                if figure_id in {"4.3", "4.4"}
+                else VERTICAL_GLOBAL_STATES
+            )
+            metric = _fixed_time_snapshot_metric(figure_id, audit_path)
+            primary = (
+                f"{_rel(audit_path)};{_rel(states_path)};"
+                f"{_rel(FIG43_FIG46_PROJECTION_DIAGNOSTIC)}"
+            )
         else:
             metric = _manifold_metric(figure_id)
         reference = PROJECT_ROOT / "outputs" / "reference_pages" / f"fig_{figure_id.replace('.', '_')}_reference.png"
@@ -449,13 +523,29 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
             f"{_rel(reference)};{_rel(contact_sheet)}"
         )
         terminal_reach = {
-            "4.3": "terminal x=0.904216..0.908818, short of the Moon-side global reach visible in the thesis",
-            "4.4": "terminal x=0.841718..0.849797, while the thesis shows a much larger Earthward return",
-            "4.5": "terminal x=0.889300..0.916987, short of the Moon-side folded sheet visible in the thesis",
-            "4.6": "terminal x=0.784378..0.837716, while the thesis extends far Earthward",
             "4.7": "the quasi-halo source remains the local terminal x=0.841718..0.849797 branch and lacks the thesis topology/density",
             "4.8": "the quasi-vertical source remains the local terminal x=0.784378..0.837716 branch and lacks the thesis Earthward reach",
-        }[figure_id]
+        }.get(figure_id, "not applicable to the fixed-time snapshot audit")
+        if is_snapshot_global:
+            boundary = (
+                "The legacy history-prefix root cause (surface[:stop]) is fixed: "
+                "each panel now evaluates a fixed-time full-torus window over "
+                "tau+[0,T0]. All four state-space numerical and local STM rows pass; "
+                "the epsilon-dependent configuration-reach check also passes. The "
+                "projection comparison remains diagnostic_only, "
+                "paper_projection_acceptance=not_run, and paper_3d_equivalence=false; "
+                "epsilon is an uncalibrated project visualization parameter, so no "
+                "paper-view, physical-envelope, or 3D-equivalence claim is made."
+            )
+        else:
+            boundary = (
+                "The internal dynamics gate passes for snapshot time, residual, "
+                "Jacobi drift, and local growth, and no analytic proxy layer is used. "
+                "Thesis projection geometry is not validated and the current contact "
+                f"sheet shows a material global-reach/topology mismatch: {terminal_reach}. "
+                "Because this is a single-view 3D panel, image digitization can only "
+                "support a locked-camera projection-space audit, not a 3D pointwise claim."
+            )
         specs.append(
             {
                 "figure_id": figure_id,
@@ -469,14 +559,7 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
                 "dg_dependency": "corrected L1 DG eigenvectors and manifold validation row",
                 "manifold_dependency": primary,
                 **metric,
-                "boundary": (
-                    "The internal dynamics gate passes for snapshot time, residual, "
-                    "Jacobi drift, and local growth, and no analytic proxy layer is used. "
-                    "Thesis projection geometry is not validated and the current contact "
-                    f"sheet shows a material global-reach/topology mismatch: {terminal_reach}. "
-                    "Because this is a single-view 3D panel, image digitization can only "
-                    "support a locked-camera projection-space audit, not a 3D pointwise claim."
-                ),
+                "boundary": boundary,
                 "next_action": next_action,
             }
         )
@@ -574,10 +657,13 @@ def _render_markdown(rows: list[dict[str, str]]) -> None:
         "Chapter 4 has proxy-free corrected numerical source layers for all",
         "original Fig. 4.1-4.8 panels, but this is not full thesis equivalence.",
         "Fig. 4.2 passes a native-image pointwise gate over the common interval",
-        "while retaining an explicit fold-tail coverage boundary. Fig. 4.3-4.8",
-        "pass internal dynamics gates only; their contact sheets show material",
-        "global-reach/topology mismatches, and their single-view 3D panels require",
-        "a locked-camera projection-space audit rather than a 3D pointwise claim.",
+        "while retaining an explicit fold-tail coverage boundary. Fig. 4.3-4.6",
+        "now use fixed-time full-torus snapshots and pass all state-space numerical",
+        "and local STM rows. Their epsilon-dependent configuration-reach checks",
+        "also pass but are not paper-level physical acceptance. Projection remains",
+        "diagnostic-only with the paper projection gate not run and 3D equivalence",
+        "false. Fig. 4.7-4.8 still depend on the legacy comparison semantics and",
+        "remain pending migration before a locked-camera projection-space audit.",
         "Fig. 4.1 also retains a finite-amplitude torus-geometry boundary.",
             "",
         ]

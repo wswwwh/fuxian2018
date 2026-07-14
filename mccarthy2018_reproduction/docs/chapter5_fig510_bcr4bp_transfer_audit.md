@@ -16,7 +16,7 @@ The BCR4BP solar angular rate uses the required normalized radians conversion,
 
 ## Initial geometry
 
-- Epoch source: `project_canonical_de421_epoch_not_thesis_specific`
+- Epoch source: `project_bcr4bp_extension_epoch_cr3bp_epoch_not_applicable`
 - DE421 kernel SHA256: `A20A7139DA04CBC462454634918E9A9CA69127044E2CC9D4F9C16E238D2DEEDC`
 - Sun phase: `1.240894756993415` rad
 - Full / planar Sun distance: `151961287.192831` / `151956833.5078107` km
@@ -50,10 +50,12 @@ defects.
 
 Both cases pass the numerical endpoint, tolerance, absolute-time segment,
 finite-RHS, lunar-clearance, and delta-v sanity gates. Both remain
-`paper_equivalence=false`: the paper epoch and raw initial states are not
-available, the boundary NRHOs are still CR3BP states, the individual impulse
-targets do not agree within 1 m/s, and no pointwise thesis-trajectory comparison
-is claimed.
+`paper_equivalence=false`: an epoch is not applicable to the autonomous CR3BP
+paper case, and this project epoch applies only to the BCR4BP extension. The
+paper-specific quasi-NRHO member, intersection phases, raw boundary states, and
+optimization constraints are unavailable; the individual impulse targets do
+not agree within 1 m/s, and no pointwise thesis-trajectory comparison is
+claimed.
 
 Artifacts:
 
@@ -61,3 +63,4 @@ Artifacts:
 - `data/computed/chapter5_fig510_bcr4bp_transfer_trajectories.csv`
 - `data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv`
 - `outputs/reference_pages/fig_5_10_reference.png`
+- `docs/chapter5_fig510_public_source_anchors.md`

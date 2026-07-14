@@ -31,12 +31,15 @@ Do not call this original McCarthy raw branch data.
 
 - Fig. 3.10 q=8 is local multiple shooting, not a robust single-shoot periodic
   orbit.
-- Chapter 4 Route H source-layer evidence is not the same as full replacement
-  of original L1 quasi-halo/quasi-vertical global manifold figures.
+- Chapter 4 Fig. 4.3-4.6 now use corrected fixed-time full-torus surfaces and
+  pass 16/16 numerical plus 16/16 epsilon-dependent configuration-reach rows; Fig. 4.7-4.8 remain legacy
+  comparisons.
 - Fig. 4.2 passes the native-image pointwise gate over 89% of the thesis curve,
   but the final fold tail is still uncovered.
-- Fig. 4.3-4.8 pass internal dynamics checks only; current projection geometry
-  visibly lacks the thesis-scale global reach/topology.
+- Fig. 4.3-4.6 projection evidence is diagnostic only (14/16 alerts), with
+  `paper_projection=not_run`, `paper_3d=false`, and epsilon uncalibrated.
+- Route H remains at 1/31 real-hyperbolic members; its DG/manifold gate fails and
+  the staged goal is unchanged.
 - Chapter 5 source-layer BCR4BP/optimization audits do not replace every thesis
   application figure.
 

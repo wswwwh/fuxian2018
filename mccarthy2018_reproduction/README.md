@@ -54,15 +54,15 @@ The current implementation is the first verified layer of the reproduction plan:
   for Chapter 4 stability analysis
 - representative `DG` samples along the `JC=3.1389` pseudo-arclength
   quasi-halo branch using each member's converged mapping time and rotation
-- purely real hyperbolic eigenvector selection and two corrected quasi-halo
-  unstable sheets propagated at the Figure 4.3-4.4 snapshot times
+- purely real hyperbolic eigenvector selection and corrected quasi-halo
+  fixed-time full-torus snapshots over `tau + [0,T0]` for Figures 4.3-4.4
 - display-scaled corrected local `DG` eigenspectrum markers for Figure 4.1
 - local stable/unstable manifold sheets generated from corrected-curve `DG`
   eigenvectors and CR3BP propagation
-- corrected quasi-vertical `DG` spectrum and two local unstable-manifold
-  branches for Figures 4.5-4.6
-- 2.5-mapping-period global quasi-vertical unstable-manifold propagation for
-  Figure 4.8
+- corrected quasi-vertical `DG` spectrum and fixed-time full-torus unstable-
+  manifold snapshots over `tau + [0,T0]` for Figures 4.5-4.6
+- legacy periodic-orbit/manifold comparison panels retained as an explicit
+  boundary for Figures 4.7-4.8
 - corrected small-amplitude `DG` stability-index family for the Figure 4.2
   local stability branch
 - Jupiter-Europa L2 planar Lyapunov, corrected 3D halo-like, and corrected
@@ -73,7 +73,7 @@ The current implementation is the first verified layer of the reproduction plan:
 - Chapter 3 torus and invariant-curve schematic figures
 - remaining Earth-Moon L1/L2 linear/geometric quasi-periodic proxy layers for
   Figures 3.9 and 3.16-3.17
-- Chapter 4 torus-stability and manifold proxy figures for Figures 4.1-4.8
+- Chapter 4 torus-stability and audited manifold figures for Figures 4.1-4.8
 - local CR3BP-propagated Sun-Earth L1 Lissajous-seed arc overlays for Figure 5.1
 - Chapter 5 formula/geometry schematics and explicit proxy overlays where a
   final optimized or ephemeris-corrected solution is still unavailable
@@ -171,13 +171,17 @@ The current implementation is the first verified layer of the reproduction plan:
   89.026651% thesis-time coverage, stability-index RMSE 0.371003, and maximum
   error 0.510882. The overlap passes its +/-1.953125 reading uncertainty, but
   the computed branch stops 0.049450 days before the thesis endpoint, so full
-  curve coverage remains false. Figures 4.3-4.8 pass internal snapshot-time,
-  residual, Jacobi-drift, and local-growth gates only. Current contact sheets
-  show material global-reach/topology mismatches (for example, Fig. 4.3 ends at
-  x=0.904216..0.908818 and Fig. 4.6/4.8 at x=0.784378..0.837716). Their static
-  single-view 3D panels cannot support a state-space pointwise claim; the next
-  paper-facing gate is extended global propagation plus a locked-camera
-  projection-space geometry audit.
+  curve coverage remains false. Figures 4.3-4.6 no longer use the incorrect
+  `surface[:stop]` history-prefix interpretation: each red surface is now a
+  fixed-time full-torus snapshot evaluated over `tau + [0,T0]`. All 16/16
+  snapshot rows pass the numerical and local-STM gates; the 16/16
+  epsilon-dependent configuration-reach checks also pass, but they are not a
+  paper-level physical acceptance criterion. The separate projection comparison
+  remains `diagnostic_only`: 14/16 panels raise alerts,
+  `paper_projection=not_run`, `paper_3d=false`, and epsilon is an uncalibrated
+  project visualization parameter. Figures 4.7-4.8 retain their legacy comparison boundary. Separately,
+  the Route H Chapter 4 scan still has only 1/31 real-hyperbolic members, so its
+  DG/manifold gate fails and the staged-goal status is unchanged.
   Figure 5.1 now overlays local CR3BP-propagated Sun-Earth L1 Lissajous-seed
   arcs on the proxy long-propagation scene. Figures 5.2-5.4 reproduce the
   formula and frame-geometry schematics used by the thesis. Figure 5.8 now uses
@@ -246,28 +250,25 @@ Status C - shape-match with local numerical overlay:
 Status D - proxy/schematic only:
 2.1, 2.2, 2.5, 2.9, 2.10, 2.12, 3.1, 3.2, 3.3, 3.4, 5.2, 5.3, 5.4.
 
-Chapter 4 now has a dedicated manifold audit table at
-`data/computed/chapter4_manifold_validation.csv`. Figures 4.3-4.8 record
-corrected DG manifold diagnostics including source-curve residual, DG mapping
-time and rotation angle, selected real unstable multiplier, perturbation scale,
-growth versus linear expectation, Jacobi drift, terminal spatial bounds, and
-whether a proxy background is still retained.
-
-Figures 4.3-4.4 retain proxy thesis-scale backgrounds with audited corrected
-quasi-halo finite-amplitude DG overlays. Figures 4.5-4.6 retain proxy global
-backgrounds with audited corrected quasi-vertical local branches. Figures
-4.7-4.8 use corrected DG propagation as the main red sheet and keep the grey
-sheet only as a proxy reference. These corrected sheets are physical-consistency
-baselines, not full high-amplitude torus-scale global manifold reproductions.
+Chapter 4 has dedicated manifold audits at
+`data/computed/chapter4_fig43_fig44_global_manifold_audit.csv` and
+`data/computed/chapter4_fig45_fig48_vertical_manifold_audit.csv`. For Figures
+4.3-4.6, the corrected DG manifolds are rendered as fixed-time full-torus
+surfaces over `tau + [0,T0]`; all 16/16 numerical and local-STM rows pass. The
+16/16 configuration-reach checks describe only the current uncalibrated
+epsilon. The locked-camera/image-registration layer has not been run, and the
+current 16-panel pixel comparison is diagnostic only, with 14 alerts. Therefore
+`paper_projection=not_run`, `paper_3d=false`, and epsilon calibration is still
+pending. Figures 4.7-4.8 remain legacy comparison boundaries rather than new
+paper-equivalent manifold reconstructions.
 
 Figures 3.16-3.17 now use the Route H fixed-mapping quasi-DRO source branch recorded in `data/computed/chapter3_fixed_mapping_cache_accepted_family.csv` and `data/computed/chapter3_fixed_mapping_cache_accepted_validation.csv`. The accepted Route H range is mapping time 14.74932760227518 days, rho 1.445863346020272-1.457169483818128 rad, and max abs z 10969.67553863909-14573.10318409037 km. The Route H audit has 30 rows above 10,500 km and 29 rows above 11,000 km, with max map residual 6.469474407020314e-10 and max one-map Jacobi drift 7.760059261840979e-11. Fig. 3.16 renders corrected Route H tori directly; Fig. 3.17 plots Route H as the audited branch and keeps the reference trend only as context. This supersedes the older local-only PALC/Route B endpoint discussion for the figure-source layer, while preserving the boundary that the full thesis is not yet a complete numerical-equivalence reproduction.
 
-The next upgrades should focus on Figures 4.3-4.8 continued torus-scale DG
-manifold propagation, the remaining Figure 3.9 quasi-halo proxy tail, and the
-10,000-14,000 km Chapter 3 quasi-DRO continuation bottleneck. The quasi-DRO
-work should continue with pseudo-arclength or fixed-rotation continuation
-before Chapter 5 quasi-DRO application scenes are treated as the next source of
-stronger numerical evidence. Figure 3.10's q=2 and q=8 period-q audit is
+The next Chapter 4 upgrades should calibrate epsilon, run a locked-camera
+projection audit for Figures 4.3-4.6, migrate the legacy Figure 4.7-4.8
+comparisons, and repair the Route H real-hyperbolic coverage beyond its current
+1/31 members. The remaining Figure 3.9 quasi-halo proxy tail is a separate
+source-layer task. Figure 3.10's q=2 and q=8 period-q audit is
 already documented and is not the current priority. Chapter 5 entries are
 intentionally labelled as CR3BP baseline, DE421-oriented baseline, local
 direct-shooting solution, or geometric proxy instead of complete BCR4BP or
@@ -275,14 +276,12 @@ optimized transfer reproductions.
 
 ### External resources and next reproduction roadmap
 
-The next documentation layer is now organized in
-`docs/external_reproduction_resources.md`,
-`docs/stage_report_reproduction_status.md`, and
-`docs/next_reproduction_roadmap.md`. These files collect external thesis,
-method, continuation-tool, CR3BP benchmark, and Chapter 5 application resources;
-summarize the current reproduction status for reporting; and separate the next
-phase into original-data search, quasi-DRO formulation replacement, and
-paper-level reproduction-report routes.
+Current planning is organized in `docs/reproduction_execution_plan_2026-07-13.md`
+and `docs/reproduction_report/future_work_plan.md`; external sources remain in
+`docs/external_reproduction_resources.md`. The files
+`docs/stage_report_reproduction_status.md` and
+`docs/next_reproduction_roadmap.md` are explicitly retained as historical
+pre-Route-H snapshots and are not current status sources.
 
 ### Reproduction report package
 

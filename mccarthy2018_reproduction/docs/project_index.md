@@ -27,7 +27,7 @@
 | diagnostic outputs | `outputs/diagnostics/`, `outputs/figure_qa/`, `outputs/comparison_contact_sheets/` | 对比图、诊断图、分章 montage、逐图 contact sheet。 | 不直接手改；可复制精选图到 presentation 目录。 | 适合展示审计、对比和缺口。 |
 | report package | `docs/reproduction_report/` | Route C 报告包：主报告、附录、未来计划、搜索和 digitization 记录。 | 可修改文档层，但不能改写核心结论为更乐观版本。 | 是教师和组会展示的主要文本依据。 |
 | presentation materials | `docs/reproduction_report/presentation_outline.md`, `docs/reproduction_report/qa_for_group_meeting.md`, `docs/reproduction_report/teacher_package/`, `outputs/presentation/` | 汇报顺序、问答、精选图和一页总结。 | 可整理和补充，但不得覆盖原始数据或原始图输出。 | 是直接面向老师 / 组会的材料层。 |
-| future work docs | `docs/reproduction_report/future_work_plan.md`, `docs/next_reproduction_roadmap.md` | Route A / B / C 后续路线、成功标准和停止条件。 | 可更新计划，不应伪装为已完成成果。 | 可用于讨论下一阶段研究任务。 |
+| future work docs | `docs/reproduction_execution_plan_2026-07-13.md`, `docs/reproduction_report/future_work_plan.md` | 当前分阶段计划、Route A / B / C 后续路线、成功标准和停止条件。`docs/next_reproduction_roadmap.md` 仅保留为 Route H 之前的历史快照。 | 可更新当前计划，不应把历史快照伪装为当前状态或已完成成果。 | 可用于讨论下一阶段研究任务。 |
 
 ## Canonical Sources of Truth
 

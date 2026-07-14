@@ -1,9 +1,10 @@
 """Audit DE421-initialized planar BCR4BP extensions of Fig. 5.10.
 
-The thesis flight times and impulse targets are preserved, but the epoch is a
-project-selected DE421 epoch because the thesis does not publish one for these
-CR3BP transfers.  Numerical BCR4BP acceptance and paper-equivalence acceptance
-are deliberately separate.
+The thesis flight times and impulse targets are preserved. Figure 5.10 is an
+autonomous CR3BP calculation, so an epoch is not applicable to the published
+case; the date below belongs only to this project-defined DE421/BCR4BP
+extension. Numerical BCR4BP acceptance and paper-equivalence acceptance are
+deliberately separate.
 """
 
 from __future__ import annotations
@@ -34,13 +35,14 @@ from qp_orbits.ephemeris import MOON_RADIUS_KM, de421_bcr4bp_initial_geometry
 
 
 EPOCH_UTC = "2020-06-15T00:00:00Z"
-EPOCH_SOURCE = "project_canonical_de421_epoch_not_thesis_specific"
+EPOCH_SOURCE = "project_bcr4bp_extension_epoch_cr3bp_epoch_not_applicable"
 KERNEL = PROJECT_ROOT / "data" / "raw" / "ephemeris" / "de421.bsp"
 BASELINE_CSV = (
     PROJECT_ROOT / "data" / "computed" / "chapter5_earth_moon_nrho_transfer_baseline.csv"
 )
 TARGET_REGISTRY = PROJECT_ROOT / "data" / "reproduction_targets.csv"
 REFERENCE_IMAGE = PROJECT_ROOT / "outputs" / "reference_pages" / "fig_5_10_reference.png"
+PUBLIC_SOURCE_NOTE = PROJECT_ROOT / "docs" / "chapter5_fig510_public_source_anchors.md"
 
 AUDIT_OUTPUT = (
     PROJECT_ROOT / "data" / "computed" / "chapter5_fig510_bcr4bp_transfer_audit.csv"
@@ -633,17 +635,19 @@ def build_audit() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
             ),
             "paper_equivalence_threshold": (
                 "TOF <= 1e-9 day; each impulse <= 1 m/s; total relative error <= 1%; "
-                "thesis epoch/high-fidelity boundaries/pointwise geometry required"
+                "paper torus member/intersection phases/boundaries/pointwise geometry required"
             ),
             "evidence_artifact": (
                 f"{_rel(BASELINE_CSV)};{_rel(TARGET_REGISTRY)};{_rel(REFERENCE_IMAGE)};"
-                "src/qp_orbits/bcr4bp.py;src/qp_orbits/ephemeris.py"
+                f"{_rel(PUBLIC_SOURCE_NOTE)};src/qp_orbits/bcr4bp.py;"
+                "src/qp_orbits/ephemeris.py"
             ),
             "boundary": (
                 "Numerically accepted DE421-initialized planar BCR4BP extension. "
-                "Departure/arrival states remain CR3BP NRHO boundaries; the project epoch "
-                "is not thesis-specific; DE421 endpoint solar phase, full ephemeris "
-                "dynamics, impulse agreement, and pointwise thesis geometry remain open."
+                "Departure/arrival states remain CR3BP NRHO boundaries; epoch is not "
+                "applicable to the autonomous paper case and this date belongs only to "
+                "the project BCR4BP extension. The paper torus member, intersection phases, "
+                "impulse agreement, and pointwise thesis geometry remain open."
             ),
         }
         row["numerical_acceptance"] = numerical_acceptance(row)
@@ -742,10 +746,12 @@ defects.
 
 Both cases pass the numerical endpoint, tolerance, absolute-time segment,
 finite-RHS, lunar-clearance, and delta-v sanity gates. Both remain
-`paper_equivalence=false`: the paper epoch and raw initial states are not
-available, the boundary NRHOs are still CR3BP states, the individual impulse
-targets do not agree within 1 m/s, and no pointwise thesis-trajectory comparison
-is claimed.
+`paper_equivalence=false`: an epoch is not applicable to the autonomous CR3BP
+paper case, and this project epoch applies only to the BCR4BP extension. The
+paper-specific quasi-NRHO member, intersection phases, raw boundary states, and
+optimization constraints are unavailable; the individual impulse targets do
+not agree within 1 m/s, and no pointwise thesis-trajectory comparison is
+claimed.
 
 Artifacts:
 
@@ -753,6 +759,7 @@ Artifacts:
 - `{_rel(TRAJECTORY_OUTPUT)}`
 - `{_rel(BASELINE_CSV)}`
 - `{_rel(REFERENCE_IMAGE)}`
+- `{_rel(PUBLIC_SOURCE_NOTE)}`
 """,
         encoding="utf-8",
     )

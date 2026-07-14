@@ -13,7 +13,8 @@ import pickle
 import numpy as np
 
 from .constants import CR3BPSystem
-from .cr3bp import integrate_cr3bp, jacobi_constant
+from .cr3bp import integrate_cr3bp, integrate_states_cr3bp, jacobi_constant
+from .variational import integrate_states_and_stms
 from .quasi_torus import (
     FreeEnergyCurveCorrection,
     FixedFrequencyPseudoArclengthCorrection,
@@ -159,6 +160,171 @@ class CorrectedCurveManifoldSheet:
         return multiplier
 
 
+@dataclass(frozen=True)
+class CorrectedTorusManifoldSnapshots:
+    """Fixed-time torus snapshots and their separate trajectory histories.
+
+    ``snapshot_states[k]`` is the full perturbed torus after manifold elapsed
+    time ``snapshot_times[k]``. Its first axis spans one mapping interval and
+    must not be confused with ``history_states``, which spans the departure
+    histories from zero to the final requested snapshot.
+    """
+
+    dg: DiscreteCurveDG
+    branch: str
+    eigenvalue: complex
+    perturbation_sign: float
+    perturbation_scale: float
+    snapshot_times: np.ndarray
+    phase_times: np.ndarray
+    history_times: np.ndarray
+    base_torus_states: np.ndarray
+    base_history_states: np.ndarray
+    history_states: np.ndarray
+    base_snapshot_states: np.ndarray
+    snapshot_states: np.ndarray
+    perturbation_directions: np.ndarray
+    linear_history_state_separation_norms: np.ndarray
+    linear_snapshot_state_separation_norms: np.ndarray
+    linear_history_position_separation_norms: np.ndarray
+    linear_snapshot_position_separation_norms: np.ndarray
+
+    def __post_init__(self) -> None:
+        snapshot_times = np.asarray(self.snapshot_times)
+        phase_times = np.asarray(self.phase_times)
+        history_times = np.asarray(self.history_times)
+        if snapshot_times.ndim != 1 or snapshot_times.size == 0:
+            raise ValueError("snapshot_times must be a non-empty vector")
+        if phase_times.ndim != 1 or phase_times.size < 2:
+            raise ValueError("phase_times must contain at least two values")
+        if history_times.ndim != 1 or history_times.size < 2:
+            raise ValueError("history_times must contain at least two values")
+        if (
+            np.any(np.diff(snapshot_times) <= 0.0)
+            or np.any(np.diff(phase_times) <= 0.0)
+            or np.any(np.diff(history_times) <= 0.0)
+        ):
+            raise ValueError("snapshot, phase, and history times must be strictly increasing")
+        if abs(float(phase_times[0])) > 1.0e-14 or abs(float(history_times[0])) > 1.0e-14:
+            raise ValueError("phase_times and history_times must start at zero")
+
+        phase_count = phase_times.size
+        history_count = history_times.size
+        snapshot_count = snapshot_times.size
+        curve_count = self.perturbation_directions.shape[0]
+        expected_shapes = {
+            "base_torus_states": (phase_count, curve_count, 6),
+            "base_history_states": (history_count, curve_count, 6),
+            "history_states": (history_count, curve_count, 6),
+            "base_snapshot_states": (snapshot_count, phase_count, curve_count, 6),
+            "snapshot_states": (snapshot_count, phase_count, curve_count, 6),
+            "perturbation_directions": (curve_count, 6),
+            "linear_history_state_separation_norms": (
+                history_count,
+                curve_count,
+            ),
+            "linear_snapshot_state_separation_norms": (
+                snapshot_count,
+                phase_count,
+                curve_count,
+            ),
+            "linear_history_position_separation_norms": (
+                history_count,
+                curve_count,
+            ),
+            "linear_snapshot_position_separation_norms": (
+                snapshot_count,
+                phase_count,
+                curve_count,
+            ),
+        }
+        for name, shape in expected_shapes.items():
+            values = np.asarray(getattr(self, name))
+            if values.shape != shape:
+                raise ValueError(f"{name} must have shape {shape}, got {values.shape}")
+            if not np.all(np.isfinite(values)):
+                raise ValueError(f"{name} contains non-finite values")
+        if self.dg is not None and abs(float(phase_times[-1]) - self.dg.mapping_time) > 1.0e-12:
+            raise ValueError("phase_times must span exactly one DG mapping interval")
+        if np.any(self.linear_history_state_separation_norms <= 0.0):
+            raise ValueError("linear history separation norms must be positive")
+        if np.any(self.linear_snapshot_state_separation_norms <= 0.0):
+            raise ValueError("linear snapshot separation norms must be positive")
+        if np.any(self.linear_history_position_separation_norms < 0.0):
+            raise ValueError("linear history position separation norms must be nonnegative")
+        if np.any(self.linear_snapshot_position_separation_norms < 0.0):
+            raise ValueError("linear snapshot position separation norms must be nonnegative")
+
+    @property
+    def base_surface(self) -> np.ndarray:
+        return self.base_torus_states[:, :, :3]
+
+    @property
+    def snapshot_surfaces(self) -> np.ndarray:
+        return self.snapshot_states[:, :, :, :3]
+
+    @property
+    def history_surface(self) -> np.ndarray:
+        return self.history_states[:, :, :3]
+
+    @property
+    def snapshot_state_separation_norms(self) -> np.ndarray:
+        return np.linalg.norm(self.snapshot_states - self.base_snapshot_states, axis=3)
+
+    @property
+    def history_state_separation_norms(self) -> np.ndarray:
+        return np.linalg.norm(self.history_states - self.base_history_states, axis=2)
+
+    @property
+    def history_linearization_ratios(self) -> np.ndarray:
+        """Nonlinear separation divided by the same-trajectory STM prediction."""
+
+        return (
+            self.history_state_separation_norms
+            / self.linear_history_state_separation_norms
+        )
+
+    @property
+    def snapshot_linearization_ratios(self) -> np.ndarray:
+        """Far-field nonlinear/STM ratios, retained as diagnostics only."""
+
+        return (
+            self.snapshot_state_separation_norms
+            / self.linear_snapshot_state_separation_norms
+        )
+
+    @property
+    def snapshot_position_separation_norms(self) -> np.ndarray:
+        return np.linalg.norm(
+            self.snapshot_states[..., :3] - self.base_snapshot_states[..., :3],
+            axis=3,
+        )
+
+    def snapshot_index(self, elapsed_time: float) -> int:
+        index = int(np.argmin(np.abs(self.snapshot_times - elapsed_time)))
+        if abs(float(self.snapshot_times[index]) - float(elapsed_time)) > 1.0e-12:
+            raise ValueError(f"{elapsed_time} is not a stored fixed-time snapshot")
+        return index
+
+    def surface_at_snapshot(self, elapsed_time: float) -> np.ndarray:
+        """Return one fixed-time torus surface with shape ``(phase, curve, 3)``."""
+
+        return self.snapshot_surfaces[self.snapshot_index(elapsed_time)]
+
+    def state_surface_at_snapshot(self, elapsed_time: float) -> np.ndarray:
+        """Return one fixed-time torus state surface."""
+
+        return self.snapshot_states[self.snapshot_index(elapsed_time)]
+
+    def history_surface_until(self, elapsed_time: float) -> np.ndarray:
+        """Return perturbed departure histories up to ``elapsed_time``."""
+
+        if elapsed_time < -1.0e-14 or elapsed_time > self.history_times[-1] + 1.0e-12:
+            raise ValueError("elapsed_time is outside the stored history interval")
+        stop = int(np.searchsorted(self.history_times, elapsed_time, side="right"))
+        return self.history_surface[: max(stop, 2)]
+
+
 CHAPTER4_MANIFOLD_VALIDATION_COLUMNS = [
     "figure_id",
     "family",
@@ -175,12 +341,18 @@ CHAPTER4_MANIFOLD_VALIDATION_COLUMNS = [
     "duration_days",
     "duration_periods",
     "time_samples",
+    "snapshot_anchor_days",
+    "max_absolute_propagation_days",
+    "snapshot_count",
+    "phase_samples",
+    "history_samples",
     "curve_samples",
     "initial_mean_separation",
     "final_mean_separation",
     "mean_state_growth",
     "expected_growth",
     "growth_ratio",
+    "linear_reference_method",
     "jacobi_drift_max",
     "terminal_x_min",
     "terminal_x_max",
@@ -289,6 +461,100 @@ def corrected_manifold_validation_row(
         "mean_state_growth": mean_state_growth,
         "expected_growth": expected_growth,
         "growth_ratio": growth_ratio,
+        "jacobi_drift_max": jacobi_drift,
+        "terminal_x_min": float(np.min(terminal[:, 0])),
+        "terminal_x_max": float(np.max(terminal[:, 0])),
+        "terminal_y_min": float(np.min(terminal[:, 1])),
+        "terminal_y_max": float(np.max(terminal[:, 1])),
+        "terminal_z_min": float(np.min(terminal[:, 2])),
+        "terminal_z_max": float(np.max(terminal[:, 2])),
+        "uses_proxy_background": uses_proxy_background,
+        "validation_status": validation_status,
+        "next_action": next_action,
+    }
+
+
+def corrected_torus_snapshot_validation_row(
+    snapshots: CorrectedTorusManifoldSnapshots,
+    system: CR3BPSystem,
+    *,
+    figure_id: str,
+    family: str,
+    branch: str,
+    source_curve: str,
+    uses_proxy_background: bool,
+    validation_status: str,
+    next_action: str,
+) -> dict[str, object]:
+    """Summarize one fixed-time torus-manifold branch for the shared audit."""
+
+    initial_mean_separation = float(
+        np.mean(snapshots.history_state_separation_norms[0])
+    )
+    final_separations = snapshots.snapshot_state_separation_norms[-1]
+    final_mean_separation = float(np.mean(final_separations))
+    mean_state_growth = final_mean_separation / initial_mean_separation
+    snapshot_anchor_nd = float(snapshots.snapshot_times[-1])
+    duration_nd = snapshot_anchor_nd + float(snapshots.phase_times[-1])
+    duration_periods = duration_nd / snapshots.dg.mapping_time
+    linear_final_separations = snapshots.linear_snapshot_state_separation_norms[-1]
+    expected_growth = float(
+        np.mean(linear_final_separations) / initial_mean_separation
+    )
+    growth_ratio = float(
+        np.mean(final_separations / linear_final_separations)
+    )
+    history_jacobi = jacobi_constant(
+        snapshots.history_states.reshape(-1, 6), system.mu
+    ).reshape(snapshots.history_states.shape[:-1])
+    snapshot_jacobi = jacobi_constant(
+        snapshots.snapshot_states.reshape(-1, 6), system.mu
+    ).reshape(snapshots.snapshot_states.shape[:-1])
+    jacobi_drift = float(
+        max(
+            np.ptp(
+                np.r_[
+                    history_jacobi[:, curve_index],
+                    snapshot_jacobi[:, :, curve_index].reshape(-1),
+                ]
+            )
+            for curve_index in range(snapshots.snapshot_states.shape[2])
+        )
+    )
+    terminal = snapshots.snapshot_surfaces[-1].reshape(-1, 3)
+    time_unit_days = system.time_unit_days or 1.0
+
+    return {
+        "figure_id": figure_id,
+        "family": family,
+        "branch": branch,
+        "source_curve": source_curve,
+        "source_curve_residual": _source_curve_residual(snapshots),
+        "dg_mapping_time": float(snapshots.dg.mapping_time),
+        "dg_rotation_angle": float(snapshots.dg.rotation_angle_rad),
+        "selected_eigenvalue": _format_complex(snapshots.eigenvalue),
+        "selected_eigenvalue_abs": float(abs(snapshots.eigenvalue)),
+        "perturbation_scale": float(snapshots.perturbation_scale),
+        "perturbation_sign": float(snapshots.perturbation_sign),
+        "duration_nd": duration_nd,
+        "duration_days": duration_nd * time_unit_days,
+        "duration_periods": duration_periods,
+        "time_samples": int(
+            snapshots.history_times.size
+            + snapshots.snapshot_times.size * snapshots.phase_times.size
+        ),
+        "snapshot_anchor_days": snapshot_anchor_nd * time_unit_days,
+        "max_absolute_propagation_days": duration_nd * time_unit_days,
+        "snapshot_count": int(snapshots.snapshot_times.size),
+        "phase_samples": int(snapshots.phase_times.size),
+        "history_samples": int(snapshots.history_times.size),
+        "curve_samples": int(snapshots.snapshot_states.shape[2]),
+        "initial_mean_separation": initial_mean_separation,
+        "final_mean_separation": final_mean_separation,
+        "mean_state_growth": mean_state_growth,
+        "expected_growth": expected_growth,
+        "growth_ratio": growth_ratio,
+        "linear_reference_method": "base_trajectory_STM_first_order",
         "jacobi_drift_max": jacobi_drift,
         "terminal_x_min": float(np.min(terminal[:, 0])),
         "terminal_x_max": float(np.max(terminal[:, 0])),
@@ -929,6 +1195,178 @@ def _corrected_curve_manifold_from_dg(
     )
 
 
+def _indices_for_exact_times(
+    evaluation_times: np.ndarray,
+    requested_times: np.ndarray,
+) -> np.ndarray:
+    """Return indices for times deliberately inserted in an evaluation grid."""
+
+    indices = np.searchsorted(evaluation_times, requested_times)
+    if np.any(indices >= evaluation_times.size):
+        raise RuntimeError("A requested manifold evaluation time is missing")
+    errors = np.abs(evaluation_times[indices] - requested_times)
+    if float(np.max(errors, initial=0.0)) > 1.0e-12:
+        raise RuntimeError("A requested manifold evaluation time is missing")
+    return indices
+
+
+def corrected_curve_fixed_time_manifold_snapshots(
+    mu: float,
+    *,
+    dg: DiscreteCurveDG,
+    snapshot_times: tuple[float, ...],
+    branch: str = "unstable",
+    perturbation_scale: float = 4.5e-7,
+    perturbation_sign: float = 1.0,
+    eigen_index: int | None = None,
+    phase_samples: int = 121,
+    history_samples: int = 161,
+    max_step: float = 0.01,
+) -> CorrectedTorusManifoldSnapshots:
+    """Propagate fixed-time Chapter 4 torus-manifold snapshots.
+
+    A torus snapshot at manifold elapsed time ``tau`` is evaluated at
+    ``tau + phase`` for every phase in one DG mapping interval. Trajectory
+    histories over ``[0, tau]`` are stored separately for the black departure
+    curves used in Figures 4.3--4.6.
+    """
+
+    if branch != "unstable":
+        raise ValueError("fixed-time Chapter 4 snapshots currently require branch='unstable'")
+    requested = np.asarray(snapshot_times, dtype=float)
+    if requested.ndim != 1 or requested.size == 0:
+        raise ValueError("snapshot_times must contain at least one value")
+    if np.any(requested <= 0.0) or np.any(np.diff(requested) <= 0.0):
+        raise ValueError("snapshot_times must be positive and strictly increasing")
+    if phase_samples < 2:
+        raise ValueError("phase_samples must be at least 2")
+    if history_samples < 2:
+        raise ValueError("history_samples must be at least 2")
+    if perturbation_scale <= 0.0:
+        raise ValueError("perturbation_scale must be positive")
+
+    sample_count = dg.correction.corrected_states.shape[0]
+    if eigen_index is None:
+        eigen_index = real_hyperbolic_eigen_index(dg, branch=branch)
+    if not 0 <= eigen_index < dg.eigenvectors.shape[1]:
+        eigen_index = dg.eigenvectors.shape[1] + eigen_index
+    if not 0 <= eigen_index < dg.eigenvectors.shape[1]:
+        raise ValueError("eigen_index is out of range")
+
+    eigenvector = dg.eigenvectors[:, eigen_index]
+    direction = np.real(eigenvector).reshape(sample_count, 6)
+    block_norms = np.linalg.norm(direction, axis=1)
+    if np.min(block_norms) < 1.0e-12:
+        direction = np.imag(eigenvector).reshape(sample_count, 6)
+        block_norms = np.linalg.norm(direction, axis=1)
+    if np.min(block_norms) < 1.0e-12:
+        raise RuntimeError("Selected DG eigenvector has near-zero local blocks")
+    # Uniform per-node seeding distances preserve the local unstable direction
+    # but intentionally discard the stacked eigenvector's relative block
+    # amplitudes. Consequently, the discrete multiplier is not a valid
+    # fractional-time growth model for these seeds; continuous references below
+    # are obtained from each base trajectory's STM instead.
+    direction = direction / block_norms[:, None]
+
+    base_initial = dg.correction.corrected_states
+    manifold_initial = (
+        base_initial
+        + float(perturbation_sign) * float(perturbation_scale) * direction
+    )
+    phase_times = np.linspace(0.0, dg.mapping_time, phase_samples)
+    history_times = np.unique(
+        np.r_[np.linspace(0.0, requested[-1], history_samples), requested]
+    )
+    snapshot_evaluation_times = np.concatenate(
+        [elapsed + phase_times for elapsed in requested]
+    )
+    evaluation_times = np.unique(
+        np.r_[phase_times, history_times, snapshot_evaluation_times]
+    )
+    final_time = float(requested[-1] + dg.mapping_time)
+
+    base_sol = integrate_states_and_stms(
+        base_initial,
+        (0.0, final_time),
+        mu,
+        t_eval=evaluation_times,
+        rtol=1.0e-12,
+        atol=1.0e-14,
+        max_step=max_step,
+    )
+    manifold_sol = integrate_states_cr3bp(
+        manifold_initial,
+        (0.0, final_time),
+        mu,
+        t_eval=evaluation_times,
+        rtol=1.0e-12,
+        atol=1.0e-14,
+        max_step=max_step,
+    )
+    if not base_sol.success:
+        raise RuntimeError(base_sol.message)
+    if not manifold_sol.success:
+        raise RuntimeError(manifold_sol.message)
+
+    base_augmented = base_sol.y.T.reshape(evaluation_times.size, sample_count, 42)
+    base_evaluated = base_augmented[:, :, :6]
+    base_stms = base_augmented[:, :, 6:].reshape(
+        evaluation_times.size,
+        sample_count,
+        6,
+        6,
+    )
+    linear_separation_states = (
+        float(perturbation_scale)
+        * np.einsum("tnij,nj->tni", base_stms, direction, optimize=True)
+    )
+    linear_separation_norms = np.linalg.norm(linear_separation_states, axis=2)
+    linear_position_separation_norms = np.linalg.norm(
+        linear_separation_states[:, :, :3],
+        axis=2,
+    )
+    manifold_evaluated = manifold_sol.y.T.reshape(
+        evaluation_times.size,
+        sample_count,
+        6,
+    )
+    phase_indices = _indices_for_exact_times(evaluation_times, phase_times)
+    history_indices = _indices_for_exact_times(evaluation_times, history_times)
+    snapshot_indices = _indices_for_exact_times(
+        evaluation_times,
+        snapshot_evaluation_times,
+    ).reshape(requested.size, phase_samples)
+
+    return CorrectedTorusManifoldSnapshots(
+        dg=dg,
+        branch=branch,
+        eigenvalue=dg.eigenvalues[eigen_index],
+        perturbation_sign=float(perturbation_sign),
+        perturbation_scale=float(perturbation_scale),
+        snapshot_times=requested,
+        phase_times=phase_times,
+        history_times=history_times,
+        base_torus_states=base_evaluated[phase_indices],
+        base_history_states=base_evaluated[history_indices],
+        history_states=manifold_evaluated[history_indices],
+        base_snapshot_states=base_evaluated[snapshot_indices],
+        snapshot_states=manifold_evaluated[snapshot_indices],
+        perturbation_directions=direction,
+        linear_history_state_separation_norms=linear_separation_norms[
+            history_indices
+        ],
+        linear_snapshot_state_separation_norms=linear_separation_norms[
+            snapshot_indices
+        ],
+        linear_history_position_separation_norms=linear_position_separation_norms[
+            history_indices
+        ],
+        linear_snapshot_position_separation_norms=linear_position_separation_norms[
+            snapshot_indices
+        ],
+    )
+
+
 def corrected_curve_manifold(
     mu: float,
     *,
@@ -1051,6 +1489,86 @@ def corrected_vertical_global_unstable_manifold(
         for sign in signs
     )
     return min(candidates, key=lambda sheet: float(np.min(sheet.surface[:, :, 0])))
+
+
+@lru_cache(maxsize=4)
+def corrected_l1_constant_energy_halo_unstable_manifold_snapshots(
+    mu: float,
+    *,
+    time_unit_days: float,
+    snapshot_times_days: tuple[float, ...] = (7.79, 9.75, 11.39, 13.02),
+    samples: int = 9,
+    phase_samples: int = 121,
+    history_samples: int = 161,
+    perturbation_scale: float = 4.5e-7,
+    max_step: float = 0.01,
+) -> tuple[CorrectedTorusManifoldSnapshots, CorrectedTorusManifoldSnapshots]:
+    """Return the +x and -x fixed-time quasi-halo unstable snapshots."""
+
+    if time_unit_days <= 0.0:
+        raise ValueError("time_unit_days must be positive")
+    if samples != 9:
+        raise ValueError("The validated pseudo-arclength endpoint currently uses samples=9")
+    dg = corrected_l1_constant_energy_halo_pseudo_arclength_endpoint_dg(
+        mu,
+        max_step=max_step,
+    )
+    snapshot_times = tuple(float(value) / time_unit_days for value in snapshot_times_days)
+    candidates = tuple(
+        corrected_curve_fixed_time_manifold_snapshots(
+            mu,
+            dg=dg,
+            snapshot_times=snapshot_times,
+            perturbation_scale=perturbation_scale,
+            perturbation_sign=sign,
+            phase_samples=phase_samples,
+            history_samples=history_samples,
+            max_step=max_step,
+        )
+        for sign in (-1.0, 1.0)
+    )
+    minus_x, plus_x = sorted(
+        candidates,
+        key=lambda snapshots: float(np.mean(snapshots.snapshot_surfaces[-1, :, :, 0])),
+    )
+    return plus_x, minus_x
+
+
+@lru_cache(maxsize=4)
+def corrected_l1_constant_energy_vertical_unstable_manifold_snapshots(
+    mu: float,
+    *,
+    time_unit_days: float,
+    snapshot_times_days: tuple[float, ...] = (8.05, 10.08, 11.77, 13.46),
+    phase_samples: int = 121,
+    history_samples: int = 161,
+    perturbation_scale: float = 4.5e-7,
+    max_step: float = 0.01,
+) -> tuple[CorrectedTorusManifoldSnapshots, CorrectedTorusManifoldSnapshots]:
+    """Return the +x and -x fixed-time quasi-vertical unstable snapshots."""
+
+    if time_unit_days <= 0.0:
+        raise ValueError("time_unit_days must be positive")
+    dg = corrected_l1_constant_energy_vertical_staged_endpoint_dg(mu, max_step=max_step)
+    snapshot_times = tuple(float(value) / time_unit_days for value in snapshot_times_days)
+    candidates = tuple(
+        corrected_curve_fixed_time_manifold_snapshots(
+            mu,
+            dg=dg,
+            snapshot_times=snapshot_times,
+            perturbation_scale=perturbation_scale,
+            perturbation_sign=sign,
+            phase_samples=phase_samples,
+            history_samples=history_samples,
+            max_step=max_step,
+        )
+        for sign in (-1.0, 1.0)
+    )
+    minus_x, plus_x = sorted(
+        candidates,
+        key=lambda snapshots: float(np.mean(snapshots.snapshot_surfaces[-1, :, :, 0])),
+    )
+    return plus_x, minus_x
 
 
 @lru_cache(maxsize=4)

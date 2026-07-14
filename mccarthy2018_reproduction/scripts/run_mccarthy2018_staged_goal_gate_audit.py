@@ -171,6 +171,9 @@ def _build_rows() -> list[dict[str, Any]]:
     chapter4_route_h_figure_pdf = PROJECT_ROOT / "outputs" / "figures_pdf" / "fig_4_route_h.pdf"
     chapter4_per_figure_path = data / "chapter4_per_figure_source_layer_audit.csv"
     chapter4_per_figure_doc_path = docs / "chapter4_per_figure_source_layer_audit.md"
+    chapter4_halo_fixed_time_path = data / "chapter4_fig43_fig44_global_manifold_audit.csv"
+    chapter4_vertical_fixed_time_path = data / "chapter4_fig45_fig48_vertical_manifold_audit.csv"
+    chapter4_projection_path = data / "chapter4_fig43_fig46_projection_diagnostic.csv"
     chapter5_audit_path = data / "chapter5_upstream_application_gate_audit.csv"
     chapter5_doc_path = docs / "chapter5_upstream_application_gate_audit.md"
     chapter5_readiness_path = data / "chapter5_high_fidelity_optimization_readiness_audit.csv"
@@ -223,6 +226,23 @@ def _build_rows() -> list[dict[str, Any]]:
     chapter4_route_h_manifold = _read_rows(chapter4_route_h_manifold_path)
     chapter4_real_hyperbolic_scan = _read_rows(chapter4_real_hyperbolic_scan_path)
     chapter4_per_figure = _read_rows(chapter4_per_figure_path)
+    chapter4_fixed_time_rows = (
+        _read_rows(chapter4_halo_fixed_time_path)
+        + _read_rows(chapter4_vertical_fixed_time_path)
+    )
+    chapter4_fixed_time_numerical_passes = sum(
+        row.get("numerical_acceptance") == "pass"
+        for row in chapter4_fixed_time_rows
+    )
+    chapter4_fixed_time_configuration_passes = sum(
+        row.get("configuration_reach_acceptance") == "pass"
+        for row in chapter4_fixed_time_rows
+    )
+    chapter4_projection_rows = _read_rows(chapter4_projection_path)
+    chapter4_projection_alerts = sum(
+        row.get("failure_items", "none") != "none"
+        for row in chapter4_projection_rows
+    )
     chapter5_audit = _read_rows(chapter5_audit_path)
     chapter5_readiness = _read_rows(chapter5_readiness_path)
     chapter5_l1_long_prop = _read_rows(chapter5_l1_long_prop_path)
@@ -809,10 +829,10 @@ def _build_rows() -> list[dict[str, Any]]:
                 else ("regenerate_chapter4_from_route_h_source" if chapter3_reproducible else "do_not_regenerate_chapter4_manifolds")
             ),
             notes=(
-                "Route H accepted quasi-DRO corrections now have a regenerated Chapter 4 source-layer DG/manifold figure; existing Fig. 4.3-4.8 L1 quasi-halo/vertical proxy backgrounds still need a separate thesis-figure replacement route."
+                f"Route H accepted quasi-DRO corrections now have a regenerated Chapter 4 source-layer DG/manifold figure. Independently, Fig. 4.3-4.6 use corrected tau+[0,T0] fixed-time full-torus snapshots with {chapter4_fixed_time_numerical_passes}/{len(chapter4_fixed_time_rows)} numerical rows and {chapter4_fixed_time_configuration_passes}/{len(chapter4_fixed_time_rows)} epsilon-dependent configuration-reach rows passing; projection remains diagnostic_only with {chapter4_projection_alerts}/{len(chapter4_projection_rows)} alerts, paper_projection=not_run, paper_3d=false, and epsilon is uncalibrated. Fig. 4.7-4.8 retain the legacy comparison boundary."
                 if chapter4_route_h_figure_passes
                 else
-                "Route H accepted quasi-DRO corrections now pass the Chapter 4 DG compatibility and local manifold probe layer; existing Fig. 4.3-4.8 L1 quasi-halo/vertical proxy backgrounds still need a separate figure-source decision."
+                f"Route H accepted quasi-DRO corrections now pass the Chapter 4 DG compatibility and local manifold probe layer. Independently, Fig. 4.3-4.6 use corrected tau+[0,T0] fixed-time full-torus snapshots with {chapter4_fixed_time_numerical_passes}/{len(chapter4_fixed_time_rows)} numerical rows and {chapter4_fixed_time_configuration_passes}/{len(chapter4_fixed_time_rows)} epsilon-dependent configuration-reach rows passing; projection remains diagnostic_only with {chapter4_projection_alerts}/{len(chapter4_projection_rows)} alerts, paper_projection=not_run, paper_3d=false, and epsilon is uncalibrated. Fig. 4.7-4.8 retain the legacy comparison boundary."
                 if chapter4_route_h_dg_passes
                 else "The historical Route H artifact passes amplitude gates but cannot be cold-started from current code, so Chapter 4 remains gated on source reproducibility."
                 if chapter3_passes and not chapter3_reproducible
@@ -852,7 +872,7 @@ def _build_rows() -> list[dict[str, Any]]:
             threshold="> 0 and PDF exists",
             evidence_artifact=f"{_artifact(chapter4_route_h_figure_png)};{_artifact(chapter4_route_h_figure_pdf)};{_artifact(chapter4_per_figure_path)}",
             decision="route_h_chapter4_figure_source_available" if chapter4_route_h_figure_passes else "run_fig_4_route_h_quasi_dro",
-            notes="This figure is a Route H quasi-DRO Chapter 4 source-layer artifact; it does not claim to replace the original L1 quasi-halo/vertical thesis figures 4.3-4.8.",
+            notes="This figure is a Route H quasi-DRO Chapter 4 source-layer artifact; it is separate from the corrected fixed-time full-torus L1 evidence for Fig. 4.3-4.6 and the legacy comparison boundary for Fig. 4.7-4.8.",
         ),
         _row(
             scope="chapter4",
@@ -1218,6 +1238,24 @@ def build_rows() -> list[dict[str, Any]]:
 
 
 def _write_doc(rows: list[dict[str, Any]]) -> None:
+    data = PROJECT_ROOT / "data" / "computed"
+    fixed_time_rows = (
+        _read_rows(data / "chapter4_fig43_fig44_global_manifold_audit.csv")
+        + _read_rows(data / "chapter4_fig45_fig48_vertical_manifold_audit.csv")
+    )
+    fixed_time_numerical_passes = sum(
+        row.get("numerical_acceptance") == "pass" for row in fixed_time_rows
+    )
+    fixed_time_configuration_passes = sum(
+        row.get("configuration_reach_acceptance") == "pass"
+        for row in fixed_time_rows
+    )
+    projection_rows = _read_rows(
+        data / "chapter4_fig43_fig46_projection_diagnostic.csv"
+    )
+    projection_alerts = sum(
+        row.get("failure_items", "none") != "none" for row in projection_rows
+    )
     by_gate = {row["gate_id"]: row for row in rows}
     c3 = by_gate["C3-FIGURE-SOURCE-FRONTIER"]
     experimental = by_gate["C3-EXPERIMENTAL-FRONTIER"]
@@ -1252,9 +1290,9 @@ Those cached corrections pass the Chapter 4 source-layer DG/manifold probe in
 regenerated source-layer figure artifacts are `outputs/figures_png/fig_4_route_h.png`
 and `outputs/figures_pdf/fig_4_route_h.pdf`.
 
-This unlocks a Chapter 4 Route H figure-source artifact, not a completed replacement
-of Fig. 4.3-4.8: those existing figures target L1 quasi-halo and quasi-vertical
-families and still retain proxy backgrounds."""
+This unlocks a Chapter 4 Route H figure-source artifact. It remains separate from
+the original L1 quasi-halo and quasi-vertical Figures 4.3-4.8 and does not by
+itself establish their paper equivalence."""
     else:
         c4_interpretation = f"""Route H contributes accepted fixed-time figure-source
 members above 10,500 km, but the current Chapter 4 source-layer DG/manifold probe
@@ -1262,8 +1300,8 @@ does not pass the nearly-real hyperbolic-direction gate. The worst selected-eige
 relative imaginary part is `{_fmt(c4_route_h['value'])}` against the `<= 1e-6`
 threshold. Existing `fig_4_route_h` artifacts are diagnostic outputs and must not be
 treated as accepted Chapter 4 figure-source evidence until the DG/manifold audit is
-regenerated with a valid real hyperbolic direction. Original Fig. 4.1-4.8 replacement
-also remains incomplete."""
+regenerated with valid real hyperbolic coverage. Current coverage is 1/31 members,
+so the Route H gate fails and the staged-goal status remains unchanged."""
     DOC_OUTPUT.write_text(
         f"""# McCarthy 2018 Staged Goal Gate Status
 
@@ -1305,6 +1343,17 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 ## Interpretation
 
 {c4_interpretation}
+
+For the original L1 manifold figures, Fig. 4.3-4.6 now use corrected
+`tau + [0,T0]` fixed-time full-torus surfaces instead of the legacy
+`surface[:stop]` history prefix. Their dedicated audits pass
+`{fixed_time_numerical_passes}/{len(fixed_time_rows)}` numerical rows and
+`{fixed_time_configuration_passes}/{len(fixed_time_rows)}` epsilon-dependent
+configuration-reach rows. The `{len(projection_rows)}`-panel projection comparison
+remains `diagnostic_only`, with `{projection_alerts}` alerts,
+`paper_projection=not_run`, `paper_3d=false`, and epsilon uncalibrated. Fig. 4.7-4.8 retain the legacy comparison
+boundary. These facts do not promote paper-level 3D equivalence or alter the
+staged-goal decision.
 
 The Chapter 4 per-original-figure mapping is recorded in
 `data/computed/chapter4_per_figure_source_layer_audit.csv` and

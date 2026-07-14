@@ -1,4 +1,13 @@
-# McCarthy 2018 论文复现阶段性研究报告
+# McCarthy 2018 论文复现阶段性研究报告（历史快照）
+
+> **状态说明（2026-07-14）**：本文保留早期阶段判断，不再是当前状态源。
+> 当前结论请以 `data/computed/figure_validation_table.csv`、
+> `data/computed/mccarthy2018_staged_goal_gate_status.csv`、
+> `docs/reproduction_execution_plan_2026-07-13.md` 和
+> `docs/reproduction_report/main_report.md` 为准。自本文形成后，Route H
+> 已替代旧的 10,164 km 上游瓶颈，Fig. 4.3–4.6 已迁移到固定时刻全环面
+> 与局部 STM 审计，Chapter 5 也已有多项 source-layer 审计；这些进展不应
+> 被下文的历史描述覆盖。
 
 本文档面向导师、组会或开题报告，概括当前 McCarthy 2018 复现项目的完成度、数值证据、主要缺口和下一阶段路线。本文不推进新的 continuation 算法，不修改 Fig. 3.10，不继续 Chapter 4，也不进入 Chapter 5 数值升级。
 

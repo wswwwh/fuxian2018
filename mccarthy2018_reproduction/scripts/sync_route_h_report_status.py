@@ -25,6 +25,9 @@ ROUTE_H_AUDIT = DATA / "chapter3_fixed_mapping_cache_audit.csv"
 STAGED_GATE = DATA / "mccarthy2018_staged_goal_gate_status.csv"
 CHAPTER4_PER_FIGURE_AUDIT = DATA / "chapter4_per_figure_source_layer_audit.csv"
 CHAPTER4_FIG42_DIGITIZED_AUDIT = DATA / "chapter4_fig42_digitized_comparison_audit.csv"
+CHAPTER4_HALO_FIXED_TIME_AUDIT = DATA / "chapter4_fig43_fig44_global_manifold_audit.csv"
+CHAPTER4_VERTICAL_FIXED_TIME_AUDIT = DATA / "chapter4_fig45_fig48_vertical_manifold_audit.csv"
+CHAPTER4_PROJECTION_DIAGNOSTIC = DATA / "chapter4_fig43_fig46_projection_diagnostic.csv"
 CHAPTER5_PER_FIGURE_AUDIT = DATA / "chapter5_per_figure_source_layer_audit.csv"
 CHAPTER3_PERIOD_Q_PER_FIGURE_AUDIT = DATA / "chapter3_period_q_per_figure_audit.csv"
 
@@ -86,6 +89,11 @@ def _is_original_chapter4_figure(figure_id: str) -> bool:
 
 def _route_h_summary() -> dict[str, float | int | str]:
     rows = _read_csv(ROUTE_H_VALIDATION)
+    chapter4_fixed_time_rows = (
+        _read_csv(CHAPTER4_HALO_FIXED_TIME_AUDIT)
+        + _read_csv(CHAPTER4_VERTICAL_FIXED_TIME_AUDIT)
+    )
+    chapter4_projection_rows = _read_csv(CHAPTER4_PROJECTION_DIAGNOSTIC)
     max_row = max(rows, key=lambda row: _as_float(row, "max_abs_z_km"))
     return {
         "rows": len(rows),
@@ -105,6 +113,20 @@ def _route_h_summary() -> dict[str, float | int | str]:
         "max_phase_error": max(_as_float(row, "one_map_phase_return_error") for row in rows),
         "max_ten_return_jacobi_span": max(
             _as_float(row, "ten_return_jacobi_span") for row in rows
+        ),
+        "chapter4_fixed_time_rows": len(chapter4_fixed_time_rows),
+        "chapter4_numerical_passes": sum(
+            row.get("numerical_acceptance") == "pass"
+            for row in chapter4_fixed_time_rows
+        ),
+        "chapter4_configuration_passes": sum(
+            row.get("configuration_reach_acceptance") == "pass"
+            for row in chapter4_fixed_time_rows
+        ),
+        "chapter4_projection_rows": len(chapter4_projection_rows),
+        "chapter4_projection_alerts": sum(
+            row.get("failure_items", "none") != "none"
+            for row in chapter4_projection_rows
         ),
     }
 
@@ -455,8 +477,12 @@ def _write_proxy_usage_appendix(rows: list[dict[str, str]], summary: dict[str, f
             "- Fig. 3.10: q=8 is still a local multiple-shooting approximation, not a",
             "  robust single-shoot periodic orbit.",
             "- Fig. 3.17: the faint reference trend and digitized trend are not raw branch data.",
-            "- Figures 4.3-4.8: corrected DG evidence exists, but original thesis-scale",
-            "  global manifold replacement remains separate from the Route H source layer.",
+            "- Figures 4.3-4.6: corrected tau+[0,T0] fixed-time full-torus surfaces pass",
+            f"  {summary['chapter4_numerical_passes']}/{summary['chapter4_fixed_time_rows']} numerical and {summary['chapter4_configuration_passes']}/{summary['chapter4_fixed_time_rows']} epsilon-dependent configuration-reach rows,",
+            f"  while the {summary['chapter4_projection_rows']}-panel projection diagnostic has {summary['chapter4_projection_alerts']} alerts;",
+            "  paper_projection=not_run, paper_3d=false, and epsilon is uncalibrated.",
+            "  Figures 4.7-4.8 retain the legacy comparison",
+            "  boundary. Route H remains separate at 1/31 real-hyperbolic members and its gate fails.",
             "- Chapter 5 source-layer BCR4BP/optimization audits do not replace every",
             "  original thesis application figure.",
             "",
@@ -516,7 +542,7 @@ Route H is now the current Chapter 3 quasi-DRO source-layer result:
 | Fig. 3.16 / 3.17 Route H source | Route H fixed-time quasi-DRO branch reaches `{_fmt(summary['max_z'])}` km at member `{summary['max_member']}`. | Chapter 3 source gate is passed for the fixed-time quasi-DRO source layer. | Exact thesis equivalence still needs original branch data or author code. |
 | Route H audit quality | max map residual `{_fmt(summary['max_residual'])}`, max curve Jacobi span `{_fmt(summary['max_curve_jacobi_span'])}`, max one-map Jacobi drift `{_fmt(summary['max_one_map_jacobi_drift'])}`. | The promoted source layer is backed by current CSV audit evidence. | Do not reuse rejected Route B/diagnostic rows as accepted source data. |
 | Fig. 3.10 period-q audit | q=2/q=3 are strict single-shoot accepted rows; q=8 is local multiple shooting with unreliable full-period single-shoot closure. | The figure has an explicit period-q audit boundary, not a full original-branch equivalence claim. | Promote q=8 only after robust high-instability closure validation or another accepted audit. |
-| Chapter 4 | Route H source-layer DG/manifold artifacts exist, while original L1 quasi-halo/quasi-vertical thesis-scale replacement remains separate. | Source-layer progress is real. | Do not conflate Route H quasi-DRO source-layer figures with original Fig. 4.3-4.8 replacement. |
+| Chapter 4 | Fig. 4.3-4.6 use corrected `tau+[0,T0]` fixed-time full-torus surfaces and pass {summary['chapter4_numerical_passes']}/{summary['chapter4_fixed_time_rows']} numerical plus {summary['chapter4_configuration_passes']}/{summary['chapter4_fixed_time_rows']} epsilon-dependent configuration-reach rows; Fig. 4.7-4.8 retain the legacy comparison boundary. | Projection is `diagnostic_only` with {summary['chapter4_projection_alerts']}/{summary['chapter4_projection_rows']} alerts; `paper_projection=not_run`, `paper_3d=false`, and epsilon is uncalibrated. | Route H remains separate at 1/31 real-hyperbolic members, so its DG/manifold gate fails and the staged goal is unchanged. |
 | Chapter 5 | Route H/DE421/BCR4BP/optimization source-layer audits exist. | Application-layer evidence has improved. | Per-figure high-fidelity equivalence still needs endpoint, delta-v, and ephemeris consistency checks where applicable. |
 """,
         encoding="utf-8",
@@ -582,8 +608,15 @@ replacement for raw branch data.
 
 ## Q5. What remains incomplete?
 
-Chapter 4 original L1 quasi-halo/quasi-vertical thesis-scale global manifold
-replacement remains separate from the Route H quasi-DRO source layer. Chapter 5
+Chapter 4 Fig. 4.3-4.6 pass
+`{summary['chapter4_numerical_passes']}/{summary['chapter4_fixed_time_rows']}` numerical
+and `{summary['chapter4_configuration_passes']}/{summary['chapter4_fixed_time_rows']}`
+epsilon-dependent configuration-reach checks after the fixed-time full-torus
+semantics correction, but the `{summary['chapter4_projection_rows']}`-panel
+projection comparison is diagnostic only with `{summary['chapter4_projection_alerts']}`
+alerts and epsilon remains uncalibrated. Fig. 4.7-4.8 retain
+the legacy comparison boundary, while Route H remains a separate failed 1/31
+real-hyperbolic-coverage gate. Chapter 5
 has Route H/DE421/BCR4BP/optimization source-layer audits, but per-original-figure
 high-fidelity equivalence still needs endpoint, delta-v, and ephemeris checks.
 
@@ -777,11 +810,17 @@ branch states, tables, author code, or another direct high-authority comparison.
 {fig42_section}
 
 Chapter 4 also has corrected source-curve residuals, DG eigenvector propagation,
-and Jacobi drift evidence. For Fig. 4.3-4.8 these are internal dynamics gates,
-not paper-geometry acceptance. Current contact sheets show material
-global-reach/topology mismatches, and the single-view 3D panels can support only
-a future locked-camera projection-space audit. The Route H quasi-DRO
-source-layer figure remains separate from the original L1 manifold figures.
+and Jacobi drift evidence. Fig. 4.3-4.6 now use `tau+[0,T0]` fixed-time
+full-torus surfaces instead of `surface[:stop]` history prefixes;
+`{summary['chapter4_numerical_passes']}/{summary['chapter4_fixed_time_rows']}`
+numerical and `{summary['chapter4_configuration_passes']}/{summary['chapter4_fixed_time_rows']}`
+epsilon-dependent configuration-reach rows pass. Their
+`{summary['chapter4_projection_rows']}`-panel projection comparison remains
+`diagnostic_only`, with `{summary['chapter4_projection_alerts']}` alerts,
+`paper_projection=not_run`, `paper_3d=false`, and epsilon uncalibrated. Fig. 4.7-4.8 retain the
+legacy comparison boundary. The Route H quasi-DRO source layer remains separate:
+only 1/31 members are real-hyperbolic, so its gate fails and the staged goal is
+unchanged.
 
 ## D. Chapter 5 source-layer audit
 
@@ -829,12 +868,15 @@ Do not call this original McCarthy raw branch data.
 
 - Fig. 3.10 q=8 is local multiple shooting, not a robust single-shoot periodic
   orbit.
-- Chapter 4 Route H source-layer evidence is not the same as full replacement
-  of original L1 quasi-halo/quasi-vertical global manifold figures.
+- Chapter 4 Fig. 4.3-4.6 now use corrected fixed-time full-torus surfaces and
+  pass {summary['chapter4_numerical_passes']}/{summary['chapter4_fixed_time_rows']} numerical plus {summary['chapter4_configuration_passes']}/{summary['chapter4_fixed_time_rows']} epsilon-dependent configuration-reach rows; Fig. 4.7-4.8 remain legacy
+  comparisons.
 - Fig. 4.2 passes the native-image pointwise gate over 89% of the thesis curve,
   but the final fold tail is still uncovered.
-- Fig. 4.3-4.8 pass internal dynamics checks only; current projection geometry
-  visibly lacks the thesis-scale global reach/topology.
+- Fig. 4.3-4.6 projection evidence is diagnostic only ({summary['chapter4_projection_alerts']}/{summary['chapter4_projection_rows']} alerts), with
+  `paper_projection=not_run`, `paper_3d=false`, and epsilon uncalibrated.
+- Route H remains at 1/31 real-hyperbolic members; its DG/manifold gate fails and
+  the staged goal is unchanged.
 - Chapter 5 source-layer BCR4BP/optimization audits do not replace every thesis
   application figure.
 

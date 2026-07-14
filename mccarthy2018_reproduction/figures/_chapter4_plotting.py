@@ -128,6 +128,87 @@ def plot_corrected_manifold_stage(
     )
 
 
+def plot_fixed_time_manifold_snapshot(
+    ax,
+    snapshots,
+    *,
+    elapsed_days: float,
+    surface_color: str = "#c9253d",
+) -> None:
+    """Plot a fixed-time perturbed torus and its separate departure histories."""
+
+    system = SYSTEMS["earth_moon"]
+    elapsed_time = elapsed_days / (system.time_unit_days or 1.0)
+    surface = _close_periodic_curve_axis(
+        snapshots.surface_at_snapshot(elapsed_time)
+    )
+    history = snapshots.history_surface_until(elapsed_time)
+    ax.plot_surface(
+        surface[:, :, 0],
+        surface[:, :, 1],
+        surface[:, :, 2],
+        color=surface_color,
+        edgecolor="none",
+        linewidth=0,
+        shade=True,
+        alpha=0.58,
+    )
+    ax.plot_wireframe(
+        surface[:, :, 0],
+        surface[:, :, 1],
+        surface[:, :, 2],
+        rstride=max(1, surface.shape[0] // 20),
+        cstride=1,
+        color="#7f1d2d",
+        linewidth=0.22,
+        alpha=0.58,
+    )
+    for curve_idx in range(history.shape[1]):
+        ax.plot(
+            history[:, curve_idx, 0],
+            history[:, curve_idx, 1],
+            history[:, curve_idx, 2],
+            color="black",
+            linewidth=0.38,
+            alpha=0.66,
+        )
+
+
+def plot_fixed_time_base_torus(ax, snapshots, color: str = "black") -> None:
+    """Plot the unperturbed source torus for fixed-time manifold snapshots."""
+
+    surface = _close_periodic_curve_axis(snapshots.base_surface)
+    ax.plot_surface(
+        surface[:, :, 0],
+        surface[:, :, 1],
+        surface[:, :, 2],
+        color="#7f7f7f",
+        edgecolor="none",
+        linewidth=0,
+        shade=True,
+        alpha=0.20,
+    )
+    ax.plot_wireframe(
+        surface[:, :, 0],
+        surface[:, :, 1],
+        surface[:, :, 2],
+        rstride=max(1, surface.shape[0] // 20),
+        cstride=1,
+        color=color,
+        linewidth=0.28,
+        alpha=0.60,
+    )
+
+
+def _close_periodic_curve_axis(surface: np.ndarray) -> np.ndarray:
+    """Append the first curve node so Matplotlib renders the periodic seam."""
+
+    values = np.asarray(surface)
+    if values.ndim != 3 or values.shape[1] < 1:
+        raise ValueError("surface must have shape (phase, curve, coordinates)")
+    return np.concatenate([values, values[:, :1, :]], axis=1)
+
+
 def plot_corrected_base_torus(ax, sheet, color: str = "black") -> None:
     """Plot the propagated source torus associated with a corrected DG sheet."""
 

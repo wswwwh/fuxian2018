@@ -9,12 +9,14 @@ effort. Priorities use:
 - B: useful for algorithmic upgrades or validation infrastructure.
 - C: background reading or longer-term reference.
 
-Current project status used for prioritization: Fig. 3.10 is a shape-match
-figure with local period-q numerical overlays; Fig. 3.16 and Fig. 3.17 remain
-partial physical-consistency baselines, not full numerical reproductions;
-Chapter 4 has audited local/finite-amplitude DG manifold baselines but still
-retains proxy thesis-scale backgrounds; Chapter 5 should not be upgraded before
-the Chapter 3 quasi-DRO branch bottleneck is resolved.
+Project-status note updated 2026-07-14: Fig. 3.10 now has a strict-vs-boundary
+period-q audit; Fig. 3.16 and Fig. 3.17 use the accepted Route H fixed-time
+source layer. Chapter 4 Figs. 4.3-4.6 use proxy-free fixed-time full-torus
+snapshots with local STM audits, while paper projection/3D equivalence and
+Figs. 4.7-4.8 remain boundaries. Chapter 5 has several source-layer audits,
+but per-figure paper equivalence is still incomplete. The resource search below
+remains useful for missing original branch states, camera geometry, and
+application boundary conditions.
 
 ## McCarthy 2018 Original Paper And Related Materials
 

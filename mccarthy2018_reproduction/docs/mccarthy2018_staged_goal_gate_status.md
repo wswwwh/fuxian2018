@@ -68,8 +68,19 @@ does not pass the nearly-real hyperbolic-direction gate. The worst selected-eige
 relative imaginary part is `0.6242638760846673` against the `<= 1e-6`
 threshold. Existing `fig_4_route_h` artifacts are diagnostic outputs and must not be
 treated as accepted Chapter 4 figure-source evidence until the DG/manifold audit is
-regenerated with a valid real hyperbolic direction. Original Fig. 4.1-4.8 replacement
-also remains incomplete.
+regenerated with valid real hyperbolic coverage. Current coverage is 1/31 members,
+so the Route H gate fails and the staged-goal status remains unchanged.
+
+For the original L1 manifold figures, Fig. 4.3-4.6 now use corrected
+`tau + [0,T0]` fixed-time full-torus surfaces instead of the legacy
+`surface[:stop]` history prefix. Their dedicated audits pass
+`16/16` numerical rows and
+`16/16` epsilon-dependent
+configuration-reach rows. The `16`-panel projection comparison
+remains `diagnostic_only`, with `14` alerts,
+`paper_projection=not_run`, `paper_3d=false`, and epsilon uncalibrated. Fig. 4.7-4.8 retain the legacy comparison
+boundary. These facts do not promote paper-level 3D equivalence or alter the
+staged-goal decision.
 
 The Chapter 4 per-original-figure mapping is recorded in
 `data/computed/chapter4_per_figure_source_layer_audit.csv` and
