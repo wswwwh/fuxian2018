@@ -1,0 +1,54 @@
+{
+  "camera_config_sha256": "7FE3D12CF319A3CBD60B540FFDAD005B5C7B51C8B5F3A2D924B7CFECBC26DFA0",
+  "development_panels": [
+    "a",
+    "b",
+    "c"
+  ],
+  "epsilon_by_family": {
+    "halo": 4.90728479699366e-07,
+    "vertical": 4.90728479699366e-07
+  },
+  "evidence_class": "programmatic_frozen_holdout_with_historical_exposure",
+  "h0_epsilon": 4.90728479699366e-07,
+  "h1_admissible": false,
+  "h1_epsilon_by_family": {
+    "halo": 1.2727922061357855e-06,
+    "vertical": 4.5e-07
+  },
+  "h1_neither_family_worse": false,
+  "h1_relative_validation_improvement": 0.057708557971244974,
+  "h1_validation_improvement_min": 0.1,
+  "historical_exposure": true,
+  "holdout_panel": "d",
+  "holdout_red_mask_read": false,
+  "input_sha256": {
+    "camera": "D0A16AF2EDC36B22EBEE15195CBDED051354E08A291B8ED2F66CB25359B5DF59",
+    "camera_metrics": "97A4B10C4C52841B223D2A11EDE3B9F7F49C7AA5D43D458529442E4B71925F05",
+    "generator": "06E79ED5F356BF887925D39941C2A2DC4EE888C9E0D58DBDB378794BE9293D06",
+    "projection_core": "07FF9AEF6D48FDBCC3FEA9D242AF0BE73FAF4D278259D22D3FB1F9D24BA44A82",
+    "protocol": "6D2FD58CFCA4E74CC533B757E852D7AC772D036E0E385C30A1057EB9861D01C1",
+    "state": "8BBD1CC9F646E5DB0F15812BCADFEDA1954813E6E4DBDF43E380C1E1E97989A2",
+    "state_rows": "EB5765A144EEB2C835AAC905FA45C6A1DE14C4A7407FE67542C400482D15768D"
+  },
+  "mask_rule": "R>=55;R-max(G,B)>=14;R>=1.10*max(G,B);morphology=none",
+  "normalized_panel_size": 512,
+  "paper_3d_equivalence": false,
+  "paper_projection_acceptance": "not_run",
+  "paper_source_sha256": {
+    "4.3": "DDD9E4B1EF0B3B8D456BBF1AEBA66AB1E8A672D8907FFF22B3329269536158EE",
+    "4.4": "72F9F9A41FAF5DB2E00F021866086EE5A982AB35EC2EC05EC2C0C7D1D2782256",
+    "4.5": "ED1D3B2F5C9977ABFEA717FAB4F24832B09668B8B0972DABE8338133B19A1746",
+    "4.6": "7E18E60DE4C373BE50A908128565B36FBFBFB93A1FBF6EC81EE1D25F901B2CD3"
+  },
+  "per_panel_transform": "forbidden",
+  "projection_loss": "chamfer/D+0.5*(1-F1@0.01D)+0.25*abs(log(area_ratio))+0.25*HD95/D",
+  "refinement_status": {
+    "H0": "five_point_log2_refinement_run",
+    "H1_halo": "not_run_coarse_optimum_at_grid_boundary",
+    "H1_vertical": "five_point_log2_refinement_run"
+  },
+  "renderer": "orthographic_projected_quad_union_curve_seam_only",
+  "schema_version": "chapter4_projection_fit_lock_v1",
+  "selected_model": "H0_global"
+}
