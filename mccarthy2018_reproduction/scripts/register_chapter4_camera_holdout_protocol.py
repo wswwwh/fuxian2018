@@ -16,7 +16,7 @@ import json
 import math
 import os
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 from _paths import find_thesis_pdf
 
@@ -26,6 +26,7 @@ DATA = ROOT / "data" / "computed"
 DOCS = ROOT / "docs"
 CSV_PATH = DATA / "chapter4_fig43_fig46_camera_holdout_protocol.csv"
 DOC_PATH = DOCS / "chapter4_fig43_fig46_camera_holdout_protocol.md"
+STATE_CSV_PATH = DATA / "chapter4_fig43_fig46_epsilon_state_sensitivity.csv"
 
 PROTOCOL_VERSION = "chapter4_camera_epsilon_holdout_v1"
 EVIDENCE_CLASS = "programmatic_frozen_holdout_with_historical_exposure"
@@ -155,7 +156,44 @@ def _fmt(value: Any) -> str:
     return str(value)
 
 
-def build_rows() -> list[dict[str, str]]:
+def _state_bound_source_hashes() -> dict[str, str] | None:
+    """Recover the pre-fit source hashes after post-holdout regeneration.
+
+    The sensitivity artifact is downstream of this protocol and is itself
+    bound by the committed fit lock.  Once it exists, its source hashes are
+    the historical registration inputs; the live fixed-time audit NPZ files
+    may later be regenerated for explicitly labelled development figures.
+    """
+
+    if not STATE_CSV_PATH.is_file():
+        return None
+    if not CSV_PATH.is_file():
+        raise RuntimeError("Stored protocol CSV is missing")
+    with STATE_CSV_PATH.open(newline="", encoding="utf-8") as stream:
+        state_rows = list(csv.DictReader(stream))
+    if not state_rows:
+        raise RuntimeError("Stored epsilon sensitivity rows are missing")
+    protocol_hash = _sha256(CSV_PATH)
+    if {row["protocol_sha256"] for row in state_rows} != {protocol_hash}:
+        raise RuntimeError("Sensitivity evidence is not bound to this protocol")
+    hashes: dict[str, str] = {}
+    for row in state_rows:
+        path = row["source_npz"]
+        digest = row["source_npz_sha256"]
+        previous = hashes.setdefault(path, digest)
+        if previous != digest:
+            raise RuntimeError(f"Inconsistent locked source hash for {path}")
+    expected = {
+        _display(DATA / str(config["npz"])) for config in FIGURE_CONFIG.values()
+    }
+    if set(hashes) != expected:
+        raise RuntimeError("Sensitivity evidence has an unexpected source set")
+    return hashes
+
+
+def build_rows(
+    *, source_hashes: Mapping[str, str] | None = None
+) -> list[dict[str, str]]:
     rows: list[dict[str, str]] = []
     thesis_path = find_thesis_pdf()
     thesis_hash = _sha256(thesis_path)
@@ -167,6 +205,16 @@ def build_rows() -> list[dict[str, str]]:
             / f"fig_{figure_id.replace('.', '_')}_reference.png"
         )
         npz_path = DATA / str(config["npz"])
+        npz_display = _display(npz_path)
+        if source_hashes is None:
+            npz_hash = _sha256(npz_path)
+        else:
+            try:
+                npz_hash = source_hashes[npz_display]
+            except KeyError as error:
+                raise RuntimeError(
+                    f"Missing registered source hash for {npz_display}"
+                ) from error
         for panel_index, panel_id in enumerate(("a", "b", "c", "d")):
             rect = PANEL_RECTS[figure_id][panel_id]
             values: dict[str, Any] = {
@@ -192,8 +240,8 @@ def build_rows() -> list[dict[str, str]]:
                 "holdout_red_mask_allowed_during_fit": False,
                 "paper_source": _display(paper_path),
                 "paper_source_sha256": _sha256(paper_path),
-                "source_npz": _display(npz_path),
-                "source_npz_sha256": _sha256(npz_path),
+                "source_npz": npz_display,
+                "source_npz_sha256": npz_hash,
                 "source_array": config["array"],
                 "panel_rect_x0": rect[0],
                 "panel_rect_y0": rect[1],
@@ -365,7 +413,13 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    rows = build_rows()
+    if not args.check and CSV_PATH.is_file() and STATE_CSV_PATH.is_file():
+        raise RuntimeError(
+            "Protocol is frozen by downstream state evidence; use --check "
+            "or register a new protocol version"
+        )
+    locked_source_hashes = _state_bound_source_hashes() if args.check else None
+    rows = build_rows(source_hashes=locked_source_hashes)
     _validate(rows)
     expected_csv = _csv_bytes(rows)
     expected_doc = _render_doc(rows)
@@ -376,7 +430,8 @@ def main() -> int:
             raise RuntimeError("Stored camera/epsilon protocol report is stale")
         print(
             "chapter4_camera_holdout_protocol_check: rows=16, "
-            "historical_exposure=true, paper_projection_acceptance=not_run"
+            "historical_exposure=true, paper_projection_acceptance=not_run, "
+            "source_binding=historical_pre_fit"
         )
         return 0
     CSV_PATH.parent.mkdir(parents=True, exist_ok=True)

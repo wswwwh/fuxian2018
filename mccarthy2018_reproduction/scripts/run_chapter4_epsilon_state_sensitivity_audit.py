@@ -126,8 +126,8 @@ def _load_family(family: str) -> dict[str, Any]:
     source_npz = Path(config["source_npz"])
     with np.load(source_npz, allow_pickle=False) as evidence:
         epsilon = float(np.asarray(evidence["perturbation_scale"]).reshape(-1)[0])
-        if abs(epsilon - EPSILON0) > 1.0e-18:
-            raise RuntimeError(f"Unexpected accepted epsilon in {source_npz}")
+        if not np.isfinite(epsilon) or epsilon <= 0.0:
+            raise RuntimeError(f"Invalid source epsilon in {source_npz}")
         source = np.asarray(evidence["plus_x_source_states"], dtype=float)
         direction = np.asarray(
             evidence["plus_x_perturbation_directions"], dtype=float
@@ -188,6 +188,88 @@ def _load_family(family: str) -> dict[str, Any]:
     payload["snapshot_indices"] = _indices_for_times(
         evaluation_times, snapshot_evaluation_times
     ).reshape(snapshot_times.size, phase_times.size)
+    return payload
+
+
+def _load_frozen_family(family: str) -> dict[str, Any]:
+    """Load immutable pre-fit inputs and verify live semantic inputs agree.
+
+    The fixed-time audit containers are allowed to be regenerated with the
+    selected post-fit epsilon.  That changes their file hashes and nonlinear
+    snapshot arrays, but must not change the source curve, DG directions, base
+    trajectory, or time grids used by this frozen sweep.
+    """
+
+    if not NPZ_PATH.is_file():
+        raise RuntimeError("Stored epsilon sensitivity NPZ is missing")
+    config = FAMILY_CONFIG[family]
+    prefix = f"{family}_"
+    with np.load(NPZ_PATH, allow_pickle=False) as frozen:
+        payload: dict[str, Any] = {
+            "family": family,
+            "source_npz": Path(config["source_npz"]),
+            "source_npz_sha256": str(frozen[prefix + "source_npz_sha256"][0]),
+            "source_states": np.asarray(frozen[prefix + "source_states"], dtype=float),
+            "directions": np.asarray(
+                frozen[prefix + "perturbation_directions"], dtype=float
+            ),
+            "branch_signs": np.asarray(frozen[prefix + "branch_signs"], dtype=float),
+            "phase_times": np.asarray(frozen[prefix + "phase_times_nd"], dtype=float),
+            "history_times": np.asarray(
+                frozen[prefix + "history_times_nd"], dtype=float
+            ),
+            "snapshot_times": np.asarray(
+                frozen[prefix + "snapshot_times_nd"], dtype=float
+            ),
+            "evaluation_times": np.asarray(
+                frozen[prefix + "evaluation_times_nd"], dtype=float
+            ),
+            "base_history_states": np.asarray(
+                frozen[prefix + "base_history_states"], dtype=float
+            ),
+            "base_snapshot_states": np.asarray(
+                frozen[prefix + "base_snapshot_states"], dtype=float
+            ),
+            "scale_free_linear_history_norms": np.asarray(
+                frozen[prefix + "scale_free_linear_history_norms"], dtype=float
+            ),
+        }
+    payload["history_indices"] = _indices_for_times(
+        payload["evaluation_times"], payload["history_times"]
+    )
+    payload["snapshot_indices"] = _indices_for_times(
+        payload["evaluation_times"],
+        np.concatenate(
+            [elapsed + payload["phase_times"] for elapsed in payload["snapshot_times"]]
+        ),
+    ).reshape(payload["snapshot_times"].size, payload["phase_times"].size)
+
+    live = _load_family(family)
+    exact_keys = (
+        "source_states",
+        "directions",
+        "branch_signs",
+        "phase_times",
+        "history_times",
+        "snapshot_times",
+        "evaluation_times",
+        "history_indices",
+        "snapshot_indices",
+        "base_history_states",
+        "base_snapshot_states",
+    )
+    for key in exact_keys:
+        if not np.array_equal(np.asarray(live[key]), np.asarray(payload[key])):
+            raise RuntimeError(f"Live source semantics drifted for {family}: {key}")
+    if not np.allclose(
+        live["scale_free_linear_history_norms"],
+        payload["scale_free_linear_history_norms"],
+        rtol=0.0,
+        atol=1.0e-12,
+    ):
+        raise RuntimeError(
+            f"Live scale-free STM semantics drifted for {family}"
+        )
     return payload
 
 
@@ -346,7 +428,9 @@ def _panel_metrics(
     }
 
 
-def analyze() -> tuple[list[dict[str, str]], dict[str, np.ndarray]]:
+def analyze(
+    *, frozen_inputs: bool = False
+) -> tuple[list[dict[str, str]], dict[str, np.ndarray]]:
     system = SYSTEMS["earth_moon"]
     if system.length_unit_km is None:
         raise RuntimeError("Earth-Moon length unit is required")
@@ -365,7 +449,7 @@ def analyze() -> tuple[list[dict[str, str]], dict[str, np.ndarray]]:
         "max_step": np.asarray([MAX_STEP], dtype=float),
     }
     for family, config in FAMILY_CONFIG.items():
-        payload = _load_family(family)
+        payload = _load_frozen_family(family) if frozen_inputs else _load_family(family)
         propagated = _propagate_family(payload, system.mu)
         prefix = f"{family}_"
         arrays.update(
@@ -516,8 +600,13 @@ def _render_doc(rows: list[dict[str, str]], npz_sha256: str) -> str:
     )
     for family, config in FAMILY_CONFIG.items():
         path = Path(config["source_npz"])
+        source_rows = [row for row in rows if row["family"] == family]
+        source_hashes = {row["source_npz_sha256"] for row in source_rows}
+        if len(source_hashes) != 1:
+            raise RuntimeError(f"Inconsistent source hashes for {family}")
         lines.append(
-            f"- {family} source: `{_display(path)}` (SHA256 `{_sha256(path)}`)."
+            f"- {family} source: `{_display(path)}` "
+            f"(SHA256 `{next(iter(source_hashes))}`)."
         )
     lines.extend(
         [
@@ -573,7 +662,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    rows, arrays = analyze()
+    rows, arrays = analyze(frozen_inputs=args.check)
     _verify_rows(rows)
     if args.check:
         _compare_arrays(arrays)

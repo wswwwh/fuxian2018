@@ -176,10 +176,12 @@ The current implementation is the first verified layer of the reproduction plan:
   fixed-time full-torus snapshot evaluated over `tau + [0,T0]`. All 16/16
   snapshot rows pass the numerical and local-STM gates; the 16/16
   epsilon-dependent configuration-reach checks also pass, but they are not a
-  paper-level physical acceptance criterion. The separate projection comparison
-  remains `diagnostic_only`: 14/16 panels raise alerts,
-  `paper_projection=not_run`, `paper_3d=false`, and epsilon is an uncalibrated
-  project visualization parameter. Figures 4.7-4.8 retain their legacy comparison boundary. Separately,
+  paper-level physical acceptance criterion. PDF-native static camera anchors
+  pass 16/16, and the development fit locks the parsimonious global H0 epsilon
+  at `4.90728479699366e-7`. However, the separately committed panel-(d)
+  projection holdout fails 0/4, so `paper_projection=fail` and
+  `paper_3d=false`; holdout-driven retuning is forbidden. Figures 4.7-4.8
+  retain their legacy comparison boundary. Separately,
   the Route H Chapter 4 scan still has only 1/31 real-hyperbolic members, so its
   DG/manifold gate fails and the staged-goal status is unchanged.
   Figure 5.1 now overlays local CR3BP-propagated Sun-Earth L1 Lissajous-seed
@@ -255,19 +257,23 @@ Chapter 4 has dedicated manifold audits at
 `data/computed/chapter4_fig45_fig48_vertical_manifold_audit.csv`. For Figures
 4.3-4.6, the corrected DG manifolds are rendered as fixed-time full-torus
 surfaces over `tau + [0,T0]`; all 16/16 numerical and local-STM rows pass. The
-16/16 configuration-reach checks describe only the current uncalibrated
-epsilon. The locked-camera/image-registration layer has not been run, and the
-current 16-panel pixel comparison is diagnostic only, with 14 alerts. Therefore
-`paper_projection=not_run`, `paper_3d=false`, and epsilon calibration is still
-pending. Figures 4.7-4.8 remain legacy comparison boundaries rather than new
+16/16 configuration-reach checks describe a locked development epsilon, not a
+paper-reported value or physical-flight acceptance. Static camera anchors pass
+16/16, but the frozen panel-(d) red-surface holdout fails 0/4. Therefore
+`paper_projection=fail` and `paper_3d=false`; the older unregistered 16-panel
+comparison is diagnostic only, with 15 alerts. Figures 4.7-4.8 remain legacy
+comparison boundaries rather than new
 paper-equivalent manifold reconstructions.
 
 Figures 3.16-3.17 now use the Route H fixed-mapping quasi-DRO source branch recorded in `data/computed/chapter3_fixed_mapping_cache_accepted_family.csv` and `data/computed/chapter3_fixed_mapping_cache_accepted_validation.csv`. The accepted Route H range is mapping time 14.74932760227518 days, rho 1.445863346020272-1.457169483818128 rad, and max abs z 10969.67553863909-14573.10318409037 km. The Route H audit has 30 rows above 10,500 km and 29 rows above 11,000 km, with max map residual 6.469474407020314e-10 and max one-map Jacobi drift 7.760059261840979e-11. Fig. 3.16 renders corrected Route H tori directly; Fig. 3.17 plots Route H as the audited branch and keeps the reference trend only as context. This supersedes the older local-only PALC/Route B endpoint discussion for the figure-source layer, while preserving the boundary that the full thesis is not yet a complete numerical-equivalence reproduction.
 
-The next Chapter 4 upgrades should calibrate epsilon, run a locked-camera
-projection audit for Figures 4.3-4.6, migrate the legacy Figure 4.7-4.8
-comparisons, and repair the Route H real-hyperbolic coverage beyond its current
-1/31 members. The remaining Figure 3.9 quasi-halo proxy tail is a separate
+The next Chapter 4 upgrades treat source-torus/DG geometry as a leading but not
+exclusive cause of the failed frozen holdout. They will run the predeclared
+12.40-day halo-member/N-convergence experiment, the fixed 12.66-day vertical
+N-convergence experiment, and renderer/time-mapping negative controls without
+retuning the frozen panel-(d) evidence. They must also migrate the legacy Figure
+4.7-4.8 comparisons and repair Route H real-hyperbolic coverage beyond its
+current 1/31 members. The remaining Figure 3.9 quasi-halo proxy tail is a separate
 source-layer task. Figure 3.10's q=2 and q=8 period-q audit is
 already documented and is not the current priority. Chapter 5 entries are
 intentionally labelled as CR3BP baseline, DE421-oriented baseline, local

@@ -15,9 +15,18 @@ from __future__ import annotations
 
 import csv
 from pathlib import Path
+import sys
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(PROJECT_ROOT / "src"))
+
+from qp_orbits.chapter4_reproduction_lock import (  # noqa: E402
+    load_chapter4_reproduction_lock,
+)
+
+
+REPRODUCTION_LOCK = load_chapter4_reproduction_lock(PROJECT_ROOT)
 DATA = PROJECT_ROOT / "data" / "computed"
 DOCS = PROJECT_ROOT / "docs"
 FIGURES_PNG = PROJECT_ROOT / "outputs" / "figures_png"
@@ -57,6 +66,21 @@ VERTICAL_GLOBAL_AUDIT = DATA / "chapter4_fig45_fig48_vertical_manifold_audit.csv
 VERTICAL_GLOBAL_STATES = DATA / "chapter4_fig45_fig48_vertical_manifold_audit.npz"
 FIG43_FIG46_PROJECTION_DIAGNOSTIC = (
     DATA / "chapter4_fig43_fig46_projection_diagnostic.csv"
+)
+FIG43_FIG46_CAMERA_CALIBRATION = (
+    DATA / "chapter4_fig43_fig46_camera_static_metrics.csv"
+)
+FIG43_FIG46_PROJECTION_FIT = (
+    DATA / "chapter4_fig43_fig46_projection_fit_metrics.csv"
+)
+FIG43_FIG46_PROJECTION_HOLDOUT = (
+    DATA / "chapter4_fig43_fig46_projection_holdout_audit.csv"
+)
+HALO_12P40_POSTHOC = (
+    DATA / "chapter4_fig43_fig44_halo_12p40_posthoc_diagnostic.csv"
+)
+HALO_12P40_POSTHOC_STATES = (
+    DATA / "chapter4_fig43_fig44_halo_12p40_posthoc_diagnostic.npz"
 )
 VERTICAL_PLUS = DATA / "chapter4_corrected_vertical_curve_unstable_manifold_plus.csv"
 VERTICAL_MINUS = DATA / "chapter4_corrected_vertical_curve_unstable_manifold_minus.csv"
@@ -453,31 +477,31 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
     manifold_specs = {
         "4.3": (
             "corrected L1 quasi-halo +x fixed-time full-torus unstable-manifold snapshots at four paper times",
-            "numerical fixed-time manifold with configuration-reach pass and projection boundary",
-            "numerical_fixed_time_manifold_and_configuration_reach_pass_projection_pending_boundary",
+            "numerical fixed-time manifold with configuration-reach pass and frozen projection-holdout failure",
+            "numerical_fixed_time_manifold_and_configuration_reach_pass_projection_holdout_failed_boundary",
             _rel(HALO_GLOBAL_AUDIT),
-            "Lock the thesis camera by fitting axis ticks and Moon position, then evaluate a held-out red-mask projection audit before any paper-equivalence claim.",
+            "Run the predeclared 12.40-day halo source-member/N-convergence falsification and frozen renderer/time-mapping negative controls; panel (d) is post-hoc diagnostic only and cannot be retuned.",
         ),
         "4.4": (
             "corrected L1 quasi-halo -x fixed-time full-torus unstable-manifold snapshots at four paper times",
-            "numerical fixed-time manifold with configuration-reach pass and projection boundary",
-            "numerical_fixed_time_manifold_and_configuration_reach_pass_projection_pending_boundary",
+            "numerical fixed-time manifold with configuration-reach pass and frozen projection-holdout failure",
+            "numerical_fixed_time_manifold_and_configuration_reach_pass_projection_holdout_failed_boundary",
             _rel(HALO_GLOBAL_AUDIT),
-            "Lock the thesis camera by fitting axis ticks and Moon position, then evaluate a held-out red-mask projection audit before any paper-equivalence claim.",
+            "Run the predeclared 12.40-day halo source-member/N-convergence falsification and frozen renderer/time-mapping negative controls; panel (d) is post-hoc diagnostic only and cannot be retuned.",
         ),
         "4.5": (
             "corrected L1 quasi-vertical +x fixed-time full-torus unstable-manifold snapshots at four paper times",
-            "numerical fixed-time manifold with configuration-reach pass and projection boundary",
-            "numerical_fixed_time_manifold_and_configuration_reach_pass_projection_pending_boundary",
+            "numerical fixed-time manifold with configuration-reach pass and frozen projection-holdout failure",
+            "numerical_fixed_time_manifold_and_configuration_reach_pass_projection_holdout_failed_boundary",
             _rel(VERTICAL_GLOBAL_AUDIT),
-            "Lock the thesis camera by fitting axis ticks and Moon position, then evaluate a held-out red-mask projection audit before any paper-equivalence claim.",
+            "Keep the 12.66-day vertical member fixed and test N33-to-N45/N57 DG-direction and 3D-sheet convergence plus frozen renderer/time-mapping negative controls; do not retune panel (d).",
         ),
         "4.6": (
             "corrected L1 quasi-vertical -x fixed-time full-torus unstable-manifold snapshots at four paper times",
-            "numerical fixed-time manifold with configuration-reach pass and projection boundary",
-            "numerical_fixed_time_manifold_and_configuration_reach_pass_projection_pending_boundary",
+            "numerical fixed-time manifold with configuration-reach pass and frozen projection-holdout failure",
+            "numerical_fixed_time_manifold_and_configuration_reach_pass_projection_holdout_failed_boundary",
             _rel(VERTICAL_GLOBAL_AUDIT),
-            "Lock the thesis camera by fitting axis ticks and Moon position, then evaluate a held-out red-mask projection audit before any paper-equivalence claim.",
+            "Keep the 12.66-day vertical member fixed and test N33-to-N45/N57 DG-direction and 3D-sheet convergence plus frozen renderer/time-mapping negative controls; do not retune panel (d).",
         ),
         "4.7": (
             "corrected quasi-halo manifold with periodic-halo comparison",
@@ -507,8 +531,16 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
             metric = _fixed_time_snapshot_metric(figure_id, audit_path)
             primary = (
                 f"{_rel(audit_path)};{_rel(states_path)};"
+                f"{_rel(FIG43_FIG46_CAMERA_CALIBRATION)};"
+                f"{_rel(FIG43_FIG46_PROJECTION_FIT)};"
+                f"{_rel(FIG43_FIG46_PROJECTION_HOLDOUT)};"
                 f"{_rel(FIG43_FIG46_PROJECTION_DIAGNOSTIC)}"
             )
+            if figure_id in {"4.3", "4.4"}:
+                primary += (
+                    f";{_rel(HALO_12P40_POSTHOC)};"
+                    f"{_rel(HALO_12P40_POSTHOC_STATES)}"
+                )
         else:
             metric = _manifold_metric(figure_id)
         reference = PROJECT_ROOT / "outputs" / "reference_pages" / f"fig_{figure_id.replace('.', '_')}_reference.png"
@@ -532,10 +564,13 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
                 "each panel now evaluates a fixed-time full-torus window over "
                 "tau+[0,T0]. All four state-space numerical and local STM rows pass; "
                 "the epsilon-dependent configuration-reach check also passes. The "
-                "projection comparison remains diagnostic_only, "
-                "paper_projection_acceptance=not_run, and paper_3d_equivalence=false; "
-                "epsilon is an uncalibrated project visualization parameter, so no "
-                "paper-view, physical-envelope, or 3D-equivalence claim is made."
+                "paper camera and development epsilon are hash-locked. Static anchors "
+                "pass 16/16, but the separately committed panel-(d) red-surface "
+                f"projection holdout passes {REPRODUCTION_LOCK.holdout_passes}/"
+                f"{REPRODUCTION_LOCK.holdout_rows}, so paper_projection_acceptance="
+                f"{REPRODUCTION_LOCK.paper_projection_acceptance} "
+                "and paper_3d_equivalence=false. No paper-view, physical-flight, or "
+                "3D-equivalence claim is made."
             )
         else:
             boundary = (
@@ -660,8 +695,11 @@ def _render_markdown(rows: list[dict[str, str]]) -> None:
         "while retaining an explicit fold-tail coverage boundary. Fig. 4.3-4.6",
         "now use fixed-time full-torus snapshots and pass all state-space numerical",
         "and local STM rows. Their epsilon-dependent configuration-reach checks",
-        "also pass but are not paper-level physical acceptance. Projection remains",
-        "diagnostic-only with the paper projection gate not run and 3D equivalence",
+        "also pass but are not paper-level physical acceptance. Their paper cameras",
+        "and development epsilon are locked; static anchors pass 16/16, while the",
+        f"frozen panel-(d) projection holdout passes {REPRODUCTION_LOCK.holdout_passes}/"
+        f"{REPRODUCTION_LOCK.holdout_rows}; paper projection is "
+        f"{REPRODUCTION_LOCK.paper_projection_acceptance} and 3D equivalence remains",
         "false. Fig. 4.7-4.8 still depend on the legacy comparison semantics and",
         "remain pending migration before a locked-camera projection-space audit.",
         "Fig. 4.1 also retains a finite-amplitude torus-geometry boundary.",

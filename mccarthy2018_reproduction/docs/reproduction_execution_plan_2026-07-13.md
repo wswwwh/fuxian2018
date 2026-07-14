@@ -8,10 +8,14 @@
 当前事实基线（以仓库 CSV/Markdown 为准）：
 
 - Chapter 3 Route H 已有超过 10,500 km 的图源层证据；混合 cold-start 可复核，但单体 cold-start 仍保留失败证据，不能声称所有路径完全可重建。
-- Chapter 4 的 Fig. 4.2 已完成 PDF 原生图二维数字化并在共同区间通过逐点误差门，但计算分支仍缺论文末端约 0.04945 天。Fig. 4.3–4.6 已修正把历史前缀误作快照面的语义错误，改用 `tau + [0,T0]` 固定时刻全环面；16/16 数值与局部 STM 行通过，16/16 构型到达范围检查也通过，但后者依赖未校准的 `epsilon=4.5e-7`，不是论文级物理验收。当前无配准投影诊断仍有 14/16 面板告警，`paper_projection=not_run`、`paper_3d=false`。Fig. 4.7–4.8 仍保留旧比较语义。Route H 严格扫描的 31 个高振幅成员中只有成员 68 通过近实双曲门控，因此三成员跨振幅升级仍是 boundary。
+- Chapter 4 的 Fig. 4.2 已完成 PDF 原生图二维数字化并在共同区间通过逐点误差门，但计算分支仍缺论文末端约 0.04945 天。Fig. 4.3–4.6 已修正把历史前缀误作快照面的语义错误，改用 `tau + [0,T0]` 固定时刻全环面；16/16 数值与局部 STM 行通过，16/16 构型到达范围检查也通过。论文相机的 PDF 原生静态锚点 16/16 通过，开发集锁定简约 H0 全局 `epsilon=4.90728479699366e-7`；但先提交拟合锁和评估器后首次运行的 panel-(d) 冻结投影门为 0/4，故 `paper_projection=fail`、`paper_3d=false`。部分 epsilon 候选还进入月球实体半径，只能视为点质量 CR3BP 数学流形。Fig. 4.7–4.8 仍保留旧比较语义。Route H 严格扫描的 31 个高振幅成员中只有成员 68 通过近实双曲门控，因此三成员跨振幅升级仍是 boundary。
 - Chapter 5 Fig. 5.13/5.14 的 active-geometry Sun–Earth L1 两频环面、约 7,033 km 近地点和 185 km LEO 端点已通过 CR3BP 目标门；BCR4BP/DE421 按图校正和论文图逐点对照仍未完成。
 
 ## 2. 目标模式的硬目标（当前主线）
+
+2026-07-14 主线切换：下面的 Fig. 5.13/5.14 指标是已完成并保留的历史子目标；当前目标模式重新锁定为“54 图逐图可审计复现”，最近的阻断里程碑是 Chapter 4 Fig. 4.3–4.6。完成不等于 54 个文件存在，而要求：每个数值图都有可重跑脚本、显式参数、CSV/NPZ、图件和边界标签；关键图的状态空间门与论文投影门分开报告；任何已暴露面板只能作为 post-hoc diagnostic，不能重新包装为盲留出验收。
+
+当前 Chapter 4 硬目标为：冻结已有 v1 holdout 及其失败结论；先完成 `C4-HALO-12P40-SOURCE-FALSIFICATION`、quasi-vertical N33→N45/N57 收敛和 renderer/time-mapping 负对照；只有新源模型在预注册的状态空间收敛门下通过，且开发投影比较达到既有 Chamfer/F1/HD95/面积门，才允许更新图级状态。由于论文未公开原始 3D 状态且所有面板已有历史暴露，即使开发投影通过，也必须保留“非独立盲验”的证据边界。
 
 当前主线是 Fig. 5.13/5.14 的 Sun–Earth L1 两频 Lissajous 环面与稳定流形应用。论文目标注册表给出的目标对为：
 
@@ -59,8 +63,8 @@ P2 当前证据：accepted=468 环面上的粗扫和 1° 细化均已保存；9�
 
 - 先运行 `scripts/run_chapter4_real_hyperbolic_scan.py`，用相对虚部 `1e-6`、determinant 误差 `<1e-9`、复数互易误差 `<1e-8` 锁定可用于实特征向量流形的 Route H 成员。
 - 当前扫描结果为 `1/31` 通过，只有成员 68 可重建 DG 和局部不稳定流形；成员 17、32 等旧 CSV 中的复数双曲对已降级为 boundary，不再冒充 real manifold。
-- 原始 Fig. 4.3–4.6 现使用固定时刻全环面快照：quasi-halo 为 `K=4, M=121, N=9`，quasi-vertical 为 `K=4, M=121, N=33`，共享项目可视化参数 `epsilon=4.5e-7`。16/16 行通过快照时间、源残差、DG、Jacobi、局部 STM 一阶一致性和独立重积分门；远场非线性/STM 比值只作诊断。当前构型范围包括 Fig. 4.3 `xmax=1.060688`、Fig. 4.4 `xmin=0.661348`、Fig. 4.5 `xmax=1.195293`、Fig. 4.6 `xmin=0.242478`。该参数不是论文公布值，不能据此声称物理包络等价，投影校准仍未完成。
-- 因此 P3 的阶段结论是“4.3–4.6 数值状态空间与局部 STM 源层已打通，当前构型到达范围通过，但论文投影/物理等价、4.7–4.8 迁移和 Route H 三成员门均未通过”；只有轴刻度/Moon 锁相机后的红面 hold-out 投影门通过，同时 Route H 覆盖至少 3 个跨 2,000 km 且近实双曲门控均通过后，才可升级为完整 Chapter 4 复现。
+- 原始 Fig. 4.3–4.6 现使用固定时刻全环面快照：quasi-halo 为 `K=4, M=121, N=9`，quasi-vertical 为 `K=4, M=121, N=33`，共享锁定的开发参数 `epsilon=4.90728479699366e-7`。16/16 行通过快照时间、源残差、DG、Jacobi、局部 STM 一阶一致性和独立重积分门；远场非线性/STM 比值只作诊断。当前最终构型范围包括 Fig. 4.3 `xmax=1.054154`、Fig. 4.4 `xmin=0.648736`、Fig. 4.5 `xmax=1.199106`、Fig. 4.6 `xmin=0.197812`。静态相机锚点通过 16/16，但冻结 red-surface holdout 为 0/4；这否定的是完整 locked pipeline。明显相机误差已不太可能，但 panel/time 映射、mask/rasterizer、surface renderer 语义仍需负对照。由 `chapter4_fig43_fig44_halo_12p40_posthoc_diagnostic.csv/.npz` 可重算的 post-hoc 消融把 halo 的 12.09 天 N9 源成员指向首要候选根因：固定其它条件换为论文 12.40 天最近的 N21 成员 `12.397983 d` 后，Fig. 4.3 的 F1 从 `0.362` 提升到 `0.668`、面积比从 `0.486` 提升到 `1.107`；quasi-vertical 的 12.66 天 N33 成员选择目前没有被否定。
+- 因此 P3 的阶段结论是“4.3–4.6 数值状态空间与局部 STM 源层已打通，当前构型到达范围通过，但冻结论文投影门明确失败，物理等价、4.7–4.8 迁移和 Route H 三成员门均未通过”。后续禁止依据 panel (d) 回调相机、epsilon、裁剪、渲染器或阈值。按顺序执行：`C4-HALO-12P40-SOURCE-FALSIFICATION`（冻结 `T0=12.397983 d, N=21`）、同一 halo 物理成员的更高 N 状态空间收敛、quasi-vertical 12.66 天成员 N33→N45/N57 收敛、renderer/time-mapping/mask 负对照；已暴露 panel (d) 只作 post-hoc diagnostic。只有新源模型在新的预注册证据链中通过，同时 Route H 覆盖至少 3 个跨 2,000 km 且近实双曲门控均通过后，才可升级为完整 Chapter 4 复现。
 
 ### P4：逐图收尾与最终验收
 
@@ -75,8 +79,8 @@ P4 初始审计检查点（2026-07-14）：
 - Fig. 5.13/5.14 的逐图证据已改为 active-geometry 成员 468、全环面 `129 x 256`、tight stable-manifold `9 x 9` 和 LEO transfer 审计；目标模式的 CR3BP 几何门控通过，但 BCR4BP/DE421 和论文面板逐点对比仍是 boundary。
 - `scripts/run_figure_evidence_gap_audit.py` 进一步给出保守证据分类：`accepted=7`、`boundary=30`、`diagnostic=5`、`proxy=12`，54 行的脚本/数据/PNG/PDF 路径均存在；该表只记录证据缺口，不新增科学主张。
 - Fig. 4.2 已从 PDF 第 103 页 xref 473 无损提取 `1517 x 682` 原生面板：1054 个蓝线像素列、13 个共同区间计算点，覆盖 `89.026651%`，稳定性指数 RMSE `0.371003`、最大绝对误差 `0.510882`，均低于 `+/-1.953125` 数字化不确定度；`full_curve_coverage=false`，尾段缺口 `0.049450` 天保持为 boundary。
-- Fig. 4.3–4.6 的 canonical 行已更新为“固定时刻全环面数值与局部 STM 通过、未校准 epsilon 下构型范围通过、论文投影与物理等价待校准”；16 面板投影诊断保留 14 个告警。Fig. 4.7–4.8 仍是旧比较边界；后续必须先迁移语义，再拟合/锁定论文相机做 projection-space Chamfer/coverage 审计，不能把静态 3D 图称为状态空间逐点数字化。
-- Fig. 4.2 数字化脚本在两个独立 Python 进程中复跑，原生图、标定 CSV、数字化点、逐点对比、摘要、Markdown 和诊断 PNG 的 SHA256 均保持一致；加入 Chapter 4 fixed-time、周期接缝、STM 与 Fig. 5.10 BCR4BP 回归门后，`unittest discover` 42/42、54 图 smoke、目标表 `--check`、投影诊断 `--check` 和 `git diff --check` 均通过。
+- Fig. 4.3–4.6 的 canonical 行已更新为“固定时刻全环面数值与局部 STM 通过、锁定开发 epsilon 下构型范围通过、静态相机锚点通过、冻结 panel-(d) 投影 0/4 失败”；旧 16 面板投影诊断现有 15 个告警，仅作辅助。Fig. 4.7–4.8 仍是旧比较边界；后续先用源成员/N 收敛与 renderer/time-mapping/mask 负对照区分候选根因，再为新模型建立新的预注册证据链，不能把静态 3D 图称为状态空间逐点数字化。
+- Fig. 4.2 数字化脚本在两个独立 Python 进程中复跑，原生图、标定 CSV、数字化点、逐点对比、摘要、Markdown 和诊断 PNG 的 SHA256 均保持一致；加入 Chapter 4 fixed-time、周期接缝、STM、冻结相机漂移拒绝、12.40 天 post-hoc 诊断与 Fig. 5.10 BCR4BP 回归门后，`unittest discover` 63/63、54 图 smoke、目标表 `--check`、冻结协议/epsilon/相机/拟合/holdout/诊断 `--check`、12.40 天诊断 `--check` 和 `git diff --check` 均通过。
 - Fig. 5.10 已新增 DE421 初始化的平面 Earth–Moon BCR4BP 两案例专用审计：项目历元为 `2020-06-15T00:00:00Z`，初始太阳相位 `1.2408947569934152 rad`，并修复太阳角速度归一化中遗漏的 `2*pi`。23 天与 12.4 天案例均通过独立重传播、容差散布、绝对时间分段和月面净空门，最大独立终端误差 `4.819078e-05 km`；错误地把每段时间重置为零会产生至少 `100.774 km` 缺陷，已作为非自治负对照保留。
 - Fig. 5.10 的 BCR4BP 总脉冲分别为 `72.628142 m/s` 与 `89.049947 m/s`，相对论文总量误差为 `-9.7787%` 与 `+2.8290%`。因此数值扩展门为 `2/2`，论文等价门明确为 `0/2`；canonical 论文风格主图仍保留 CR3BP，BCR4BP 轨迹与误差只放入独立诊断 PNG/PDF。论文原案例是自主 CR3BP，历元不适用；`2020-06-15` 只属于项目扩展。
 - 因为仍有 25 个图行带 boundary/open 条件，当前结论是“54/54 工程覆盖 + 可审计 source-layer”，不是完整论文数值等价复现；下一步优先按 `figure_validation_table.csv` 的 `next_action` 消化高影响 boundary。

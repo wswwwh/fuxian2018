@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 import unittest
 from pathlib import Path
 
@@ -14,6 +15,33 @@ DATA = ROOT / "data" / "computed"
 
 
 class Chapter4EpsilonStateSensitivityTests(unittest.TestCase):
+    def test_live_container_drift_preserves_frozen_semantic_inputs(self) -> None:
+        state_path = DATA / "chapter4_fig43_fig46_epsilon_state_sensitivity.npz"
+        configurations = {
+            "halo": DATA / "chapter4_fig43_fig44_global_manifold_audit.npz",
+            "vertical": DATA / "chapter4_fig45_fig48_vertical_manifold_audit.npz",
+        }
+        with np.load(state_path, allow_pickle=False) as frozen:
+            for family, live_path in configurations.items():
+                digest = hashlib.sha256(live_path.read_bytes()).hexdigest().upper()
+                self.assertNotEqual(
+                    digest,
+                    str(frozen[f"{family}_source_npz_sha256"][0]),
+                )
+                with np.load(live_path, allow_pickle=False) as live:
+                    self.assertTrue(
+                        np.array_equal(
+                            frozen[f"{family}_source_states"],
+                            live["plus_x_source_states"],
+                        )
+                    )
+                    self.assertTrue(
+                        np.array_equal(
+                            frozen[f"{family}_perturbation_directions"],
+                            live["plus_x_perturbation_directions"],
+                        )
+                    )
+
     def test_state_sweep_preserves_projection_and_3d_boundaries(self) -> None:
         path = DATA / "chapter4_fig43_fig46_epsilon_state_sensitivity.csv"
         with path.open(newline="", encoding="utf-8") as stream:

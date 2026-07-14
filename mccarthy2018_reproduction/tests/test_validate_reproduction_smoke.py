@@ -84,7 +84,12 @@ class ReproductionSmokeCliTests(unittest.TestCase):
             result.stdout,
         )
         self.assertIn("projection_alerts=", result.stdout)
-        self.assertIn("paper_projection=not_run", result.stdout)
+        self.assertIn("projection_holdout=0/4 paper_projection=fail", result.stdout)
+        self.assertIn(
+            "chapter4_halo_12p40_source_gate=2/2 "
+            "posthoc_projection=0/2 frozen_holdout=fail",
+            result.stdout,
+        )
         self.assertIn(
             "fig510_bcr4bp_numerical=2/2 paper_equivalence=0/2",
             result.stdout,

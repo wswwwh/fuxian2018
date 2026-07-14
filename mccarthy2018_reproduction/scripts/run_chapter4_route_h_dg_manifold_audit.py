@@ -366,11 +366,11 @@ manifold claim.  The regenerated source-layer figure is available as
 `fig_4_route_h` after running `figures/fig_4_route_h_quasi_dro.py`.
 
 Separately, original Figs. 4.3-4.6 have 16/16 project numerical and
-epsilon-dependent configuration-reach rows accepted with proxy-free fixed-time
-propagation. Their local first-order reference uses base-trajectory STMs;
-far-field ratios remain diagnostic. The epsilon value is uncalibrated and the
-16-panel projection audit remains diagnostic-only with paper acceptance not run,
-so these rows do not imply paper physical/3D equivalence. Figs. 4.7-4.8 retain
+configuration-reach rows accepted with proxy-free fixed-time propagation. Their
+local first-order reference uses base-trajectory STMs; far-field ratios remain
+diagnostic. Static camera anchors pass 16/16, but the frozen panel-(d)
+projection holdout fails 0/4, so paper projection and 3D equivalence remain
+false. The locked development epsilon must not be retuned on holdout. Figs. 4.7-4.8 retain
 legacy comparison semantics, and none of this promotes the Route H
 three-member gate beyond its current 1/31 coverage.
 """,

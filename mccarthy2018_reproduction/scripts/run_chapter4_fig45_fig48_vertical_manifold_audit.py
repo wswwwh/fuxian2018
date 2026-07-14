@@ -15,6 +15,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from qp_orbits.constants import SYSTEMS  # noqa: E402
+from qp_orbits.chapter4_reproduction_lock import (  # noqa: E402
+    load_chapter4_reproduction_lock,
+)
 from qp_orbits.cr3bp import integrate_cr3bp, jacobi_constant  # noqa: E402
 from qp_orbits.torus_stability import (  # noqa: E402
     CorrectedTorusManifoldSnapshots,
@@ -25,7 +28,8 @@ from qp_orbits.torus_stability import (  # noqa: E402
 SNAPSHOTS_DAYS = (8.05, 10.08, 11.77, 13.46)
 PHASE_SAMPLES = 121
 EXPECTED_CURVE_SAMPLES = 33
-PERTURBATION_SCALE = 4.5e-7
+REPRODUCTION_LOCK = load_chapter4_reproduction_lock(ROOT)
+PERTURBATION_SCALE = REPRODUCTION_LOCK.epsilon_by_family["vertical"]
 MAX_STEP = 0.01
 
 SNAPSHOT_TIME_ERROR_LIMIT_DAYS = 1.0e-10
@@ -407,15 +411,22 @@ def _branch_metrics(
             "overall_acceptance_scope": (
                 "project_numerical_and_configuration_only"
             ),
-            "paper_projection_acceptance": "not_run",
+            "paper_projection_acceptance": (
+                REPRODUCTION_LOCK.paper_projection_acceptance
+            ),
             "paper_3d_equivalence": "false",
-            "epsilon_selection_status": (
-                "project_visualization_parameter_uncalibrated"
-            ),
+            "epsilon_selection_status": REPRODUCTION_LOCK.epsilon_selection_status,
             "paper_geometry_boundary": (
-                "configuration reach is epsilon-dependent and locked-camera "
-                "projection acceptance is not run; paper 3D equivalence is false"
+                "epsilon and paper camera are development-locked, but the "
+                "programmatic frozen projection holdout passes "
+                f"{REPRODUCTION_LOCK.holdout_passes}/"
+                f"{REPRODUCTION_LOCK.holdout_rows}; "
+                f"paper projection is {REPRODUCTION_LOCK.paper_projection_acceptance} "
+                "and paper 3D equivalence is false"
             ),
+            "projection_fit_lock_sha256": REPRODUCTION_LOCK.fit_lock_sha256,
+            "projection_holdout_sha256": REPRODUCTION_LOCK.holdout_csv_sha256,
+            "projection_holdout_run_id": REPRODUCTION_LOCK.holdout_run_id,
             "acceptance": "pass" if overall_acceptance else "fail",
         }
         rows.append(row)
@@ -544,10 +555,21 @@ def main() -> None:
         batched_independent_error_limit=np.asarray(
             BATCHED_INDEPENDENT_ERROR_LIMIT
         ),
-        paper_projection_acceptance=np.asarray("not_run"),
+        paper_projection_acceptance=np.asarray(
+            REPRODUCTION_LOCK.paper_projection_acceptance
+        ),
         paper_3d_equivalence=np.asarray(False),
         epsilon_selection_status=np.asarray(
-            "project_visualization_parameter_uncalibrated"
+            REPRODUCTION_LOCK.epsilon_selection_status
+        ),
+        projection_fit_lock_sha256=np.asarray(
+            REPRODUCTION_LOCK.fit_lock_sha256
+        ),
+        projection_holdout_sha256=np.asarray(
+            REPRODUCTION_LOCK.holdout_csv_sha256
+        ),
+        projection_holdout_run_id=np.asarray(
+            REPRODUCTION_LOCK.holdout_run_id
         ),
         **archives,
     )
@@ -592,9 +614,10 @@ def main() -> None:
 - Figure 4.5 configuration-reach diagnostic: `{plus_rows[0]['configuration_reach_acceptance']}`
 - Figure 4.6 configuration-reach diagnostic: `{minus_rows[0]['configuration_reach_acceptance']}`
 - Proxy background: `false`
-- Paper projection acceptance: `not_run`
+- Paper projection acceptance: `{REPRODUCTION_LOCK.paper_projection_acceptance}`
 - Paper 3D equivalence: `false`
-- Epsilon selection status: `project_visualization_parameter_uncalibrated`
+- Epsilon selection status: `{REPRODUCTION_LOCK.epsilon_selection_status}`
+- Frozen holdout: `{REPRODUCTION_LOCK.holdout_passes}/{REPRODUCTION_LOCK.holdout_rows}` panels passed (`{REPRODUCTION_LOCK.paper_projection_status}`)
 - Raw audit archive: `data/computed/{archive_path.name}`
 
 Each red surface is the full perturbed torus over one mapping-time phase window
@@ -615,11 +638,11 @@ state error must be <= `{BATCHED_INDEPENDENT_ERROR_LIMIT:.1e}`, with finite arra
 
 The configuration-reach diagnostic requires Figure 4.5's x-max sequence to be
 nondecreasing and end at or beyond `1.15`, while Figure 4.6's x-min sequence
-must be nonincreasing and end at or below `0.30`. This check describes only the
-reach of the project's uncalibrated `epsilon={PERTURBATION_SCALE:.1e}` rendering
-configuration; it is not paper-level physical acceptance. A locked-camera
-projection acceptance audit has not yet been run, so paper-facing 3D equivalence
-is false and epsilon calibration remains pending.
+must be nonincreasing and end at or below `0.30`. Epsilon and the paper camera
+are development-locked, but the separately committed panel-(d) projection
+holdout failed `0/4`. Thus projection acceptance is
+`{REPRODUCTION_LOCK.paper_projection_acceptance}`, paper-facing 3D equivalence
+is false, and the red-surface geometry remains an unresolved reproduction gap.
 
 ## Figure 4.8 follow-up
 

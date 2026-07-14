@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 
+from qp_orbits.chapter4_camera import apply_chapter4_paper_camera
 from qp_orbits.constants import SYSTEMS
 from qp_orbits.libration_points import compute_libration_points
 from qp_orbits.torus_stability import (
@@ -316,21 +317,49 @@ def add_to_earth_arrow(ax, xy=(0.16, 0.14), xytext=(0.34, 0.23), rotation=-25) -
     )
 
 
-def style_manifold_axis(ax, *, direction: str = "plus", compact: bool = False) -> None:
+def style_manifold_axis(
+    ax,
+    *,
+    direction: str = "plus",
+    compact: bool = False,
+    figure_id: str | None = None,
+) -> None:
     if direction == "plus":
         ax.set_xlim(0.78, 1.17)
         ax.set_ylim(-0.15, 0.15)
         ax.set_zlim(-0.12, 0.12)
         ax.view_init(elev=24, azim=-132)
         ax.set_box_aspect((1.15, 1.20, 0.9))
-        add_to_earth_arrow(ax, xy=(0.14, 0.11), xytext=(0.34, 0.20), rotation=-28)
+        if figure_id != "4.5":
+            add_to_earth_arrow(
+                ax,
+                xy=(0.14, 0.11),
+                xytext=(0.34, 0.20),
+                rotation=-28,
+            )
     else:
         ax.set_xlim(0.18, 1.04)
         ax.set_ylim(-0.04, 0.40)
         ax.set_zlim(-0.14, 0.14)
         ax.view_init(elev=20, azim=-52)
         ax.set_box_aspect((1.7, 1.05, 0.75))
-        add_to_earth_arrow(ax, xy=(0.27, 0.71), xytext=(0.41, 0.79), rotation=-24)
+        if figure_id == "4.6":
+            add_to_earth_arrow(
+                ax,
+                xy=(0.92, 0.50),
+                xytext=(0.72, 0.58),
+                rotation=-5,
+            )
+        else:
+            add_to_earth_arrow(
+                ax,
+                xy=(0.27, 0.71),
+                xytext=(0.41, 0.79),
+                rotation=-24,
+            )
+
+    if figure_id is not None:
+        apply_chapter4_paper_camera(ax, figure_id)
 
     if compact:
         ax.tick_params(labelsize=7, pad=-2)

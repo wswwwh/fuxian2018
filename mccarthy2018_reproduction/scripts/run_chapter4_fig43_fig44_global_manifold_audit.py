@@ -14,6 +14,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from qp_orbits.constants import SYSTEMS  # noqa: E402
+from qp_orbits.chapter4_reproduction_lock import (  # noqa: E402
+    load_chapter4_reproduction_lock,
+)
 from qp_orbits.cr3bp import integrate_cr3bp, jacobi_constant  # noqa: E402
 from qp_orbits.torus_stability import (  # noqa: E402
     corrected_l1_constant_energy_halo_unstable_manifold_snapshots,
@@ -30,7 +33,8 @@ SNAPSHOTS_DAYS = (7.79, 9.75, 11.39, 13.02)
 CURVE_SAMPLES = 9
 PHASE_SAMPLES = 121
 HISTORY_SAMPLES = 161
-PERTURBATION_SCALE = 4.5e-7
+REPRODUCTION_LOCK = load_chapter4_reproduction_lock(ROOT)
+PERTURBATION_SCALE = REPRODUCTION_LOCK.epsilon_by_family["halo"]
 MAX_STEP = 0.01
 REPRESENTATIVE_CURVE_INDEX = CURVE_SAMPLES // 2
 
@@ -397,15 +401,22 @@ def main() -> None:
                     "overall_acceptance_scope": (
                         "project_numerical_and_configuration_only"
                     ),
-                    "paper_projection_acceptance": "not_run",
+                    "paper_projection_acceptance": (
+                        REPRODUCTION_LOCK.paper_projection_acceptance
+                    ),
                     "paper_3d_equivalence": False,
-                    "epsilon_selection_status": (
-                        "project_visualization_parameter_uncalibrated"
-                    ),
+                    "epsilon_selection_status": REPRODUCTION_LOCK.epsilon_selection_status,
                     "paper_geometry_boundary": (
-                        "configuration reach is epsilon-dependent and locked-camera "
-                        "projection acceptance is not run; paper 3D equivalence is false"
+                        "epsilon and paper camera are development-locked, but the "
+                        "programmatic frozen projection holdout passes "
+                        f"{REPRODUCTION_LOCK.holdout_passes}/"
+                        f"{REPRODUCTION_LOCK.holdout_rows}; "
+                        f"paper projection is {REPRODUCTION_LOCK.paper_projection_acceptance} "
+                        "and paper 3D equivalence is false"
                     ),
+                    "projection_fit_lock_sha256": REPRODUCTION_LOCK.fit_lock_sha256,
+                    "projection_holdout_sha256": REPRODUCTION_LOCK.holdout_csv_sha256,
+                    "projection_holdout_run_id": REPRODUCTION_LOCK.holdout_run_id,
                     "acceptance": (
                         "pass"
                         if numerical_pass and configuration_reach_pass
@@ -441,6 +452,22 @@ def main() -> None:
         "snapshot_times_days": np.asarray(SNAPSHOTS_DAYS),
         "representative_curve_index": np.asarray([REPRESENTATIVE_CURVE_INDEX]),
         "perturbation_scale": np.asarray([PERTURBATION_SCALE]),
+        "paper_projection_acceptance": np.asarray(
+            [REPRODUCTION_LOCK.paper_projection_acceptance]
+        ),
+        "paper_3d_equivalence": np.asarray([False]),
+        "epsilon_selection_status": np.asarray(
+            [REPRODUCTION_LOCK.epsilon_selection_status]
+        ),
+        "projection_fit_lock_sha256": np.asarray(
+            [REPRODUCTION_LOCK.fit_lock_sha256]
+        ),
+        "projection_holdout_sha256": np.asarray(
+            [REPRODUCTION_LOCK.holdout_csv_sha256]
+        ),
+        "projection_holdout_run_id": np.asarray(
+            [REPRODUCTION_LOCK.holdout_run_id]
+        ),
         "time_unit_days": np.asarray([system.time_unit_days]),
         "snapshot_time_error_limit_days": np.asarray([TIME_ERROR_LIMIT_DAYS]),
         "source_residual_limit": np.asarray([SOURCE_RESIDUAL_LIMIT]),
@@ -570,9 +597,10 @@ def main() -> None:
 - Paper snapshot times: `{SNAPSHOTS_DAYS}` days
 - Internal numerical acceptance: `{'pass' if numerical_pass else 'fail'}`
 - Configuration-reach diagnostic: `{'pass' if configuration_pass else 'fail'}`
-- Paper projection acceptance: `not_run`
+- Paper projection acceptance: `{REPRODUCTION_LOCK.paper_projection_acceptance}`
 - Paper 3D equivalence: `false`
-- Epsilon selection status: `project_visualization_parameter_uncalibrated`
+- Epsilon selection status: `{REPRODUCTION_LOCK.epsilon_selection_status}`
+- Frozen holdout: `{REPRODUCTION_LOCK.holdout_passes}/{REPRODUCTION_LOCK.holdout_rows}` panels passed (`{REPRODUCTION_LOCK.paper_projection_status}`)
 - Proxy background: `false`
 - Machine-readable arrays: `{NPZ_PATH.relative_to(ROOT).as_posix()}`
 
@@ -606,11 +634,11 @@ fixed-time torus window `tau + phase`; the black trajectory history over
 `[0, tau]` is audited separately and its full xyz ranges are retained in the
 CSV and NPZ.
 
-The numerical gates establish a proxy-free corrected-DG propagation. The reach
-checks only describe this project's uncalibrated `epsilon={PERTURBATION_SCALE:.1e}`
-configuration; they are not a paper-level physical acceptance criterion. A
-locked-camera projection-space calibration and epsilon sensitivity audit remain
-pending, so paper projection acceptance is `not_run` and 3D equivalence is false.
+The numerical gates establish a proxy-free corrected-DG propagation. The
+epsilon and paper camera are locked from development panels, but the separately
+committed panel-(d) projection holdout failed `0/4`. Therefore these reach checks
+remain project configuration diagnostics, paper projection acceptance is
+`{REPRODUCTION_LOCK.paper_projection_acceptance}`, and 3D equivalence is false.
 """,
         encoding="utf-8",
     )

@@ -28,6 +28,8 @@ CHAPTER4_FIG42_DIGITIZED_AUDIT = DATA / "chapter4_fig42_digitized_comparison_aud
 CHAPTER4_HALO_FIXED_TIME_AUDIT = DATA / "chapter4_fig43_fig44_global_manifold_audit.csv"
 CHAPTER4_VERTICAL_FIXED_TIME_AUDIT = DATA / "chapter4_fig45_fig48_vertical_manifold_audit.csv"
 CHAPTER4_PROJECTION_DIAGNOSTIC = DATA / "chapter4_fig43_fig46_projection_diagnostic.csv"
+CHAPTER4_PROJECTION_HOLDOUT = DATA / "chapter4_fig43_fig46_projection_holdout_audit.csv"
+CHAPTER4_CAMERA_METRICS = DATA / "chapter4_fig43_fig46_camera_static_metrics.csv"
 CHAPTER5_PER_FIGURE_AUDIT = DATA / "chapter5_per_figure_source_layer_audit.csv"
 CHAPTER3_PERIOD_Q_PER_FIGURE_AUDIT = DATA / "chapter3_period_q_per_figure_audit.csv"
 
@@ -94,6 +96,8 @@ def _route_h_summary() -> dict[str, float | int | str]:
         + _read_csv(CHAPTER4_VERTICAL_FIXED_TIME_AUDIT)
     )
     chapter4_projection_rows = _read_csv(CHAPTER4_PROJECTION_DIAGNOSTIC)
+    chapter4_projection_holdout_rows = _read_csv(CHAPTER4_PROJECTION_HOLDOUT)
+    chapter4_camera_rows = _read_csv(CHAPTER4_CAMERA_METRICS)
     max_row = max(rows, key=lambda row: _as_float(row, "max_abs_z_km"))
     return {
         "rows": len(rows),
@@ -127,6 +131,16 @@ def _route_h_summary() -> dict[str, float | int | str]:
         "chapter4_projection_alerts": sum(
             row.get("failure_items", "none") != "none"
             for row in chapter4_projection_rows
+        ),
+        "chapter4_projection_holdout_rows": len(chapter4_projection_holdout_rows),
+        "chapter4_projection_holdout_passes": sum(
+            row.get("holdout_gate") == "pass"
+            for row in chapter4_projection_holdout_rows
+        ),
+        "chapter4_camera_rows": len(chapter4_camera_rows),
+        "chapter4_camera_passes": sum(
+            row.get("static_camera_gate") == "pass"
+            for row in chapter4_camera_rows
         ),
     }
 
@@ -479,8 +493,8 @@ def _write_proxy_usage_appendix(rows: list[dict[str, str]], summary: dict[str, f
             "- Fig. 3.17: the faint reference trend and digitized trend are not raw branch data.",
             "- Figures 4.3-4.6: corrected tau+[0,T0] fixed-time full-torus surfaces pass",
             f"  {summary['chapter4_numerical_passes']}/{summary['chapter4_fixed_time_rows']} numerical and {summary['chapter4_configuration_passes']}/{summary['chapter4_fixed_time_rows']} epsilon-dependent configuration-reach rows,",
-            f"  while the {summary['chapter4_projection_rows']}-panel projection diagnostic has {summary['chapter4_projection_alerts']} alerts;",
-            "  paper_projection=not_run, paper_3d=false, and epsilon is uncalibrated.",
+            f"  the paper camera passes {summary['chapter4_camera_passes']}/{summary['chapter4_camera_rows']} static-anchor panels, but the frozen projection holdout passes only {summary['chapter4_projection_holdout_passes']}/{summary['chapter4_projection_holdout_rows']};",
+            "  paper_projection=fail and paper_3d=false. The locked development epsilon must not be retuned on panel (d).",
             "  Figures 4.7-4.8 retain the legacy comparison",
             "  boundary. Route H remains separate at 1/31 real-hyperbolic members and its gate fails.",
             "- Chapter 5 source-layer BCR4BP/optimization audits do not replace every",
@@ -542,7 +556,7 @@ Route H is now the current Chapter 3 quasi-DRO source-layer result:
 | Fig. 3.16 / 3.17 Route H source | Route H fixed-time quasi-DRO branch reaches `{_fmt(summary['max_z'])}` km at member `{summary['max_member']}`. | Chapter 3 source gate is passed for the fixed-time quasi-DRO source layer. | Exact thesis equivalence still needs original branch data or author code. |
 | Route H audit quality | max map residual `{_fmt(summary['max_residual'])}`, max curve Jacobi span `{_fmt(summary['max_curve_jacobi_span'])}`, max one-map Jacobi drift `{_fmt(summary['max_one_map_jacobi_drift'])}`. | The promoted source layer is backed by current CSV audit evidence. | Do not reuse rejected Route B/diagnostic rows as accepted source data. |
 | Fig. 3.10 period-q audit | q=2/q=3 are strict single-shoot accepted rows; q=8 is local multiple shooting with unreliable full-period single-shoot closure. | The figure has an explicit period-q audit boundary, not a full original-branch equivalence claim. | Promote q=8 only after robust high-instability closure validation or another accepted audit. |
-| Chapter 4 | Fig. 4.3-4.6 use corrected `tau+[0,T0]` fixed-time full-torus surfaces and pass {summary['chapter4_numerical_passes']}/{summary['chapter4_fixed_time_rows']} numerical plus {summary['chapter4_configuration_passes']}/{summary['chapter4_fixed_time_rows']} epsilon-dependent configuration-reach rows; Fig. 4.7-4.8 retain the legacy comparison boundary. | Projection is `diagnostic_only` with {summary['chapter4_projection_alerts']}/{summary['chapter4_projection_rows']} alerts; `paper_projection=not_run`, `paper_3d=false`, and epsilon is uncalibrated. | Route H remains separate at 1/31 real-hyperbolic members, so its DG/manifold gate fails and the staged goal is unchanged. |
+| Chapter 4 | Fig. 4.3-4.6 use corrected `tau+[0,T0]` fixed-time full-torus surfaces and pass {summary['chapter4_numerical_passes']}/{summary['chapter4_fixed_time_rows']} numerical plus {summary['chapter4_configuration_passes']}/{summary['chapter4_fixed_time_rows']} configuration-reach rows; Fig. 4.7-4.8 retain the legacy comparison boundary. | Static camera anchors pass {summary['chapter4_camera_passes']}/{summary['chapter4_camera_rows']}, but the frozen panel-(d) projection holdout passes only {summary['chapter4_projection_holdout_passes']}/{summary['chapter4_projection_holdout_rows']}; `paper_projection=fail` and `paper_3d=false`. | Test the 12.40-day halo source, vertical N-convergence, and renderer/time-mapping controls; source/DG geometry is a leading candidate, not a unique proven cause. |
 | Chapter 5 | Route H/DE421/BCR4BP/optimization source-layer audits exist. | Application-layer evidence has improved. | Per-figure high-fidelity equivalence still needs endpoint, delta-v, and ephemeris consistency checks where applicable. |
 """,
         encoding="utf-8",
@@ -611,10 +625,12 @@ replacement for raw branch data.
 Chapter 4 Fig. 4.3-4.6 pass
 `{summary['chapter4_numerical_passes']}/{summary['chapter4_fixed_time_rows']}` numerical
 and `{summary['chapter4_configuration_passes']}/{summary['chapter4_fixed_time_rows']}`
-epsilon-dependent configuration-reach checks after the fixed-time full-torus
-semantics correction, but the `{summary['chapter4_projection_rows']}`-panel
-projection comparison is diagnostic only with `{summary['chapter4_projection_alerts']}`
-alerts and epsilon remains uncalibrated. Fig. 4.7-4.8 retain
+configuration-reach checks after the fixed-time full-torus semantics correction.
+Static camera anchors pass `{summary['chapter4_camera_passes']}/{summary['chapter4_camera_rows']}`,
+but the frozen panel-(d) projection holdout passes only
+`{summary['chapter4_projection_holdout_passes']}/{summary['chapter4_projection_holdout_rows']}`;
+paper projection therefore fails and the locked development epsilon cannot be
+retuned on holdout. Fig. 4.7-4.8 retain
 the legacy comparison boundary, while Route H remains a separate failed 1/31
 real-hyperbolic-coverage gate. Chapter 5
 has Route H/DE421/BCR4BP/optimization source-layer audits, but per-original-figure
@@ -814,10 +830,11 @@ and Jacobi drift evidence. Fig. 4.3-4.6 now use `tau+[0,T0]` fixed-time
 full-torus surfaces instead of `surface[:stop]` history prefixes;
 `{summary['chapter4_numerical_passes']}/{summary['chapter4_fixed_time_rows']}`
 numerical and `{summary['chapter4_configuration_passes']}/{summary['chapter4_fixed_time_rows']}`
-epsilon-dependent configuration-reach rows pass. Their
-`{summary['chapter4_projection_rows']}`-panel projection comparison remains
-`diagnostic_only`, with `{summary['chapter4_projection_alerts']}` alerts,
-`paper_projection=not_run`, `paper_3d=false`, and epsilon uncalibrated. Fig. 4.7-4.8 retain the
+configuration-reach rows pass. Static camera anchors pass
+`{summary['chapter4_camera_passes']}/{summary['chapter4_camera_rows']}`, but the
+frozen panel-(d) projection holdout passes only
+`{summary['chapter4_projection_holdout_passes']}/{summary['chapter4_projection_holdout_rows']}`;
+`paper_projection=fail` and `paper_3d=false`. Fig. 4.7-4.8 retain the
 legacy comparison boundary. The Route H quasi-DRO source layer remains separate:
 only 1/31 members are real-hyperbolic, so its gate fails and the staged goal is
 unchanged.
@@ -873,8 +890,8 @@ Do not call this original McCarthy raw branch data.
   comparisons.
 - Fig. 4.2 passes the native-image pointwise gate over 89% of the thesis curve,
   but the final fold tail is still uncovered.
-- Fig. 4.3-4.6 projection evidence is diagnostic only ({summary['chapter4_projection_alerts']}/{summary['chapter4_projection_rows']} alerts), with
-  `paper_projection=not_run`, `paper_3d=false`, and epsilon uncalibrated.
+- Fig. 4.3-4.6 static camera anchors pass {summary['chapter4_camera_passes']}/{summary['chapter4_camera_rows']}, but the frozen projection holdout passes only {summary['chapter4_projection_holdout_passes']}/{summary['chapter4_projection_holdout_rows']};
+  `paper_projection=fail`, `paper_3d=false`, and holdout-driven retuning is forbidden.
 - Route H remains at 1/31 real-hyperbolic members; its DG/manifold gate fails and
   the staged goal is unchanged.
 - Chapter 5 source-layer BCR4BP/optimization audits do not replace every thesis

@@ -76,11 +76,14 @@ For the original L1 manifold figures, Fig. 4.3-4.6 now use corrected
 `surface[:stop]` history prefix. Their dedicated audits pass
 `16/16` numerical rows and
 `16/16` epsilon-dependent
-configuration-reach rows. The `16`-panel projection comparison
-remains `diagnostic_only`, with `14` alerts,
-`paper_projection=not_run`, `paper_3d=false`, and epsilon uncalibrated. Fig. 4.7-4.8 retain the legacy comparison
-boundary. These facts do not promote paper-level 3D equivalence or alter the
-staged-goal decision.
+configuration-reach rows. The paper camera and development epsilon are locked,
+but the frozen panel-(d) projection holdout passes only
+`0/4`, so
+`paper_projection=fail` and
+`paper_3d=false`. The older `16`-
+panel diagnostic has `15` alerts. Fig. 4.7-4.8 retain the legacy
+comparison boundary. These facts do not promote paper-level 3D equivalence or
+alter the staged-goal decision.
 
 The Chapter 4 per-original-figure mapping is recorded in
 `data/computed/chapter4_per_figure_source_layer_audit.csv` and

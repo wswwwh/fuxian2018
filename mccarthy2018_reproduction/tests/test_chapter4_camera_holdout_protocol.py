@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import csv
+import subprocess
+import sys
 import unittest
 from pathlib import Path
 
@@ -11,9 +13,20 @@ ROOT = Path(__file__).resolve().parents[1]
 CSV_PATH = (
     ROOT / "data" / "computed" / "chapter4_fig43_fig46_camera_holdout_protocol.csv"
 )
+CHECK_SCRIPT = ROOT / "scripts" / "register_chapter4_camera_holdout_protocol.py"
 
 
 class Chapter4CameraHoldoutProtocolTests(unittest.TestCase):
+    def test_frozen_protocol_check_uses_pre_fit_source_binding(self) -> None:
+        result = subprocess.run(
+            [sys.executable, str(CHECK_SCRIPT), "--check"],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("source_binding=historical_pre_fit", result.stdout)
+
     def test_protocol_is_explicitly_nonblind_and_projection_is_not_run(self) -> None:
         with CSV_PATH.open(newline="", encoding="utf-8") as stream:
             rows = list(csv.DictReader(stream))

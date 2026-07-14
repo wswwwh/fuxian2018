@@ -298,13 +298,34 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
             "Chapter 4 fixed-time numerical/configuration audit is not 16/16 pass"
         )
     if any(
-        row.get("paper_projection_acceptance") != "not_run"
+        row.get("paper_projection_acceptance") != "fail"
         or row.get("paper_3d_equivalence") != "false"
         or row.get("epsilon_selection_status")
-        != "project_visualization_parameter_uncalibrated"
+        != "development_projection_fit_locked_holdout_failed"
         for row in chapter4_fixed_time_rows
     ):
         raise SmokeFailure("Chapter 4 fixed-time paper boundary is not explicit")
+    fit_lock_path = (
+        project_root
+        / "data"
+        / "computed"
+        / "chapter4_fig43_fig46_projection_fit_lock.json"
+    )
+    holdout_path = (
+        project_root
+        / "data"
+        / "computed"
+        / "chapter4_fig43_fig46_projection_holdout_audit.csv"
+    )
+    fit_lock_hash = sha256(fit_lock_path)
+    holdout_hash = sha256(holdout_path)
+    if any(
+        row.get("projection_fit_lock_sha256") != fit_lock_hash
+        or row.get("projection_holdout_sha256") != holdout_hash
+        or not row.get("projection_holdout_run_id")
+        for row in chapter4_fixed_time_rows
+    ):
+        raise SmokeFailure("Chapter 4 fixed-time projection fingerprints are stale")
 
     chapter4_source_rows = read_csv(
         project_root
@@ -323,10 +344,115 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
     if any(
         row.get("accepted_rows") != "4"
         or row.get("original_replacement_status")
-            != "numerical_fixed_time_manifold_and_configuration_reach_pass_projection_pending_boundary"
+            != "numerical_fixed_time_manifold_and_configuration_reach_pass_projection_holdout_failed_boundary"
         for row in fixed_time_source_rows
     ):
         raise SmokeFailure("Chapter 4 fixed-time per-figure status is inconsistent")
+
+    camera_rows = read_csv(
+        project_root
+        / "data"
+        / "computed"
+        / "chapter4_fig43_fig46_camera_static_metrics.csv",
+        project_root,
+    )
+    if len(camera_rows) != 16 or any(
+        row.get("static_camera_gate") != "pass"
+        or row.get("red_mask_read") != "false"
+        for row in camera_rows
+    ):
+        raise SmokeFailure("Chapter 4 static camera gate is not 16/16 pass")
+    fit_rows = read_csv(
+        project_root
+        / "data"
+        / "computed"
+        / "chapter4_fig43_fig46_projection_fit_metrics.csv",
+        project_root,
+    )
+    if not fit_rows or {row.get("panel_id") for row in fit_rows} != {"a", "b", "c"}:
+        raise SmokeFailure("Chapter 4 projection fit leaked or omitted development panels")
+    if any(
+        row.get("holdout_red_mask_read") != "false"
+        or row.get("paper_projection_acceptance") != "not_run"
+        for row in fit_rows
+    ):
+        raise SmokeFailure("Chapter 4 projection fit boundary regressed")
+    selection_rows = read_csv(
+        project_root
+        / "data"
+        / "computed"
+        / "chapter4_fig43_fig46_epsilon_model_selection.csv",
+        project_root,
+    )
+    selected_models = [row for row in selection_rows if row.get("selected_model") == "true"]
+    if len(selected_models) != 1 or selected_models[0].get("model") != "H0_global":
+        raise SmokeFailure("Chapter 4 epsilon model lock is not the accepted H0")
+    holdout_rows = read_csv(holdout_path, project_root)
+    if len(holdout_rows) != 4 or {row.get("panel_id") for row in holdout_rows} != {"d"}:
+        raise SmokeFailure("Chapter 4 holdout must contain exactly four panel-(d) rows")
+    if any(
+        row.get("holdout_gate") != "fail"
+        or row.get("paper_projection_status") != "paper_projection_holdout_fail"
+        or row.get("paper_3d_equivalence") != "false"
+        or row.get("fit_lock_sha256") != fit_lock_hash
+        for row in holdout_rows
+    ):
+        raise SmokeFailure("Chapter 4 failed frozen holdout boundary regressed")
+    holdout_passes = sum(row.get("holdout_gate") == "pass" for row in holdout_rows)
+
+    halo_posthoc_path = (
+        project_root
+        / "data"
+        / "computed"
+        / "chapter4_fig43_fig44_halo_12p40_posthoc_diagnostic.csv"
+    )
+    halo_posthoc_npz = halo_posthoc_path.with_suffix(".npz")
+    halo_posthoc_generator = (
+        project_root
+        / "scripts"
+        / "run_chapter4_halo_12p40_posthoc_diagnostic.py"
+    )
+    halo_posthoc_rows = read_csv(halo_posthoc_path, project_root)
+    expected_halo_posthoc = {
+        (variant, figure_id)
+        for variant in ("current_n9", "thesis_12p40_n21")
+        for figure_id in ("4.3", "4.4")
+    }
+    if len(halo_posthoc_rows) != 4 or {
+        (row.get("source_variant"), row.get("figure_id"))
+        for row in halo_posthoc_rows
+    } != expected_halo_posthoc:
+        raise SmokeFailure("Chapter 4 halo 12.40-day post-hoc rows are incomplete")
+    if any(
+        row.get("paper_projection_acceptance") != "fail"
+        or row.get("paper_3d_equivalence") != "false"
+        or row.get("source_selection_red_mask_read") != "false"
+        or row.get("fit_lock_sha256") != fit_lock_hash
+        or row.get("holdout_csv_sha256") != holdout_hash
+        or row.get("evidence_npz_sha256") != sha256(halo_posthoc_npz)
+        or row.get("generator_sha256") != sha256(halo_posthoc_generator)
+        for row in halo_posthoc_rows
+    ):
+        raise SmokeFailure("Chapter 4 halo post-hoc evidence boundary or hash regressed")
+    halo_candidate_rows = [
+        row
+        for row in halo_posthoc_rows
+        if row.get("source_variant") == "thesis_12p40_n21"
+    ]
+    halo_source_gate_passes = sum(
+        abs(float(row["source_period_days"]) - 12.40) <= 0.005
+        and abs(float(row["source_ay_km"]) - 41815.0) <= 50.0
+        and abs(float(row["source_az_km"]) - 35783.0) <= 50.0
+        and float(row["source_curve_residual"]) <= 1.0e-9
+        and float(row["dg_determinant_error_from_one"]) <= 5.0e-9
+        and float(row["source_jacobi_span"]) <= 1.0e-6
+        and float(row["manifold_jacobi_drift_max"]) <= 1.0e-10
+        for row in halo_candidate_rows
+    )
+    halo_posthoc_projection_passes = sum(
+        row.get("posthoc_projection_gate") == "pass"
+        for row in halo_candidate_rows
+    )
 
     projection_rows = read_csv(
         project_root
@@ -484,6 +610,12 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
         "chapter4_fixed_time_rows": len(chapter4_fixed_time_rows),
         "chapter4_projection_rows": len(projection_rows),
         "chapter4_projection_alerts": projection_alerts,
+        "chapter4_camera_rows": len(camera_rows),
+        "chapter4_holdout_rows": len(holdout_rows),
+        "chapter4_holdout_passes": holdout_passes,
+        "chapter4_halo_posthoc_rows": len(halo_candidate_rows),
+        "chapter4_halo_source_gate_passes": halo_source_gate_passes,
+        "chapter4_halo_posthoc_projection_passes": halo_posthoc_projection_passes,
         "fig510_bcr4bp_numerical": sum(
             row["numerical_acceptance"] == "true" for row in fig510_rows
         ),
@@ -547,7 +679,17 @@ def main() -> int:
         f"chapter4_fixed_time={summary['chapter4_fixed_time_rows']}/16 "
         f"projection_diagnostic_rows={summary['chapter4_projection_rows']} "
         f"projection_alerts={summary['chapter4_projection_alerts']} "
-        "paper_projection=not_run"
+        f"static_camera={summary['chapter4_camera_rows']}/16 "
+        f"projection_holdout={summary['chapter4_holdout_passes']}/"
+        f"{summary['chapter4_holdout_rows']} paper_projection=fail"
+    )
+    print(
+        "chapter4_halo_12p40_source_gate="
+        f"{summary['chapter4_halo_source_gate_passes']}/"
+        f"{summary['chapter4_halo_posthoc_rows']} "
+        "posthoc_projection="
+        f"{summary['chapter4_halo_posthoc_projection_passes']}/"
+        f"{summary['chapter4_halo_posthoc_rows']} frozen_holdout=fail"
     )
     print(
         f"fig510_bcr4bp_numerical={summary['fig510_bcr4bp_numerical']}/2 "

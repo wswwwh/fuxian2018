@@ -12,6 +12,7 @@ from _chapter4_plotting import (
     style_manifold_axis,
 )
 from qp_orbits.constants import SYSTEMS
+from qp_orbits.chapter4_reproduction_lock import load_chapter4_reproduction_lock
 from qp_orbits.plot_style import apply_style, save_figure
 from qp_orbits.torus_stability import (
     corrected_l1_constant_energy_vertical_unstable_manifold_snapshots,
@@ -30,6 +31,7 @@ NOTES = "Fixed-time full-torus JC=3.1389 DG unstable snapshots at the four paper
 def main() -> None:
     apply_style()
     system = SYSTEMS["earth_moon"]
+    reproduction_lock = load_chapter4_reproduction_lock(PROJECT_ROOT)
     snapshot_days = [8.05, 10.08, 11.77, 13.46]
     (
         corrected_branch,
@@ -37,6 +39,7 @@ def main() -> None:
     ) = corrected_l1_constant_energy_vertical_unstable_manifold_snapshots(
         system.mu,
         time_unit_days=system.time_unit_days,
+        perturbation_scale=reproduction_lock.epsilon_by_family["vertical"],
     )
     update_chapter4_manifold_validation(
         PROJECT_ROOT,
@@ -50,17 +53,22 @@ def main() -> None:
                 source_curve="JC=3.1389 quasi-vertical staged endpoint",
                 uses_proxy_background=False,
                 validation_status="fixed-time full-torus snapshots generated; dedicated audit owns acceptance",
-                next_action="Run the dedicated numerical/configuration audit, then calibrate the paper camera",
+                next_action="Keep the 12.66-day source fixed and run N33-to-N45/N57 direction/sheet convergence and renderer controls",
             )
         ],
     )
-    fig = plt.figure(figsize=(8.2, 7.5), constrained_layout=True)
+    fig = plt.figure(figsize=(8.91, 7.33), constrained_layout=True)
     for idx, elapsed_days in enumerate(snapshot_days, start=1):
         ax = fig.add_subplot(2, 2, idx, projection="3d")
         plot_fixed_time_base_torus(ax, corrected_branch)
         plot_fixed_time_manifold_snapshot(ax, corrected_branch, elapsed_days=elapsed_days)
-        add_earth_moon_labels(ax)
-        style_manifold_axis(ax, direction="plus", compact=True)
+        add_earth_moon_labels(ax, include_l1=False)
+        style_manifold_axis(
+            ax,
+            direction="plus",
+            compact=True,
+            figure_id=FIGURE_ID,
+        )
         ax.text2D(0.47, -0.10, f"({chr(96 + idx)})", transform=ax.transAxes, fontsize=12)
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)

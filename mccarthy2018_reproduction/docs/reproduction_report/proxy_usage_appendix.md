@@ -51,8 +51,8 @@ comparison, and several Chapter 4/5 figures retain proxy or source-layer status.
 - Fig. 3.17: the faint reference trend and digitized trend are not raw branch data.
 - Figures 4.3-4.6: corrected tau+[0,T0] fixed-time full-torus surfaces pass
   16/16 numerical and 16/16 epsilon-dependent configuration-reach rows,
-  while the 16-panel projection diagnostic has 14 alerts;
-  paper_projection=not_run, paper_3d=false, and epsilon is uncalibrated.
+  the paper camera passes 16/16 static-anchor panels, but the frozen projection holdout passes only 0/4;
+  paper_projection=fail and paper_3d=false. The locked development epsilon must not be retuned on panel (d).
   Figures 4.7-4.8 retain the legacy comparison
   boundary. Route H remains separate at 1/31 real-hyperbolic members and its gate fails.
 - Chapter 5 source-layer BCR4BP/optimization audits do not replace every

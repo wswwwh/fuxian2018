@@ -34,10 +34,12 @@ replacement for raw branch data.
 Chapter 4 Fig. 4.3-4.6 pass
 `16/16` numerical
 and `16/16`
-epsilon-dependent configuration-reach checks after the fixed-time full-torus
-semantics correction, but the `16`-panel
-projection comparison is diagnostic only with `14`
-alerts and epsilon remains uncalibrated. Fig. 4.7-4.8 retain
+configuration-reach checks after the fixed-time full-torus semantics correction.
+Static camera anchors pass `16/16`,
+but the frozen panel-(d) projection holdout passes only
+`0/4`;
+paper projection therefore fails and the locked development epsilon cannot be
+retuned on holdout. Fig. 4.7-4.8 retain
 the legacy comparison boundary, while Route H remains a separate failed 1/31
 real-hyperbolic-coverage gate. Chapter 5
 has Route H/DE421/BCR4BP/optimization source-layer audits, but per-original-figure

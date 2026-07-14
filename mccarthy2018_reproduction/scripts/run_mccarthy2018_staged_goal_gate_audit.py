@@ -17,10 +17,19 @@ import numpy as np
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = PROJECT_ROOT / "scripts"
+SRC = PROJECT_ROOT / "src"
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
+if str(SRC) not in sys.path:
+    sys.path.insert(0, str(SRC))
 
 import run_chapter3_integrated_breakthrough as campaign
+from qp_orbits.chapter4_reproduction_lock import (  # noqa: E402
+    load_chapter4_reproduction_lock,
+)
+
+
+CHAPTER4_REPRODUCTION_LOCK = load_chapter4_reproduction_lock(PROJECT_ROOT)
 
 OUTPUT = PROJECT_ROOT / "data" / "computed" / "mccarthy2018_staged_goal_gate_status.csv"
 DOC_OUTPUT = PROJECT_ROOT / "docs" / "mccarthy2018_staged_goal_gate_status.md"
@@ -243,6 +252,8 @@ def _build_rows() -> list[dict[str, Any]]:
         row.get("failure_items", "none") != "none"
         for row in chapter4_projection_rows
     )
+    chapter4_projection_holdout_passes = CHAPTER4_REPRODUCTION_LOCK.holdout_passes
+    chapter4_projection_holdout_count = CHAPTER4_REPRODUCTION_LOCK.holdout_rows
     chapter5_audit = _read_rows(chapter5_audit_path)
     chapter5_readiness = _read_rows(chapter5_readiness_path)
     chapter5_l1_long_prop = _read_rows(chapter5_l1_long_prop_path)
@@ -829,10 +840,10 @@ def _build_rows() -> list[dict[str, Any]]:
                 else ("regenerate_chapter4_from_route_h_source" if chapter3_reproducible else "do_not_regenerate_chapter4_manifolds")
             ),
             notes=(
-                f"Route H accepted quasi-DRO corrections now have a regenerated Chapter 4 source-layer DG/manifold figure. Independently, Fig. 4.3-4.6 use corrected tau+[0,T0] fixed-time full-torus snapshots with {chapter4_fixed_time_numerical_passes}/{len(chapter4_fixed_time_rows)} numerical rows and {chapter4_fixed_time_configuration_passes}/{len(chapter4_fixed_time_rows)} epsilon-dependent configuration-reach rows passing; projection remains diagnostic_only with {chapter4_projection_alerts}/{len(chapter4_projection_rows)} alerts, paper_projection=not_run, paper_3d=false, and epsilon is uncalibrated. Fig. 4.7-4.8 retain the legacy comparison boundary."
+                f"Route H accepted quasi-DRO corrections now have a regenerated Chapter 4 source-layer DG/manifold figure. Independently, Fig. 4.3-4.6 use corrected tau+[0,T0] fixed-time full-torus snapshots with {chapter4_fixed_time_numerical_passes}/{len(chapter4_fixed_time_rows)} numerical rows and {chapter4_fixed_time_configuration_passes}/{len(chapter4_fixed_time_rows)} configuration-reach rows passing; the camera and development epsilon are locked, but the frozen projection holdout passes only {chapter4_projection_holdout_passes}/{chapter4_projection_holdout_count}, so paper_projection={CHAPTER4_REPRODUCTION_LOCK.paper_projection_acceptance} and paper_3d=false. The legacy diagnostic has {chapter4_projection_alerts}/{len(chapter4_projection_rows)} alerts. Fig. 4.7-4.8 retain the legacy comparison boundary."
                 if chapter4_route_h_figure_passes
                 else
-                f"Route H accepted quasi-DRO corrections now pass the Chapter 4 DG compatibility and local manifold probe layer. Independently, Fig. 4.3-4.6 use corrected tau+[0,T0] fixed-time full-torus snapshots with {chapter4_fixed_time_numerical_passes}/{len(chapter4_fixed_time_rows)} numerical rows and {chapter4_fixed_time_configuration_passes}/{len(chapter4_fixed_time_rows)} epsilon-dependent configuration-reach rows passing; projection remains diagnostic_only with {chapter4_projection_alerts}/{len(chapter4_projection_rows)} alerts, paper_projection=not_run, paper_3d=false, and epsilon is uncalibrated. Fig. 4.7-4.8 retain the legacy comparison boundary."
+                f"Route H accepted quasi-DRO corrections now pass the Chapter 4 DG compatibility and local manifold probe layer. Independently, Fig. 4.3-4.6 use corrected tau+[0,T0] fixed-time full-torus snapshots with {chapter4_fixed_time_numerical_passes}/{len(chapter4_fixed_time_rows)} numerical rows and {chapter4_fixed_time_configuration_passes}/{len(chapter4_fixed_time_rows)} configuration-reach rows passing; the camera and development epsilon are locked, but the frozen projection holdout passes only {chapter4_projection_holdout_passes}/{chapter4_projection_holdout_count}, so paper_projection={CHAPTER4_REPRODUCTION_LOCK.paper_projection_acceptance} and paper_3d=false. The legacy diagnostic has {chapter4_projection_alerts}/{len(chapter4_projection_rows)} alerts. Fig. 4.7-4.8 retain the legacy comparison boundary."
                 if chapter4_route_h_dg_passes
                 else "The historical Route H artifact passes amplitude gates but cannot be cold-started from current code, so Chapter 4 remains gated on source reproducibility."
                 if chapter3_passes and not chapter3_reproducible
@@ -1256,6 +1267,8 @@ def _write_doc(rows: list[dict[str, Any]]) -> None:
     projection_alerts = sum(
         row.get("failure_items", "none") != "none" for row in projection_rows
     )
+    projection_holdout_passes = CHAPTER4_REPRODUCTION_LOCK.holdout_passes
+    projection_holdout_count = CHAPTER4_REPRODUCTION_LOCK.holdout_rows
     by_gate = {row["gate_id"]: row for row in rows}
     c3 = by_gate["C3-FIGURE-SOURCE-FRONTIER"]
     experimental = by_gate["C3-EXPERIMENTAL-FRONTIER"]
@@ -1349,11 +1362,14 @@ For the original L1 manifold figures, Fig. 4.3-4.6 now use corrected
 `surface[:stop]` history prefix. Their dedicated audits pass
 `{fixed_time_numerical_passes}/{len(fixed_time_rows)}` numerical rows and
 `{fixed_time_configuration_passes}/{len(fixed_time_rows)}` epsilon-dependent
-configuration-reach rows. The `{len(projection_rows)}`-panel projection comparison
-remains `diagnostic_only`, with `{projection_alerts}` alerts,
-`paper_projection=not_run`, `paper_3d=false`, and epsilon uncalibrated. Fig. 4.7-4.8 retain the legacy comparison
-boundary. These facts do not promote paper-level 3D equivalence or alter the
-staged-goal decision.
+configuration-reach rows. The paper camera and development epsilon are locked,
+but the frozen panel-(d) projection holdout passes only
+`{projection_holdout_passes}/{projection_holdout_count}`, so
+`paper_projection={CHAPTER4_REPRODUCTION_LOCK.paper_projection_acceptance}` and
+`paper_3d=false`. The older `{len(projection_rows)}`-
+panel diagnostic has `{projection_alerts}` alerts. Fig. 4.7-4.8 retain the legacy
+comparison boundary. These facts do not promote paper-level 3D equivalence or
+alter the staged-goal decision.
 
 The Chapter 4 per-original-figure mapping is recorded in
 `data/computed/chapter4_per_figure_source_layer_audit.csv` and

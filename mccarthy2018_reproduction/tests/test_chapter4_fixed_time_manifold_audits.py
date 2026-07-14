@@ -26,7 +26,7 @@ class FixedTimeManifoldAuditTests(unittest.TestCase):
         self.assertTrue(all(row["acceptance"] == "pass" for row in rows))
         self.assertTrue(all(int(row["phase_samples"]) >= 121 for row in rows))
         self.assertTrue(all(int(row["curve_samples"]) == 9 for row in rows))
-        self.assertTrue(all(row["paper_projection_acceptance"] == "not_run" for row in rows))
+        self.assertTrue(all(row["paper_projection_acceptance"] == "fail" for row in rows))
         self.assertTrue(all(row["paper_3d_equivalence"] == "false" for row in rows))
         self.assertTrue(all(row["numerical_acceptance"] == "pass" for row in rows))
         self.assertTrue(
@@ -47,11 +47,16 @@ class FixedTimeManifoldAuditTests(unittest.TestCase):
         self.assertTrue(
             all(
                 row["epsilon_selection_status"]
-                == "project_visualization_parameter_uncalibrated"
+                == "development_projection_fit_locked_holdout_failed"
                 for row in rows
             )
         )
-        self.assertEqual({float(row["perturbation_scale"]) for row in rows}, {4.5e-7})
+        self.assertEqual(
+            {float(row["perturbation_scale"]) for row in rows},
+            {4.90728479699366e-7},
+        )
+        self.assertTrue(all(row["projection_fit_lock_sha256"] for row in rows))
+        self.assertTrue(all(row["projection_holdout_run_id"] for row in rows))
         plus = [row for row in rows if row["figure_id"] == "4.3"]
         minus = [row for row in rows if row["figure_id"] == "4.4"]
         self.assertGreaterEqual(float(plus[-1]["surface_x_max"]), 1.02)
@@ -83,7 +88,7 @@ class FixedTimeManifoldAuditTests(unittest.TestCase):
         self.assertTrue(all(row["acceptance"] == "pass" for row in rows))
         self.assertTrue(all(int(row["phase_samples"]) >= 121 for row in rows))
         self.assertTrue(all(int(row["curve_samples"]) == 33 for row in rows))
-        self.assertTrue(all(row["paper_projection_acceptance"] == "not_run" for row in rows))
+        self.assertTrue(all(row["paper_projection_acceptance"] == "fail" for row in rows))
         self.assertTrue(all(row["paper_3d_equivalence"] == "false" for row in rows))
         self.assertTrue(all(row["numerical_acceptance"] == "pass" for row in rows))
         self.assertTrue(
@@ -104,11 +109,16 @@ class FixedTimeManifoldAuditTests(unittest.TestCase):
         self.assertTrue(
             all(
                 row["epsilon_selection_status"]
-                == "project_visualization_parameter_uncalibrated"
+                == "development_projection_fit_locked_holdout_failed"
                 for row in rows
             )
         )
-        self.assertEqual({float(row["perturbation_scale"]) for row in rows}, {4.5e-7})
+        self.assertEqual(
+            {float(row["perturbation_scale"]) for row in rows},
+            {4.90728479699366e-7},
+        )
+        self.assertTrue(all(row["projection_fit_lock_sha256"] for row in rows))
+        self.assertTrue(all(row["projection_holdout_run_id"] for row in rows))
         plus = [row for row in rows if row["figure_id"] == "4.5"]
         minus = [row for row in rows if row["figure_id"] == "4.6"]
         self.assertGreaterEqual(float(plus[-1]["snapshot_x_max"]), 1.15)

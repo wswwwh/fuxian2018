@@ -88,10 +88,11 @@ and Jacobi drift evidence. Fig. 4.3-4.6 now use `tau+[0,T0]` fixed-time
 full-torus surfaces instead of `surface[:stop]` history prefixes;
 `16/16`
 numerical and `16/16`
-epsilon-dependent configuration-reach rows pass. Their
-`16`-panel projection comparison remains
-`diagnostic_only`, with `14` alerts,
-`paper_projection=not_run`, `paper_3d=false`, and epsilon uncalibrated. Fig. 4.7-4.8 retain the
+configuration-reach rows pass. Static camera anchors pass
+`16/16`, but the
+frozen panel-(d) projection holdout passes only
+`0/4`;
+`paper_projection=fail` and `paper_3d=false`. Fig. 4.7-4.8 retain the
 legacy comparison boundary. The Route H quasi-DRO source layer remains separate:
 only 1/31 members are real-hyperbolic, so its gate fails and the staged goal is
 unchanged.

@@ -36,8 +36,8 @@ Do not call this original McCarthy raw branch data.
   comparisons.
 - Fig. 4.2 passes the native-image pointwise gate over 89% of the thesis curve,
   but the final fold tail is still uncovered.
-- Fig. 4.3-4.6 projection evidence is diagnostic only (14/16 alerts), with
-  `paper_projection=not_run`, `paper_3d=false`, and epsilon uncalibrated.
+- Fig. 4.3-4.6 static camera anchors pass 16/16, but the frozen projection holdout passes only 0/4;
+  `paper_projection=fail`, `paper_3d=false`, and holdout-driven retuning is forbidden.
 - Route H remains at 1/31 real-hyperbolic members; its DG/manifold gate fails and
   the staged goal is unchanged.
 - Chapter 5 source-layer BCR4BP/optimization audits do not replace every thesis

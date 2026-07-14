@@ -2,26 +2,27 @@
 
 - Audited panel rows: `8`
 - Accepted panel rows: `8`
-- Configuration: `K=4`, `M=121`, `N=9`, shared `epsilon=4.5e-07`
+- Configuration: `K=4`, `M=121`, `N=9`, shared `epsilon=4.9e-07`
 - Paper snapshot times: `(7.79, 9.75, 11.39, 13.02)` days
 - Internal numerical acceptance: `pass`
 - Configuration-reach diagnostic: `pass`
-- Paper projection acceptance: `not_run`
+- Paper projection acceptance: `fail`
 - Paper 3D equivalence: `false`
-- Epsilon selection status: `project_visualization_parameter_uncalibrated`
+- Epsilon selection status: `development_projection_fit_locked_holdout_failed`
+- Frozen holdout: `0/4` panels passed (`paper_projection_holdout_fail`)
 - Proxy background: `false`
 - Machine-readable arrays: `data/computed/chapter4_fig43_fig44_global_manifold_audit.npz`
 
 | Figure | day | fixed-time surface x | fixed-time surface y | fixed-time surface z | nonlinear/STM ratio | independent error | numerical | configuration reach |
 |---|---:|---:|---:|---:|---:|---:|---|---|
-| 4.3 | 7.79 | [0.823127, 0.875818] | [-0.097938, 0.098215] | [-0.082455, 0.068936] | 1.004868 | 1.490e-12 | pass | pass |
-| 4.3 | 9.75 | [0.823141, 0.913998] | [-0.097913, 0.095499] | [-0.082458, 0.068927] | 1.030609 | 7.077e-12 | pass | pass |
-| 4.3 | 11.39 | [0.823130, 1.043072] | [-0.097928, 0.080188] | [-0.082443, 0.068916] | 1.169812 | 4.134e-10 | pass | pass |
-| 4.3 | 13.02 | [0.823127, 1.060688] | [-0.097936, 0.117241] | [-0.082448, 0.060796] | 1.116259 | 4.309e-10 | pass | pass |
-| 4.4 | 7.79 | [0.811947, 0.875515] | [-0.097494, 0.098250] | [-0.083922, 0.069006] | 0.995633 | 9.589e-14 | pass | pass |
-| 4.4 | 9.75 | [0.810774, 0.875515] | [-0.097464, 0.124047] | [-0.083941, 0.069003] | 0.980968 | 2.272e-13 | pass | pass |
-| 4.4 | 11.39 | [0.773048, 0.875514] | [-0.097488, 0.138171] | [-0.083937, 0.068983] | 0.945160 | 4.324e-13 | pass | pass |
-| 4.4 | 13.02 | [0.661348, 0.874690] | [-0.097494, 0.171043] | [-0.083929, 0.088794] | 0.881070 | 5.641e-13 | pass | pass |
+| 4.3 | 7.79 | [0.823529, 0.875835] | [-0.097958, 0.098213] | [-0.082389, 0.068932] | 1.005338 | 6.437e-13 | pass | pass |
+| 4.3 | 9.75 | [0.823530, 0.920690] | [-0.097933, 0.095497] | [-0.082388, 0.068923] | 1.034635 | 3.266e-12 | pass | pass |
+| 4.3 | 11.39 | [0.823525, 1.040115] | [-0.097948, 0.078819] | [-0.082372, 0.068913] | 1.173203 | 2.020e-10 | pass | pass |
+| 4.3 | 13.02 | [0.823526, 1.054154] | [-0.097956, 0.118283] | [-0.082384, 0.060787] | 1.108172 | 1.741e-10 | pass | pass |
+| 4.4 | 7.79 | [0.811252, 0.875506] | [-0.097474, 0.098251] | [-0.083990, 0.069010] | 0.995259 | 2.305e-13 | pass | pass |
+| 4.4 | 9.75 | [0.807129, 0.875506] | [-0.097444, 0.126390] | [-0.084006, 0.069006] | 0.979540 | 5.348e-13 | pass | pass |
+| 4.4 | 11.39 | [0.765988, 0.875504] | [-0.097468, 0.144176] | [-0.084005, 0.068986] | 0.941845 | 9.941e-13 | pass | pass |
+| 4.4 | 13.02 | [0.648736, 0.874667] | [-0.097474, 0.183115] | [-0.083997, 0.088509] | 0.875445 | 1.256e-12 | pass | pass |
 
 ## Numerical gates
 
@@ -49,8 +50,8 @@ fixed-time torus window `tau + phase`; the black trajectory history over
 `[0, tau]` is audited separately and its full xyz ranges are retained in the
 CSV and NPZ.
 
-The numerical gates establish a proxy-free corrected-DG propagation. The reach
-checks only describe this project's uncalibrated `epsilon=4.5e-07`
-configuration; they are not a paper-level physical acceptance criterion. A
-locked-camera projection-space calibration and epsilon sensitivity audit remain
-pending, so paper projection acceptance is `not_run` and 3D equivalence is false.
+The numerical gates establish a proxy-free corrected-DG propagation. The
+epsilon and paper camera are locked from development panels, but the separately
+committed panel-(d) projection holdout failed `0/4`. Therefore these reach checks
+remain project configuration diagnostics, paper projection acceptance is
+`fail`, and 3D equivalence is false.
