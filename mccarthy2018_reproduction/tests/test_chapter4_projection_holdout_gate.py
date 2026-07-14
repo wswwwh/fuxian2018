@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import importlib.util
+import csv
 from pathlib import Path
 import unittest
+
+import numpy as np
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -49,6 +52,39 @@ class Chapter4ProjectionHoldoutGateTests(unittest.TestCase):
             "area_ratio_gt_1.50",
             MODULE._holdout_failures(baseline, anchor_rmse=0.0, anchor_max=0.0),
         )
+
+    def test_frozen_holdout_failure_is_preserved_without_3d_claim(self) -> None:
+        path = (
+            ROOT
+            / "data"
+            / "computed"
+            / "chapter4_fig43_fig46_projection_holdout_audit.csv"
+        )
+        with path.open(newline="", encoding="utf-8") as stream:
+            rows = list(csv.DictReader(stream))
+        self.assertEqual(len(rows), 4)
+        self.assertEqual({row["panel_id"] for row in rows}, {"d"})
+        self.assertTrue(all(row["holdout_gate"] == "fail" for row in rows))
+        self.assertTrue(
+            all(row["paper_projection_status"] == "paper_projection_holdout_fail" for row in rows)
+        )
+        self.assertTrue(all(row["paper_3d_equivalence"] == "false" for row in rows))
+        self.assertEqual(
+            {row["fit_lock_commit"] for row in rows},
+            {"cef2cae46d37973cddc947cc1a668beabf2cb2c4"},
+        )
+        with np.load(
+            ROOT
+            / "data"
+            / "computed"
+            / "chapter4_fig43_fig46_projection_holdout_audit.npz",
+            allow_pickle=False,
+        ) as evidence:
+            self.assertEqual(
+                str(evidence["chapter4_projection_holdout_gate"][0]),
+                "fail",
+            )
+            self.assertFalse(bool(evidence["paper_3d_equivalence"][0]))
 
 
 if __name__ == "__main__":
