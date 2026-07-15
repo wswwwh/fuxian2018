@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "figures": 54,
+  "original_assets": 54,
+  "reproduction_assets": 54,
+  "original_unique_hashes": 54,
+  "reproduction_unique_hashes": 54,
+  "review_rows": 0,
+  "visual_review": true,
+  "issues": []
+}

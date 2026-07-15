@@ -40,3 +40,32 @@ D:\miniconda3\envs\cislunar\python.exe scripts\validate_reproduction_smoke.py
 - 【待核实】作者、单位、导师、基金和投稿信息。
 - 【待核实】原文未公开的完整初始状态、连续分支节点、相位、流形分支和优化约束。
 - 【待核实】阶段 C 尚未逐条绑定的模型、坐标系、数值方法和差异原因。
+
+## 2026-07-15 — 阶段 B：原图与复现图资产整理
+
+- 状态：`PASS`。
+- 原论文图：54/54；从 137 页主 PDF 以 `zoom=4.2` 重新渲染/裁切，名义分辨率 302.4 dpi；54 个唯一 SHA-256。
+- 复现图：54/54；从当前脚本生成的非空 PNG/PDF 权威输出做哈希保持复制，54 个唯一 SHA-256。
+- 真实性说明：阶段 B 的 `reexported_in_report_build=False`；没有重新计算 54 个数值任务，也没有覆盖 `outputs/figures_*`。
+- 质量：原图 54/54 通过 `>=800×300 px`；复现图 54/54 通过 `>=1000×600 px`；缺失、空图、重复哈希和命名错误均为 0。
+- 体量：原图 16,293,245 bytes；复现图 16,954,537 bytes。
+- 人工接触表复核：54 对标签与图号一致；未发现错章、错号、正文误裁或漏掉整组子图。明显视觉差异保留为阶段 C-D 科学差异，不作为映射错误消除。
+
+### 构建命令
+
+```powershell
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\extract_mccarthy_figures.py
+
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\collect_reproduction_figures.py
+
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\validate_report_assets.py
+```
+
+### 验证结果
+
+- `original_figures=54 unique_hashes=54 quality={'pass': 54}`。
+- `reproduction_figures=54 unique_hashes=54 quality={'pass': 54} reexported=0`。
+- `stage_b=PASS figures=54 original_unique=54 reproduction_unique=54 review=0`。
