@@ -1,0 +1,22 @@
+{
+  "status": "PASS_WITH_TRACKED_PENDING",
+  "figures": 54,
+  "metrics": 238,
+  "core_figures": 28,
+  "core_numeric_missing": [],
+  "essential_failures": [],
+  "evidence_missing": [],
+  "pending_items": 60,
+  "grade_counts": {
+    "A": 7,
+    "B": 30,
+    "C": 5,
+    "D": 12
+  },
+  "evidence_counts": {
+    "accepted": 7,
+    "boundary": 30,
+    "diagnostic": 5,
+    "proxy": 12
+  }
+}

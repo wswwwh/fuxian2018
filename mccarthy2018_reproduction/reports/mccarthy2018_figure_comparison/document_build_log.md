@@ -69,3 +69,27 @@ D:\miniconda3\envs\cislunar\python.exe `
 - `original_figures=54 unique_hashes=54 quality={'pass': 54}`。
 - `reproduction_figures=54 unique_hashes=54 quality={'pass': 54} reexported=0`。
 - `stage_b=PASS figures=54 original_unique=54 reproduction_unique=54 review=0`。
+
+## 2026-07-15 — 阶段 C：定量证据整理
+
+- 状态：`PASS_WITH_TRACKED_PENDING`。
+- 54/54 图均绑定研究对象、模型、坐标系、主要参数、数值方法、脚本、数据源、证据状态、A-E 等级、差异、原因和限制。
+- 等级统计：A=7、B=30、C=5、D=12、E=0。A 级只代表当前项目门槛内定量通过，不等于论文原作者节点逐点等价。
+- 权威证据状态：accepted=7、boundary=30、diagnostic=5、proxy=12。
+- 定量注册表：238 行；28 张优先核心数值图均至少 2 条记录，并至少包含 1 条当前项目数值。
+- CSV 直接范围使用当前文件 min/max，不外推；原论文未报告的残差、Jacobi 漂移、闭合误差等明确标记为“原论文未报告（本项目验证指标）”。
+- 边界复核：q=8 单步闭合误差 3.906984451743337；Route H monolithic cold-start=fail；Chapter 4 frozen holdout=0/4；Fig. 5.10 paper_equivalence=0/2；Fig. 5.12 只覆盖 -24..+11 h。
+- 【待核实】字段：60 条，其中 54 条为阶段 D 尚未生成的 comparison asset，6 条为任务几何/星历图的统一坐标元数据。
+
+### 构建命令
+
+```powershell
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\build_stage_c_evidence.py
+```
+
+### 验证结果
+
+- `stage_c=PASS_WITH_TRACKED_PENDING figures=54 metrics=238 core=28 core_missing=0 pending=60`。
+- 所有可解析证据路径存在；核心图数值覆盖缺失为 0；必填字段空值为 0。
+- `scientific_boundary_review.md` 明确保留失败、局部和高保真边界。
