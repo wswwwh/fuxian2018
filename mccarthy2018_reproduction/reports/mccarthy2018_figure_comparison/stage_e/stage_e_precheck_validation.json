@@ -1,0 +1,1297 @@
+{
+  "label": "stage_e_precheck",
+  "status": "PASS",
+  "generated_at_utc": "2026-07-15T15:18:06.368714+00:00",
+  "report_root": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison",
+  "docx": {
+    "path": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\McCarthy2018_54图逐图复现对照报告.docx",
+    "bytes": 12260624,
+    "sha256": "f1f19f5ca51e9552b3b6d19d4005be3d015c374943737100947cc856576edbab",
+    "zip_test_member": null,
+    "package_member_count": 80,
+    "media_count": 54,
+    "media_files": [
+      "word/media/image1.png",
+      "word/media/image10.png",
+      "word/media/image11.png",
+      "word/media/image12.png",
+      "word/media/image13.png",
+      "word/media/image14.png",
+      "word/media/image15.png",
+      "word/media/image16.png",
+      "word/media/image17.png",
+      "word/media/image18.png",
+      "word/media/image19.png",
+      "word/media/image2.png",
+      "word/media/image20.png",
+      "word/media/image21.png",
+      "word/media/image22.png",
+      "word/media/image23.png",
+      "word/media/image24.png",
+      "word/media/image25.png",
+      "word/media/image26.png",
+      "word/media/image27.png",
+      "word/media/image28.png",
+      "word/media/image29.png",
+      "word/media/image3.png",
+      "word/media/image30.png",
+      "word/media/image31.png",
+      "word/media/image32.png",
+      "word/media/image33.png",
+      "word/media/image34.png",
+      "word/media/image35.png",
+      "word/media/image36.png",
+      "word/media/image37.png",
+      "word/media/image38.png",
+      "word/media/image39.png",
+      "word/media/image4.png",
+      "word/media/image40.png",
+      "word/media/image41.png",
+      "word/media/image42.png",
+      "word/media/image43.png",
+      "word/media/image44.png",
+      "word/media/image45.png",
+      "word/media/image46.png",
+      "word/media/image47.png",
+      "word/media/image48.png",
+      "word/media/image49.png",
+      "word/media/image5.png",
+      "word/media/image50.png",
+      "word/media/image51.png",
+      "word/media/image52.png",
+      "word/media/image53.png",
+      "word/media/image54.png",
+      "word/media/image6.png",
+      "word/media/image7.png",
+      "word/media/image8.png",
+      "word/media/image9.png"
+    ],
+    "drawing_count": 54,
+    "blip_count": 54,
+    "table_count": 121,
+    "math_count": 6,
+    "math_paragraph_count": 6,
+    "paragraph_styles": {
+      "15": 1,
+      "11": 1,
+      "12": 3,
+      "27": 2,
+      "26": 2,
+      "24": 2,
+      "25": 2,
+      "29": 1,
+      "10": 16,
+      "14": 59,
+      "2": 15,
+      "8": 135,
+      "3": 59,
+      "34": 3111,
+      "32": 116,
+      "33": 116,
+      "30": 54,
+      "31": 54,
+      "36": 1,
+      "35": 14
+    },
+    "heading_style_ids": [
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7"
+    ],
+    "numbered_heading_count": 70,
+    "toc_field": true,
+    "page_field": true,
+    "instruction_text": "TOC \\h \\o \"1-3\"  HYPERLINK \\l _Toc22429   PAGEREF _Toc22429 \\h   HYPERLINK \\l _Toc2513   PAGEREF _Toc2513 \\h   HYPERLINK \\l _Toc31821   PAGEREF _Toc31821 \\h   HYPERLINK \\l _Toc260   PAGEREF _Toc260 \\h   HYPERLINK \\l _Toc14350   PAGEREF _Toc14350 \\h   HYPERLINK \\l _Toc30287   PAGEREF _Toc30287 \\h   HYPERLINK \\l _Toc14492   PAGEREF _Toc14492 \\h   HYPERLINK \\l _Toc17653   PAGEREF _Toc17653 \\h   HYPERLINK \\l _Toc1753   PAGEREF _Toc1753 \\h   HYPERLINK \\l _Toc10834   PAGEREF _Toc10834 \\h   HYPERLINK \\l _Toc27307   PAGEREF _Toc27307 \\h   HYPERLINK \\l _Toc14019   PAGEREF _Toc14019 \\h   HYPERLINK \\l _Toc17092   PAGEREF _Toc17092 \\h   HYPERLINK \\l _Toc18133   PAGEREF _Toc18133 \\h   HYPERLINK \\l _Toc6040   PAGEREF _Toc6040 \\h   HYPERLINK \\l _Toc20190   PAGEREF _Toc20190 \\h   HYPERLINK \\l _Toc11021   PAGEREF _Toc11021 \\h   HYPERLINK \\l _Toc21615   PAGEREF _Toc21615 \\h   HYPERLINK \\l _Toc4780   PAGEREF _Toc4780 \\h   HYPERLINK \\l _Toc3134   PAGEREF _Toc3134 \\h   HYPERLINK \\l _Toc6235   PAGEREF _Toc6235 \\h   HYPERLINK \\l _Toc2169   PAGEREF _Toc2169 \\h   HYPERLINK \\l _Toc15850   PAGEREF _Toc15850 \\h   HYPERLINK \\l _Toc678   PAGEREF _Toc678 \\h   HYPERLINK \\l _Toc25077   PAGEREF _Toc25077 \\h   HYPERLINK \\l _Toc25971   PAGEREF _Toc25971 \\h   HYPERLINK \\l _Toc14568   PAGEREF _Toc14568 \\h   HYPERLINK \\l _Toc7722   PAGEREF _Toc7722 \\h   HYPERLINK \\l _Toc9010   PAGEREF _Toc9010 \\h   HYPERLINK \\l _Toc15012   PAGEREF _Toc15012 \\h   HYPERLINK \\l _Toc29150   PAGEREF _Toc29150 \\h   HYPERLINK \\l _Toc16367   PAGEREF _Toc16367 \\h   HYPERLINK \\l _Toc30001   PAGEREF _Toc30001 \\h   HYPERLINK \\l _Toc18177   PAGEREF _Toc18177 \\h   HYPERLINK \\l _Toc19709   PAGEREF _Toc19709 \\h   HYPERLINK \\l _Toc6194   PAGEREF _Toc6194 \\h   HYPERLINK \\l _Toc28873   PAGEREF _Toc28873 \\h   HYPERLINK \\l _Toc848   PAGEREF _Toc848 \\h   HYPERLINK \\l _Toc22018   PAGEREF _Toc22018 \\h   HYPERLINK \\l _Toc24971   PAGEREF _Toc24971 \\h   HYPERLINK \\l _Toc3267   PAGEREF _Toc3267 \\h   HYPERLINK \\l _Toc22413   PAGEREF _Toc22413 \\h   HYPERLINK \\l _Toc12298   PAGEREF _Toc12298 \\h   HYPERLINK \\l _Toc24947   PAGEREF _Toc24947 \\h   HYPERLINK \\l _Toc11335   PAGEREF _Toc11335 \\h   HYPERLINK \\l _Toc16269   PAGEREF _Toc16269 \\h   HYPERLINK \\l _Toc14248   PAGEREF _Toc14248 \\h   HYPERLINK \\l _Toc20997   PAGEREF _Toc20997 \\h   HYPERLINK \\l _Toc29077   PAGEREF _Toc29077 \\h   HYPERLINK \\l _Toc8929   PAGEREF _Toc8929 \\h   HYPERLINK \\l _Toc2869   PAGEREF _Toc2869 \\h   HYPERLINK \\l _Toc6401   PAGEREF _Toc6401 \\h   HYPERLINK \\l _Toc10486   PAGEREF _Toc10486 \\h   HYPERLINK \\l _Toc25597   PAGEREF _Toc25597 \\h   HYPERLINK \\l _Toc28007   PAGEREF _Toc28007 \\h   HYPERLINK \\l _Toc28694   PAGEREF _Toc28694 \\h   HYPERLINK \\l _Toc24561   PAGEREF _Toc24561 \\h   HYPERLINK \\l _Toc27290   PAGEREF _Toc27290 \\h   HYPERLINK \\l _Toc13861   PAGEREF _Toc13861 \\h   HYPERLINK \\l _Toc25185   PAGEREF _Toc25185 \\h   HYPERLINK \\l _Toc31937   PAGEREF _Toc31937 \\h   HYPERLINK \\l _Toc11608   PAGEREF _Toc11608 \\h   HYPERLINK \\l _Toc17818   PAGEREF _Toc17818 \\h   HYPERLINK \\l _Toc17201   PAGEREF _Toc17201 \\h   HYPERLINK \\l _Toc27143   PAGEREF _Toc27143 \\h   HYPERLINK \\l _Toc32424   PAGEREF _Toc32424 \\h   HYPERLINK \\l _Toc11657   PAGEREF _Toc11657 \\h   HYPERLINK \\l _Toc525   PAGEREF _Toc525 \\h   HYPERLINK \\l _Toc10941   PAGEREF _Toc10941 \\h   HYPERLINK \\l _Toc8425   PAGEREF _Toc8425 \\h   HYPERLINK \\l _Toc1248   PAGEREF _Toc1248 \\h   HYPERLINK \\l _Toc32760   PAGEREF _Toc32760 \\h   HYPERLINK \\l _Toc27243   PAGEREF _Toc27243 \\h   HYPERLINK \\l _Toc26065   PAGEREF _Toc26065 \\h   HYPERLINK \\l _Toc6543   PAGEREF _Toc6543 \\h "
+  },
+  "pdf": {
+    "path": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\McCarthy2018_54图逐图复现对照报告.pdf",
+    "bytes": 12968768,
+    "sha256": "04d519277488a3f4c174c8169979e932f860f61bdc822d92e7fb2ffabf049cdf",
+    "page_count": 122,
+    "page_records": [
+      {
+        "page": 1,
+        "text_characters": 1658,
+        "image_count": 0,
+        "drawing_count": 0,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 2,
+        "text_characters": 4676,
+        "image_count": 0,
+        "drawing_count": 0,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 3,
+        "text_characters": 5034,
+        "image_count": 0,
+        "drawing_count": 0,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 4,
+        "text_characters": 1278,
+        "image_count": 0,
+        "drawing_count": 0,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 5,
+        "text_characters": 1072,
+        "image_count": 0,
+        "drawing_count": 20,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 6,
+        "text_characters": 920,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 7,
+        "text_characters": 435,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 8,
+        "text_characters": 992,
+        "image_count": 1,
+        "drawing_count": 5,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 9,
+        "text_characters": 297,
+        "image_count": 0,
+        "drawing_count": 7,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 10,
+        "text_characters": 1045,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 11,
+        "text_characters": 488,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 12,
+        "text_characters": 982,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 13,
+        "text_characters": 394,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 14,
+        "text_characters": 954,
+        "image_count": 1,
+        "drawing_count": 5,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 15,
+        "text_characters": 320,
+        "image_count": 0,
+        "drawing_count": 7,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 16,
+        "text_characters": 1074,
+        "image_count": 1,
+        "drawing_count": 5,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 17,
+        "text_characters": 355,
+        "image_count": 0,
+        "drawing_count": 7,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 18,
+        "text_characters": 1062,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 19,
+        "text_characters": 438,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 20,
+        "text_characters": 1139,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 21,
+        "text_characters": 439,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 22,
+        "text_characters": 936,
+        "image_count": 1,
+        "drawing_count": 5,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 23,
+        "text_characters": 307,
+        "image_count": 0,
+        "drawing_count": 7,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 24,
+        "text_characters": 919,
+        "image_count": 1,
+        "drawing_count": 5,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 25,
+        "text_characters": 287,
+        "image_count": 0,
+        "drawing_count": 7,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 26,
+        "text_characters": 1214,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 27,
+        "text_characters": 606,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 28,
+        "text_characters": 973,
+        "image_count": 1,
+        "drawing_count": 5,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 29,
+        "text_characters": 315,
+        "image_count": 0,
+        "drawing_count": 7,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 30,
+        "text_characters": 1200,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 31,
+        "text_characters": 660,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 32,
+        "text_characters": 1201,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 33,
+        "text_characters": 548,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 34,
+        "text_characters": 1177,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 35,
+        "text_characters": 689,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 36,
+        "text_characters": 892,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 37,
+        "text_characters": 380,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 38,
+        "text_characters": 1075,
+        "image_count": 1,
+        "drawing_count": 5,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 39,
+        "text_characters": 314,
+        "image_count": 0,
+        "drawing_count": 7,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 40,
+        "text_characters": 1343,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 41,
+        "text_characters": 555,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 42,
+        "text_characters": 1013,
+        "image_count": 1,
+        "drawing_count": 5,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 43,
+        "text_characters": 314,
+        "image_count": 0,
+        "drawing_count": 7,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 44,
+        "text_characters": 1327,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 45,
+        "text_characters": 787,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 46,
+        "text_characters": 1264,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 47,
+        "text_characters": 784,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 48,
+        "text_characters": 1345,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 49,
+        "text_characters": 782,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 50,
+        "text_characters": 1285,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 51,
+        "text_characters": 796,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 52,
+        "text_characters": 1209,
+        "image_count": 1,
+        "drawing_count": 5,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 53,
+        "text_characters": 746,
+        "image_count": 0,
+        "drawing_count": 7,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 54,
+        "text_characters": 1585,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 55,
+        "text_characters": 1207,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 56,
+        "text_characters": 1223,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 57,
+        "text_characters": 550,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 58,
+        "text_characters": 1153,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 59,
+        "text_characters": 795,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 60,
+        "text_characters": 1117,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 61,
+        "text_characters": 784,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 62,
+        "text_characters": 1146,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 63,
+        "text_characters": 789,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 64,
+        "text_characters": 1184,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 65,
+        "text_characters": 777,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 66,
+        "text_characters": 1795,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 67,
+        "text_characters": 1407,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 68,
+        "text_characters": 1735,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 69,
+        "text_characters": 1436,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 70,
+        "text_characters": 1095,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 71,
+        "text_characters": 1674,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 72,
+        "text_characters": 1634,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 73,
+        "text_characters": 1619,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 74,
+        "text_characters": 1921,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 75,
+        "text_characters": 2932,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 76,
+        "text_characters": 1921,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 77,
+        "text_characters": 2932,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 78,
+        "text_characters": 1781,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 79,
+        "text_characters": 2780,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 80,
+        "text_characters": 1781,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 81,
+        "text_characters": 2782,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 82,
+        "text_characters": 1467,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 83,
+        "text_characters": 1494,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 84,
+        "text_characters": 1442,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 85,
+        "text_characters": 1537,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 86,
+        "text_characters": 1263,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 87,
+        "text_characters": 1634,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 88,
+        "text_characters": 1080,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 89,
+        "text_characters": 649,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 90,
+        "text_characters": 1106,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 91,
+        "text_characters": 649,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 92,
+        "text_characters": 1102,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 93,
+        "text_characters": 649,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 94,
+        "text_characters": 1543,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 95,
+        "text_characters": 1411,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 96,
+        "text_characters": 1464,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 97,
+        "text_characters": 1366,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 98,
+        "text_characters": 1515,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 99,
+        "text_characters": 1345,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 100,
+        "text_characters": 1536,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 101,
+        "text_characters": 1745,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 102,
+        "text_characters": 1473,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 103,
+        "text_characters": 1911,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 104,
+        "text_characters": 1668,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 105,
+        "text_characters": 2154,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 106,
+        "text_characters": 1370,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 107,
+        "text_characters": 1585,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 108,
+        "text_characters": 1299,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 109,
+        "text_characters": 1488,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 110,
+        "text_characters": 1347,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 111,
+        "text_characters": 1922,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 112,
+        "text_characters": 1363,
+        "image_count": 1,
+        "drawing_count": 4,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 113,
+        "text_characters": 1726,
+        "image_count": 0,
+        "drawing_count": 12,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 114,
+        "text_characters": 1518,
+        "image_count": 0,
+        "drawing_count": 6,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 115,
+        "text_characters": 570,
+        "image_count": 0,
+        "drawing_count": 0,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 116,
+        "text_characters": 1948,
+        "image_count": 0,
+        "drawing_count": 8,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 117,
+        "text_characters": 2033,
+        "image_count": 0,
+        "drawing_count": 9,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 118,
+        "text_characters": 3195,
+        "image_count": 0,
+        "drawing_count": 7,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 119,
+        "text_characters": 5163,
+        "image_count": 0,
+        "drawing_count": 7,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 120,
+        "text_characters": 1056,
+        "image_count": 0,
+        "drawing_count": 8,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 121,
+        "text_characters": 1629,
+        "image_count": 0,
+        "drawing_count": 5,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      },
+      {
+        "page": 122,
+        "text_characters": 521,
+        "image_count": 0,
+        "drawing_count": 6,
+        "width_pt": 595.2999877929688,
+        "height_pt": 841.9000244140625
+      }
+    ],
+    "blank_pages": [],
+    "sparse_text_pages": []
+  },
+  "coverage": {
+    "registry": 54,
+    "docx_figure_ids": 54,
+    "pdf_figure_ids": 54
+  },
+  "grades": {
+    "D": 12,
+    "B": 30,
+    "A": 7,
+    "C": 5
+  },
+  "statuses": {
+    "proxy": 12,
+    "boundary": 30,
+    "accepted": 7,
+    "diagnostic": 5
+  },
+  "pending": {
+    "registry_field_count": 6,
+    "items": [
+      {
+        "target_id": "5.2",
+        "field": "coordinate_system",
+        "value": "任务几何示意坐标；具体原点、轴向和历元【待核实】"
+      },
+      {
+        "target_id": "5.3",
+        "field": "coordinate_system",
+        "value": "任务几何示意坐标；具体原点、轴向和历元【待核实】"
+      },
+      {
+        "target_id": "5.4",
+        "field": "coordinate_system",
+        "value": "任务几何示意坐标；具体原点、轴向和历元【待核实】"
+      },
+      {
+        "target_id": "5.6",
+        "field": "coordinate_system",
+        "value": "星历历元与绘图坐标由对应脚本定义；统一坐标元数据【待核实】"
+      },
+      {
+        "target_id": "5.7",
+        "field": "coordinate_system",
+        "value": "星历历元与绘图坐标由对应脚本定义；统一坐标元数据【待核实】"
+      },
+      {
+        "target_id": "5.10",
+        "field": "coordinate_system",
+        "value": "星历历元与绘图坐标由对应脚本定义；统一坐标元数据【待核实】"
+      }
+    ],
+    "docx_occurrences": 21,
+    "pdf_occurrences": 21
+  },
+  "checks": {
+    "DOCX ZIP 可读": {
+      "pass": true,
+      "detail": null
+    },
+    "registry 54 行且图号唯一": {
+      "pass": true,
+      "detail": {
+        "rows": 54,
+        "unique": 54
+      }
+    },
+    "三份资产 manifest 均为 54 行": {
+      "pass": true,
+      "detail": {
+        "source": 54,
+        "reproduced": 54,
+        "comparison": 54
+      }
+    },
+    "registry 必填字段完整": {
+      "pass": true,
+      "detail": []
+    },
+    "registry 三类资产路径有效": {
+      "pass": true,
+      "detail": []
+    },
+    "DOCX 54 图号覆盖": {
+      "pass": true,
+      "detail": {
+        "count": 54,
+        "missing": []
+      }
+    },
+    "PDF 54 图号覆盖": {
+      "pass": true,
+      "detail": {
+        "count": 54,
+        "missing": []
+      }
+    },
+    "DOCX 54 张嵌入图": {
+      "pass": true,
+      "detail": {
+        "media": 54,
+        "drawing": 54,
+        "blip": 54
+      }
+    },
+    "DOCX 54 个中文逐图图题": {
+      "pass": true,
+      "detail": 54
+    },
+    "DOCX 54 个英文逐图图题": {
+      "pass": true,
+      "detail": 54
+    },
+    "PDF 54 个中文逐图图题": {
+      "pass": true,
+      "detail": 54
+    },
+    "PDF 54 个英文逐图图题": {
+      "pass": true,
+      "detail": 54
+    },
+    "核心数值图 28 张且指标完整": {
+      "pass": true,
+      "detail": {
+        "core_ids": 28,
+        "failures": []
+      }
+    },
+    "自动目录字段存在": {
+      "pass": true,
+      "detail": "TOC \\h \\o \"1-3\"  HYPERLINK \\l _Toc22429   PAGEREF _Toc22429 \\h   HYPERLINK \\l _Toc2513   PAGEREF _Toc2513 \\h   HYPERLINK \\l _Toc31821   PAGEREF _Toc31821 \\h   HYPERLINK \\l _Toc260   PAGEREF _Toc260 \\h   HYPERLINK \\l _Toc14350   PAGEREF _Toc14350 \\h   HYPERLINK \\l _Toc30287   PAGEREF _Toc30287 \\h   HYPERLINK \\l _Toc14492   PAGEREF _Toc14492 \\h   HYPERLINK \\l _Toc17653   PAGEREF _Toc17653 \\h   HYPERLINK \\l _Toc1753   PAGEREF _Toc1753 \\h   HYPERLINK \\l _Toc10834   PAGEREF _Toc10834 \\h   HYPERLINK \\l _Toc27307   PAGEREF _Toc27307 \\h   HYPERLINK \\l _Toc14019   PAGEREF _Toc14019 \\h   HYPERLINK \\l _Toc17092   PAGEREF _Toc17092 \\h   HYPERLINK \\l _Toc18133   PAGEREF _Toc18133 \\h   HYPERLINK \\l _Toc6040   PAGEREF _Toc6040 \\h   HYPERLINK \\l _Toc20190   PAGEREF _Toc20190 \\h   HYPERLINK \\l _Toc11021   PAGEREF _Toc11021 \\h   HYPERLINK \\l _Toc21615   PAGEREF _Toc21615 \\h   HYPERLINK \\l _Toc4780   PAGEREF _Toc4780 \\h   HYPERLINK \\l _Toc3134   PAGEREF _Toc3134 \\h   HYPERLINK \\l _Toc6235   PAGEREF _Toc6235 \\h   HYPERLINK \\l _Toc2169   PAGEREF _Toc2169 \\h   HYPERLINK \\l _Toc15850   PAGEREF _Toc15850 \\h   HYPERLINK \\l _Toc678   PAGEREF _Toc678 \\h   HYPERLINK \\l _Toc25077   PAGEREF _Toc25077 \\h   HYPERLINK \\l _Toc25971   PAGEREF _Toc25971 \\h   HYPERLINK \\l _Toc14568   PAGEREF _Toc14568 \\h   HYPERLINK \\l _Toc7722   PAGEREF _Toc7722 \\h   HYPERLINK \\l _Toc9010   PAGEREF _Toc9010 \\h   HYPERLINK \\l _Toc15012   PAGEREF _Toc15012 \\h   HYPERLINK \\l _Toc29150   PAGEREF _Toc29150 \\h   HYPERLINK \\l _Toc16367   PAGEREF _Toc16367 \\h   HYPERLINK \\l _Toc30001   PAGEREF _Toc30001 \\h   HYPERLINK \\l _Toc18177   PAGEREF _Toc18177 \\h   HYPERLINK \\l _Toc19709   PAGEREF _Toc19709 \\h   HYPERLINK \\l _Toc6194   PAGEREF _Toc6194 \\h   HYPERLINK \\l _Toc28873   PAGEREF _Toc28873 \\h   HYPERLINK \\l _Toc848   PAGEREF _Toc848 \\h   HYPERLINK \\l _Toc22018   PAGEREF _Toc22018 \\h   HYPERLINK \\l _Toc24971   PAGEREF _Toc24971 \\h   HYPERLINK \\l _Toc3267   PAGEREF _Toc3267 \\h   HYPERLINK \\l _Toc22413   PAGEREF _Toc22413 \\h   HYPERLINK \\l _Toc12298   PAGEREF _Toc12298 \\h   HYPERLINK \\l _Toc24947   PAGEREF _Toc24947 \\h   HYPERLINK \\l _Toc11335   PAGEREF _Toc11335 \\h   HYPERLINK \\l _Toc16269   PAGEREF _Toc16269 \\h   HYPERLINK \\l _Toc14248   PAGEREF _Toc14248 \\h   HYPERLINK \\l _Toc20997   PAGEREF _Toc20997 \\h   HYPERLINK \\l _Toc29077   PAGEREF _Toc29077 \\h   HYPERLINK \\l _Toc8929   PAGEREF _Toc8929 \\h   HYPERLINK \\l _Toc2869   PAGEREF _Toc2869 \\h   HYPERLINK \\l _Toc6401   PAGEREF _Toc6401 \\h   HYPERLINK \\l _Toc10486   PAGEREF _Toc10486 \\h   HYPERLINK \\l _Toc25597   PAGEREF _Toc25597 \\h   HYPERLINK \\l _Toc28007   PAGEREF _Toc28007 \\h   HYPERLINK \\l _Toc28694   PAGEREF _Toc28694 \\h   HYPERLINK \\l _Toc24561   PAGEREF _Toc24561 \\h   HYPERLINK \\l _Toc27290   PAGEREF _Toc27290 \\h   HYPERLINK \\l _Toc13861   PAGEREF _Toc13861 \\h   HYPERLINK \\l _Toc25185   PAGEREF _Toc25185 \\h   HYPERLINK \\l _Toc31937   PAGEREF _Toc31937 \\h   HYPERLINK \\l _Toc11608   PAGEREF _Toc11608 \\h   HYPERLINK \\l _Toc17818   PAGEREF _Toc17818 \\h   HYPERLINK \\l _Toc17201   PAGEREF _Toc17201 \\h   HYPERLINK \\l _Toc27143   PAGEREF _Toc27143 \\h   HYPERLINK \\l _Toc32424   PAGEREF _Toc32424 \\h   HYPERLINK \\l _Toc11657   PAGEREF _Toc11657 \\h   HYPERLINK \\l _Toc525   PAGEREF _Toc525 \\h   HYPERLINK \\l _Toc10941   PAGEREF _Toc10941 \\h   HYPERLINK \\l _Toc8425   PAGEREF _Toc8425 \\h   HYPERLINK \\l _Toc1248   PAGEREF _Toc1248 \\h   HYPERLINK \\l _Toc32760   PAGEREF _Toc32760 \\h   HYPERLINK \\l _Toc27243   PAGEREF _Toc27243 \\h   HYPERLINK \\l _Toc26065   PAGEREF _Toc26065 \\h   HYPERLINK \\l _Toc6543   PAGEREF _Toc6543 \\h "
+    },
+    "页码字段存在": {
+      "pass": true,
+      "detail": true
+    },
+    "标题自动编号存在": {
+      "pass": true,
+      "detail": 70
+    },
+    "公式对象与式号完整": {
+      "pass": true,
+      "detail": {
+        "math": 6,
+        "math_paragraphs": 6
+      }
+    },
+    "表格与双语编号符合构建记录": {
+      "pass": true,
+      "detail": {
+        "table_objects": 121,
+        "labelled_tables": 116
+      }
+    },
+    "无 Word 域错误或 MERGEFORMAT 泄漏": {
+      "pass": true,
+      "detail": {
+        "docx": [],
+        "pdf": []
+      }
+    },
+    "PDF 无真正空白页": {
+      "pass": true,
+      "detail": []
+    },
+    "PDF 无近空白孤页": {
+      "pass": true,
+      "detail": []
+    },
+    "PDF 页数与 Word 导出状态一致": {
+      "pass": true,
+      "detail": {
+        "pdf": 122,
+        "export_status": 122
+      }
+    },
+    "待核实字段集中且未被消隐": {
+      "pass": true,
+      "detail": {
+        "registry_fields": 6,
+        "docx": 21,
+        "pdf": 21
+      }
+    },
+    "等级统计符合审计": {
+      "pass": true,
+      "detail": {
+        "D": 12,
+        "B": 30,
+        "A": 7,
+        "C": 5
+      }
+    },
+    "证据状态统计符合审计": {
+      "pass": true,
+      "detail": {
+        "proxy": 12,
+        "boundary": 30,
+        "accepted": 7,
+        "diagnostic": 5
+      }
+    }
+  }
+}

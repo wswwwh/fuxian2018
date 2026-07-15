@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "output": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\McCarthy2018_54图逐图复现对照报告.docx",
+  "output_bytes": 21638200,
+  "output_sha256": "5117ccf8b7a58adbe585de5ec5404033537bb9d9f30adc7829e5646f22a23505",
+  "registry_rows": 54,
+  "metric_rows": 238,
+  "pending_rows": 6,
+  "embedded_media_parts": 55,
+  "build_input": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\stage_e\\word_build_input.json",
+  "build_input_sha256": "847350e65c446f77575e9077c6e0ff0c2a6a7d78ee2d5bbbcd339e697c88b5bb",
+  "git_head": "78af7b18a18c2832e6f98236688b187f61b37ca8",
+  "command": [
+    "C:\\Users\\wwh20\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+    "--max-old-space-size=4096",
+    "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\scripts\\build_word_report.js",
+    "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\stage_e\\word_build_input.json",
+    "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\McCarthy2018_54图逐图复现对照报告.docx"
+  ]
+}

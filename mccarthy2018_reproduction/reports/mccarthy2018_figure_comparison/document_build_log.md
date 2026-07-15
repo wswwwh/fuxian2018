@@ -116,3 +116,45 @@ D:\miniconda3\envs\cislunar\python.exe `
 - `stage_d=PASS panels=54 unique=54 pending=6 redrawn=0`。
 - `graphics_review.csv`：54 行全部 pass。
 - `visual_panel_review.md`：人工复核 PASS。
+
+## 2026-07-15 — 阶段 E：完整 Word 初稿与 PDF
+
+- 状态：`PASS`。
+- 通过 `build_word_report.py` 生成完整 DOCX：54 个逐图 panel、54 个中文逐图图题、54 个英文逐图图题、116 组双语表题、121 个实际表对象、6 个 OMML 公式对象和 28 张核心数值图量化表。
+- 文档结构：中英文摘要/关键词；双栏引言、动力学和评价方法；Chapter 2—5 的 54 组通栏逐图论证；综合讨论、限制、结论、参考文献与附录 A—D。
+- Word 12.0 COM 更新自动目录并导出主 PDF；最终为 122 页。初次导出的目录后近空白页已通过节设置修正，自动审计的空白/近空白页均为 0。
+- 最终 DOCX：12,260,624 bytes；SHA-256 `f1f19f5ca51e9552b3b6d19d4005be3d015c374943737100947cc856576edbab`。
+- 最终 PDF：12,968,768 bytes；SHA-256 `04d519277488a3f4c174c8169979e932f860f61bdc822d92e7fb2ffabf049cdf`。
+- LibreOffice 交叉导出为 127 页，分页差 -5；54/54 图号和 54/54 双语图题仍完整，`MERGEFORMAT` 与域错误为 0。最终 PDF 以 Word 导出为准。
+- Word COM 退出阶段仍可能报告远程过程调用清理警告，但导出状态为 PASS，且检查后无残留 `WINWORD` 进程。
+
+### 构建命令
+
+```powershell
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\build_word_report.py
+
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\export_report_pdf.py
+
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\validate_final_report.py `
+  --output-dir reports\mccarthy2018_figure_comparison\stage_e `
+  --label stage_e_precheck
+
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\render_report_review.py `
+  --output-dir reports\mccarthy2018_figure_comparison\stage_e\visual_review
+```
+
+### 验证结果
+
+- `word_build=PASS figures=54 metrics=238 media=55`；其中 ZIP 目录项 1 个、实际媒体 54 个。
+- `pdf_export=PASS engine=Microsoft Word COM pages=122 fallback=False`。
+- `final_report_validation=PASS checks=25 pages=122 docx_figures=54 pdf_figures=54`。
+- 全页 contact sheet 覆盖 122/122 页；16 张重点样张覆盖封面、目录、方法、四章代表图、讨论、附录和待核实清单。
+
+### 【待核实】
+
+- 封面：`【待核实】姓名`、`【待核实】单位`、`【待核实】导师`。
+- registry：Fig. 5.2、5.3、5.4、5.6、5.7、5.10 的统一坐标元数据仍为 `【待核实】`。
