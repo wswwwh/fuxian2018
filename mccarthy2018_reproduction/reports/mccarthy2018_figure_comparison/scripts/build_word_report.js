@@ -11,6 +11,7 @@ const {
   HeadingLevel,
   ImageRun,
   LevelFormat,
+  LevelSuffix,
   Math: MathElement,
   MathRun,
   Packer,
@@ -69,11 +70,12 @@ function body(text, options = {}) {
 }
 
 function centered(text, style = "CenteredText", options = {}) {
+  const pending = String(text).includes(PENDING);
   return new Paragraph({
     style,
     alignment: AlignmentType.CENTER,
     keepNext: options.keepNext || false,
-    children: [textRun(text, { bold: options.bold, size: options.size, font: options.font || FONT })],
+    children: [textRun(text, { bold: options.bold || pending, color: pending ? "B91C1C" : options.color, size: options.size, font: options.font || FONT })],
   });
 }
 
@@ -508,11 +510,14 @@ async function main() {
       figureCounter += 1;
       const evidenceTableNumber = ++tableCounter;
       const metricRows = coreMetricRows(metrics, row.target_id);
+      const isCoreMetricFigure = metrics.some(
+        (item) => item.target_id === row.target_id && String(item.priority_core).toLowerCase() === "true",
+      );
       const metricTableNumber = metricRows.length > 0 ? ++tableCounter : null;
       figuresSection.push(heading2(`McCarthy Fig. ${row.target_id}：${row.research_object}`, chapterIndex > 0));
       figuresSection.push(
         body(
-          `如图 ${figureCounter} 所示，左侧为 McCarthy 原论文 Fig. ${row.target_id}，右侧为本项目当前复现结果。逐图证据字段见表 ${evidenceTableNumber}${metricTableNumber ? `，核心定量指标见表 ${metricTableNumber}` : ""}。当前主等级为 ${row.reproduction_grade}，证据状态为 ${row.status}。`,
+          `如图 ${figureCounter} 所示，左侧为 McCarthy 原论文 Fig. ${row.target_id}，右侧为本项目当前复现结果。逐图证据字段见表 ${evidenceTableNumber}${metricTableNumber ? `，${isCoreMetricFigure ? "核心定量指标" : "验证/边界指标"}见表 ${metricTableNumber}` : ""}。当前主等级为 ${row.reproduction_grade}，证据状态为 ${row.status}。`,
           { keepNext: true },
         ),
       );
@@ -527,7 +532,9 @@ async function main() {
         }),
       );
       if (metricTableNumber) {
-        figuresSection.push(...tableCaptions(metricTableNumber, `原论文 Fig. ${row.target_id} 核心定量指标`, `Core quantitative metrics for original Fig. ${row.target_id}`));
+        const metricCaptionCN = isCoreMetricFigure ? "核心定量指标" : "验证/边界指标";
+        const metricCaptionEN = isCoreMetricFigure ? "Core quantitative metrics" : "Validation and boundary metrics";
+        figuresSection.push(...tableCaptions(metricTableNumber, `原论文 Fig. ${row.target_id} ${metricCaptionCN}`, `${metricCaptionEN} for original Fig. ${row.target_id}`));
         figuresSection.push(
           threeLineTable(["指标", "原论文值或目标值", "本项目结果", "误差/状态"], metricRows, [1800, 2700, 3100, 1900], {
             fontSize: 15,
@@ -588,7 +595,7 @@ async function main() {
     new Paragraph({
       numbering: { reference: "reference-list", level: 0 },
       style: "ReferenceText",
-      children: [textRun("McCarthy B. P. Characterization of Quasi-Periodic Orbits for Applications in the Sun-Earth and Earth-Moon Systems. Purdue University, 2018.", { size: 16 })],
+      children: [textRun("McCarthy, B. P. Characterization of Quasi-Periodic Orbits for Applications in the Sun-Earth and Earth-Moon Systems. Purdue University, 2018.", { size: 16 })],
     }),
   );
 
@@ -687,15 +694,15 @@ async function main() {
       {
         reference: "heading-numbering",
         levels: [
-          { level: 0, format: LevelFormat.DECIMAL, text: "%1", alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 0, hanging: 0 } } } },
-          { level: 1, format: LevelFormat.DECIMAL, text: "%1.%2", alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 0, hanging: 0 } } } },
-          { level: 2, format: LevelFormat.DECIMAL, text: "%1.%2.%3", alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 0, hanging: 0 } } } },
+          { level: 0, format: LevelFormat.DECIMAL, text: "%1", suffix: LevelSuffix.SPACE, alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 0, hanging: 0 } } } },
+          { level: 1, format: LevelFormat.DECIMAL, text: "%1.%2", suffix: LevelSuffix.SPACE, alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 0, hanging: 0 } } } },
+          { level: 2, format: LevelFormat.DECIMAL, text: "%1.%2.%3", suffix: LevelSuffix.SPACE, alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 0, hanging: 0 } } } },
         ],
       },
       {
         reference: "reference-list",
         levels: [
-          { level: 0, format: LevelFormat.DECIMAL, text: "[%1]", alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 540, hanging: 540 } } } },
+          { level: 0, format: LevelFormat.DECIMAL, text: "[%1]", suffix: LevelSuffix.SPACE, alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 540, hanging: 540 } } } },
         ],
       },
     ],

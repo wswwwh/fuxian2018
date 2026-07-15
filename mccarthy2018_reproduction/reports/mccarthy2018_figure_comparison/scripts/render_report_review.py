@@ -101,6 +101,8 @@ def main() -> None:
         marker_pages[marker] = None if index is None else index + 1
         if index is not None:
             selected.append(index)
+            if marker.startswith("McCarthy Fig.") and index + 1 < len(document):
+                selected.append(index + 1)
     selected.extend([max(0, len(document) - 2), len(document) - 1])
     selected = sorted(set(selected))
 

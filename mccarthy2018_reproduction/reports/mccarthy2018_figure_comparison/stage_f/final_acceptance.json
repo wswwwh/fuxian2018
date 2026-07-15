@@ -1,0 +1,97 @@
+{
+  "status": "PASS",
+  "date": "2026-07-15",
+  "report_root": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison",
+  "source_thesis": {
+    "path": "C:\\Users\\wwh20\\Desktop\\复现论文\\2018_McCarthy_拟周期轨道.pdf",
+    "pages": 137,
+    "sha256": "e434aeabb749dc34b2b05d12bfd77d7afe940a0e04eee1a6b20c2e1c4206456a"
+  },
+  "reference_docx": {
+    "path": "C:\\Users\\wwh20\\Desktop\\复现论文\\[20260709]DRO至日地L1 Halo有动力月球借力转移策略_投稿版.docx",
+    "sha256": "28fe6836665adfe7e36773c5cecbeb4f1947155e0bcfd78dc6de9c0f5fb669f4",
+    "use_boundary": "layout, language form, figure/table/formula conventions and argument structure only"
+  },
+  "coverage": {
+    "target_figures": 54,
+    "chapter_counts": {"2": 15, "3": 17, "4": 8, "5": 14},
+    "source_figures": 54,
+    "reproduction_figures": 54,
+    "comparison_panels": 54,
+    "docx_figure_ids": 54,
+    "pdf_figure_ids": 54,
+    "chinese_figure_captions": 54,
+    "english_figure_captions": 54,
+    "figure_evidence_tables": 54,
+    "core_metric_tables": 28,
+    "validation_boundary_metric_tables": 26
+  },
+  "grades": {"A": 7, "B": 30, "C": 5, "D": 12, "E": 0},
+  "evidence_status": {"accepted": 7, "boundary": 30, "diagnostic": 5, "proxy": 12},
+  "docx": {
+    "path": "McCarthy2018_54图逐图复现对照报告.docx",
+    "bytes": 12261055,
+    "sha256": "41a62e98470a226fb97485ad8eb482e71f311a3156cf854c4055ef302ec8c047",
+    "embedded_images": 54,
+    "embedded_image_dimensions": "1444x843 px",
+    "table_objects": 121,
+    "numbered_bilingual_tables": 116,
+    "omml_equations": 6,
+    "toc_fields": 1
+  },
+  "pdf": {
+    "path": "McCarthy2018_54图逐图复现对照报告.pdf",
+    "bytes": 12966265,
+    "sha256": "0e3537b4c2e41bdcfd95e621432a9e03984a3cc19f9377b0a6ec45d449b13976",
+    "engine": "Microsoft Word COM 12.0",
+    "pages": 122,
+    "blank_pages": 0,
+    "near_blank_orphan_pages": 0
+  },
+  "cross_engine_check": {
+    "engine": "LibreOffice 26.2.4",
+    "pages": 127,
+    "sha256": "9294911f0141a4b079953f04a056506825f922a5f69e3e340ef66e9cf336df8e",
+    "page_delta_vs_word": 5,
+    "figure_ids": 54,
+    "mergeformat_or_field_errors": 0,
+    "authoritative_pdf": "Microsoft Word export"
+  },
+  "quality_rounds": [
+    {
+      "round": 1,
+      "status": "FAIL_REVISED",
+      "checks_total": 36,
+      "checks_passed": 33,
+      "findings": ["heading numbering spacing", "non-core metric label strength", "reference author punctuation"]
+    },
+    {
+      "round": 2,
+      "status": "PASS",
+      "checks_total": 37,
+      "checks_passed": 37,
+      "visual_pages_reviewed": 122,
+      "selected_high_resolution_pages": 22
+    }
+  ],
+  "pending_verification": {
+    "cover": ["姓名", "单位", "导师"],
+    "registry_fields": [
+      "Fig. 5.2 coordinate_system",
+      "Fig. 5.3 coordinate_system",
+      "Fig. 5.4 coordinate_system",
+      "Fig. 5.6 coordinate_system",
+      "Fig. 5.7 coordinate_system",
+      "Fig. 5.10 coordinate_system"
+    ],
+    "guessed_values_inserted": 0
+  },
+  "stage_commits": {
+    "A": "efee688",
+    "B": "f840b90",
+    "C": "e05e698",
+    "D": "78af7b1",
+    "E": "0cb5531",
+    "F": "the Git commit containing this acceptance file"
+  }
+}

@@ -158,3 +158,53 @@ D:\miniconda3\envs\cislunar\python.exe `
 
 - 封面：`【待核实】姓名`、`【待核实】单位`、`【待核实】导师`。
 - registry：Fig. 5.2、5.3、5.4、5.6、5.7、5.10 的统一坐标元数据仍为 `【待核实】`。
+
+## 2026-07-15 — 阶段 F：两轮期刊式质量检查与最终验收
+
+- 状态：`PASS`。
+- 第 1 轮执行内容、结构、可追溯性和资产复验：资产 `PASS`；最终报告 36 项中 33 项通过。发现标题编号间距、26 张非核心图指标标签过强、参考文献作者标点三项问题。
+- 第 1 轮修订：多级编号和参考文献列表显式使用空格后缀；仅 28 张 `priority_core=true` 图标“核心定量指标”，其余 26 张改为“验证/边界指标”；作者格式统一为 `McCarthy, B. P.`；封面待核实项改为红色加粗。
+- 第 2 轮执行同一报告的强化自动验收与全页渲染：37/37 项通过；122/122 页总览和 22 张重点页通过人工复核。
+- 最终 DOCX：12,261,055 bytes；SHA-256 `41a62e98470a226fb97485ad8eb482e71f311a3156cf854c4055ef302ec8c047`。
+- 最终 PDF：12,966,265 bytes；122 页；SHA-256 `0e3537b4c2e41bdcfd95e621432a9e03984a3cc19f9377b0a6ec45d449b13976`。
+- 最终 Word 内嵌图：54 张，Word 保存后均为 1444×843 px；纵横比保持，人工放大可读。
+- LibreOffice 交叉 PDF：127 页；SHA-256 `9294911f0141a4b079953f04a056506825f922a5f69e3e340ef66e9cf336df8e`；54 图完整，域错误 0。5 页分页差来自跨引擎布局算法，最终 PDF 以 Word 导出为准。
+- 阶段 E 基线提交：`0cb5531`；阶段 F 验收文件与最终二进制在本阶段最终 Git 提交中记录，具体提交哈希以 `git log` 为准。
+
+### 第 1 轮命令
+
+```powershell
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\validate_report_assets.py
+
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\validate_final_report.py `
+  --output-dir reports\mccarthy2018_figure_comparison\stage_f `
+  --label stage_f_round_1
+```
+
+### 第 2 轮命令
+
+```powershell
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\build_word_report.py
+
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\export_report_pdf.py
+
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\validate_final_report.py `
+  --output-dir reports\mccarthy2018_figure_comparison\stage_f `
+  --label stage_f_round_2
+
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\render_report_review.py `
+  --output-dir reports\mccarthy2018_figure_comparison\stage_f\round_2_visual
+```
+
+### 最终结果
+
+- `stage_f_round_1_validation.json/md`：`FAIL_REVISED`，修订前证据保留。
+- `stage_f_round_2_validation.json/md`：`PASS`，37/37。
+- `review_checklist.md`：内容完整性、文档质量、科学可信度和可重复性全部勾选通过。
+- `stage_f/final_acceptance.json/md`：最终验收 `PASS`。

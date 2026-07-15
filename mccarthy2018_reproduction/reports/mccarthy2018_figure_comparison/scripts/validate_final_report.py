@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import io
 import json
 import re
 import sys
@@ -16,6 +17,7 @@ from pathlib import Path
 from xml.etree import ElementTree as ET
 
 import fitz
+from PIL import Image
 
 
 W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
@@ -91,12 +93,17 @@ def inspect_docx(path: Path) -> dict[str, object]:
             for name in names
             if name.startswith("word/media/") and not name.endswith("/")
         ]
+        media_dimensions = []
+        for name in media:
+            with Image.open(io.BytesIO(archive.read(name))) as image:
+                media_dimensions.append({"name": name, "width": image.width, "height": image.height})
         result.update(
             {
                 "zip_test_member": bad_member,
                 "package_member_count": len(names),
                 "media_count": len(media),
                 "media_files": media,
+                "media_dimensions": media_dimensions,
                 "drawing_count": len(document_root.findall(".//w:drawing", NS)),
                 "blip_count": len(document_root.findall(".//a:blip", NS)),
                 "table_count": len(document_root.findall(".//w:tbl", NS)),
@@ -307,10 +314,50 @@ def main() -> int:
     add_check(checks, "DOCX 54 图号覆盖", len(docx_ids) == 54, {"count": len(docx_ids), "missing": sorted(set(figure_ids) - set(docx_ids))})
     add_check(checks, "PDF 54 图号覆盖", len(pdf_ids) == 54, {"count": len(pdf_ids), "missing": sorted(set(figure_ids) - set(pdf_ids))})
     add_check(checks, "DOCX 54 张嵌入图", docx["media_count"] == 54 and docx["drawing_count"] == 54 and docx["blip_count"] == 54, {"media": docx["media_count"], "drawing": docx["drawing_count"], "blip": docx["blip_count"]})
+    embedded_dimensions = docx["media_dimensions"]
+    embedded_resolution_ok = len(embedded_dimensions) == 54 and all(
+        item["width"] >= 1400
+        and item["height"] >= 800
+        and abs(item["width"] / item["height"] - 2400 / 1400) < 0.01
+        for item in embedded_dimensions
+    )
+    add_check(
+        checks,
+        "DOCX 嵌入图分辨率与纵横比",
+        embedded_resolution_ok,
+        sorted({(item["width"], item["height"]) for item in embedded_dimensions}),
+    )
     add_check(checks, "DOCX 54 个中文逐图图题", docx_text.count("McCarthy 原文结果与本文复现结果对照") == 54, docx_text.count("McCarthy 原文结果与本文复现结果对照"))
     add_check(checks, "DOCX 54 个英文逐图图题", docx_text.count("Comparison between the original result of McCarthy") == 54, docx_text.count("Comparison between the original result of McCarthy"))
     add_check(checks, "PDF 54 个中文逐图图题", pdf_text.count("McCarthy 原文结果与本文复现结果对照") == 54, pdf_text.count("McCarthy 原文结果与本文复现结果对照"))
     add_check(checks, "PDF 54 个英文逐图图题", pdf_text.count("Comparison between the original result of McCarthy") == 54, pdf_text.count("Comparison between the original result of McCarthy"))
+    add_check(
+        checks,
+        "54 个逐图证据表进入 DOCX/PDF",
+        docx_text.count("Evidence record for original Fig.") == 54
+        and pdf_text.count("Evidence record for original Fig.") == 54,
+        {"docx": docx_text.count("Evidence record for original Fig."), "pdf": pdf_text.count("Evidence record for original Fig.")},
+    )
+    add_check(
+        checks,
+        "28 个核心量化表进入 DOCX/PDF",
+        docx_text.count("Core quantitative metrics for original Fig.") == 28
+        and pdf_text.count("Core quantitative metrics for original Fig.") == 28,
+        {"docx": docx_text.count("Core quantitative metrics for original Fig."), "pdf": pdf_text.count("Core quantitative metrics for original Fig.")},
+    )
+    add_check(
+        checks,
+        "26 个非核心验证边界表标签准确",
+        docx_text.count("Validation and boundary metrics for original Fig.") == 26
+        and pdf_text.count("Validation and boundary metrics for original Fig.") == 26,
+        {"docx": docx_text.count("Validation and boundary metrics for original Fig."), "pdf": pdf_text.count("Validation and boundary metrics for original Fig.")},
+    )
+    add_check(
+        checks,
+        "54 个逐图等级与证据状态叙述",
+        docx_text.count("当前主等级为") == 54 and docx_text.count("证据状态为") >= 55,
+        {"grade_narratives": docx_text.count("当前主等级为"), "status_mentions": docx_text.count("证据状态为")},
+    )
     add_check(checks, "核心数值图 28 张且指标完整", len(core_ids) == 28 and not core_failures, {"core_ids": len(core_ids), "failures": core_failures})
     add_check(checks, "自动目录字段存在", bool(docx["toc_field"]), docx["instruction_text"])
     add_check(checks, "页码字段存在", bool(docx["page_field"]), docx["page_field"])
@@ -319,6 +366,35 @@ def main() -> int:
     labelled_tables = sum(f"Table {number} " in docx_text for number in range(1, 117))
     add_check(checks, "表格与双语编号符合构建记录", docx["table_count"] == 121 and labelled_tables == 116, {"table_objects": docx["table_count"], "labelled_tables": labelled_tables})
     add_check(checks, "无 Word 域错误或 MERGEFORMAT 泄漏", not bad_docx and not bad_pdf, {"docx": bad_docx, "pdf": bad_pdf})
+    truth_tokens = [
+        "3.906984451743337",
+        "14573.10318409037",
+        "6.469474407020314×10^-10",
+        "0.8902665099213599",
+        "0.3710034126027414",
+        "4.819078×10^-5",
+        "7034.029835374918",
+        "7034.028970727035",
+        "433.0873004386989",
+        "monolithic cold-start=fail",
+        "hybrid=pass",
+        "paper_equivalence=0/2",
+        "paper_3d=false",
+    ]
+    missing_truth_tokens = [token for token in truth_tokens if token not in docx_text]
+    add_check(checks, "核心数值与失败边界进入正文", not missing_truth_tokens, missing_truth_tokens)
+    boundary_sentences = [
+        "不作整篇论文全部数值等价的声明",
+        "不支持“整篇论文全部成功复现”的表述",
+    ]
+    add_check(checks, "总论结论未夸大论文等价", all(sentence in docx_text for sentence in boundary_sentences), [sentence for sentence in boundary_sentences if sentence not in docx_text])
+    cover_pending = ["【待核实】姓名", "【待核实】单位", "【待核实】导师"]
+    add_check(checks, "封面未知信息使用待核实标记", all(item in docx_text for item in cover_pending) and "待填写" not in docx_text, {"present": [item for item in cover_pending if item in docx_text], "legacy_waiting": docx_text.count("待填写")})
+    add_check(checks, "参考文献与正文引用存在", "McCarthy, B. P." in docx_text and "[1]" in docx_text and "参考文献" in docx_text, {"citation_1": docx_text.count("[1]")})
+    add_check(checks, "关键单位进入报告", all(unit in docx_text for unit in ("km", "day", "m/s")), {"km": docx_text.count("km"), "day": docx_text.count("day"), "m/s": docx_text.count("m/s")})
+    add_check(checks, "可重复构建命令进入附录", all(name in docx_text for name in ("build_word_report.py", "export_report_pdf.py", "validate_report_assets.py")), True)
+    joined_headings = re.findall(r"(?m)^\d+\.\d+McCarthy Fig\.", pdf_text)
+    add_check(checks, "多级标题编号后保留空格", not joined_headings, {"joined_heading_count": len(joined_headings), "examples": joined_headings[:5]})
     add_check(checks, "PDF 无真正空白页", not pdf["blank_pages"], pdf["blank_pages"])
     add_check(checks, "PDF 无近空白孤页", not pdf["sparse_text_pages"], pdf["sparse_text_pages"])
     export_status_path = root / "stage_e" / "pdf_export_status.json"

@@ -5389,16 +5389,16 @@
   },
   "build_meta": {
     "build_date": "2026-07-15",
-    "git_head": "78af7b18a18c2832e6f98236688b187f61b37ca8",
+    "git_head": "0cb5531a57fa92e60f95e9403e798929f2322e75",
     "git_log": [
+      "0cb5531 Build stage E complete Word and PDF report",
       "78af7b1 Build and review stage D comparison panels",
       "e05e698 Bind and audit stage C figure evidence",
       "f840b90 Package and audit stage B figure assets",
       "efee688 Audit 54-figure report inputs and design stage A",
       "1358190 Lock Chapter 4 projection boundary and root-cause evidence",
       "8d20e8d Refresh stale comparison contact sheets",
-      "4b38a73 Record failed Chapter 4 frozen projection holdout",
-      "00d57dd Freeze Chapter 4 projection holdout evaluator"
+      "4b38a73 Record failed Chapter 4 frozen projection holdout"
     ],
     "project_root": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction",
     "report_root": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison",
