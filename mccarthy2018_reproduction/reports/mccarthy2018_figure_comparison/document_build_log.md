@@ -93,3 +93,26 @@ D:\miniconda3\envs\cislunar\python.exe `
 - `stage_c=PASS_WITH_TRACKED_PENDING figures=54 metrics=238 core=28 core_missing=0 pending=60`。
 - 所有可解析证据路径存在；核心图数值覆盖缺失为 0；必填字段空值为 0。
 - `scientific_boundary_review.md` 明确保留失败、局部和高保真边界。
+
+## 2026-07-15 — 阶段 D：统一 panel 与图形审查
+
+- 状态：`PASS`。
+- 生成 54/54 对照 panel；固定 2400×1400 px；54 个唯一 SHA-256；缺失和重复均为 0。
+- 统一内容：白色画布、左右边框、(a)/(b) 标签、原图号、A-E 等级、中英文状态和页码；两侧均等比缩放。
+- 保护规则：cropped=False、stretched=False、underlying_scientific_figure_redrawn=False；没有修改坐标、相机、颜色、数值参数或底层科学图。
+- 通栏/双栏预览均已生成。人工复核决定 54 个逐图对照全部通栏；双栏只用于摘要、方法和文本密集段落。
+- 人工 montage 复核覆盖 Chapter 2/3/4/5 的 15/17/8/14 个 panel，未发现左右颠倒、图号错位、空图或漏子图。
+- registry 的 comparison asset 已从 54 条【待核实】补齐为 54/54；剩余【待核实】为 6 条统一坐标元数据。
+
+### 构建命令
+
+```powershell
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\build_comparison_panels.py
+```
+
+### 验证结果
+
+- `stage_d=PASS panels=54 unique=54 pending=6 redrawn=0`。
+- `graphics_review.csv`：54 行全部 pass。
+- `visual_panel_review.md`：人工复核 PASS。

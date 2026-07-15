@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "panels": 54,
+  "unique_panel_hashes": 54,
+  "duplicate_groups": [],
+  "underlying_figures_redrawn": 0,
+  "standardized_panel_wrappers": 54,
+  "remaining_pending_fields": 6,
+  "visual_review": true
+}
