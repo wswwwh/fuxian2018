@@ -1,0 +1,32 @@
+{
+  "figures": 54,
+  "source_existing": 54,
+  "reproduction_png_existing": 54,
+  "reproduction_pdf_existing": 54,
+  "caption_verified": 54,
+  "source_duplicate_groups": 0,
+  "reproduction_duplicate_groups": 0,
+  "missing_rows": 9,
+  "evidence_counts": {
+    "proxy": 12,
+    "boundary": 30,
+    "accepted": 7,
+    "diagnostic": 5
+  },
+  "grade_counts": {
+    "D": 12,
+    "B": 30,
+    "A": 7,
+    "C": 5
+  },
+  "gate_counts": {
+    "pass": 16,
+    "informational": 1,
+    "fail": 4,
+    "ready_for_regeneration": 1,
+    "not_run_or_fail": 2,
+    "blocked_by_chapter4": 1,
+    "chapter3_passed_chapter4_ready": 1
+  },
+  "stage_a_status": "PASS_WITH_TRACKED_GAPS"
+}
