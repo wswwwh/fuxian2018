@@ -1,4 +1,5 @@
 {
+  "chapter4_halo_portable_replay_status": "pass",
   "full_rehearsal_status": "PASS",
   "official_action_versions": [
     "actions/checkout@v6",
@@ -10,7 +11,7 @@
   "python_executable": "D:\\miniconda3\\envs\\cislunar\\python.exe",
   "schema_version": "ci_stage_environment_v2",
   "small_physical_status": "PASS",
-  "unit_tests": 175,
+  "unit_tests": 195,
   "workflow_contract_status": "PASS",
   "workflow_path_root": "repository",
   "workflow_project_directory": "mccarthy2018_reproduction"

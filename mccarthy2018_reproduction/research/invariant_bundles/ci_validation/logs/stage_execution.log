@@ -1,25 +1,31 @@
 ## authoritative snapshot
 command: ['D:\\miniconda3\\envs\\cislunar\\python.exe', 'C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\scripts\\verify_ci_authoritative_immutability.py', 'snapshot', '--manifest', 'C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\research\\invariant_bundles\\ci_validation\\authoritative_before.json']
 return_code: 0
-elapsed_seconds: 0.182084
+elapsed_seconds: 0.200521
 authoritative snapshot PASS files=11
 
 ## workflow contract validation
 command: ['D:\\miniconda3\\envs\\cislunar\\python.exe', 'C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\scripts\\validate_github_actions_workflows.py', '--output-dir', 'C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\research\\invariant_bundles\\ci_validation\\workflow_contracts']
 return_code: 0
-elapsed_seconds: 0.290807
-workflow contract PASS checks=52
+elapsed_seconds: 0.336310
+workflow contract PASS checks=54
 
 ## small physical benchmark
 command: ['D:\\miniconda3\\envs\\cislunar\\python.exe', 'C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\scripts\\run_ci_small_physical_benchmark.py', '--output-dir', 'C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\research\\invariant_bundles\\ci_validation\\small_physical']
 return_code: 0
-elapsed_seconds: 1.669812
+elapsed_seconds: 1.619977
 small physical benchmark PASS case=em_halo_12p09_n15_small schur=3.936e-09 qr=7.518e-11
+
+## Chapter 4 halo portable replay
+command: ['D:\\miniconda3\\envs\\cislunar\\python.exe', 'C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\scripts\\validate_chapter4_halo_12p40_portable_replay.py']
+return_code: 0
+elapsed_seconds: 11.962250
+chapter4_halo_12p40_portable_replay: PASS refined_arrays=4, maximum_envelope_ratio=0, candidate_masks=exact, frozen_holdout=fail, paper_3d=false
 
 ## CI workflow unit contracts
 command: ['D:\\miniconda3\\envs\\cislunar\\python.exe', '-m', 'unittest', 'tests.test_github_actions_workflows', '-v']
 return_code: 0
-elapsed_seconds: 2.045186
+elapsed_seconds: 1.871320
 test_actions_and_authoritative_hash_guard_are_pinned (tests.test_github_actions_workflows.GithubActionsWorkflowTests.test_actions_and_authoritative_hash_guard_are_pinned) ... ok
 test_artifact_upload_contracts_are_complete (tests.test_github_actions_workflows.GithubActionsWorkflowTests.test_artifact_upload_contracts_are_complete) ... ok
 test_ci_artifact_hash_manifest_is_repository_rooted_and_current (tests.test_github_actions_workflows.GithubActionsWorkflowTests.test_ci_artifact_hash_manifest_is_repository_rooted_and_current) ... ok
@@ -29,21 +35,28 @@ test_frozen_chapter4_and_route_h_boundaries_remain_visible (tests.test_github_ac
 test_full_controller_rejects_any_checkout_output (tests.test_github_actions_workflows.GithubActionsWorkflowTests.test_full_controller_rejects_any_checkout_output) ... ok
 test_full_workflow_is_manual_isolated_and_uploads_artifacts (tests.test_github_actions_workflows.GithubActionsWorkflowTests.test_full_workflow_is_manual_isolated_and_uploads_artifacts) ... ok
 test_local_validator_passes_all_contracts (tests.test_github_actions_workflows.GithubActionsWorkflowTests.test_local_validator_passes_all_contracts) ... ok
+test_project_dependencies_match_frozen_environment_lock (tests.test_github_actions_workflows.GithubActionsWorkflowTests.test_project_dependencies_match_frozen_environment_lock) ... ok
 test_protected_authoritative_paths_exist (tests.test_github_actions_workflows.GithubActionsWorkflowTests.test_protected_authoritative_paths_exist) ... ok
 test_run_defaults_and_job_environment_are_ubuntu_safe (tests.test_github_actions_workflows.GithubActionsWorkflowTests.test_run_defaults_and_job_environment_are_ubuntu_safe) ... ok
 test_setup_python_cache_uses_repository_root_dependency_path (tests.test_github_actions_workflows.GithubActionsWorkflowTests.test_setup_python_cache_uses_repository_root_dependency_path) ... ok
 test_workflows_are_only_at_repository_root (tests.test_github_actions_workflows.GithubActionsWorkflowTests.test_workflows_are_only_at_repository_root) ... ok
 
 ----------------------------------------------------------------------
-Ran 13 tests in 0.102s
+Ran 14 tests in 0.106s
 
 OK
-workflow contract PASS checks=52
+workflow contract PASS checks=54
 
 ## complete unit suite
 command: ['D:\\miniconda3\\envs\\cislunar\\python.exe', '-m', 'unittest', 'discover', '-s', 'tests', '-v']
 return_code: 0
-elapsed_seconds: 12.148236
+elapsed_seconds: 30.991369
+test_binary_scientific_artifact_uses_exact_raw_bytes (test_artifact_fingerprints.ArtifactFingerprintTests.test_binary_scientific_artifact_uses_exact_raw_bytes) ... ok
+test_declared_manifest_mode_is_enforced (test_artifact_fingerprints.ArtifactFingerprintTests.test_declared_manifest_mode_is_enforced) ... ok
+test_legacy_raw_text_hash_accepts_only_newline_variants (test_artifact_fingerprints.ArtifactFingerprintTests.test_legacy_raw_text_hash_accepts_only_newline_variants) ... ok
+test_lf_and_crlf_text_have_one_normalized_fingerprint (test_artifact_fingerprints.ArtifactFingerprintTests.test_lf_and_crlf_text_have_one_normalized_fingerprint) ... ok
+test_real_text_content_change_changes_normalized_hash (test_artifact_fingerprints.ArtifactFingerprintTests.test_real_text_content_change_changes_normalized_hash) ... ok
+test_utf8_bom_change_is_not_ignored (test_artifact_fingerprints.ArtifactFingerprintTests.test_utf8_bom_change_is_not_ignored) ... ok
 test_dense_output_is_available_for_continuous_clearance_checks (test_bcr4bp_parameters.EarthMoonBCR4BPParameterTests.test_dense_output_is_available_for_continuous_clearance_checks) ... ok
 test_solar_angular_rate_uses_radians_per_normalized_time (test_bcr4bp_parameters.EarthMoonBCR4BPParameterTests.test_solar_angular_rate_uses_radians_per_normalized_time) ... ok
 test_without_sun_reduces_exactly_to_cr3bp_rhs (test_bcr4bp_parameters.EarthMoonBCR4BPParameterTests.test_without_sun_reduces_exactly_to_cr3bp_rhs) ... ok
@@ -53,6 +66,7 @@ test_cross_resolution_metric_detects_nonconverged_direction (test_bundle_resolut
 test_fourier_resampling_recovers_same_bundle_across_odd_resolutions (test_bundle_resolution_convergence.BundleResolutionConvergenceTests.test_fourier_resampling_recovers_same_bundle_across_odd_resolutions) ... ok
 test_all_static_panels_pass_without_red_mask_or_panel_transform (test_chapter4_camera_calibration.Chapter4CameraCalibrationTests.test_all_static_panels_pass_without_red_mask_or_panel_transform) ... ok
 test_frozen_camera_values_and_axis_corners (test_chapter4_camera_calibration.Chapter4CameraCalibrationTests.test_frozen_camera_values_and_axis_corners) ... ok
+test_project_pins_the_frozen_renderer_version (test_chapter4_camera_calibration.Chapter4CameraCalibrationTests.test_project_pins_the_frozen_renderer_version) ... ok
 test_frozen_protocol_check_uses_pre_fit_source_binding (test_chapter4_camera_holdout_protocol.Chapter4CameraHoldoutProtocolTests.test_frozen_protocol_check_uses_pre_fit_source_binding) ... ok
 test_holdout_and_transform_boundaries_are_frozen (test_chapter4_camera_holdout_protocol.Chapter4CameraHoldoutProtocolTests.test_holdout_and_transform_boundaries_are_frozen) ... ok
 test_protocol_is_explicitly_nonblind_and_projection_is_not_run (test_chapter4_camera_holdout_protocol.Chapter4CameraHoldoutProtocolTests.test_protocol_is_explicitly_nonblind_and_projection_is_not_run) ... ok
@@ -69,6 +83,9 @@ test_unknown_snapshot_time_is_rejected (test_chapter4_fixed_time_manifold_snapsh
 test_validation_uses_stm_reference_and_full_absolute_duration (test_chapter4_fixed_time_manifold_snapshots.FixedTimeManifoldSnapshotTests.test_validation_uses_stm_reference_and_full_absolute_duration) ... ok
 test_arrays_and_recomputation_check (test_chapter4_halo_12p40_posthoc_diagnostic.Chapter4Halo12p40PosthocDiagnosticTests.test_arrays_and_recomputation_check) ... ok
 test_candidate_source_and_evidence_boundaries (test_chapter4_halo_12p40_posthoc_diagnostic.Chapter4Halo12p40PosthocDiagnosticTests.test_candidate_source_and_evidence_boundaries) ... ok
+test_csv_check_accepts_crlf_but_rejects_content_drift (test_chapter4_halo_12p40_posthoc_diagnostic.Chapter4Halo12p40PosthocDiagnosticTests.test_csv_check_accepts_crlf_but_rejects_content_drift) ... ok
+test_portable_envelope_accepts_solver_scale_drift (test_chapter4_halo_12p40_posthoc_diagnostic.Chapter4Halo12p40PosthocDiagnosticTests.test_portable_envelope_accepts_solver_scale_drift) ... ok
+test_portable_envelope_rejects_material_drift (test_chapter4_halo_12p40_posthoc_diagnostic.Chapter4Halo12p40PosthocDiagnosticTests.test_portable_envelope_rejects_material_drift) ... ok
 test_invalid_surface_shape_is_rejected (test_chapter4_plotting.Chapter4PlottingTests.test_invalid_surface_shape_is_rejected) ... ok
 test_periodic_curve_axis_is_closed_without_mutating_input (test_chapter4_plotting.Chapter4PlottingTests.test_periodic_curve_axis_is_closed_without_mutating_input) ... ok
 test_fit_artifacts_contain_no_holdout_rows (test_chapter4_projection_fit.Chapter4ProjectionFitTests.test_fit_artifacts_contain_no_holdout_rows) ... ok
@@ -114,10 +131,12 @@ test_frozen_chapter4_and_route_h_boundaries_remain_visible (test_github_actions_
 test_full_controller_rejects_any_checkout_output (test_github_actions_workflows.GithubActionsWorkflowTests.test_full_controller_rejects_any_checkout_output) ... ok
 test_full_workflow_is_manual_isolated_and_uploads_artifacts (test_github_actions_workflows.GithubActionsWorkflowTests.test_full_workflow_is_manual_isolated_and_uploads_artifacts) ... ok
 test_local_validator_passes_all_contracts (test_github_actions_workflows.GithubActionsWorkflowTests.test_local_validator_passes_all_contracts) ... ok
+test_project_dependencies_match_frozen_environment_lock (test_github_actions_workflows.GithubActionsWorkflowTests.test_project_dependencies_match_frozen_environment_lock) ... ok
 test_protected_authoritative_paths_exist (test_github_actions_workflows.GithubActionsWorkflowTests.test_protected_authoritative_paths_exist) ... ok
 test_run_defaults_and_job_environment_are_ubuntu_safe (test_github_actions_workflows.GithubActionsWorkflowTests.test_run_defaults_and_job_environment_are_ubuntu_safe) ... ok
 test_setup_python_cache_uses_repository_root_dependency_path (test_github_actions_workflows.GithubActionsWorkflowTests.test_setup_python_cache_uses_repository_root_dependency_path) ... ok
 test_workflows_are_only_at_repository_root (test_github_actions_workflows.GithubActionsWorkflowTests.test_workflows_are_only_at_repository_root) ... ok
+test_windows_style_artifact_reference_is_portable (test_hybrid_cold_start_audit.HybridColdStartAuditTests.test_windows_style_artifact_reference_is_portable) ... ok
 test_zero_start_checkpoint_and_four_target_chain_pass (test_hybrid_cold_start_audit.HybridColdStartAuditTests.test_zero_start_checkpoint_and_four_target_chain_pass) ... ok
 test_dimension_classification_status_and_preset_metrics_agree (test_independent_schur_backend_validation.IndependentSchurBackendValidationTests.test_dimension_classification_status_and_preset_metrics_agree) ... ok
 test_exact_predeclared_case_set_and_backend (test_independent_schur_backend_validation.IndependentSchurBackendValidationTests.test_exact_predeclared_case_set_and_backend) ... ok
@@ -184,6 +203,8 @@ test_route_h_physical_and_legacy_controls_remain_separate (test_invariant_bundle
 test_exact_one_dimensional_bundle_has_machine_residual (test_invariant_bundle_residual.InvariantBundleResidualTests.test_exact_one_dimensional_bundle_has_machine_residual) ... ok
 test_wrong_bundle_is_rejected_by_residual (test_invariant_bundle_residual.InvariantBundleResidualTests.test_wrong_bundle_is_rejected_by_residual) ... ok
 test_unstable_transport_keeps_one_branch_orientation (test_manifold_direction_consistency.ManifoldDirectionConsistencyTests.test_unstable_transport_keeps_one_branch_orientation) ... ok
+test_all_committed_artifact_manifests_are_portable_and_current (test_portable_artifact_hash_manifests.PortableArtifactHashManifestTests.test_all_committed_artifact_manifests_are_portable_and_current) ... ok
+test_manifest_modes_distinguish_text_and_binary_artifacts (test_portable_artifact_hash_manifests.PortableArtifactHashManifestTests.test_manifest_modes_distinguish_text_and_binary_artifacts) ... ok
 test_exact_five_failure_cases_and_bounded_grid (test_qr_svd_failure_classification.QrSvdFailureClassificationTests.test_exact_five_failure_cases_and_bounded_grid) ... ok
 test_hashes_and_truth_boundary (test_qr_svd_failure_classification.QrSvdFailureClassificationTests.test_hashes_and_truth_boundary) ... ok
 test_legacy_control_remains_separate_and_initialization_sensitive (test_qr_svd_failure_classification.QrSvdFailureClassificationTests.test_legacy_control_remains_separate_and_initialization_sensitive) ... ok
@@ -216,39 +237,40 @@ test_rejects_complex_only_unstable_candidates (test_torus_stability_eigen_select
 test_selects_nearly_real_stable_candidate (test_torus_stability_eigen_selection.RealHyperbolicEigenSelectionTests.test_selects_nearly_real_stable_candidate) ... ok
 test_current_repository_passes_with_auditable_summary (test_validate_reproduction_smoke.ReproductionSmokeCliTests.test_current_repository_passes_with_auditable_summary) ... ok
 test_duplicate_target_figure_returns_failure (test_validate_reproduction_smoke.ReproductionSmokeCliTests.test_duplicate_target_figure_returns_failure) ... ok
+test_equivalent_crlf_target_registry_passes (test_validate_reproduction_smoke.ReproductionSmokeCliTests.test_equivalent_crlf_target_registry_passes) ... ok
+test_generated_lf_target_registry_passes (test_validate_reproduction_smoke.ReproductionSmokeCliTests.test_generated_lf_target_registry_passes) ... ok
 test_incomplete_parameter_extraction_returns_failure (test_validate_reproduction_smoke.ReproductionSmokeCliTests.test_incomplete_parameter_extraction_returns_failure) ... ok
 test_missing_target_registry_returns_failure (test_validate_reproduction_smoke.ReproductionSmokeCliTests.test_missing_target_registry_returns_failure) ... ok
+test_target_registry_content_change_fails (test_validate_reproduction_smoke.ReproductionSmokeCliTests.test_target_registry_content_change_fails) ... ok
+test_target_registry_field_order_change_fails (test_validate_reproduction_smoke.ReproductionSmokeCliTests.test_target_registry_field_order_change_fails) ... ok
 test_target_registry_matches_its_generator (test_validate_reproduction_smoke.ReproductionSmokeCliTests.test_target_registry_matches_its_generator) ... ok
+test_target_registry_missing_field_fails (test_validate_reproduction_smoke.ReproductionSmokeCliTests.test_target_registry_missing_field_fails) ... ok
+test_target_registry_row_order_change_fails (test_validate_reproduction_smoke.ReproductionSmokeCliTests.test_target_registry_row_order_change_fails) ... ok
 
 ----------------------------------------------------------------------
-Ran 175 tests in 8.695s
+Ran 195 tests in 27.432s
 
 OK
-workflow contract PASS checks=52
+workflow contract PASS checks=54
 
 ## git diff whitespace check
 command: ['git', 'diff', '--check']
 return_code: 0
-elapsed_seconds: 0.186877
-warning: in the working copy of '.github/workflows/ci.yml', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of '.github/workflows/full_research_validation.yml', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it
+elapsed_seconds: 0.196272
 warning: in the working copy of 'mccarthy2018_reproduction/README.md', LF will be replaced by CRLF the next time Git touches it
 warning: in the working copy of 'mccarthy2018_reproduction/data/computed/reproduction_baseline_v1_manifest.csv', LF will be replaced by CRLF the next time Git touches it
 warning: in the working copy of 'mccarthy2018_reproduction/docs/repository_architecture.md', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'mccarthy2018_reproduction/research/invariant_bundles/adviser_summary_validation/final_acceptance/final_acceptance_report.md', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'mccarthy2018_reproduction/research/invariant_bundles/adviser_summary_validation/final_acceptance/final_acceptance_summary.json', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'mccarthy2018_reproduction/research/invariant_bundles/adviser_summary_validation/final_acceptance/final_goal_acceptance.csv', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'mccarthy2018_reproduction/research/invariant_bundles/configs/ci_validation.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mccarthy2018_reproduction/docs/reproducible_environment.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mccarthy2018_reproduction/research/invariant_bundles/adviser_summary_validation/artifact_hashes.csv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mccarthy2018_reproduction/research/invariant_bundles/adviser_summary_validation/final_acceptance/artifact_hashes.csv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mccarthy2018_reproduction/research/invariant_bundles/ci_validation/artifact_hashes.csv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mccarthy2018_reproduction/research/invariant_bundles/ci_validation/workflow_contracts/workflow_contract_checks.csv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mccarthy2018_reproduction/research/invariant_bundles/ci_validation/workflow_contracts/workflow_contract_summary.json', LF will be replaced by CRLF the next time Git touches it
 warning: in the working copy of 'mccarthy2018_reproduction/scripts/collect_ci_stage_evidence.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'mccarthy2018_reproduction/scripts/run_ci_full_research_validation.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'mccarthy2018_reproduction/scripts/run_final_goal_acceptance.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'mccarthy2018_reproduction/scripts/validate_github_actions_workflows.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'mccarthy2018_reproduction/tests/test_final_goal_acceptance.py', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'mccarthy2018_reproduction/tests/test_github_actions_workflows.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mccarthy2018_reproduction/tests/test_chapter4_halo_12p40_posthoc_diagnostic.py', LF will be replaced by CRLF the next time Git touches it
 
 ## authoritative comparison
 command: ['D:\\miniconda3\\envs\\cislunar\\python.exe', 'C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\scripts\\verify_ci_authoritative_immutability.py', 'compare', '--manifest', 'C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\research\\invariant_bundles\\ci_validation\\authoritative_before.json', '--report', 'C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\research\\invariant_bundles\\ci_validation\\authoritative_before_after.csv']
 return_code: 0
-elapsed_seconds: 0.188257
+elapsed_seconds: 0.187180
 authoritative immutability PASS files=11

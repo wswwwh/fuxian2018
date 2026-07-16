@@ -123,6 +123,13 @@ research accepted 不得覆盖 reproduction fail/boundary。
   `environment-lock.yml`. This keeps GitHub-hosted Ubuntu on the tested NumPy,
   SciPy, pandas, renderer, and document stack instead of silently upgrading a
   numerical dependency behind frozen recomputation evidence.
+- The frozen Chapter 4 halo 12.40-day NPZ remains raw-byte authoritative.
+  `scripts/validate_chapter4_halo_12p40_portable_replay.py` performs a read-only
+  Linux/Windows replay: provenance, schema, raster masks, failure decisions,
+  and documents are exact; adaptive DOP853 state differences must remain inside
+  a same-platform `max_step=0.005` convergence envelope. This portability
+  envelope does not replace or loosen the residual, DG, Jacobi, or projection
+  acceptance thresholds.
 
 ## Legacy / deprecated status 索引
 

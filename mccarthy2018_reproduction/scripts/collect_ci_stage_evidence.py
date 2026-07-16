@@ -34,6 +34,9 @@ DEFAULT_OUTPUT = (
 SNAPSHOT_SCRIPT = ROOT / "scripts" / "verify_ci_authoritative_immutability.py"
 WORKFLOW_SCRIPT = ROOT / "scripts" / "validate_github_actions_workflows.py"
 PHYSICAL_SCRIPT = ROOT / "scripts" / "run_ci_small_physical_benchmark.py"
+PORTABLE_REPLAY_SCRIPT = (
+    ROOT / "scripts" / "validate_chapter4_halo_12p40_portable_replay.py"
+)
 
 
 def sha256(path: Path) -> str:
@@ -108,8 +111,10 @@ def write_manifest(output: Path) -> None:
         ROOT / "scripts" / "run_ci_full_research_validation.py",
         ROOT / "scripts" / "verify_ci_authoritative_immutability.py",
         ROOT / "scripts" / "validate_github_actions_workflows.py",
+        ROOT / "scripts" / "validate_chapter4_halo_12p40_portable_replay.py",
         Path(__file__).resolve(),
         ROOT / "tests" / "test_github_actions_workflows.py",
+        ROOT / "tests" / "test_chapter4_halo_12p40_posthoc_diagnostic.py",
     ]
     files = inputs + [
         path
@@ -184,6 +189,13 @@ def main() -> int:
         ],
         log_records=execution_log,
     )
+    portable_replay_output = run_logged(
+        "Chapter 4 halo portable replay",
+        [sys.executable, str(PORTABLE_REPLAY_SCRIPT)],
+        log_records=execution_log,
+    )
+    if "chapter4_halo_12p40_portable_replay: PASS" not in portable_replay_output:
+        raise RuntimeError("portable replay output did not contain the PASS marker")
     copy_full_rehearsal(full, output / "full_rehearsal")
     run_logged(
         "CI workflow unit contracts",
@@ -261,6 +273,7 @@ def main() -> int:
         "platform": platform.platform(),
         "workflow_contract_status": workflow_summary["status"],
         "small_physical_status": physical_summary["status"],
+        "chapter4_halo_portable_replay_status": "pass",
         "full_rehearsal_status": full_summary["status"],
         "workflow_path_root": workflow_summary["path_root"],
         "workflow_project_directory": workflow_summary["project_directory"],
@@ -290,6 +303,10 @@ def main() -> int:
         f"{workflow_summary['checks']}/{workflow_summary['checks']} checks.\n"
         "- Small physical benchmark: PASS; ordered real Schur and QR/SVD "
         "both returned a one-dimensional accepted bundle under preset thresholds.\n"
+        "- Chapter 4 halo portable replay: PASS; frozen provenance and raster "
+        "masks are exact, while DOP853 states remain inside the half-step "
+        "convergence envelope. All scientific gates and failure decisions are "
+        "unchanged.\n"
         "- Full workflow rehearsal: PASS; "
         f"{full_summary['bundle_cases']} bundle cases, "
         f"{full_summary['bundle_rows']} bundle rows, "
@@ -315,6 +332,7 @@ def main() -> int:
         "# GitHub Actions stage failure evidence\n\n"
         "- Workflow contract failures: 0.\n"
         "- Small physical smoke failures: 0.\n"
+        "- Chapter 4 halo portable-replay failures: 0.\n"
         "- Full worker failures: 0.\n"
         "- Full result-schema failures: 0.\n"
         f"- Retained bundle fail rows: {full_summary['bundle_status_counts'].get('fail', 0)}.\n"

@@ -2,6 +2,7 @@
 
 - Workflow contract failures: 0.
 - Small physical smoke failures: 0.
+- Chapter 4 halo portable-replay failures: 0.
 - Full worker failures: 0.
 - Full result-schema failures: 0.
 - Retained bundle fail rows: 24.

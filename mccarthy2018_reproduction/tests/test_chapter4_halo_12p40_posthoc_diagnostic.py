@@ -16,12 +16,13 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "computed"
 CSV_PATH = DATA / "chapter4_fig43_fig44_halo_12p40_posthoc_diagnostic.csv"
 NPZ_PATH = DATA / "chapter4_fig43_fig44_halo_12p40_posthoc_diagnostic.npz"
-SCRIPT = ROOT / "scripts" / "run_chapter4_halo_12p40_posthoc_diagnostic.py"
+PORTABLE_SCRIPT = ROOT / "scripts" / "validate_chapter4_halo_12p40_portable_replay.py"
 SCRIPTS = ROOT / "scripts"
 if str(SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SCRIPTS))
 
 import run_chapter4_halo_12p40_posthoc_diagnostic as posthoc
+import validate_chapter4_halo_12p40_portable_replay as portable
 
 
 class Chapter4Halo12p40PosthocDiagnosticTests(unittest.TestCase):
@@ -94,13 +95,33 @@ class Chapter4Halo12p40PosthocDiagnosticTests(unittest.TestCase):
             self.assertTrue(np.all(np.isfinite(evidence["candidate_snapshot_states"])))
             self.assertEqual(int(evidence["selected_family_index"][0]), 3)
         result = subprocess.run(
-            [sys.executable, str(SCRIPT), "--check"],
+            [sys.executable, str(PORTABLE_SCRIPT)],
             check=False,
             capture_output=True,
             text=True,
         )
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("chapter4_halo_12p40_posthoc_check", result.stdout)
+        self.assertIn("chapter4_halo_12p40_portable_replay: PASS", result.stdout)
+        self.assertIn("candidate_masks=exact", result.stdout)
+        self.assertIn("frozen_holdout=fail, paper_3d=false", result.stdout)
+
+    def test_portable_envelope_accepts_solver_scale_drift(self) -> None:
+        recomputed = np.zeros((2, 3, 2), dtype=float)
+        refined = np.full_like(recomputed, 1.0e-8)
+        stored = np.full_like(recomputed, 2.0e-8)
+        comparison = portable.compare_with_refinement_envelope(
+            "synthetic_states", stored, recomputed, refined
+        )
+        self.assertLessEqual(comparison.maximum_ratio, 1.0)
+
+    def test_portable_envelope_rejects_material_drift(self) -> None:
+        recomputed = np.zeros((2, 3, 2), dtype=float)
+        refined = np.full_like(recomputed, 1.0e-8)
+        stored = np.full_like(recomputed, 5.0e-8)
+        with self.assertRaisesRegex(RuntimeError, "step-refinement envelope"):
+            portable.compare_with_refinement_envelope(
+                "synthetic_states", stored, recomputed, refined
+            )
 
 
 if __name__ == "__main__":

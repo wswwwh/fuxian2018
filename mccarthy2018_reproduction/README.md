@@ -45,6 +45,13 @@ files before and after execution, retain failed and boundary rows in uploaded
 artifacts, and preserve `MPLBACKEND=Agg`, `PYTHONHASHSEED=0`, and
 `PYTHONPATH=src` for GitHub-hosted Ubuntu.
 
+The Chapter 4 halo 12.40-day diagnostic keeps its Windows-generated frozen
+NPZ/CSV/report unchanged. Fast CI replays it with
+`scripts/validate_chapter4_halo_12p40_portable_replay.py`: provenance and
+raster masks remain exact, while long DOP853 trajectories are bounded by a
+same-platform half-step convergence envelope. The original residual, DG,
+Jacobi, projection-failure, and `paper_3d=false` gates remain unchanged.
+
 This repository is the local reproduction workspace for:
 
 Brian P. McCarthy, *Characterization of Quasi-Periodic Orbits for Applications

@@ -67,3 +67,13 @@ git diff --check
 ```
 
 `run_reproduction_baseline_freeze.py` 只读取 canonical CSV、冻结锁和证据文件；默认模式仅重建派生的基线摘要、清单与 Markdown，`--check` 模式不写文件。
+
+## Chapter 4 跨平台重放
+
+以下命令只读取已冻结的 halo 12.40-day NPZ/CSV/报告：
+
+```powershell
+& 'D:\miniconda3\envs\cislunar\python.exe' scripts\validate_chapter4_halo_12p40_portable_replay.py
+```
+
+冻结 NPZ 继续使用原始字节 SHA256，不因 Ubuntu/Windows 的 DOP853 末位差异重写。跨平台重放必须保持 provenance、schema、投影像素 mask、`fail` 结论和 `paper_3d=false` 精确一致；连续状态还必须位于同平台半步长收敛包络内。该包络只用于判断求解器可移植性，不改变 residual、DG、Jacobi 或投影的科学门限。
