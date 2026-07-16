@@ -1,0 +1,22 @@
+{
+  "cache_hits": 15,
+  "cases": 15,
+  "elapsed_seconds": 34.21769409999979,
+  "max_iterations": 200,
+  "max_wall_seconds": 1800.0,
+  "method_rows": 45,
+  "methods": 3,
+  "registry_sha256": "B38099E93BB85AD4B97035D667A4AD5E6A74C1805B612EDEABC7AF6497C23EE5",
+  "research_status_counts": {
+    "accepted": 17,
+    "boundary": 4,
+    "fail": 24
+  },
+  "run_id": "622C929BECB834767763",
+  "schema_version": "invariant_bundle_method_comparison_v1",
+  "source_git_commit": "95a606ef75888fcef7f4d8cb2eedb120efc13b22",
+  "stage_f_rows": 126,
+  "stage_f_run_id": "BCD048008409BD67CAA4",
+  "stage_f_status": "complete",
+  "status": "complete_stage_d_e_bundle_only"
+}

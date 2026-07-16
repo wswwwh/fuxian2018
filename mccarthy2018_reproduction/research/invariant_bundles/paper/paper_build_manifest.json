@@ -1,0 +1,24 @@
+{
+  "bundle_run_id": "622C929BECB834767763",
+  "citation_status": "pending_verified_external_literature",
+  "claim_scope": "reliable_numerical_framework_and_systematic_comparison",
+  "inputs": {
+    "data/computed/reproduction_baseline_v1_summary.csv": "BD440A782B6F1E3D5608F49E3D6514656B20B39EB142F0FC7092A7BB62AFED52",
+    "research/invariant_bundles/benchmarks/benchmark_registry.csv": "B38099E93BB85AD4B97035D667A4AD5E6A74C1805B612EDEABC7AF6497C23EE5",
+    "research/invariant_bundles/figures/research_figure_manifest.csv": "FE7147FC8FF4702C1EF6A86454AC45F21CACFD667542DEFD9E17303FC1DE040C",
+    "research/invariant_bundles/results/csv/manifold_convergence.csv": "248A1F8CB8F958640D526CFFC2859AC3AEDF697BEE5BDAF78EBED95AD898FB8E",
+    "research/invariant_bundles/results/csv/method_comparison.csv": "0B66A89B13926BAF90114741796EA1128AC39A6C62BB092B4A1018B97CDEB88B",
+    "research/invariant_bundles/results/csv/resolution_convergence.csv": "137F53A170D7E1B5C073B70872195F9BC57011E0B1871B514BC15BF6DBBE1526"
+  },
+  "outputs": {
+    "research/invariant_bundles/paper/abstract.md": "16BCD3961DB9C87F1E5C6838E57CDDF689A776B754FAB2EE30FF36CBE0D5CF52",
+    "research/invariant_bundles/paper/claim_evidence_matrix.csv": "79BFD5B4BBFB011D03E586A1406F558BB2D5619EB9557FD212960E1EC04BD1AA",
+    "research/invariant_bundles/paper/contributions.md": "D6E8B927432F38FEA99D21AB58AFA4F9D2B93C1E27EFDA6A0E87D9F432DD632B",
+    "research/invariant_bundles/paper/figure_plan.md": "4D97D34BEA1D5783464A47E8C91A18F727080837D9614E129C15614E7C9B64F0",
+    "research/invariant_bundles/paper/limitations.md": "889DCB1D6FFD87A6D47E8C3E305767B6942E77D5FD6D1B0FA9D45F5752730CD3",
+    "research/invariant_bundles/paper/manuscript.md": "4EE9F7CF25F53775C1E9CDA266381AB22672DAD5A8E5C5ECB93D5B699A52289C",
+    "research/invariant_bundles/paper/tables.md": "84EDEC391A7AF9818A016D6EE7BB44724B0CB1AAD5D38BCC824C8904EBD336C3"
+  },
+  "schema_version": "invariant_bundle_paper_build_v1",
+  "source_git_commit": "95a606ef75888fcef7f4d8cb2eedb120efc13b22"
+}

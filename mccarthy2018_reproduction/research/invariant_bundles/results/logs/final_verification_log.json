@@ -1,0 +1,151 @@
+{
+  "commands": {
+    "baseline": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/run_reproduction_baseline_freeze.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "last_line": "BASELINE FREEZE CHECK PASS targets=54 v0=13 v2=41 accepted=7 boundary=30 diagnostic=5 proxy=12 holdout=0/4",
+      "output_sha256": "58F3B009FE900BE74D0CEA472C2099256AF27CF2390F20E3B982729AFE39AA78"
+    },
+    "benchmarks": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/run_invariant_bundle_benchmarks.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "last_line": "invariant-bundle benchmark CHECK PASS cases=15 rows=45",
+      "output_sha256": "17065BA857D6C9FC47103E4BBEDAAC43E22B3F078678DC1C08451C58538185C2"
+    },
+    "figures": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "research/invariant_bundles/figures/generate_research_figures.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "last_line": "research figures CHECK PASS figures=6 artifacts=12",
+      "output_sha256": "BE9AF633F20CE53252147A352EA18D3B2B1A1B288D029A312EE98675BAFD4BF3"
+    },
+    "git_diff_check": {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "last_line": "warning: in the working copy of 'mccarthy2018_reproduction/src/qp_orbits/__init__.py', LF will be replaced by CRLF the next time Git touches it",
+      "output_sha256": "70EF9484D0DF45CFCA614C9204230E1823FB840585C6F3048C3FC4679732DCE1"
+    },
+    "manifolds": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/run_invariant_bundle_manifold_convergence.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "last_line": "invariant-bundle manifold CHECK PASS cases=7 rows=126",
+      "output_sha256": "8D74C06B5204B6ED8B88C3823C90F9268DDCEA853A8507F4843CC8BC16361BD7"
+    },
+    "paper": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/build_invariant_bundle_paper.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "last_line": "invariant-bundle paper CHECK PASS files=8 claims=10",
+      "output_sha256": "AB426F4D3B077BCAEB08C7FDFDDB180FE9A4507D1096C789B69E670C45E2EC98"
+    },
+    "registry": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/build_invariant_bundle_registry.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "last_line": "invariant-bundle registry CHECK PASS cases=15 families=4",
+      "output_sha256": "9E39E43F42573BBB1D7624746A9D782C1BF87CF080998DCCC56D936E6CA70C1F"
+    },
+    "smoke": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/validate_reproduction_smoke.py"
+      ],
+      "exit_code": 0,
+      "last_line": "png=54 pdf=54",
+      "output_sha256": "72F332E42A1B7735376A9DC02E360189C47C4A992289A371EE664156D1127961"
+    },
+    "stage_b_conclusion": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/run_chapter4_stage_b_conclusion.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "last_line": "chapter4 Stage B conclusion CHECK PASS status=complete_with_negative_results",
+      "output_sha256": "75AA9BADA9E62E778921833BA5BF4C4F5ED5AB6C19B8243AD4878045E30F7DC2"
+    },
+    "stage_b_controls": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/run_chapter4_projection_semantics_negative_controls.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "last_line": "chapter4 negative controls CHECK PASS rows=24 frozen_holdout=fail",
+      "output_sha256": "33F59A857B4F92304B9EBD865F59F1106501BAB7AB7E093A1898B0ACFC5E3726"
+    },
+    "stage_b_resolution": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/run_chapter4_resolution_audits.py",
+        "--family",
+        "all",
+        "--check",
+        "--max-wall-seconds",
+        "900"
+      ],
+      "exit_code": 0,
+      "last_line": "vertical resolution check PASS rows=3 highest=fail_source_gate frozen_holdout=fail",
+      "output_sha256": "CFCAFF8B386FC6C1B51D7B66FE9CD081C9B1534E9409F1E183D12BB094CAA136"
+    },
+    "targets": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/build_reproduction_targets.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "last_line": "target registry is up to date: 54 rows",
+      "output_sha256": "3184D2A2EE6522E39F05002DEE0A721F4CA1F5D1E6A7B381CDCB84B02A902E4B"
+    },
+    "unit_tests": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "last_line": "OK",
+      "output_sha256": "15BFCA1CC010EDA17E8C533F49BBCDD944C8BAE2904799C8739DB750DB58F811"
+    }
+  },
+  "input_hashes": {
+    "data/computed/chapter4_invariant_bundle_stage_b_conclusion.csv": "5D01AEA34888EE1A517E8DDD45BD87EA426AD1906322B78A13F9554B067BF246",
+    "data/computed/reproduction_baseline_v1_summary.csv": "BD440A782B6F1E3D5608F49E3D6514656B20B39EB142F0FC7092A7BB62AFED52",
+    "research/invariant_bundles/benchmarks/benchmark_registry.csv": "B38099E93BB85AD4B97035D667A4AD5E6A74C1805B612EDEABC7AF6497C23EE5",
+    "research/invariant_bundles/figures/research_figure_manifest.csv": "FE7147FC8FF4702C1EF6A86454AC45F21CACFD667542DEFD9E17303FC1DE040C",
+    "research/invariant_bundles/results/csv/manifold_convergence.csv": "248A1F8CB8F958640D526CFFC2859AC3AEDF697BEE5BDAF78EBED95AD898FB8E",
+    "research/invariant_bundles/results/csv/method_comparison.csv": "0B66A89B13926BAF90114741796EA1128AC39A6C62BB092B4A1018B97CDEB88B"
+  },
+  "schema_version": "invariant_bundle_final_verification_v1",
+  "source_git_commit": "95a606ef75888fcef7f4d8cb2eedb120efc13b22"
+}

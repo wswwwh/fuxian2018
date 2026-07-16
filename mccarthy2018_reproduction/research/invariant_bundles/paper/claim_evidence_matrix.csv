@@ -1,0 +1,11 @@
+claim_id,section,claim,evidence_artifact,filter_or_metric,status,boundary
+C1,Introduction,The reproduction baseline is frozen and is not a thesis-wide strict-equivalence claim.,data/computed/reproduction_baseline_v1_summary.csv,target_rows and evidence-class rows,supported,Research cannot promote reproduction.
+C2,Benchmarks,The registry contains 15 cases from four families.,research/invariant_bundles/benchmarks/benchmark_registry.csv,row count; family nunique,supported,Physical and legacy Route-H member 68 are separate.
+C3,Results,Pointwise eig has 0/15 accepted cases; Schur has 7/15; QR/SVD has 10/15.,research/invariant_bundles/results/csv/method_comparison.csv,"group by method,research_status",supported,Research-only status.
+C4,Results,"QR/SVD has repeatable residual advantage on Halo, Vertical, and Sun-Earth anchors.",research/invariant_bundles/results/csv/method_comparison.csv,three HIGH_CASES max_invariance_residual,supported,Does not imply thesis projection equivalence.
+C5,Resolution,Local bundle convergence does not by itself clear full-sheet convergence.,research/invariant_bundles/results/csv/manifold_convergence.csv,cross_resolution_normalized_3d_distance,supported,0.01 boundary retained.
+C6,Route H,The legacy member-68 positive control and physical corrected-rho case are different operators.,research/invariant_bundles/results/csv/method_comparison.csv,"source map residual, rho case IDs, dimension",supported,Legacy control is not a physical-source acceptance.
+C7,Manifolds,"Both improved methods pass at Halo N45, Vertical N57, and Sun-Earth 468.",research/invariant_bundles/results/csv/manifold_convergence.csv,nominal epsilon; both signs; status,supported,Only unstable 1-D manifolds tested.
+C8,Manifolds,Maximum stored Jacobi drift is 2.220e-15.,research/invariant_bundles/results/csv/manifold_convergence.csv,max manifold_jacobi_drift,supported,Finite tested campaign only.
+C9,Contribution,The work is a reliable numerical framework and systematic comparison.,research/invariant_bundles/results/csv/method_comparison.csv;research/invariant_bundles/results/csv/manifold_convergence.csv,multi-family accepted and failed rows,supported,No new theorem claim.
+C10,Boundary,The work establishes McCarthy 2018 paper-equivalence.,data/computed/reproduction_baseline_v1_summary.csv,frozen boundary text,rejected,Explicitly unsupported.

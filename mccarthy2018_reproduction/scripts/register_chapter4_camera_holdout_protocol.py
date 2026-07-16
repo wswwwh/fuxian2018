@@ -30,6 +30,7 @@ STATE_CSV_PATH = DATA / "chapter4_fig43_fig46_epsilon_state_sensitivity.csv"
 
 PROTOCOL_VERSION = "chapter4_camera_epsilon_holdout_v1"
 EVIDENCE_CLASS = "programmatic_frozen_holdout_with_historical_exposure"
+FROZEN_THESIS_SOURCE = "../2018_McCarthy_拟周期轨道.pdf"
 NORMALIZED_SIZE = 512
 MASK_RULE = "R>=55;R-max(G,B)>=14;R>=1.10*max(G,B)"
 CAMERA_MODEL = "shared_per_figure_orthographic_2x3_affine_from_static_fiducials"
@@ -231,7 +232,9 @@ def build_rows(
                 "epsilon_scope": "nested_H0_global_or_H1_family;never_branch_figure_panel",
                 "paper_epsilon_numeric": "not_reported",
                 "paper_epsilon_source": "Section_4.2_Equations_4.5_4.6_and_figure_captions",
-                "thesis_source": _display(thesis_path),
+                # Preserve the v1 provenance label even if the byte-identical
+                # thesis PDF is relocated into an approved workspace folder.
+                "thesis_source": FROZEN_THESIS_SOURCE,
                 "thesis_source_sha256": thesis_hash,
                 "epsilon_hypotheses": EPSILON_HYPOTHESES,
                 "camera_fit_panels": CAMERA_FIT_PANELS,

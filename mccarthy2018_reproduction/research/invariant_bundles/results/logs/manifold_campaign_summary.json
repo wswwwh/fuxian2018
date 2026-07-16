@@ -1,0 +1,23 @@
+{
+  "bundle_run_id": "622C929BECB834767763",
+  "cases": 7,
+  "cross_resolution_distance_limit": 0.01,
+  "elapsed_seconds": 28.53034900000057,
+  "families": 3,
+  "initial_linear_ratio_tolerance": 0.05,
+  "jacobi_drift_limit": 1e-10,
+  "method_npz_sha256": "5BEE3AF6EC59F598B04D9B60BC2147A608AF9EDF45F9FC0DC3FADA2B31343571",
+  "methods": 3,
+  "perturbations": 3,
+  "registry_sha256": "B38099E93BB85AD4B97035D667A4AD5E6A74C1805B612EDEABC7AF6497C23EE5",
+  "rows": 126,
+  "run_id": "BCD048008409BD67CAA4",
+  "schema_version": "invariant_bundle_manifold_convergence_v2",
+  "signs": 2,
+  "source_git_commit": "95a606ef75888fcef7f4d8cb2eedb120efc13b22",
+  "status": "complete",
+  "status_counts": {
+    "accepted": 36,
+    "fail": 90
+  }
+}

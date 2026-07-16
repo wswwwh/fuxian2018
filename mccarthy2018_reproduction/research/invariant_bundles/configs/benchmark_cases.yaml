@@ -1,0 +1,32 @@
+schema_version: invariant_bundle_benchmark_cases_v1
+registry: ../benchmarks/benchmark_registry.csv
+enabled_cases:
+  - em_halo_12p40_n21
+  - em_halo_12p40_n33
+  - em_halo_12p40_n45
+  - em_halo_12p09_n15_small
+  - em_halo_12p097_n9_lowres_negative
+  - em_vertical_12p66_n33
+  - em_vertical_12p66_n45
+  - em_vertical_12p66_n57
+  - route_h_member_68
+  - route_h_member_68_legacy_dg_positive
+  - route_h_member_17
+  - route_h_member_32
+  - route_h_member_54
+  - se_active_geometry_member_468
+  - se_quasi_halo_small_n21
+resolution_groups:
+  halo_12p40:
+    - em_halo_12p40_n21
+    - em_halo_12p40_n33
+    - em_halo_12p40_n45
+  vertical_12p66:
+    - em_vertical_12p66_n33
+    - em_vertical_12p66_n45
+    - em_vertical_12p66_n57
+manifold_stage_f_cases:
+  - em_halo_12p40_n45
+  - em_vertical_12p66_n45
+  - se_active_geometry_member_468
+

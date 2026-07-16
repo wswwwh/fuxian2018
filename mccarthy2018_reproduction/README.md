@@ -12,6 +12,21 @@ local-only 10,164 km bottleneck description. Route H accepted validation rows:
 not make the whole thesis a complete numerical-equivalence reproduction.
 <!-- ROUTE_H_STATUS_SYNC_END -->
 
+## Reproduction Baseline v1
+
+The frozen, auditable status entry point is
+`docs/reproduction_baseline_v1.md`, backed by
+`data/computed/reproduction_baseline_v1_summary.csv` and
+`data/computed/reproduction_baseline_v1_manifest.csv`.
+
+Status claims must be resolved from the staged-gate and per-figure CSVs before
+using this README or older reports. The baseline records 54/54 engineering
+coverage while explicitly preserving the Chapter 4 frozen projection holdout
+at 0/4 (`paper_projection=fail`, `paper_3d=false`). It is not a claim of
+full thesis numerical equivalence. Repository boundaries and the mandatory
+Stage A -> Stage B -> research transition are defined in
+`docs/repository_architecture.md` and `docs/research_transition_plan.md`.
+
 This repository is the local reproduction workspace for:
 
 Brian P. McCarthy, *Characterization of Quasi-Periodic Orbits for Applications
@@ -394,10 +409,13 @@ conda run -n cislunar python --version
 For the current scripts, the required packages are:
 
 ```powershell
-conda run -n cislunar python -m pip install pypdf pymupdf
+conda run -n cislunar python -m pip install pypdf pymupdf skyfield
 ```
 
-The full environment intent is recorded in `environment.yml`.
+The compatible environment intent is recorded in `environment.yml`; the
+tested direct-dependency snapshot is `environment-lock.yml`. Exact interpreter,
+environment variables, import probes, and Stage A regression commands are in
+`docs/reproducible_environment.md`.
 
 ## Run
 

@@ -1,0 +1,8 @@
+{
+  "schema_version": "reproduction_baseline_v1_lock",
+  "baseline_version": "v1",
+  "freeze_date": "2026-07-15",
+  "source_git_commit": "95a606ef75888fcef7f4d8cb2eedb120efc13b22",
+  "goal_path": "../计划与目标/codex_goal_invariant_bundles.md",
+  "policy": "Derived baseline outputs may be regenerated; canonical reproduction CSVs and the Chapter 4 v1 holdout remain read-only."
+}

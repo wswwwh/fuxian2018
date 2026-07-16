@@ -11,6 +11,7 @@ dependencies = [
   "pillow",
   "pypdf",
   "pymupdf",
+  "skyfield",
 ]
 
 [tool.setuptools.packages.find]

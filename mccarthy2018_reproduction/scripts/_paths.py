@@ -14,7 +14,19 @@ if str(SRC_ROOT) not in sys.path:
 
 
 def find_thesis_pdf() -> Path:
-    candidates = sorted(PROJECT_ROOT.parent.glob("2018_McCarthy*.pdf"))
+    search_roots = (
+        PROJECT_ROOT.parent,
+        PROJECT_ROOT.parent / "目标论文",
+    )
+    candidates = sorted(
+        candidate
+        for root in search_roots
+        if root.is_dir()
+        for candidate in root.glob("2018_McCarthy*.pdf")
+    )
     if not candidates:
-        raise FileNotFoundError("Could not find 2018_McCarthy thesis PDF next to the project.")
+        searched = ", ".join(str(root) for root in search_roots)
+        raise FileNotFoundError(
+            f"Could not find 2018_McCarthy thesis PDF in the approved locations: {searched}"
+        )
     return candidates[0]

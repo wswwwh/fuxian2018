@@ -1,0 +1,26 @@
+schema_version: invariant_bundle_method_options_v1
+campaign_caps:
+  max_cases: 15
+  max_spectral_samples: 57
+  max_iterations: 200
+  max_wall_time_seconds: 1800
+  residual_plateau_window: 12
+  checkpoint_every_case: true
+cocycle:
+  earth_moon_max_step_nd: 0.01
+  sun_earth_max_step_nd: 0.005
+methods:
+  - traditional_pointwise_eigendecomposition
+  - ordered_partial_real_schur_tracking
+  - qr_svd_shifted_cocycle_iteration
+research_only_thresholds:
+  pass_max_invariance_residual: 1.0e-6
+  boundary_max_invariance_residual: 1.0e-3
+  pass_selection_residual: 1.0e-8
+  real_relative_imaginary_tolerance: 1.0e-10
+  qr_angle_tolerance_deg: 2.0e-6
+notes:
+  - These thresholds classify research runs only.
+  - They do not replace or relax any reproduction or projection gate.
+  - A complex pair must be stored as a real two-dimensional subspace.
+
