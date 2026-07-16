@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import re
 import subprocess
+import tomllib
 from typing import Any, Iterable
 
 import yaml
@@ -23,6 +24,12 @@ CONFIG = (
     / "ci_validation.json"
 )
 FULL_CONTROLLER = PROJECT_ROOT / "scripts" / "run_ci_full_research_validation.py"
+CAMERA_PARAMETERS = (
+    PROJECT_ROOT
+    / "data"
+    / "computed"
+    / "chapter4_fig43_fig46_camera_parameters.csv"
+)
 
 
 def discover_repository_root(project_root: Path = PROJECT_ROOT) -> Path:
@@ -59,6 +66,27 @@ REPOSITORY_ROOT = discover_repository_root()
 
 def repository_relative(path: Path) -> str:
     return path.resolve().relative_to(REPOSITORY_ROOT).as_posix()
+
+
+def frozen_renderer_dependency_valid(
+    pyproject_path: Path, camera_parameters_path: Path = CAMERA_PARAMETERS
+) -> tuple[bool, str]:
+    """Bind the installed Matplotlib release to the frozen camera evidence."""
+
+    with pyproject_path.open("rb") as stream:
+        pyproject = tomllib.load(stream)
+    dependencies = pyproject.get("project", {}).get("dependencies", [])
+    if not isinstance(dependencies, list) or not all(
+        isinstance(dependency, str) for dependency in dependencies
+    ):
+        return False, "pyproject project.dependencies is invalid"
+    with camera_parameters_path.open(newline="", encoding="utf-8") as stream:
+        rows = list(csv.DictReader(stream))
+    versions = {row.get("matplotlib_version", "") for row in rows}
+    if len(versions) != 1 or not next(iter(versions), ""):
+        return False, "camera evidence does not declare one Matplotlib version"
+    requirement = f"matplotlib=={next(iter(versions))}"
+    return requirement in dependencies, requirement
 
 
 def load_workflow(path: Path) -> dict[str, Any]:
@@ -356,6 +384,15 @@ def validate(output: Path) -> list[dict[str, str]]:
         "cache_dependency_path_exists",
         (REPOSITORY_ROOT / dependency_path).is_file(),
         dependency_path,
+    )
+    renderer_dependency_valid, renderer_requirement = (
+        frozen_renderer_dependency_valid(REPOSITORY_ROOT / dependency_path)
+    )
+    record(
+        rows,
+        "frozen_camera_renderer_dependency_pin",
+        renderer_dependency_valid,
+        renderer_requirement,
     )
     record(
         rows,

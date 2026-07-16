@@ -18,6 +18,7 @@ github_actions_contract_check_v2,full_setup_python_action,pass,actions/setup-pyt
 github_actions_contract_check_v2,fast_artifact_action,pass,actions/upload-artifact@v7
 github_actions_contract_check_v2,full_artifact_action,pass,actions/upload-artifact@v7
 github_actions_contract_check_v2,cache_dependency_path_exists,pass,mccarthy2018_reproduction/pyproject.toml
+github_actions_contract_check_v2,frozen_camera_renderer_dependency_pin,pass,matplotlib==3.10.7
 github_actions_contract_check_v2,fast_setup_python_pip_cache,pass,cache=pip cache-dependency-path=mccarthy2018_reproduction/pyproject.toml
 github_actions_contract_check_v2,full_setup_python_pip_cache,pass,cache=pip cache-dependency-path=mccarthy2018_reproduction/pyproject.toml
 github_actions_contract_check_v2,fast_ubuntu_environment,pass,"{""MPLBACKEND"": ""Agg"", ""PYTHONHASHSEED"": ""0"", ""PYTHONPATH"": ""src""}"

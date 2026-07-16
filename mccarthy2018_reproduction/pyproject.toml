@@ -7,7 +7,7 @@ dependencies = [
   "numpy",
   "scipy",
   "pandas",
-  "matplotlib",
+  "matplotlib==3.10.7",
   "pillow",
   "pypdf",
   "pymupdf",

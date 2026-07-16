@@ -115,6 +115,10 @@ research accepted 不得覆盖 reproduction fail/boundary。
   row, encoding/BOM, threshold, or scientific-result changes.
 - `scripts/refresh_portable_artifact_hash_manifests.py --check` is the read-only
   contract for committed artifact manifests.
+- The frozen Chapter 4 camera evidence records its Matplotlib renderer version.
+  `pyproject.toml` pins that exact release (`matplotlib==3.10.7`) so a fresh CI
+  install cannot silently change projection matrices; changing the renderer
+  requires an explicit camera-evidence and promotion audit.
 
 ## Legacy / deprecated status 索引
 

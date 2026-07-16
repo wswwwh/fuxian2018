@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import tomllib
 import unittest
 from pathlib import Path
 
@@ -25,6 +26,21 @@ def _rows(path: Path) -> list[dict[str, str]]:
 
 
 class Chapter4CameraCalibrationTests(unittest.TestCase):
+    def test_project_pins_the_frozen_renderer_version(self) -> None:
+        with (ROOT / "pyproject.toml").open("rb") as stream:
+            pyproject = tomllib.load(stream)
+        dependencies = pyproject["project"]["dependencies"]
+        parameters = _rows(DATA / "chapter4_fig43_fig46_camera_parameters.csv")
+        parameter_versions = {row["matplotlib_version"] for row in parameters}
+        with np.load(
+            DATA / "chapter4_fig43_fig46_camera_calibration.npz",
+            allow_pickle=False,
+        ) as evidence:
+            evidence_version = str(evidence["matplotlib_version"][0])
+
+        self.assertEqual(parameter_versions, {evidence_version})
+        self.assertIn(f"matplotlib=={evidence_version}", dependencies)
+
     def test_frozen_camera_values_and_axis_corners(self) -> None:
         self.assertEqual(set(CHAPTER4_PAPER_CAMERAS), {"4.3", "4.4", "4.5", "4.6"})
         self.assertEqual(CHAPTER4_PAPER_CAMERAS["4.3"].azimuth_deg, -45.0)

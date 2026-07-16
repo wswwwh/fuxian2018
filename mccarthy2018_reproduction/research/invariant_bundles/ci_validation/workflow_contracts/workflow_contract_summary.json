@@ -1,5 +1,5 @@
 {
-  "checks": 52,
+  "checks": 53,
   "failed": 0,
   "failed_check_ids": [],
   "fast_workflow": ".github/workflows/ci.yml",
@@ -27,7 +27,7 @@
     "source": "official GitHub release pages",
     "verified_on": "2026-07-16"
   },
-  "passed": 52,
+  "passed": 53,
   "path_root": "repository",
   "project_directory": "mccarthy2018_reproduction",
   "schema_version": "github_actions_contract_summary_v2",
