@@ -1,0 +1,20 @@
+{
+  "adviser": "张晨",
+  "author": "兀文昊",
+  "chapter4_holdout": "0/4",
+  "claim_evidence_rows": 15,
+  "docx_images": 9,
+  "docx_pages_rendered": 20,
+  "formal_references": 25,
+  "institution": "中国科学院大学",
+  "positioning": "numerical_framework_and_systematic_comparison",
+  "release_figures": 9,
+  "required_sections": 13,
+  "schema_version": "invariant_bundle_paper_release_summary_v1",
+  "status": "pass",
+  "submission_readiness": "not_claimed",
+  "summary_tables": 8,
+  "title": "拟周期轨道实不变子束计算方法的数值比较与可靠性分析",
+  "truth_boundary_status": "preserved",
+  "verified_doi": 21
+}

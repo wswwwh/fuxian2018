@@ -1,0 +1,16 @@
+paper release build
+started_utc=2026-07-16T08:43:16.877466+00:00
+finished_utc=2026-07-16T08:43:31.272650+00:00
+elapsed_seconds=14.395184
+python=C:\Users\wwh20\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe
+title=拟周期轨道实不变子束计算方法的数值比较与可靠性分析
+identity=兀文昊|张晨|中国科学院大学
+sections=13/13
+claims=15
+references=25
+figures=9
+tables=8
+docx_pages=20
+chapter4_holdout=0/4
+truth_boundary_status=preserved
+submission_readiness=not_claimed

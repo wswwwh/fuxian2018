@@ -1,0 +1,11 @@
+{
+  "document_builder": "python-docx",
+  "libreoffice": "C:\\Program Files\\LibreOffice\\program\\soffice.exe",
+  "numpy": "2.3.5",
+  "pdf_renderer": "LibreOffice headless",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.13 (main, Mar  3 2026, 15:01:35) [MSC v.1944 64 bit (AMD64)]",
+  "python_docx": "1.2.0",
+  "python_executable": "C:\\Users\\wwh20\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+  "schema_version": "paper_release_stage_environment_v1"
+}

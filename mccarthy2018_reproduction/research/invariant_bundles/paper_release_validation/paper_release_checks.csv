@@ -1,0 +1,12 @@
+check_id,status,detail
+identity_fields,pass,兀文昊;张晨;中国科学院大学
+required_sections,pass,13/13
+formal_references,pass,25 references; 21 verified DOI
+claim_evidence_rows,pass,15
+figures,pass,9 raster plus vector sources
+summary_tables,pass,8
+docx_embedded_images,pass,9
+docx_render_pages,pass,20
+chapter4_holdout,pass,0/4;paper_projection=fail;paper_3d=false
+route_h_boundary,pass,physical=2D/fail;legacy=1D/accepted control
+submission_readiness,pass,not_claimed

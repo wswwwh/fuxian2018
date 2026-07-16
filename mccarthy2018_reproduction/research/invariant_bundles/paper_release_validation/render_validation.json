@@ -1,0 +1,23 @@
+{
+  "libreoffice_command": [
+    "C:\\Program Files\\LibreOffice\\program\\soffice.exe",
+    "--headless",
+    "-env:UserInstallation=file:///C:/Users/wwh20/AppData/Local/Temp/lo_profile_paper_1cxl55p9",
+    "--convert-to",
+    "pdf",
+    "--outdir",
+    "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\research\\invariant_bundles\\paper_release_validation\\rendered",
+    "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\research\\invariant_bundles\\paper_release\\manuscript_zh.docx"
+  ],
+  "libreoffice_output": "Could not find platform independent libraries <prefix>\nconvert C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\research\\invariant_bundles\\paper_release\\manuscript_zh.docx as a Writer document -> C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\research\\invariant_bundles\\paper_release_validation\\rendered\\manuscript_zh.pdf using filter : writer_pdf_Export",
+  "libreoffice_return_code": 0,
+  "pdf_bytes": 1950171,
+  "pdf_extracted_characters": 19975,
+  "pdf_pages": 20,
+  "pdf_path": "research/invariant_bundles/paper_release_validation/rendered/manuscript_zh.pdf",
+  "preview_paths": [
+    "research/invariant_bundles/paper_release_validation/rendered/preview_page_001.png",
+    "research/invariant_bundles/paper_release_validation/rendered/preview_page_011.png",
+    "research/invariant_bundles/paper_release_validation/rendered/preview_page_020.png"
+  ]
+}

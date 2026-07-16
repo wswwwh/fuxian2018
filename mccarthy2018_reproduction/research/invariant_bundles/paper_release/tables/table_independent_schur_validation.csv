@@ -1,0 +1,13 @@
+case_id,internal_dimension,independent_dimension,principal_angle_max_deg,classification_agreement,status_agreement,validation_verdict
+em_halo_12p40_n21,1,1,1.9090959104164224e-06,true,true,accepted
+em_halo_12p40_n33,1,1,1.4787793334710982e-06,true,true,accepted
+em_halo_12p40_n45,1,1,1.4787793334710982e-06,true,true,accepted
+em_vertical_12p66_n33,1,1,1.2074182697257333e-06,true,true,accepted
+em_vertical_12p66_n45,1,1,1.4787793334710982e-06,true,true,accepted
+em_vertical_12p66_n57,1,1,1.2074182697257333e-06,true,true,accepted
+se_active_geometry_member_468,1,1,1.2074182697257333e-06,true,true,accepted
+route_h_member_17,2,2,2.4148365394514667e-06,true,true,accepted
+route_h_member_32,2,2,2.4148365394514667e-06,true,true,accepted
+route_h_member_54,2,2,2.561320938754782e-06,true,true,accepted
+route_h_member_68,2,2,2.561320938754782e-06,true,true,accepted
+route_h_member_68_legacy_dg_positive,1,1,1.4787793334710982e-06,true,true,accepted

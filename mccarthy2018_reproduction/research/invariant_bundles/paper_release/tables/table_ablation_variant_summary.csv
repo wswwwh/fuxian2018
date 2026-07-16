@@ -1,0 +1,8 @@
+variant,short_label,accepted,failed,method_exceptions,median_finite_max_residual,max_finite_max_residual
+pointwise_eig_no_phase_alignment,V1,0,5,2,0.16160936728506684,0.16420905801806215
+pointwise_eig_sign_alignment_only,V2,0,5,2,0.14338814917799492,0.15981439053762933
+partial_real_schur_no_phase_tracking,V3,3,2,0,6.542693099748203e-07,0.8126024262485982
+partial_real_schur_phase_tracking,V4,3,2,0,6.542693099748203e-07,0.4278835886004915
+qr_svd_no_phase_alignment,V5,3,2,0,9.471927263847928e-09,0.00195539491876543
+qr_svd_phase_alignment,V6,3,2,0,9.471927263010407e-09,0.001955394751787983
+qr_svd_phase_alignment_schur_dimension_seed,V7,3,2,0,9.471927263010407e-09,0.9298896769453022

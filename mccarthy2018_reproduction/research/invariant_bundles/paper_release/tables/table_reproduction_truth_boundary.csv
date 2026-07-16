@@ -1,0 +1,10 @@
+metric_id,value,interpretation
+target_rows,54,engineering target coverage
+v0_targets,13,schematic tier
+v2_targets,41,numeric/application tier
+evidence_accepted,7,conservative evidence-gap classification
+evidence_boundary,30,conservative evidence-gap classification
+evidence_diagnostic,5,conservative evidence-gap classification
+evidence_proxy,12,conservative evidence-gap classification
+chapter4_frozen_holdout_pass,0,frozen paper projection passes
+chapter4_frozen_holdout_total,4,frozen paper projection rows

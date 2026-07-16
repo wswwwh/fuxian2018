@@ -1,0 +1,6 @@
+case_id,independent_schur_dimension,best_native_status,best_native_max_residual,iteration_caps,resolutions,high_precision_digits,final_label,negative_result_retained
+route_h_member_17,2,fail,0.6471125810275846,200;500;1000,native_n45;fourier_lift_n67,80,no_accepted_1d_bundle,true
+route_h_member_32,2,fail,0.6642796190258199,200;500;1000,native_n45;fourier_lift_n67,80,no_accepted_1d_bundle,true
+route_h_member_54,2,fail,0.6988622496280984,200;500;1000,native_n45;fourier_lift_n67,80,no_accepted_1d_bundle,true
+route_h_member_68,2,fail,0.7440595114401031,200;500;1000,native_n45;fourier_lift_n67,80,no_accepted_1d_bundle,true
+route_h_member_68_legacy_dg_positive,1,accepted,2.222629541790655e-09,200;500;1000,native_n45;fourier_lift_n67,80,method_initialization_sensitive,true

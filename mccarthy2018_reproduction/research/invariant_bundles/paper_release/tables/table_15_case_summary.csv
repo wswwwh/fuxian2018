@@ -1,0 +1,16 @@
+case_id,family,spectral_samples,pointwise_status,pointwise_dimension,pointwise_max_residual,schur_status,schur_dimension,schur_max_residual,qr_svd_status,qr_svd_dimension,qr_svd_max_residual
+em_halo_12p40_n21,地月 L1 拟 Halo,21,fail,1,0.1235239283781203,boundary,1,8.121598454661443e-06,accepted,1,6.687398870392696e-07
+em_halo_12p40_n33,地月 L1 拟 Halo,33,fail,1,0.1245260831692273,accepted,1,2.053713400702783e-08,accepted,1,2.116522855633167e-09
+em_halo_12p40_n45,地月 L1 拟 Halo,45,fail,1,0.1240301871126478,accepted,1,5.998696454080925e-11,accepted,1,4.402709619572765e-12
+em_halo_12p09_n15_small,地月 L1 拟 Halo,15,fail,1,0.08248230905639937,accepted,1,3.936401645065712e-09,accepted,1,7.517655815932932e-11
+em_halo_12p097_n9_lowres_negative,地月 L1 拟 Halo,9,fail,1,0.08258131391599341,boundary,1,4.884507986118001e-06,accepted,1,1.011879515616497e-07
+em_vertical_12p66_n33,地月 L1 拟 Vertical,33,fail,1,0.1589738651233461,boundary,1,3.803948785677248e-05,accepted,1,8.507152339934762e-07
+em_vertical_12p66_n45,地月 L1 拟 Vertical,45,fail,1,0.1614168830909394,boundary,1,1.103257920854445e-06,accepted,1,8.006029911494085e-08
+em_vertical_12p66_n57,地月 L1 拟 Vertical,57,fail,1,0.1598143905376293,accepted,1,6.373404342531289e-08,accepted,1,3.890772613996416e-09
+route_h_member_68,地月 Route H 拟 DRO,45,fail,0,nan,fail,2,0.1649902199855227,fail,2,0.8975552238288886
+route_h_member_17,地月 Route H 拟 DRO,45,fail,0,nan,fail,2,0.1950707777350608,fail,2,0.9790344254954164
+route_h_member_32,地月 Route H 拟 DRO,45,fail,0,nan,fail,2,0.4278835886004915,fail,2,0.9298896769453022
+route_h_member_54,地月 Route H 拟 DRO,45,fail,0,nan,fail,2,0.1549284657167022,fail,2,0.7062781387830996
+route_h_member_68_legacy_dg_positive,地月 Route H 拟 DRO,45,fail,0,nan,accepted,1,1.20348957779899e-09,fail,1,0.003646331871069523
+se_active_geometry_member_468,日地 L1 双频环面,21,fail,1,0.1433881491779949,accepted,1,6.542693099748203e-07,accepted,1,9.471927263010407e-09
+se_quasi_halo_small_n21,日地 L1 双频环面,21,fail,1,0.009908065218083925,accepted,1,3.479102082747889e-07,accepted,1,1.95190423586231e-09

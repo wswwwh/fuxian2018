@@ -1,0 +1,88 @@
+{
+  "schema_version": "invariant_bundle_paper_release_config_v1",
+  "title": "拟周期轨道实不变子束计算方法的数值比较与可靠性分析",
+  "author": "兀文昊",
+  "adviser": "张晨",
+  "institution": "中国科学院大学",
+  "date": "2026年7月",
+  "language": "zh-CN",
+  "study_positioning": "numerical_framework_and_systematic_comparison",
+  "submission_readiness": "not_claimed",
+  "thresholds": {
+    "bundle_accepted_max_residual": 1e-06,
+    "bundle_boundary_max_residual": 0.001,
+    "qr_iteration_cap": 200,
+    "qr_failure_caps_tested": [
+      200,
+      500,
+      1000
+    ],
+    "qr_failure_high_precision_digits": 80,
+    "independent_schur_angle_tolerance_deg": 0.0001,
+    "manifold_cross_resolution_boundary": 0.01,
+    "chapter4_projection_holdout_pass": 0,
+    "chapter4_projection_holdout_total": 4
+  },
+  "required_sections": [
+    "引言",
+    "问题描述与 cocycle 方程",
+    "传统点式特征方向方法及其失效模式",
+    "Partial real-Schur 方法",
+    "Shifted QR/SVD cocycle 迭代",
+    "Benchmark 轨道族与评价指标",
+    "子束结果",
+    "消融实验",
+    "流形传播与几何收敛",
+    "Route H 算子语义案例",
+    "计算成本",
+    "局限性与讨论",
+    "结论"
+  ],
+  "figures": [
+    {
+      "source": "research/invariant_bundles/figures/fig_bundle_method_summary.png",
+      "caption": "三种子束方法在 15 个 benchmark 上的状态与残差概览"
+    },
+    {
+      "source": "research/invariant_bundles/figures/fig_phase_continuity_profiles.png",
+      "caption": "代表性案例的相位连续性与相邻主角剖面"
+    },
+    {
+      "source": "research/invariant_bundles/figures/fig_resolution_convergence.png",
+      "caption": "Halo 与 Vertical 分辨率序列的子束主角收敛"
+    },
+    {
+      "source": "research/invariant_bundles/figures/fig_manifold_method_metrics.png",
+      "caption": "流形传播的数值守恒、方向差与几何距离"
+    },
+    {
+      "source": "research/invariant_bundles/figures/fig_halo_manifold_displacement_sheets.png",
+      "caption": "Halo 高分辨率案例的归一化位移流形片比较"
+    },
+    {
+      "source": "research/invariant_bundles/figures/fig_route_h_rho_control.png",
+      "caption": "Route H corrected-rho 与 legacy seed-rho 算子语义对照"
+    },
+    {
+      "source": "research/invariant_bundles/figures/ablation_bundle_residual.png",
+      "caption": "消融实验中的子束不变性残差"
+    },
+    {
+      "source": "research/invariant_bundles/figures/ablation_phase_continuity.png",
+      "caption": "消融实验中的相位连续性指标"
+    },
+    {
+      "source": "research/invariant_bundles/figures/ablation_manifold_geometry.png",
+      "caption": "消融实验中的线性化一映射流形几何诊断"
+    }
+  ],
+  "truth_boundaries": [
+    "54 图为完整工程覆盖，不是整篇学位论文严格等价复现。",
+    "Chapter 4 projection holdout 保持 0/4，paper_projection=fail，paper_3d=false。",
+    "Route H corrected-rho 物理案例保持二维实共轭子空间和失败状态。",
+    "legacy seed-rho 只作为正控制，不能替代物理算子。",
+    "二维实 Schur 子空间不得改写为一维实方向。",
+    "局部 bundle 验收与全局 manifold sheet 验收必须分开。",
+    "独立验证完成不等于已经达到投稿条件。"
+  ]
+}

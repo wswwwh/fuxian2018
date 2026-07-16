@@ -1,0 +1,10 @@
+case_id,method,spectral_samples,runtime_seconds,iterations,research_status
+em_halo_12p40_n45,Pointwise eig,45,0.04284379999990051,0,fail
+em_halo_12p40_n45,Partial real-Schur,45,0.1056647999994311,0,accepted
+em_halo_12p40_n45,Shifted QR/SVD,45,0.201437600000645,4,accepted
+em_vertical_12p66_n57,Pointwise eig,57,0.06088249999993423,0,fail
+em_vertical_12p66_n57,Partial real-Schur,57,0.1700209999999061,0,accepted
+em_vertical_12p66_n57,Shifted QR/SVD,57,0.2673764999999548,4,accepted
+se_active_geometry_member_468,Pointwise eig,21,0.01715689999946335,0,fail
+se_active_geometry_member_468,Partial real-Schur,21,0.0433379000005516,0,accepted
+se_active_geometry_member_468,Shifted QR/SVD,21,0.0804532999991352,4,accepted
