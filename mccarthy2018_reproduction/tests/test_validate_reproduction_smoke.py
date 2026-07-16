@@ -48,6 +48,52 @@ class ReproductionSmokeCliTests(unittest.TestCase):
             text=True,
         )
 
+    def run_target_builder(
+        self, output: Path | None = None, *, check: bool
+    ) -> subprocess.CompletedProcess[str]:
+        command = [
+            sys.executable,
+            str(TARGET_BUILDER),
+            "--project-root",
+            str(PROJECT_ROOT),
+        ]
+        if output is not None:
+            command.extend(("--output", str(output)))
+        if check:
+            command.append("--check")
+        return subprocess.run(
+            command,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+
+    def generate_target_registry(self, output: Path) -> None:
+        result = self.run_target_builder(output, check=False)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def read_target_registry(
+        self, path: Path
+    ) -> tuple[list[str], list[dict[str, str]]]:
+        with path.open("r", newline="", encoding="utf-8") as stream:
+            reader = csv.DictReader(stream)
+            rows = list(reader)
+        self.assertIsNotNone(reader.fieldnames)
+        return list(reader.fieldnames or []), rows
+
+    def write_target_registry(
+        self, path: Path, fieldnames: list[str], rows: list[dict[str, str]]
+    ) -> None:
+        with path.open("w", newline="", encoding="utf-8") as stream:
+            writer = csv.DictWriter(
+                stream,
+                fieldnames=fieldnames,
+                lineterminator="\n",
+                extrasaction="ignore",
+            )
+            writer.writeheader()
+            writer.writerows(rows)
+
     def test_missing_target_registry_returns_failure(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             result = self.run_validator(Path(directory))
@@ -97,15 +143,76 @@ class ReproductionSmokeCliTests(unittest.TestCase):
         self.assertIn("png=54 pdf=54", result.stdout)
 
     def test_target_registry_matches_its_generator(self) -> None:
-        result = subprocess.run(
-            [sys.executable, str(TARGET_BUILDER), "--check"],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+        result = self.run_target_builder(check=True)
 
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("target registry is up to date", result.stdout)
+
+    def test_generated_lf_target_registry_passes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "targets.csv"
+            self.generate_target_registry(output)
+            self.assertNotIn(b"\r\n", output.read_bytes())
+            result = self.run_target_builder(output, check=True)
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_equivalent_crlf_target_registry_passes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "targets.csv"
+            self.generate_target_registry(output)
+            output.write_bytes(output.read_bytes().replace(b"\n", b"\r\n"))
+            result = self.run_target_builder(output, check=True)
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_target_registry_content_change_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "targets.csv"
+            self.generate_target_registry(output)
+            fieldnames, rows = self.read_target_registry(output)
+            rows[0]["title"] += " changed"
+            self.write_target_registry(output, fieldnames, rows)
+            result = self.run_target_builder(output, check=True)
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("field 'title' differs", result.stderr)
+
+    def test_target_registry_field_order_change_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "targets.csv"
+            self.generate_target_registry(output)
+            fieldnames, rows = self.read_target_registry(output)
+            fieldnames[0], fieldnames[1] = fieldnames[1], fieldnames[0]
+            self.write_target_registry(output, fieldnames, rows)
+            result = self.run_target_builder(output, check=True)
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("field order differs", result.stderr)
+
+    def test_target_registry_row_order_change_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "targets.csv"
+            self.generate_target_registry(output)
+            fieldnames, rows = self.read_target_registry(output)
+            rows[0], rows[1] = rows[1], rows[0]
+            self.write_target_registry(output, fieldnames, rows)
+            result = self.run_target_builder(output, check=True)
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("row 1 field 'figure_id' differs", result.stderr)
+
+    def test_target_registry_missing_field_fails(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "targets.csv"
+            self.generate_target_registry(output)
+            fieldnames, rows = self.read_target_registry(output)
+            fieldnames.remove("next_action")
+            self.write_target_registry(output, fieldnames, rows)
+            result = self.run_target_builder(output, check=True)
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("field order differs", result.stderr)
 
     def test_incomplete_parameter_extraction_returns_failure(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

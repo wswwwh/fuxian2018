@@ -65,6 +65,18 @@ class ReproductionBaselineFreezeTests(unittest.TestCase):
             ]["freeze_policy"],
             "immutable_failed_boundary",
         )
+        self.assertEqual(
+            by_path[
+                "data/computed/chapter4_fig43_fig46_projection_holdout_audit.csv"
+            ]["hash_mode"],
+            "utf8_lf_normalized",
+        )
+        self.assertEqual(
+            by_path[
+                "data/computed/chapter4_fig43_fig44_global_manifold_audit.npz"
+            ]["hash_mode"],
+            "raw_bytes",
+        )
 
     def test_document_states_non_equivalence_and_stage_b_block(self) -> None:
         text = DOCUMENT.read_text(encoding="utf-8")

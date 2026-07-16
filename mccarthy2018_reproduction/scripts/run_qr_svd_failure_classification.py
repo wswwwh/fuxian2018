@@ -21,6 +21,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from qp_orbits.artifact_fingerprints import fingerprint_fields  # noqa: E402
 from qp_orbits.invariant_bundles import (  # noqa: E402
     _align_to_reference,
     _initial_svd_bases,
@@ -649,9 +650,12 @@ def main() -> None:
         SUMMARY_CSV, EXPERIMENT_CSV, NPZ_OUTPUT, DOC_OUTPUT, LOG_OUTPUT, FAILURE_EVIDENCE,
     ]
     write_csv(HASH_OUTPUT, [
-        {"artifact": str(path.relative_to(ROOT)).replace("\\", "/"), "bytes": path.stat().st_size, "sha256": sha256(path)}
+        {
+            "artifact": str(path.relative_to(ROOT)).replace("\\", "/"),
+            **fingerprint_fields(path),
+        }
         for path in hash_paths
-    ], ["artifact", "bytes", "sha256"])
+    ], ["artifact", "hash_mode", "bytes", "sha256"])
     print(
         f"QR/SVD failure classification PASS cases={len(summary_rows)} rows={len(experiment_rows)} "
         f"labels={json.dumps(label_counts, sort_keys=True)} elapsed={elapsed:.3f}s"

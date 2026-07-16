@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import csv
-import hashlib
 import json
 from pathlib import Path
 import sys
@@ -11,6 +10,8 @@ import tempfile
 import unittest
 
 import yaml
+
+from qp_orbits.artifact_fingerprints import fingerprint_matches
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -187,10 +188,13 @@ class GithubActionsWorkflowTests(unittest.TestCase):
         for row in rows:
             path = REPOSITORY_ROOT / row["path"]
             self.assertTrue(path.is_file(), row["path"])
-            self.assertEqual(path.stat().st_size, int(row["bytes"]), row["path"])
-            self.assertEqual(
-                hashlib.sha256(path.read_bytes()).hexdigest().upper(),
-                row["sha256"],
+            self.assertTrue(
+                fingerprint_matches(
+                    path,
+                    expected_bytes=int(row["bytes"]),
+                    expected_sha256=row["sha256"],
+                    hash_mode=row["hash_mode"],
+                ),
                 row["path"],
             )
 

@@ -4,10 +4,11 @@ from __future__ import annotations
 
 import argparse
 import csv
-import hashlib
 import sys
 from collections import Counter
 from pathlib import Path
+
+from qp_orbits.artifact_fingerprints import recorded_sha256_matches
 
 
 EXPECTED_FIGURE_COUNT = 54
@@ -46,14 +47,6 @@ def read_csv(path: Path, project_root: Path) -> list[dict[str, str]]:
         raise SmokeFailure(f"missing required file: {relative}")
     with path.open(newline="", encoding="utf-8") as stream:
         return list(csv.DictReader(stream))
-
-
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for block in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest().upper()
 
 
 def require_unique_ids(rows: list[dict[str, str]], label: str) -> list[str]:
@@ -271,9 +264,6 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
         expected_fingerprint = {
             "artifact_fingerprint_version": "1",
             "npz_schema_version": schema_version,
-            "npz_sha256": sha256(npz_path),
-            "generator_sha256": sha256(generator_path),
-            "core_torus_stability_sha256": sha256(core_path),
         }
         if any(
             any(row.get(field) != value for field, value in expected_fingerprint.items())
@@ -282,6 +272,18 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
             raise SmokeFailure(
                 f"{audit_name} fingerprint is stale relative to NPZ/code"
             )
+        for field, artifact in (
+            ("npz_sha256", npz_path),
+            ("generator_sha256", generator_path),
+            ("core_torus_stability_sha256", core_path),
+        ):
+            recorded = {row.get(field, "") for row in rows}
+            if len(recorded) != 1 or not recorded_sha256_matches(
+                artifact, next(iter(recorded), "")
+            ):
+                raise SmokeFailure(
+                    f"{audit_name} fingerprint is stale relative to NPZ/code"
+                )
         chapter4_fixed_time_rows.extend(rows)
     if any(
         row.get("acceptance") != "pass"
@@ -317,15 +319,22 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
         / "computed"
         / "chapter4_fig43_fig46_projection_holdout_audit.csv"
     )
-    fit_lock_hash = sha256(fit_lock_path)
-    holdout_hash = sha256(holdout_path)
-    if any(
-        row.get("projection_fit_lock_sha256") != fit_lock_hash
-        or row.get("projection_holdout_sha256") != holdout_hash
-        or not row.get("projection_holdout_run_id")
-        for row in chapter4_fixed_time_rows
+    fit_lock_hashes = {
+        row.get("projection_fit_lock_sha256", "") for row in chapter4_fixed_time_rows
+    }
+    holdout_hashes = {
+        row.get("projection_holdout_sha256", "") for row in chapter4_fixed_time_rows
+    }
+    if (
+        len(fit_lock_hashes) != 1
+        or len(holdout_hashes) != 1
+        or not recorded_sha256_matches(fit_lock_path, next(iter(fit_lock_hashes), ""))
+        or not recorded_sha256_matches(holdout_path, next(iter(holdout_hashes), ""))
+        or any(not row.get("projection_holdout_run_id") for row in chapter4_fixed_time_rows)
     ):
         raise SmokeFailure("Chapter 4 fixed-time projection fingerprints are stale")
+    fit_lock_hash = next(iter(fit_lock_hashes))
+    holdout_hash = next(iter(holdout_hashes))
 
     chapter4_source_rows = read_csv(
         project_root
@@ -429,11 +438,20 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
         or row.get("source_selection_red_mask_read") != "false"
         or row.get("fit_lock_sha256") != fit_lock_hash
         or row.get("holdout_csv_sha256") != holdout_hash
-        or row.get("evidence_npz_sha256") != sha256(halo_posthoc_npz)
-        or row.get("generator_sha256") != sha256(halo_posthoc_generator)
         for row in halo_posthoc_rows
     ):
         raise SmokeFailure("Chapter 4 halo post-hoc evidence boundary or hash regressed")
+    for field, artifact in (
+        ("evidence_npz_sha256", halo_posthoc_npz),
+        ("generator_sha256", halo_posthoc_generator),
+    ):
+        recorded = {row.get(field, "") for row in halo_posthoc_rows}
+        if len(recorded) != 1 or not recorded_sha256_matches(
+            artifact, next(iter(recorded), "")
+        ):
+            raise SmokeFailure(
+                "Chapter 4 halo post-hoc evidence boundary or hash regressed"
+            )
     halo_candidate_rows = [
         row
         for row in halo_posthoc_rows
@@ -470,7 +488,7 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
         for row in projection_rows
     ):
         raise SmokeFailure("Chapter 4 diagnostic-only projection boundary regressed")
-    source_hashes: dict[Path, str] = {}
+    verified_source_hashes: set[tuple[Path, str]] = set()
     for row in projection_rows:
         for source_field, hash_field in (
             ("paper_source", "paper_source_sha256"),
@@ -487,13 +505,15 @@ def validate(project_root: Path) -> dict[str, float | int | str]:
                 raise SmokeFailure(
                     f"Chapter 4 projection source is missing: {row[source_field]}"
                 )
-            if source not in source_hashes:
-                source_hashes[source] = sha256(source)
-            current_hash = source_hashes[source]
-            if current_hash != row.get(hash_field):
+            expected_hash = row.get(hash_field, "")
+            source_key = (source, expected_hash)
+            if source_key not in verified_source_hashes and not recorded_sha256_matches(
+                source, expected_hash
+            ):
                 raise SmokeFailure(
                     f"Chapter 4 projection source hash is stale: {row[source_field]}"
                 )
+            verified_source_hashes.add(source_key)
     projection_alerts = sum(
         row.get("failure_items", "none") != "none" for row in projection_rows
     )

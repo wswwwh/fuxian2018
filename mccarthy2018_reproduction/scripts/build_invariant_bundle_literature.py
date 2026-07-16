@@ -17,6 +17,8 @@ from urllib.parse import urlparse
 
 import numpy as np
 
+from qp_orbits.artifact_fingerprints import fingerprint_fields
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = (
@@ -315,10 +317,9 @@ def write_hash_manifest(
     paths = inputs + [path for path in outputs if path != target]
     rows = [
         {
-            "schema_version": "literature_stage_artifact_hash_v1",
+            "schema_version": "literature_stage_artifact_hash_v2",
             "path": str(path.relative_to(ROOT)).replace("\\", "/"),
-            "bytes": path.stat().st_size,
-            "sha256": sha256(path),
+            **fingerprint_fields(path),
         }
         for path in paths
     ]

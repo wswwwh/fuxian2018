@@ -14,6 +14,7 @@ import matplotlib
 from matplotlib.figure import Figure
 import numpy as np
 
+from .artifact_fingerprints import recorded_sha256_matches
 from .chapter4_camera import (
     CHAPTER4_PAPER_CAMERAS,
     apply_chapter4_paper_camera,
@@ -112,7 +113,7 @@ def _validate_fit_inputs(root: Path, fit: dict[str, Any]) -> None:
     if not isinstance(expected, dict) or set(expected) != set(paths):
         raise RuntimeError("Chapter 4 fit lock has an invalid input-hash scope")
     for name, path in paths.items():
-        if _sha256(path) != expected[name]:
+        if not recorded_sha256_matches(path, str(expected[name])):
             raise RuntimeError(f"Chapter 4 fit input drifted: {name}")
 
 
@@ -205,13 +206,13 @@ def load_chapter4_reproduction_lock(project_root: Path) -> Chapter4ReproductionL
         raise RuntimeError("Chapter 4 holdout schema is invalid")
     _validate_fit_inputs(root, fit)
     camera_hash = _validate_live_camera(root, fit)
-    fit_hash = _sha256(fit_lock_path)
-    holdout_hash = _sha256(holdout_path)
+    fit_hash = FROZEN_FIT_LOCK_SHA256
+    holdout_hash = FROZEN_HOLDOUT_CSV_SHA256
     holdout_npz_path = data / "chapter4_fig43_fig46_projection_holdout_audit.npz"
     holdout_npz_hash = _sha256(holdout_npz_path)
-    if fit_hash != FROZEN_FIT_LOCK_SHA256:
+    if not recorded_sha256_matches(fit_lock_path, fit_hash):
         raise RuntimeError("Chapter 4 fit lock differs from the frozen v1 manifest")
-    if holdout_hash != FROZEN_HOLDOUT_CSV_SHA256:
+    if not recorded_sha256_matches(holdout_path, holdout_hash):
         raise RuntimeError("Chapter 4 holdout CSV differs from the frozen v1 manifest")
     if holdout_npz_hash != FROZEN_HOLDOUT_NPZ_SHA256:
         raise RuntimeError("Chapter 4 holdout NPZ differs from the frozen v1 manifest")
@@ -267,16 +268,20 @@ def load_chapter4_reproduction_lock(project_root: Path) -> Chapter4ReproductionL
     _require_hex(_single(rows, "projection_core_sha256"), 64, "projection-core hash")
     if holdout_run_id != FROZEN_HOLDOUT_RUN_ID:
         raise RuntimeError("Chapter 4 holdout run differs from the frozen v1 manifest")
-    if _single(rows, "generator_sha256") != _sha256(
-        root / "scripts" / "run_chapter4_fig43_fig46_projection_holdout_audit.py"
+    if not recorded_sha256_matches(
+        root / "scripts" / "run_chapter4_fig43_fig46_projection_holdout_audit.py",
+        _single(rows, "generator_sha256"),
     ):
         raise RuntimeError("Chapter 4 holdout evaluator drifted")
-    if _single(rows, "projection_core_sha256") != _sha256(
-        root / "src" / "qp_orbits" / "chapter4_projection.py"
+    if not recorded_sha256_matches(
+        root / "src" / "qp_orbits" / "chapter4_projection.py",
+        _single(rows, "projection_core_sha256"),
     ):
         raise RuntimeError("Chapter 4 projection core drifted")
     for row in rows:
-        if row["paper_source_sha256"] != _sha256(root / row["paper_source"]):
+        if not recorded_sha256_matches(
+            root / row["paper_source"], row["paper_source_sha256"]
+        ):
             raise RuntimeError(f"Chapter 4 paper source drifted: {row['figure_id']}")
     return Chapter4ReproductionLock(
         selected_model=selected_model,

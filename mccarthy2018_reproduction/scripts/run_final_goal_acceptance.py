@@ -24,6 +24,8 @@ import uuid
 import numpy as np
 import scipy
 
+from qp_orbits.artifact_fingerprints import fingerprint_fields, fingerprint_matches
+
 
 ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY_ROOT = Path(
@@ -565,11 +567,10 @@ def write_nested_hash_manifest() -> None:
     ]
     rows = [
         {
-            "schema_version": "final_goal_acceptance_artifact_hash_v2",
+            "schema_version": "final_goal_acceptance_artifact_hash_v3",
             "path_root": "repository",
             "path": path.resolve().relative_to(REPOSITORY_ROOT).as_posix(),
-            "bytes": path.stat().st_size,
-            "sha256": sha256(path),
+            **fingerprint_fields(path),
         }
         for path in source_inputs + outputs
     ]
@@ -586,8 +587,12 @@ def refresh_main_stage_manifest() -> None:
         row["path"]
         for row in rows
         if not (ROOT / row["path"]).is_file()
-        or (ROOT / row["path"]).stat().st_size != int(row["bytes"])
-        or sha256(ROOT / row["path"]) != row["sha256"]
+        or not fingerprint_matches(
+            ROOT / row["path"],
+            expected_bytes=int(row["bytes"]),
+            expected_sha256=row["sha256"],
+            hash_mode=row["hash_mode"],
+        )
     ]
     if bad:
         raise RuntimeError(f"refreshed stage manifest has invalid rows: {bad}")

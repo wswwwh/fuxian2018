@@ -103,6 +103,19 @@ research accepted 不得覆盖 reproduction fail/boundary。
 - full validation 上传完整结果树，保留 failed/boundary 行。CI 通过只代表
   工程回归成立，不能升级任何冻结的科学状态。
 
+### Cross-platform artifact fingerprints
+
+- Artifact manifests declare `hash_mode` for every row. UTF-8 text uses
+  `utf8_lf_normalized`; CRLF and LF therefore represent the same committed text.
+- Binary files and scientific arrays such as NPZ use `raw_bytes`; every byte must
+  match. CSV scientific meaning is still checked separately by schema, row, field,
+  status, and boundary tests.
+- Historical Chapter 4 lock hashes remain frozen raw hashes. Their validators accept
+  only LF/CRLF representations of the same UTF-8 content; they do not accept field,
+  row, encoding/BOM, threshold, or scientific-result changes.
+- `scripts/refresh_portable_artifact_hash_manifests.py --check` is the read-only
+  contract for committed artifact manifests.
+
 ## Legacy / deprecated status 索引
 
 以下文件保留以追溯历史，但不得直接推断当前状态：

@@ -5,7 +5,7 @@ from __future__ import annotations
 import csv
 import hashlib
 import pickle
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 
 import numpy as np
 
@@ -62,6 +62,21 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest().upper()
 
 
+def _project_path(reference: str) -> Path:
+    """Resolve a repository-relative artifact path on Windows or POSIX."""
+
+    windows_path = PureWindowsPath(reference)
+    relative = PurePosixPath(reference.replace("\\", "/"))
+    if (
+        windows_path.drive
+        or windows_path.is_absolute()
+        or relative.is_absolute()
+        or ".." in relative.parts
+    ):
+        raise ValueError(f"invalid project-relative artifact path: {reference}")
+    return PROJECT_ROOT.joinpath(*relative.parts)
+
+
 def build_row() -> dict[str, object]:
     attempts = _read(ATTEMPTS_PATH)
     cold_audit = _read(COLD_AUDIT_PATH)
@@ -94,7 +109,7 @@ def build_row() -> dict[str, object]:
         row.get("paper_reported_precision_status") == "pass" for row in coverage
     )
     strict_count = sum(row.get("strict_fixed_time_status") == "pass" for row in coverage)
-    projection_paths = [PROJECT_ROOT / row["projection_artifact"] for row in coverage]
+    projection_paths = [_project_path(row["projection_artifact"]) for row in coverage]
     projection_count = sum(path.is_file() for path in projection_paths)
     target_states = _read(TARGET_STATES_PATH)
     state_target_count = len({row["target_jacobi"] for row in target_states})

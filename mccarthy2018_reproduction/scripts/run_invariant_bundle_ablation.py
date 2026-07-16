@@ -25,6 +25,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from qp_orbits.artifact_fingerprints import fingerprint_fields  # noqa: E402
 from qp_orbits.invariant_bundles import (  # noqa: E402
     _align_to_reference,
     _branch_candidates,
@@ -783,9 +784,12 @@ def main() -> None:
         PAPER_OUTPUT, LOG_OUTPUT, FAILURE_OUTPUT,
     ] + [FIGURE_DIR / f"{stem}.{suffix}" for stem in FIGURE_STEMS for suffix in ("png", "pdf")]
     write_csv(HASH_OUTPUT, [
-        {"artifact": str(path.relative_to(ROOT)).replace("\\", "/"), "bytes": path.stat().st_size, "sha256": sha256(path)}
+        {
+            "artifact": str(path.relative_to(ROOT)).replace("\\", "/"),
+            **fingerprint_fields(path),
+        }
         for path in hash_paths
-    ], ["artifact", "bytes", "sha256"])
+    ], ["artifact", "hash_mode", "bytes", "sha256"])
     print(
         f"ablation study PASS rows={len(output_rows)} statuses={json.dumps(status_counts, sort_keys=True)} "
         f"exceptions={len(exception_rows)} elapsed={elapsed:.3f}s"

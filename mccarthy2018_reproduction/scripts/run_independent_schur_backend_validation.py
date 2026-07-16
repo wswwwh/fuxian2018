@@ -29,6 +29,7 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+from qp_orbits.artifact_fingerprints import fingerprint_fields  # noqa: E402
 from qp_orbits.invariant_bundles import (  # noqa: E402
     align_bundle_phase,
     assemble_discrete_cocycle_operator,
@@ -651,12 +652,11 @@ def write_hashes() -> None:
     rows = [
         {
             "artifact": str(path.relative_to(ROOT)).replace("\\", "/"),
-            "bytes": path.stat().st_size,
-            "sha256": sha256(path),
+            **fingerprint_fields(path),
         }
         for path in paths
     ]
-    write_csv(HASHES, rows, ["artifact", "bytes", "sha256"])
+    write_csv(HASHES, rows, ["artifact", "hash_mode", "bytes", "sha256"])
 
 
 def main() -> None:

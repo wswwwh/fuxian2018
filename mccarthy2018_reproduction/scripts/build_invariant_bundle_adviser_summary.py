@@ -20,6 +20,8 @@ import zipfile
 
 import numpy as np
 
+from qp_orbits.artifact_fingerprints import fingerprint_fields
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = (
@@ -817,10 +819,9 @@ def write_hash_manifest() -> None:
     ]
     rows = [
         {
-            "schema_version": "adviser_summary_stage_artifact_hash_v1",
+            "schema_version": "adviser_summary_stage_artifact_hash_v2",
             "path": str(path.relative_to(ROOT)).replace("\\", "/"),
-            "bytes": path.stat().st_size,
-            "sha256": sha256(path),
+            **fingerprint_fields(path),
         }
         for path in inputs + outputs
     ]

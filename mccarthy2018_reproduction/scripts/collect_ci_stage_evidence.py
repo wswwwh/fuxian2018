@@ -16,6 +16,8 @@ import sys
 import time
 from typing import Any
 
+from qp_orbits.artifact_fingerprints import fingerprint_fields
+
 
 ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY_ROOT = Path(
@@ -117,11 +119,10 @@ def write_manifest(output: Path) -> None:
     for path in files:
         rows.append(
             {
-                "schema_version": "ci_stage_artifact_hash_v2",
+                "schema_version": "ci_stage_artifact_hash_v3",
                 "path_root": "repository",
                 "path": path.resolve().relative_to(REPOSITORY_ROOT).as_posix(),
-                "bytes": path.stat().st_size,
-                "sha256": sha256(path),
+                **fingerprint_fields(path),
             }
         )
     with target.open("w", encoding="utf-8", newline="") as stream:

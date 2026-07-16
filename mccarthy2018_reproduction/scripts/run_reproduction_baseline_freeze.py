@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 from collections import Counter, defaultdict
 import csv
-import hashlib
 import io
 import json
 import os
@@ -15,6 +14,7 @@ import sys
 from typing import Iterable, Mapping, Sequence
 
 from _paths import PROJECT_ROOT, find_thesis_pdf
+from qp_orbits.artifact_fingerprints import artifact_fingerprint
 
 
 LOCK_PATH = PROJECT_ROOT / "data" / "computed" / "reproduction_baseline_v1_lock.json"
@@ -197,6 +197,12 @@ INPUT_SPECS = (
         "tests_required_for_change",
     ),
     (
+        "src/qp_orbits/artifact_fingerprints.py",
+        "portable text and binary artifact fingerprinting",
+        "infrastructure",
+        "tests_required_for_change",
+    ),
+    (
         "scripts/register_chapter4_camera_holdout_protocol.py",
         "frozen camera protocol generator",
         "protection_generator",
@@ -299,16 +305,17 @@ def read_lock() -> dict[str, str]:
     return {str(key): str(value) for key, value in lock.items()}
 
 
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        while chunk := stream.read(1024 * 1024):
-            digest.update(chunk)
-    return digest.hexdigest().upper()
-
-
 def relative_display(path: Path) -> str:
     return Path(os.path.relpath(path, PROJECT_ROOT)).as_posix()
+
+
+def fingerprint_fields(path: Path) -> dict[str, str]:
+    fingerprint = artifact_fingerprint(path)
+    return {
+        "hash_mode": fingerprint.hash_mode,
+        "bytes": str(fingerprint.bytes),
+        "sha256": fingerprint.sha256,
+    }
 
 
 def one(rows: Sequence[Mapping[str, str]], label: str) -> Mapping[str, str]:
@@ -629,8 +636,7 @@ def build_outputs() -> tuple[str, str, str]:
                 "role": role,
                 "authority": authority,
                 "freeze_policy": policy,
-                "bytes": str(path.stat().st_size),
-                "sha256": sha256(path),
+                **fingerprint_fields(path),
             }
         )
     for path, role, authority, policy in dynamic_specs:
@@ -640,12 +646,19 @@ def build_outputs() -> tuple[str, str, str]:
                 "role": role,
                 "authority": authority,
                 "freeze_policy": policy,
-                "bytes": str(path.stat().st_size),
-                "sha256": sha256(path),
+                **fingerprint_fields(path),
             }
         )
     manifest_text = csv_render(
-        ("path", "role", "authority", "freeze_policy", "bytes", "sha256"),
+        (
+            "path",
+            "role",
+            "authority",
+            "freeze_policy",
+            "hash_mode",
+            "bytes",
+            "sha256",
+        ),
         manifest_rows,
     )
 

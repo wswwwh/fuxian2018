@@ -137,10 +137,47 @@ def build_rows(project_root: Path) -> list[dict[str, str]]:
 
 def render_rows(rows: list[dict[str, str]]) -> str:
     stream = io.StringIO(newline="")
-    writer = csv.DictWriter(stream, fieldnames=FIELDNAMES)
+    writer = csv.DictWriter(
+        stream,
+        fieldnames=FIELDNAMES,
+        lineterminator="\n",
+    )
     writer.writeheader()
     writer.writerows(rows)
     return stream.getvalue()
+
+
+def compare_registry(
+    output_path: Path, expected_rows: list[dict[str, str]]
+) -> str | None:
+    """Return a precise semantic mismatch, ignoring only CSV newline style."""
+
+    with output_path.open("r", newline="", encoding="utf-8") as stream:
+        reader = csv.DictReader(stream)
+        fieldnames = reader.fieldnames
+        if fieldnames != FIELDNAMES:
+            return (
+                "target registry field order differs: "
+                f"expected {FIELDNAMES!r}, observed {fieldnames!r}"
+            )
+        current_rows = list(reader)
+    if any(None in row for row in current_rows):
+        return "target registry contains values outside the declared fields"
+    if len(current_rows) != len(expected_rows):
+        return (
+            "target registry row count differs: "
+            f"expected {len(expected_rows)}, observed {len(current_rows)}"
+        )
+    for index, (current, expected) in enumerate(
+        zip(current_rows, expected_rows, strict=True), start=1
+    ):
+        for field in FIELDNAMES:
+            if current[field] != expected[field]:
+                return (
+                    f"target registry row {index} field {field!r} differs: "
+                    f"expected {expected[field]!r}, observed {current[field]!r}"
+                )
+    return None
 
 
 def parse_args() -> argparse.Namespace:
@@ -174,11 +211,11 @@ def main() -> int:
         if not output_path.is_file():
             print(f"target registry is missing: {output_path}", file=sys.stderr)
             return 1
-        with output_path.open("r", newline="", encoding="utf-8") as stream:
-            current = stream.read()
-        if current != rendered:
+        mismatch = compare_registry(output_path, rows)
+        if mismatch is not None:
             print(
-                "target registry is out of date; run build_reproduction_targets.py",
+                f"target registry is out of date: {mismatch}; "
+                "run build_reproduction_targets.py",
                 file=sys.stderr,
             )
             return 1

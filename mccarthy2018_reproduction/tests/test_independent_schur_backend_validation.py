@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import csv
-import hashlib
 import json
 from pathlib import Path
 import unittest
 
 import numpy as np
+
+from qp_orbits.artifact_fingerprints import fingerprint_matches
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -22,14 +23,6 @@ FAILURE_PATH = RESEARCH / "results" / "logs" / "independent_schur_backend_failur
 def read_csv(path: Path) -> list[dict[str, str]]:
     with path.open("r", encoding="utf-8-sig", newline="") as stream:
         return list(csv.DictReader(stream))
-
-
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest().upper()
 
 
 class IndependentSchurBackendValidationTests(unittest.TestCase):
@@ -86,8 +79,15 @@ class IndependentSchurBackendValidationTests(unittest.TestCase):
         for row in read_csv(HASH_PATH):
             path = ROOT / row["artifact"]
             self.assertTrue(path.is_file(), row["artifact"])
-            self.assertEqual(int(row["bytes"]), path.stat().st_size)
-            self.assertEqual(row["sha256"], sha256(path))
+            self.assertTrue(
+                fingerprint_matches(
+                    path,
+                    expected_bytes=int(row["bytes"]),
+                    expected_sha256=row["sha256"],
+                    hash_mode=row["hash_mode"],
+                ),
+                row["artifact"],
+            )
         evidence = FAILURE_PATH.read_text(encoding="utf-8")
         self.assertIn("metadata_resolution_stalled_then_terminated", evidence)
         self.assertIn("MATLAB `schur`/`ordschur`", evidence)

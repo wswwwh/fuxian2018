@@ -12,6 +12,8 @@ import zipfile
 
 import numpy as np
 
+from qp_orbits.artifact_fingerprints import fingerprint_matches
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = (
@@ -253,8 +255,15 @@ class InvariantBundlePaperReleaseTests(unittest.TestCase):
         for row in rows:
             path = ROOT / row["path"]
             self.assertTrue(path.is_file(), row["path"])
-            self.assertEqual(path.stat().st_size, int(row["bytes"]))
-            self.assertEqual(sha256(path), row["sha256"])
+            self.assertTrue(
+                fingerprint_matches(
+                    path,
+                    expected_bytes=int(row["bytes"]),
+                    expected_sha256=row["sha256"],
+                    hash_mode=row["hash_mode"],
+                ),
+                row["path"],
+            )
 
 
 if __name__ == "__main__":

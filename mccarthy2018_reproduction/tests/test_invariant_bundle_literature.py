@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import csv
-import hashlib
 import json
 from pathlib import Path
 import re
@@ -11,6 +10,8 @@ import sys
 import unittest
 
 import numpy as np
+
+from qp_orbits.artifact_fingerprints import fingerprint_matches
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -40,14 +41,6 @@ HOLDOUT = (
 def read_csv(path: Path) -> list[dict[str, str]]:
     with path.open("r", encoding="utf-8", newline="") as stream:
         return list(csv.DictReader(stream))
-
-
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for block in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest().upper()
 
 
 class InvariantBundleLiteratureTests(unittest.TestCase):
@@ -179,8 +172,15 @@ class InvariantBundleLiteratureTests(unittest.TestCase):
         for row in rows:
             path = ROOT / row["path"]
             self.assertTrue(path.is_file(), row["path"])
-            self.assertEqual(path.stat().st_size, int(row["bytes"]))
-            self.assertEqual(sha256(path), row["sha256"])
+            self.assertTrue(
+                fingerprint_matches(
+                    path,
+                    expected_bytes=int(row["bytes"]),
+                    expected_sha256=row["sha256"],
+                    hash_mode=row["hash_mode"],
+                ),
+                row["path"],
+            )
 
 
 if __name__ == "__main__":

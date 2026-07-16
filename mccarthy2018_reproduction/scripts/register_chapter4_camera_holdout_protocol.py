@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from _paths import find_thesis_pdf
+from qp_orbits.artifact_fingerprints import recorded_sha256_matches
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -174,8 +175,10 @@ def _state_bound_source_hashes() -> dict[str, str] | None:
         state_rows = list(csv.DictReader(stream))
     if not state_rows:
         raise RuntimeError("Stored epsilon sensitivity rows are missing")
-    protocol_hash = _sha256(CSV_PATH)
-    if {row["protocol_sha256"] for row in state_rows} != {protocol_hash}:
+    protocol_hashes = {row["protocol_sha256"] for row in state_rows}
+    if len(protocol_hashes) != 1 or not recorded_sha256_matches(
+        CSV_PATH, next(iter(protocol_hashes), "")
+    ):
         raise RuntimeError("Sensitivity evidence is not bound to this protocol")
     hashes: dict[str, str] = {}
     for row in state_rows:
@@ -285,10 +288,24 @@ def build_rows(
 
 def _csv_bytes(rows: list[dict[str, str]]) -> bytes:
     stream = io.StringIO(newline="")
-    writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+    writer = csv.DictWriter(
+        stream,
+        fieldnames=list(rows[0]),
+        lineterminator="\n",
+    )
     writer.writeheader()
     writer.writerows(rows)
     return stream.getvalue().encode("utf-8")
+
+
+def _stored_csv_matches(rows: list[dict[str, str]]) -> bool:
+    if not CSV_PATH.is_file():
+        return False
+    with CSV_PATH.open(newline="", encoding="utf-8") as stream:
+        reader = csv.DictReader(stream)
+        if reader.fieldnames != list(rows[0]):
+            return False
+        return list(reader) == rows
 
 
 def _render_doc(rows: list[dict[str, str]]) -> str:
@@ -427,7 +444,7 @@ def main() -> int:
     expected_csv = _csv_bytes(rows)
     expected_doc = _render_doc(rows)
     if args.check:
-        if not CSV_PATH.is_file() or CSV_PATH.read_bytes() != expected_csv:
+        if not _stored_csv_matches(rows):
             raise RuntimeError("Stored camera/epsilon protocol CSV is stale")
         if not DOC_PATH.is_file() or DOC_PATH.read_text(encoding="utf-8") != expected_doc:
             raise RuntimeError("Stored camera/epsilon protocol report is stale")

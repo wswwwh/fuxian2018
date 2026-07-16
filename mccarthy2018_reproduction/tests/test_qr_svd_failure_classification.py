@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 import csv
-import hashlib
 import json
 from pathlib import Path
 import unittest
 
 import numpy as np
+
+from qp_orbits.artifact_fingerprints import fingerprint_matches
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -22,14 +23,6 @@ DOC = RESEARCH / "docs" / "qr_svd_failure_analysis.md"
 def rows(path: Path) -> list[dict[str, str]]:
     with path.open("r", encoding="utf-8-sig", newline="") as stream:
         return list(csv.DictReader(stream))
-
-
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest().upper()
 
 
 class QrSvdFailureClassificationTests(unittest.TestCase):
@@ -79,8 +72,15 @@ class QrSvdFailureClassificationTests(unittest.TestCase):
     def test_hashes_and_truth_boundary(self) -> None:
         for row in rows(HASHES):
             path = ROOT / row["artifact"]
-            self.assertEqual(int(row["bytes"]), path.stat().st_size)
-            self.assertEqual(row["sha256"], sha256(path))
+            self.assertTrue(
+                fingerprint_matches(
+                    path,
+                    expected_bytes=int(row["bytes"]),
+                    expected_sha256=row["sha256"],
+                    hash_mode=row["hash_mode"],
+                ),
+                row["artifact"],
+            )
         text = DOC.read_text(encoding="utf-8")
         self.assertIn("paper_projection=fail", text)
         self.assertIn("not presented", text)

@@ -521,7 +521,11 @@ def validate(output: Path) -> list[dict[str, str]]:
 
     csv_path = output / "workflow_contract_checks.csv"
     with csv_path.open("w", encoding="utf-8", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(
+            stream,
+            fieldnames=list(rows[0]),
+            lineterminator="\n",
+        )
         writer.writeheader()
         writer.writerows(rows)
     failures = [row for row in rows if row["status"] != "pass"]
@@ -539,10 +543,10 @@ def validate(output: Path) -> list[dict[str, str]]:
         "official_action_version_evidence": action_evidence,
         "truth_boundary": config["truth_boundaries"],
     }
-    (output / "workflow_contract_summary.json").write_text(
-        json.dumps(summary, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
+    with (output / "workflow_contract_summary.json").open(
+        "w", encoding="utf-8", newline=""
+    ) as stream:
+        stream.write(json.dumps(summary, indent=2, sort_keys=True) + "\n")
     if failures:
         raise RuntimeError(f"workflow contract failures: {summary['failed_check_ids']}")
     print(f"workflow contract PASS checks={len(rows)}")

@@ -6,6 +6,7 @@ import csv
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import unittest
 
 import numpy as np
@@ -16,9 +17,33 @@ DATA = ROOT / "data" / "computed"
 CSV_PATH = DATA / "chapter4_fig43_fig44_halo_12p40_posthoc_diagnostic.csv"
 NPZ_PATH = DATA / "chapter4_fig43_fig44_halo_12p40_posthoc_diagnostic.npz"
 SCRIPT = ROOT / "scripts" / "run_chapter4_halo_12p40_posthoc_diagnostic.py"
+SCRIPTS = ROOT / "scripts"
+if str(SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS))
+
+import run_chapter4_halo_12p40_posthoc_diagnostic as posthoc
 
 
 class Chapter4Halo12p40PosthocDiagnosticTests(unittest.TestCase):
+    def test_csv_check_accepts_crlf_but_rejects_content_drift(self) -> None:
+        rows = [{"source_variant": "current_n9", "figure_id": "4.3"}]
+        rendered = posthoc._csv_bytes(rows).decode("utf-8")
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "diagnostic.csv"
+            path.write_bytes(rendered.replace("\n", "\r\n").encode("utf-8"))
+            original = posthoc.CSV_PATH
+            posthoc.CSV_PATH = path
+            try:
+                self.assertTrue(posthoc._stored_csv_matches(rows))
+                path.write_text(
+                    rendered.replace("current_n9", "changed"),
+                    encoding="utf-8",
+                    newline="",
+                )
+                self.assertFalse(posthoc._stored_csv_matches(rows))
+            finally:
+                posthoc.CSV_PATH = original
+
     def test_candidate_source_and_evidence_boundaries(self) -> None:
         with CSV_PATH.open(newline="", encoding="utf-8") as stream:
             rows = list(csv.DictReader(stream))

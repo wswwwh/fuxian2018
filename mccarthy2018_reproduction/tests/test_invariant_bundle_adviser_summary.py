@@ -13,6 +13,8 @@ import zipfile
 import numpy as np
 from pypdf import PdfReader
 
+from qp_orbits.artifact_fingerprints import fingerprint_matches
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG = (
@@ -31,14 +33,6 @@ STAGE_G_HASHES = ROOT / "stage_g_delivery_review" / "artifact_hashes.csv"
 def read_csv(path: Path) -> list[dict[str, str]]:
     with path.open("r", encoding="utf-8-sig", newline="") as stream:
         return list(csv.DictReader(stream))
-
-
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for block in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest().upper()
 
 
 def recorded_sha256(path: Path, hash_mode: str) -> str:
@@ -205,8 +199,15 @@ class InvariantBundleAdviserSummaryTests(unittest.TestCase):
         for row in rows:
             path = ROOT / row["path"]
             self.assertTrue(path.is_file(), row["path"])
-            self.assertEqual(path.stat().st_size, int(row["bytes"]))
-            self.assertEqual(sha256(path), row["sha256"])
+            self.assertTrue(
+                fingerprint_matches(
+                    path,
+                    expected_bytes=int(row["bytes"]),
+                    expected_sha256=row["sha256"],
+                    hash_mode=row["hash_mode"],
+                ),
+                row["path"],
+            )
 
 
 if __name__ == "__main__":

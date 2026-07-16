@@ -18,6 +18,8 @@ from typing import Any, Iterable
 
 import numpy as np
 
+from qp_orbits.artifact_fingerprints import fingerprint_fields
+
 ROOT = Path(__file__).resolve().parents[1]
 RESEARCH = ROOT / "research" / "invariant_bundles"
 CONFIG = RESEARCH / "configs" / "independent_rerun.json"
@@ -73,8 +75,7 @@ def file_rows(paths: list[Path], stage: str) -> list[dict[str, Any]]:
         {
             "artifact": str(path.relative_to(ROOT)).replace("\\", "/"),
             "stage": stage,
-            "bytes": path.stat().st_size,
-            "sha256": sha256(path),
+            **fingerprint_fields(path),
         }
         for path in paths
     ]
@@ -231,7 +232,11 @@ def main() -> None:
         Path(__file__),
         CONFIG,
     ]
-    write_csv(SOURCE_HASHES, file_rows(source_paths, "input"), ["artifact", "stage", "bytes", "sha256"])
+    write_csv(
+        SOURCE_HASHES,
+        file_rows(source_paths, "input"),
+        ["artifact", "stage", "hash_mode", "bytes", "sha256"],
+    )
 
     process_records = [
         launch_worker("bundle", run_id, float(config["max_bundle_wall_time_seconds"])),
@@ -372,7 +377,7 @@ def main() -> None:
     )
     write_csv(
         ARTIFACT_HASHES, file_rows(artifact_paths, "rerun_artifact"),
-        ["artifact", "stage", "bytes", "sha256"],
+        ["artifact", "stage", "hash_mode", "bytes", "sha256"],
     )
     if not overall:
         raise RuntimeError(

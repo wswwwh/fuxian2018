@@ -16,6 +16,28 @@ import run_chapter3_route_h_hybrid_cold_start_audit as hybrid_audit
 
 
 class HybridColdStartAuditTests(unittest.TestCase):
+    def test_windows_style_artifact_reference_is_portable(self) -> None:
+        observed = hybrid_audit._project_path(
+            r"data\computed\chapter3_route_h_fixed_time_energy_projection_2p9225.csv"
+        )
+
+        self.assertEqual(
+            observed,
+            ROOT
+            / "data"
+            / "computed"
+            / "chapter3_route_h_fixed_time_energy_projection_2p9225.csv",
+        )
+
+        for invalid in (
+            r"C:\data\computed\artifact.csv",
+            r"..\outside.csv",
+            "/tmp/artifact.csv",
+        ):
+            with self.subTest(invalid=invalid):
+                with self.assertRaises(ValueError):
+                    hybrid_audit._project_path(invalid)
+
     def test_zero_start_checkpoint_and_four_target_chain_pass(self) -> None:
         row = hybrid_audit.build_row()
 

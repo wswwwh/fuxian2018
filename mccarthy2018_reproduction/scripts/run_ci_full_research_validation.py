@@ -38,6 +38,7 @@ from run_independent_rerun_worker import (  # noqa: E402
     configure_benchmark,
     configure_manifold,
 )
+from qp_orbits.artifact_fingerprints import fingerprint_fields  # noqa: E402
 
 
 CONFIG = (
@@ -364,10 +365,9 @@ def artifact_manifest(output: Path) -> None:
             continue
         rows.append(
             {
-                "schema_version": "ci_full_artifact_hash_v1",
+                "schema_version": "ci_full_artifact_hash_v2",
                 "path": str(path.relative_to(output)).replace("\\", "/"),
-                "bytes": path.stat().st_size,
-                "sha256": sha256(path),
+                **fingerprint_fields(path),
             }
         )
     write_csv(manifest, rows)

@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import csv
-import hashlib
 from pathlib import Path
 import tempfile
 from typing import Callable
 import unittest
 
+from qp_orbits.artifact_fingerprints import fingerprint_matches
 from scripts import run_final_goal_acceptance as acceptance
 
 
@@ -118,10 +118,14 @@ class FinalGoalAcceptanceComparisonTests(unittest.TestCase):
         for row in rows:
             path = acceptance.REPOSITORY_ROOT / row["path"]
             self.assertTrue(path.is_file(), row["path"])
-            self.assertEqual(path.stat().st_size, int(row["bytes"]))
-            self.assertEqual(
-                hashlib.sha256(path.read_bytes()).hexdigest().upper(),
-                row["sha256"],
+            self.assertTrue(
+                fingerprint_matches(
+                    path,
+                    expected_bytes=int(row["bytes"]),
+                    expected_sha256=row["sha256"],
+                    hash_mode=row["hash_mode"],
+                ),
+                row["path"],
             )
 
 

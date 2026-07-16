@@ -23,6 +23,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from qp_orbits.artifact_fingerprints import artifact_fingerprint  # noqa: E402
 from qp_orbits.chapter4_projection import (  # noqa: E402
     load_reference_panel_mask,
     project_surface_uv,
@@ -103,10 +104,26 @@ def _read_csv(path: Path) -> list[dict[str, str]]:
 
 def _csv_bytes(rows: list[dict[str, str]]) -> bytes:
     stream = io.StringIO(newline="")
-    writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+    writer = csv.DictWriter(
+        stream,
+        fieldnames=list(rows[0]),
+        lineterminator="\n",
+    )
     writer.writeheader()
     writer.writerows(rows)
     return stream.getvalue().encode("utf-8")
+
+
+def _stored_csv_matches(rows: list[dict[str, str]]) -> bool:
+    """Compare the stored CSV semantically while preserving schema and row order."""
+
+    if not CSV_PATH.is_file():
+        return False
+    with CSV_PATH.open(newline="", encoding="utf-8") as stream:
+        reader = csv.DictReader(stream)
+        if reader.fieldnames != list(rows[0]):
+            return False
+        return list(reader) == rows
 
 
 def _posthoc_failures(metrics: dict[str, float]) -> list[str]:
@@ -278,9 +295,9 @@ def analyze() -> tuple[list[dict[str, str]], dict[str, np.ndarray]]:
         "thesis_12p40_n21": candidate_states,
     }
 
-    generator_hash = _sha256(Path(__file__))
-    torus_hash = _sha256(TORUS_CORE)
-    projection_hash = _sha256(PROJECTION_CORE)
+    generator_hash = artifact_fingerprint(Path(__file__)).sha256
+    torus_hash = artifact_fingerprint(TORUS_CORE).sha256
+    projection_hash = artifact_fingerprint(PROJECTION_CORE).sha256
     arrays: dict[str, np.ndarray] = {
         "schema_version": np.asarray([SCHEMA_VERSION]),
         "source_variants": np.asarray(SOURCE_VARIANTS),
@@ -509,7 +526,7 @@ def main() -> int:
         _compare_arrays(arrays)
         npz_hash = _sha256(NPZ_PATH)
         checked_rows = [dict(row, evidence_npz_sha256=npz_hash) for row in rows]
-        if not CSV_PATH.is_file() or CSV_PATH.read_bytes() != _csv_bytes(checked_rows):
+        if not _stored_csv_matches(checked_rows):
             raise RuntimeError("Stored post-hoc diagnostic CSV is stale")
         expected_doc = _render_doc(checked_rows, npz_hash)
         if not DOC_PATH.is_file() or DOC_PATH.read_text(encoding="utf-8") != expected_doc:
@@ -525,7 +542,8 @@ def main() -> int:
     np.savez_compressed(NPZ_PATH, **arrays)
     npz_hash = _sha256(NPZ_PATH)
     written_rows = [dict(row, evidence_npz_sha256=npz_hash) for row in rows]
-    CSV_PATH.write_bytes(_csv_bytes(written_rows))
+    with CSV_PATH.open("w", newline="", encoding="utf-8") as stream:
+        stream.write(_csv_bytes(written_rows).decode("utf-8"))
     DOC_PATH.write_text(_render_doc(written_rows, npz_hash), encoding="utf-8")
     print(f"wrote {_display(CSV_PATH)}")
     print(f"wrote {_display(NPZ_PATH)}")
