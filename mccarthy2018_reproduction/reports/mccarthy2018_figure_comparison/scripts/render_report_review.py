@@ -92,7 +92,7 @@ def main() -> None:
         "Index of grades and boundaries for all 54 figures",
         "Representative quantitative records for 28 core figures",
         "SHA-256 hashes of key report manifests",
-        "Field-level items pending verification",
+        "Field-level confirmation record",
     ]
     selected = list(range(min(6, len(document))))
     marker_pages: dict[str, int | None] = {}

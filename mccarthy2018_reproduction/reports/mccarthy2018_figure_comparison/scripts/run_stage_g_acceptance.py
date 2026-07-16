@@ -21,6 +21,7 @@ WORKSPACE_ROOT = PROJECT_ROOT.parent
 STAGE_G = PROJECT_ROOT / "stage_g_delivery_review"
 LOG_PATH = STAGE_G / "stage_g_acceptance_log.txt"
 STATUS_PATH = STAGE_G / "stage_g_acceptance_status.json"
+HASH_PATH = STAGE_G / "stage_g_acceptance_hashes.json"
 
 
 def sha256(path: Path) -> str:
@@ -29,6 +30,31 @@ def sha256(path: Path) -> str:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def write_terminal_hashes() -> None:
+    paths = [
+        LOG_PATH,
+        STATUS_PATH,
+        STAGE_G / "stage_g_execution_log.txt",
+        STAGE_G / "stage_g_run_config.json",
+        STAGE_G / "artifact_hashes.csv",
+        STAGE_G / "stage_g_identity_rebuild_recovery.md",
+    ]
+    payload = {
+        "status": "PASS",
+        "note": "Terminal hashes are written only after acceptance log/status stop changing.",
+        "artifacts": [
+            {
+                "path": path.relative_to(PROJECT_ROOT).as_posix(),
+                "bytes": path.stat().st_size,
+                "sha256": sha256(path),
+            }
+            for path in paths
+            if path.is_file()
+        ],
+    }
+    HASH_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def main() -> int:
@@ -125,6 +151,7 @@ def main() -> int:
             STATUS_PATH.write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding="utf-8")
             raise
     STATUS_PATH.write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_terminal_hashes()
     print(
         f"stage_g_acceptance=PASS tests={status['tests']['passed']}/{status['tests']['count']} "
         f"elapsed={status['elapsed_seconds']:.3f}s"

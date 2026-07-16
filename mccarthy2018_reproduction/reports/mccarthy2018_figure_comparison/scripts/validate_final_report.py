@@ -397,12 +397,12 @@ def main() -> int:
     ]
     add_check(checks, "总论结论未夸大论文等价", all(sentence in docx_text for sentence in boundary_sentences), [sentence for sentence in boundary_sentences if sentence not in docx_text])
     manual_config_ok = (
-        delivery_fields.get("verification_status") == "manual_confirmation_required"
-        and all(PENDING in value for value in manual_values)
+        delivery_fields.get("verification_status") == "confirmed_by_user"
+        and all(value and PENDING not in value for value in manual_values)
     )
     add_check(
         checks,
-        "封面未知信息使用受控待核实配置",
+        "封面身份信息使用受控确认配置",
         manual_config_ok
         and all(item in docx_text for item in manual_values)
         and all(item in pdf_text for item in manual_values)
@@ -431,14 +431,14 @@ def main() -> int:
     add_check(checks, "PDF 页数与 Word 导出状态一致", page_count_ok, {"pdf": pdf["page_count"], "export_status": export_page_count})
     add_check(
         checks,
-        "可核实 registry 占位符已清零且人工字段未被消隐",
+        "可核实占位符已清零且确认字段完整",
         len(pending_fields) == 0
         and manual_config_ok
-        and docx_text.count(PENDING) >= len(manual_values)
-        and pdf_text.count(PENDING) >= len(manual_values),
+        and docx_text.count(PENDING) == 0
+        and pdf_text.count(PENDING) == 0,
         {
             "registry_fields": len(pending_fields),
-            "manual_fields": len(manual_values),
+            "confirmed_manual_fields": len(manual_values),
             "docx": docx_text.count(PENDING),
             "pdf": pdf_text.count(PENDING),
         },
@@ -460,8 +460,10 @@ def main() -> int:
         "pending": {
             "registry_field_count": len(pending_fields),
             "items": pending_fields,
-            "manual_field_count": len(manual_values),
-            "manual_items": manual_values,
+            "manual_field_count": 0,
+            "manual_items": [],
+            "confirmed_field_count": len(manual_values),
+            "confirmed_items": manual_values,
             "docx_occurrences": docx_text.count(PENDING),
             "pdf_occurrences": pdf_text.count(PENDING),
         },

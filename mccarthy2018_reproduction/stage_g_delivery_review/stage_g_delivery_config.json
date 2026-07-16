@@ -1,15 +1,17 @@
 {
   "status": "PASS",
-  "generated_at_utc": "2026-07-16T04:57:58.568032+00:00",
+  "generated_at_utc": "2026-07-16T06:31:10.821282+00:00",
   "validation": "stage_g_delivery_review/delivery_validation.json",
   "placeholder_summary": {
     "registry_rows": 54,
     "manual_fields": 3,
+    "manual_fields_pending": 0,
+    "manual_fields_confirmed": 3,
     "resolved_coordinate_fields": 6,
     "resolved_comparison_assets": 54,
     "remaining_registry_placeholders": 0,
-    "docx_pending_occurrences": 11,
-    "pdf_pending_occurrences": 11
+    "docx_pending_occurrences": 0,
+    "pdf_pending_occurrences": 0
   },
   "delivery_files": [
     "reports/adviser_delivery/McCarthy2018_54图逐图复现对照报告.docx",

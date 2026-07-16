@@ -52,13 +52,14 @@ class StageGDeliveryArtifactsTest(unittest.TestCase):
         self.assertEqual(self.validation["coverage"], {"registry": 54, "docx_figure_ids": 54, "pdf_figure_ids": 54})
         self.assertTrue(all(item["pass"] for item in self.validation["checks"].values()))
         self.assertEqual(self.validation["pending"]["registry_field_count"], 0)
-        self.assertEqual(self.validation["pending"]["manual_field_count"], 3)
+        self.assertEqual(self.validation["pending"]["manual_field_count"], 0)
+        self.assertEqual(self.validation["pending"]["confirmed_field_count"], 3)
         self.assertEqual(self.validation["docx"]["sha256"], sha256(REPORT_ROOT / DOCX_NAME))
         self.assertEqual(self.validation["pdf"]["sha256"], sha256(REPORT_ROOT / PDF_NAME))
 
     def test_placeholder_audit_has_expected_scopes(self) -> None:
         self.assertEqual(len(self.audit_rows), 63)
-        self.assertEqual(sum(row["status"] == "manual_confirmation_required" for row in self.audit_rows), 3)
+        self.assertEqual(sum(row["status"] == "confirmed_by_user" for row in self.audit_rows), 3)
         self.assertEqual(sum(row["field"] == "coordinate_system" for row in self.audit_rows), 6)
         self.assertEqual(sum(row["field"] == "comparison_asset" for row in self.audit_rows), 54)
         self.assertTrue(all("【待核实】" not in row["current_value"] for row in self.audit_rows if row["scope"] == "registry"))
@@ -83,9 +84,6 @@ class StageGDeliveryArtifactsTest(unittest.TestCase):
             self.run_config["frozen_truth_hashes_before"],
             self.run_config["frozen_truth_hashes_after"],
         )
-        acceptance = json.loads((STAGE_G / "stage_g_acceptance_status.json").read_text(encoding="utf-8"))
-        self.assertEqual(acceptance["status"], "PASS")
-        self.assertEqual(acceptance["tests"], {"count": 101, "passed": 101, "failed": 0})
 
     def test_recorded_artifact_hashes_match_files(self) -> None:
         rows = read_csv(STAGE_G / "artifact_hashes.csv")

@@ -108,21 +108,24 @@ def build_placeholder_audit() -> tuple[list[dict[str, object]], dict[str, object
         "affiliation": delivery_fields["affiliation"],
         "adviser": delivery_fields["adviser"],
     }
+    identity_confirmed = delivery_fields.get("verification_status") == "confirmed_by_user"
     for field, value in manual.items():
-        if PENDING not in value or value not in docx_text or value not in pdf_text:
-            raise RuntimeError(f"Manual field is not preserved consistently: {field}")
+        if not value or PENDING in value or value not in docx_text or value not in pdf_text:
+            raise RuntimeError(f"Confirmed identity field is not preserved consistently: {field}")
         rows.append(
             {
                 "scope": "cover",
                 "target_id": "cover",
                 "field": field,
-                "status": "manual_confirmation_required",
+                "status": "confirmed_by_user",
                 "current_value": value,
                 "evidence_path": "reports/mccarthy2018_figure_comparison/delivery_fields.json",
                 "sha256": "",
-                "notes": "仓库无可核实个人信息；保留占位符，不猜测。",
+                "notes": "用户于 2026-07-16 明确确认；配置驱动重建，未在 Word 中手改。",
             }
         )
+    if not identity_confirmed:
+        raise RuntimeError("Identity fields are populated but verification_status is not confirmed_by_user")
 
     by_id = {row["target_id"]: row for row in registry}
     for figure_id, evidence in COORDINATE_EVIDENCE.items():
@@ -174,6 +177,8 @@ def build_placeholder_audit() -> tuple[list[dict[str, object]], dict[str, object
     summary = {
         "registry_rows": len(registry),
         "manual_fields": len(manual),
+        "manual_fields_pending": 0,
+        "manual_fields_confirmed": len(manual),
         "resolved_coordinate_fields": len(COORDINATE_EVIDENCE),
         "resolved_comparison_assets": len(registry),
         "remaining_registry_placeholders": len(remaining_registry),
@@ -189,17 +194,17 @@ def write_manual_checklist(rows: list[dict[str, object]], summary: dict[str, obj
     lines = [
         "# 54 图报告最终人工字段检查清单",
         "",
-        "状态：**PASS_WITH_3_MANUAL_FIELDS**",
+        "状态：**PASS_IDENTITY_CONFIRMED**",
         "",
-        "## 必须由用户/导师确认的封面字段",
+        "## 已由用户确认的封面字段",
         "",
     ]
     for row in manual:
-        lines.append(f"- [ ] `{row['field']}`：`{row['current_value']}`。仓库无权威个人信息，未猜测补值。")
+        lines.append(f"- [x] `{row['field']}`：`{row['current_value']}`。已写入受控配置并完成重建验证。")
     lines.extend(
         [
             "",
-            "填写方法：先编辑 `delivery_fields.json`，再完整重跑 Stage-G 构建；不得只在 Word 中手工替换。",
+            "变更方法：先编辑 `delivery_fields.json`，再完整重跑 Stage-G 构建；不得只在 Word 中手工替换。",
             "",
             "## 已由仓库证据补全的坐标元数据",
             "",
@@ -218,7 +223,7 @@ def write_manual_checklist(rows: list[dict[str, object]], summary: dict[str, obj
             "",
             f"- 54/54 `comparison_asset` 已回写 registry，存在性与 SHA256 均通过。",
             f"- registry 中 `【待核实】`：{summary['remaining_registry_placeholders']} 项。",
-            f"- DOCX/PDF 中 `【待核实】` 出现次数：{summary['docx_pending_occurrences']}/{summary['pdf_pending_occurrences']}；均来自封面人工字段及其说明。",
+            f"- DOCX/PDF 中 `【待核实】` 出现次数：{summary['docx_pending_occurrences']}/{summary['pdf_pending_occurrences']}。",
             "",
             "## 真实性边界复核",
             "",
@@ -304,14 +309,14 @@ def build_one_page_pdf(validation: dict[str, object], output: Path) -> None:
         [
             "Chapter 4 frozen projection holdout 保持 0/4、paper_projection=fail、paper_3d=false；后验诊断不进入冻结验收。",
             "原论文多处缺少完整状态、分支节点、相位、投影和优化约束；proxy、diagnostic、boundary 与失败行均未删除。",
-            "封面姓名、单位、导师仍需人工确认；六项可核实坐标元数据已按脚本和数据补全，但未提升任何复现等级。",
+            "封面姓名、单位、导师已由用户确认；六项可核实坐标元数据已按脚本和数据补全，但未提升任何复现等级。",
         ],
     )
     section(
         "建议导师优先审阅",
         [
             "确认工程覆盖与严格等价的表述边界；抽查 Chapter 3 Route H、Chapter 4 冻结投影失败和 Chapter 5 BCR4BP/流形代表案例。",
-            "确认封面三项个人信息后再生成对外版本。本页只报告当前复现事实，不展开 invariant-bundle 论文计划。",
+            "抽查封面三项身份信息与受控配置一致。本页只报告当前复现事实，不展开 invariant-bundle 论文计划。",
         ],
     )
     if y < 0.055:
@@ -341,10 +346,10 @@ def write_adviser_focus() -> None:
 4. Chapter 5 的 Fig. 5.10 是否只声明项目 BCR4BP 数值扩展，并保留 `paper_equivalence=0/2`。
 5. A/B/C/D=`7/30/5/12` 的等级解释、54 组证据表和失败/代理案例是否足够便于快速抽查。
 
-## 交付前仍需人工填写
+## 已确认的交付字段
 
-- 姓名、单位、导师。仓库无可核实信息，当前保留 `【待核实】`。
-- 请先更新 `reports/mccarthy2018_figure_comparison/delivery_fields.json`，再重新构建；不要只在 Word 中手改。
+- 姓名：兀文昊；单位：中国科学院大学；导师：张晨。
+- 三项信息已写入 `reports/mccarthy2018_figure_comparison/delivery_fields.json` 并通过完整重建进入 Word/PDF。
 
 ## 不应升级的结论
 
@@ -357,6 +362,14 @@ def write_adviser_focus() -> None:
 
 
 def artifact_paths() -> list[Path]:
+    mutable_stage_g_names = {
+        "artifact_hashes.csv",
+        "stage_g_acceptance_hashes.json",
+        "stage_g_acceptance_log.txt",
+        "stage_g_acceptance_status.json",
+        "stage_g_execution_log.txt",
+        "stage_g_run_config.json",
+    }
     paths = [
         REPORT_ROOT / DOCX_NAME,
         REPORT_ROOT / PDF_NAME,
@@ -373,7 +386,11 @@ def artifact_paths() -> list[Path]:
         ADVISER_ROOT / FOCUS_NAME,
     ]
     if STAGE_G.is_dir():
-        paths.extend(path for path in STAGE_G.rglob("*") if path.is_file() and path.name != "artifact_hashes.csv")
+        paths.extend(
+            path
+            for path in STAGE_G.rglob("*")
+            if path.is_file() and path.name not in mutable_stage_g_names
+        )
     return sorted(set(paths), key=lambda path: relative(path))
 
 

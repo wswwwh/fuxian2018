@@ -1,11 +1,11 @@
 Stage-G acceptance
-started_at_utc=2026-07-16T05:02:04.463039+00:00
+started_at_utc=2026-07-16T06:35:04.109104+00:00
 PYTHONPATH=C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction\src
 
 === unit_tests ===
 command=D:\miniconda3\envs\cislunar\python.exe -m unittest discover -s tests -v
 returncode=0
-elapsed_seconds=14.431055
+elapsed_seconds=11.826434
 test_dense_output_is_available_for_continuous_clearance_checks (test_bcr4bp_parameters.EarthMoonBCR4BPParameterTests.test_dense_output_is_available_for_continuous_clearance_checks) ... ok
 test_solar_angular_rate_uses_radians_per_normalized_time (test_bcr4bp_parameters.EarthMoonBCR4BPParameterTests.test_solar_angular_rate_uses_radians_per_normalized_time) ... ok
 test_without_sun_reduces_exactly_to_cr3bp_rhs (test_bcr4bp_parameters.EarthMoonBCR4BPParameterTests.test_without_sun_reduces_exactly_to_cr3bp_rhs) ... ok
@@ -109,14 +109,14 @@ test_missing_target_registry_returns_failure (test_validate_reproduction_smoke.R
 test_target_registry_matches_its_generator (test_validate_reproduction_smoke.ReproductionSmokeCliTests.test_target_registry_matches_its_generator) ... ok
 
 ----------------------------------------------------------------------
-Ran 101 tests in 8.631s
+Ran 101 tests in 8.532s
 
 OK
 
 === reproduction_smoke ===
 command=D:\miniconda3\envs\cislunar\python.exe scripts/validate_reproduction_smoke.py
 returncode=0
-elapsed_seconds=0.279519
+elapsed_seconds=0.280596
 SMOKE PASS
 figures=54 targets_v0=13 targets_v2=41
 current_numerical=16 current_open=25
@@ -133,19 +133,22 @@ png=54 pdf=54
 === target_registry_check ===
 command=D:\miniconda3\envs\cislunar\python.exe scripts/build_reproduction_targets.py --check
 returncode=0
-elapsed_seconds=0.142679
+elapsed_seconds=0.137058
 target registry is up to date: 54 rows
 
 === git_diff_check ===
 command=git diff --check
 returncode=0
-elapsed_seconds=0.356195
-warning: in the working copy of 'mccarthy2018_reproduction/reports/mccarthy2018_figure_comparison/document_build_log.md', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'mccarthy2018_reproduction/reports/mccarthy2018_figure_comparison/review_checklist.md', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'mccarthy2018_reproduction/reports/mccarthy2018_figure_comparison/scripts/build_stage_c_evidence.py', LF will be replaced by CRLF the next time Git touches it
+elapsed_seconds=0.905858
+warning: in the working copy of 'mccarthy2018_reproduction/reports/mccarthy2018_figure_comparison/delivery_fields.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mccarthy2018_reproduction/reports/mccarthy2018_figure_comparison/scripts/build_stage_g_delivery_package.py', LF will be replaced by CRLF the next time Git touches it
 warning: in the working copy of 'mccarthy2018_reproduction/reports/mccarthy2018_figure_comparison/scripts/build_word_report.js', LF will be replaced by CRLF the next time Git touches it
-warning: in the working copy of 'mccarthy2018_reproduction/reports/mccarthy2018_figure_comparison/scripts/build_word_report.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mccarthy2018_reproduction/reports/mccarthy2018_figure_comparison/scripts/render_report_review.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mccarthy2018_reproduction/reports/mccarthy2018_figure_comparison/scripts/run_stage_g_acceptance.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mccarthy2018_reproduction/reports/mccarthy2018_figure_comparison/scripts/run_stage_g_delivery_pipeline.py', LF will be replaced by CRLF the next time Git touches it
 warning: in the working copy of 'mccarthy2018_reproduction/reports/mccarthy2018_figure_comparison/scripts/validate_final_report.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mccarthy2018_reproduction/stage_g_delivery_review/selected_pages_review.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'mccarthy2018_reproduction/tests/test_stage_g_delivery_artifacts.py', LF will be replaced by CRLF the next time Git touches it
 
 stage_g_acceptance=PASS
 frozen_truth_unchanged=true

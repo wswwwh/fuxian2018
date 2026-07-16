@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "note": "Terminal hashes are written only after acceptance log/status stop changing.",
+  "artifacts": [
+    {
+      "path": "stage_g_delivery_review/stage_g_acceptance_log.txt",
+      "bytes": 21728,
+      "sha256": "b48fe6661eeee238b7a91ece248e1f35c52dbec96897825b74e1d9778d7d6eb2"
+    },
+    {
+      "path": "stage_g_delivery_review/stage_g_acceptance_status.json",
+      "bytes": 1677,
+      "sha256": "7db3e11e7e26a54531db9b832da6b4839cebe586de31a8b4d1f9e8243515a9d3"
+    },
+    {
+      "path": "stage_g_delivery_review/stage_g_execution_log.txt",
+      "bytes": 3822,
+      "sha256": "3f763517ff9bfa206ba290b510bd64ea75eda2a0894d6862d182e09c7629769a"
+    },
+    {
+      "path": "stage_g_delivery_review/stage_g_run_config.json",
+      "bytes": 5928,
+      "sha256": "455b4a920e9cf96bda095509d7a52ea02ae02cf374ab71dfcae9e8395d88c05d"
+    },
+    {
+      "path": "stage_g_delivery_review/artifact_hashes.csv",
+      "bytes": 6897,
+      "sha256": "2551c75584c05607855f88b62a4386fd83a2e24c42e1bb8288c046214b2f344c"
+    },
+    {
+      "path": "stage_g_delivery_review/stage_g_identity_rebuild_recovery.md",
+      "bytes": 2101,
+      "sha256": "4aae8184024a55b453dbbae9724ed67f1008e888db7c2e02fb8a66e42ea8dfe3"
+    }
+  ]
+}

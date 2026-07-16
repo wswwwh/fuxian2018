@@ -1,7 +1,7 @@
 ﻿scope,target_id,field,status,current_value,evidence_path,sha256,notes
-cover,cover,author_name,manual_confirmation_required,【待核实】姓名,reports/mccarthy2018_figure_comparison/delivery_fields.json,,仓库无可核实个人信息；保留占位符，不猜测。
-cover,cover,affiliation,manual_confirmation_required,【待核实】单位,reports/mccarthy2018_figure_comparison/delivery_fields.json,,仓库无可核实个人信息；保留占位符，不猜测。
-cover,cover,adviser,manual_confirmation_required,【待核实】导师,reports/mccarthy2018_figure_comparison/delivery_fields.json,,仓库无可核实个人信息；保留占位符，不猜测。
+cover,cover,author_name,confirmed_by_user,兀文昊,reports/mccarthy2018_figure_comparison/delivery_fields.json,,用户于 2026-07-16 明确确认；配置驱动重建，未在 Word 中手改。
+cover,cover,affiliation,confirmed_by_user,中国科学院大学,reports/mccarthy2018_figure_comparison/delivery_fields.json,,用户于 2026-07-16 明确确认；配置驱动重建，未在 Word 中手改。
+cover,cover,adviser,confirmed_by_user,张晨,reports/mccarthy2018_figure_comparison/delivery_fields.json,,用户于 2026-07-16 明确确认；配置驱动重建，未在 Word 中手改。
 registry,5.2,coordinate_system,resolved_from_repository_evidence,"无物理状态坐标系；局部二维示意绘图坐标（Sun=(0,0)、Moon=(5.6,0)），原点、轴向和历元不作为数值元数据",figures/fig_5_02.py,,只补全元数据，不提升复现等级或论文等价状态。
 registry,5.3,coordinate_system,resolved_from_repository_evidence,"无物理状态坐标系；局部二维示意绘图坐标（Earth=(0,0)、Moon=(4.0,0)），原点、轴向和历元不作为数值元数据",figures/fig_5_03.py,,只补全元数据，不提升复现等级或论文等价状态。
 registry,5.4,coordinate_system,resolved_from_repository_evidence,"无物理状态坐标系；局部二维日—地—月会合示意坐标（Sun=(0,0)），历元不适用",figures/fig_5_04.py,,只补全元数据，不提升复现等级或论文等价状态。

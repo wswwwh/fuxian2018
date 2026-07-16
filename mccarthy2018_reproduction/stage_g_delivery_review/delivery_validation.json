@@ -1,12 +1,12 @@
 {
   "label": "delivery",
   "status": "PASS",
-  "generated_at_utc": "2026-07-16T04:57:47.833912+00:00",
+  "generated_at_utc": "2026-07-16T06:31:00.817044+00:00",
   "report_root": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison",
   "docx": {
     "path": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\McCarthy2018_54图逐图复现对照报告.docx",
-    "bytes": 12261536,
-    "sha256": "b5513008bdc9d2617e690b8e9eaa15a759e5a86a066d4c688544c0f935edaa1c",
+    "bytes": 12260073,
+    "sha256": "7930775112002e67e73fe9eb382ad8c1389ab2b38a6a6788f94b99d7021e7fe6",
     "zip_test_member": null,
     "package_member_count": 80,
     "media_count": 54,
@@ -376,17 +376,17 @@
     "numbered_heading_count": 70,
     "toc_field": true,
     "page_field": true,
-    "instruction_text": "TOC \\h \\o \"1-3\"  HYPERLINK \\l _Toc6043   PAGEREF _Toc6043 \\h   HYPERLINK \\l _Toc21692   PAGEREF _Toc21692 \\h   HYPERLINK \\l _Toc18872   PAGEREF _Toc18872 \\h   HYPERLINK \\l _Toc8601   PAGEREF _Toc8601 \\h   HYPERLINK \\l _Toc423   PAGEREF _Toc423 \\h   HYPERLINK \\l _Toc17884   PAGEREF _Toc17884 \\h   HYPERLINK \\l _Toc14799   PAGEREF _Toc14799 \\h   HYPERLINK \\l _Toc4914   PAGEREF _Toc4914 \\h   HYPERLINK \\l _Toc17025   PAGEREF _Toc17025 \\h   HYPERLINK \\l _Toc12443   PAGEREF _Toc12443 \\h   HYPERLINK \\l _Toc9965   PAGEREF _Toc9965 \\h   HYPERLINK \\l _Toc9223   PAGEREF _Toc9223 \\h   HYPERLINK \\l _Toc26295   PAGEREF _Toc26295 \\h   HYPERLINK \\l _Toc8734   PAGEREF _Toc8734 \\h   HYPERLINK \\l _Toc4405   PAGEREF _Toc4405 \\h   HYPERLINK \\l _Toc7424   PAGEREF _Toc7424 \\h   HYPERLINK \\l _Toc30620   PAGEREF _Toc30620 \\h   HYPERLINK \\l _Toc4668   PAGEREF _Toc4668 \\h   HYPERLINK \\l _Toc5550   PAGEREF _Toc5550 \\h   HYPERLINK \\l _Toc22869   PAGEREF _Toc22869 \\h   HYPERLINK \\l _Toc3228   PAGEREF _Toc3228 \\h   HYPERLINK \\l _Toc32646   PAGEREF _Toc32646 \\h   HYPERLINK \\l _Toc10812   PAGEREF _Toc10812 \\h   HYPERLINK \\l _Toc25261   PAGEREF _Toc25261 \\h   HYPERLINK \\l _Toc1740   PAGEREF _Toc1740 \\h   HYPERLINK \\l _Toc3204   PAGEREF _Toc3204 \\h   HYPERLINK \\l _Toc21967   PAGEREF _Toc21967 \\h   HYPERLINK \\l _Toc6280   PAGEREF _Toc6280 \\h   HYPERLINK \\l _Toc10949   PAGEREF _Toc10949 \\h   HYPERLINK \\l _Toc578   PAGEREF _Toc578 \\h   HYPERLINK \\l _Toc14554   PAGEREF _Toc14554 \\h   HYPERLINK \\l _Toc26330   PAGEREF _Toc26330 \\h   HYPERLINK \\l _Toc3251   PAGEREF _Toc3251 \\h   HYPERLINK \\l _Toc23563   PAGEREF _Toc23563 \\h   HYPERLINK \\l _Toc31239   PAGEREF _Toc31239 \\h   HYPERLINK \\l _Toc20472   PAGEREF _Toc20472 \\h   HYPERLINK \\l _Toc681   PAGEREF _Toc681 \\h   HYPERLINK \\l _Toc16501   PAGEREF _Toc16501 \\h   HYPERLINK \\l _Toc27433   PAGEREF _Toc27433 \\h   HYPERLINK \\l _Toc19896   PAGEREF _Toc19896 \\h   HYPERLINK \\l _Toc4408   PAGEREF _Toc4408 \\h   HYPERLINK \\l _Toc2974   PAGEREF _Toc2974 \\h   HYPERLINK \\l _Toc31345   PAGEREF _Toc31345 \\h   HYPERLINK \\l _Toc19924   PAGEREF _Toc19924 \\h   HYPERLINK \\l _Toc1599   PAGEREF _Toc1599 \\h   HYPERLINK \\l _Toc20148   PAGEREF _Toc20148 \\h   HYPERLINK \\l _Toc17382   PAGEREF _Toc17382 \\h   HYPERLINK \\l _Toc19856   PAGEREF _Toc19856 \\h   HYPERLINK \\l _Toc13828   PAGEREF _Toc13828 \\h   HYPERLINK \\l _Toc26811   PAGEREF _Toc26811 \\h   HYPERLINK \\l _Toc22287   PAGEREF _Toc22287 \\h   HYPERLINK \\l _Toc22685   PAGEREF _Toc22685 \\h   HYPERLINK \\l _Toc3716   PAGEREF _Toc3716 \\h   HYPERLINK \\l _Toc7306   PAGEREF _Toc7306 \\h   HYPERLINK \\l _Toc1266   PAGEREF _Toc1266 \\h   HYPERLINK \\l _Toc28476   PAGEREF _Toc28476 \\h   HYPERLINK \\l _Toc29960   PAGEREF _Toc29960 \\h   HYPERLINK \\l _Toc18455   PAGEREF _Toc18455 \\h   HYPERLINK \\l _Toc19011   PAGEREF _Toc19011 \\h   HYPERLINK \\l _Toc6055   PAGEREF _Toc6055 \\h   HYPERLINK \\l _Toc8697   PAGEREF _Toc8697 \\h   HYPERLINK \\l _Toc8437   PAGEREF _Toc8437 \\h   HYPERLINK \\l _Toc10709   PAGEREF _Toc10709 \\h   HYPERLINK \\l _Toc7852   PAGEREF _Toc7852 \\h   HYPERLINK \\l _Toc28405   PAGEREF _Toc28405 \\h   HYPERLINK \\l _Toc6683   PAGEREF _Toc6683 \\h   HYPERLINK \\l _Toc2900   PAGEREF _Toc2900 \\h   HYPERLINK \\l _Toc19355   PAGEREF _Toc19355 \\h   HYPERLINK \\l _Toc19234   PAGEREF _Toc19234 \\h   HYPERLINK \\l _Toc22247   PAGEREF _Toc22247 \\h   HYPERLINK \\l _Toc29238   PAGEREF _Toc29238 \\h   HYPERLINK \\l _Toc2914   PAGEREF _Toc2914 \\h   HYPERLINK \\l _Toc18883   PAGEREF _Toc18883 \\h   HYPERLINK \\l _Toc20323   PAGEREF _Toc20323 \\h   HYPERLINK \\l _Toc8431   PAGEREF _Toc8431 \\h "
+    "instruction_text": "TOC \\h \\o \"1-3\"  HYPERLINK \\l _Toc30513   PAGEREF _Toc30513 \\h   HYPERLINK \\l _Toc20531   PAGEREF _Toc20531 \\h   HYPERLINK \\l _Toc19450   PAGEREF _Toc19450 \\h   HYPERLINK \\l _Toc13040   PAGEREF _Toc13040 \\h   HYPERLINK \\l _Toc25369   PAGEREF _Toc25369 \\h   HYPERLINK \\l _Toc1966   PAGEREF _Toc1966 \\h   HYPERLINK \\l _Toc3636   PAGEREF _Toc3636 \\h   HYPERLINK \\l _Toc9088   PAGEREF _Toc9088 \\h   HYPERLINK \\l _Toc6127   PAGEREF _Toc6127 \\h   HYPERLINK \\l _Toc20697   PAGEREF _Toc20697 \\h   HYPERLINK \\l _Toc2535   PAGEREF _Toc2535 \\h   HYPERLINK \\l _Toc11   PAGEREF _Toc11 \\h   HYPERLINK \\l _Toc5031   PAGEREF _Toc5031 \\h   HYPERLINK \\l _Toc10477   PAGEREF _Toc10477 \\h   HYPERLINK \\l _Toc8762   PAGEREF _Toc8762 \\h   HYPERLINK \\l _Toc20139   PAGEREF _Toc20139 \\h   HYPERLINK \\l _Toc30013   PAGEREF _Toc30013 \\h   HYPERLINK \\l _Toc24326   PAGEREF _Toc24326 \\h   HYPERLINK \\l _Toc9637   PAGEREF _Toc9637 \\h   HYPERLINK \\l _Toc12421   PAGEREF _Toc12421 \\h   HYPERLINK \\l _Toc29592   PAGEREF _Toc29592 \\h   HYPERLINK \\l _Toc16249   PAGEREF _Toc16249 \\h   HYPERLINK \\l _Toc7164   PAGEREF _Toc7164 \\h   HYPERLINK \\l _Toc1972   PAGEREF _Toc1972 \\h   HYPERLINK \\l _Toc15284   PAGEREF _Toc15284 \\h   HYPERLINK \\l _Toc2407   PAGEREF _Toc2407 \\h   HYPERLINK \\l _Toc13737   PAGEREF _Toc13737 \\h   HYPERLINK \\l _Toc14724   PAGEREF _Toc14724 \\h   HYPERLINK \\l _Toc31232   PAGEREF _Toc31232 \\h   HYPERLINK \\l _Toc25234   PAGEREF _Toc25234 \\h   HYPERLINK \\l _Toc16440   PAGEREF _Toc16440 \\h   HYPERLINK \\l _Toc24801   PAGEREF _Toc24801 \\h   HYPERLINK \\l _Toc4869   PAGEREF _Toc4869 \\h   HYPERLINK \\l _Toc15728   PAGEREF _Toc15728 \\h   HYPERLINK \\l _Toc17434   PAGEREF _Toc17434 \\h   HYPERLINK \\l _Toc1295   PAGEREF _Toc1295 \\h   HYPERLINK \\l _Toc20297   PAGEREF _Toc20297 \\h   HYPERLINK \\l _Toc25982   PAGEREF _Toc25982 \\h   HYPERLINK \\l _Toc12194   PAGEREF _Toc12194 \\h   HYPERLINK \\l _Toc10395   PAGEREF _Toc10395 \\h   HYPERLINK \\l _Toc32371   PAGEREF _Toc32371 \\h   HYPERLINK \\l _Toc9687   PAGEREF _Toc9687 \\h   HYPERLINK \\l _Toc13140   PAGEREF _Toc13140 \\h   HYPERLINK \\l _Toc17553   PAGEREF _Toc17553 \\h   HYPERLINK \\l _Toc21935   PAGEREF _Toc21935 \\h   HYPERLINK \\l _Toc15877   PAGEREF _Toc15877 \\h   HYPERLINK \\l _Toc13151   PAGEREF _Toc13151 \\h   HYPERLINK \\l _Toc1007   PAGEREF _Toc1007 \\h   HYPERLINK \\l _Toc3412   PAGEREF _Toc3412 \\h   HYPERLINK \\l _Toc6423   PAGEREF _Toc6423 \\h   HYPERLINK \\l _Toc29288   PAGEREF _Toc29288 \\h   HYPERLINK \\l _Toc21338   PAGEREF _Toc21338 \\h   HYPERLINK \\l _Toc453   PAGEREF _Toc453 \\h   HYPERLINK \\l _Toc31475   PAGEREF _Toc31475 \\h   HYPERLINK \\l _Toc22921   PAGEREF _Toc22921 \\h   HYPERLINK \\l _Toc6416   PAGEREF _Toc6416 \\h   HYPERLINK \\l _Toc23445   PAGEREF _Toc23445 \\h   HYPERLINK \\l _Toc6126   PAGEREF _Toc6126 \\h   HYPERLINK \\l _Toc410   PAGEREF _Toc410 \\h   HYPERLINK \\l _Toc10526   PAGEREF _Toc10526 \\h   HYPERLINK \\l _Toc750   PAGEREF _Toc750 \\h   HYPERLINK \\l _Toc19098   PAGEREF _Toc19098 \\h   HYPERLINK \\l _Toc25007   PAGEREF _Toc25007 \\h   HYPERLINK \\l _Toc18899   PAGEREF _Toc18899 \\h   HYPERLINK \\l _Toc25139   PAGEREF _Toc25139 \\h   HYPERLINK \\l _Toc23519   PAGEREF _Toc23519 \\h   HYPERLINK \\l _Toc18145   PAGEREF _Toc18145 \\h   HYPERLINK \\l _Toc23668   PAGEREF _Toc23668 \\h   HYPERLINK \\l _Toc15332   PAGEREF _Toc15332 \\h   HYPERLINK \\l _Toc4430   PAGEREF _Toc4430 \\h   HYPERLINK \\l _Toc31058   PAGEREF _Toc31058 \\h   HYPERLINK \\l _Toc32305   PAGEREF _Toc32305 \\h   HYPERLINK \\l _Toc6082   PAGEREF _Toc6082 \\h   HYPERLINK \\l _Toc30129   PAGEREF _Toc30129 \\h   HYPERLINK \\l _Toc12907   PAGEREF _Toc12907 \\h "
   },
   "pdf": {
     "path": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\McCarthy2018_54图逐图复现对照报告.pdf",
-    "bytes": 12966929,
-    "sha256": "c6f65a28e6bb429db675709355a44035fa956413c0dd99405684fea7aa7e81d6",
+    "bytes": 12967018,
+    "sha256": "30ee0affa65b1f7f5395e1249d58f1dc02a139ff13008f9120867f64c1681c39",
     "page_count": 122,
     "page_records": [
       {
         "page": 1,
-        "text_characters": 1697,
+        "text_characters": 1682,
         "image_count": 0,
         "drawing_count": 0,
         "width_pt": 595.2999877929688,
@@ -402,7 +402,7 @@
       },
       {
         "page": 3,
-        "text_characters": 5034,
+        "text_characters": 5037,
         "image_count": 0,
         "drawing_count": 0,
         "width_pt": 595.2999877929688,
@@ -418,7 +418,7 @@
       },
       {
         "page": 5,
-        "text_characters": 1072,
+        "text_characters": 1078,
         "image_count": 0,
         "drawing_count": 20,
         "width_pt": 595.2999877929688,
@@ -1298,7 +1298,7 @@
       },
       {
         "page": 115,
-        "text_characters": 571,
+        "text_characters": 576,
         "image_count": 0,
         "drawing_count": 0,
         "width_pt": 595.2999877929688,
@@ -1346,7 +1346,7 @@
       },
       {
         "page": 121,
-        "text_characters": 1672,
+        "text_characters": 1653,
         "image_count": 0,
         "drawing_count": 5,
         "width_pt": 595.2999877929688,
@@ -1354,7 +1354,7 @@
       },
       {
         "page": 122,
-        "text_characters": 274,
+        "text_characters": 249,
         "image_count": 0,
         "drawing_count": 6,
         "width_pt": 595.2999877929688,
@@ -1384,14 +1384,16 @@
   "pending": {
     "registry_field_count": 0,
     "items": [],
-    "manual_field_count": 3,
-    "manual_items": [
-      "【待核实】姓名",
-      "【待核实】单位",
-      "【待核实】导师"
+    "manual_field_count": 0,
+    "manual_items": [],
+    "confirmed_field_count": 3,
+    "confirmed_items": [
+      "兀文昊",
+      "中国科学院大学",
+      "张晨"
     ],
-    "docx_occurrences": 11,
-    "pdf_occurrences": 11
+    "docx_occurrences": 0,
+    "pdf_occurrences": 0
   },
   "checks": {
     "DOCX ZIP 可读": {
@@ -1505,7 +1507,7 @@
     },
     "自动目录字段存在": {
       "pass": true,
-      "detail": "TOC \\h \\o \"1-3\"  HYPERLINK \\l _Toc6043   PAGEREF _Toc6043 \\h   HYPERLINK \\l _Toc21692   PAGEREF _Toc21692 \\h   HYPERLINK \\l _Toc18872   PAGEREF _Toc18872 \\h   HYPERLINK \\l _Toc8601   PAGEREF _Toc8601 \\h   HYPERLINK \\l _Toc423   PAGEREF _Toc423 \\h   HYPERLINK \\l _Toc17884   PAGEREF _Toc17884 \\h   HYPERLINK \\l _Toc14799   PAGEREF _Toc14799 \\h   HYPERLINK \\l _Toc4914   PAGEREF _Toc4914 \\h   HYPERLINK \\l _Toc17025   PAGEREF _Toc17025 \\h   HYPERLINK \\l _Toc12443   PAGEREF _Toc12443 \\h   HYPERLINK \\l _Toc9965   PAGEREF _Toc9965 \\h   HYPERLINK \\l _Toc9223   PAGEREF _Toc9223 \\h   HYPERLINK \\l _Toc26295   PAGEREF _Toc26295 \\h   HYPERLINK \\l _Toc8734   PAGEREF _Toc8734 \\h   HYPERLINK \\l _Toc4405   PAGEREF _Toc4405 \\h   HYPERLINK \\l _Toc7424   PAGEREF _Toc7424 \\h   HYPERLINK \\l _Toc30620   PAGEREF _Toc30620 \\h   HYPERLINK \\l _Toc4668   PAGEREF _Toc4668 \\h   HYPERLINK \\l _Toc5550   PAGEREF _Toc5550 \\h   HYPERLINK \\l _Toc22869   PAGEREF _Toc22869 \\h   HYPERLINK \\l _Toc3228   PAGEREF _Toc3228 \\h   HYPERLINK \\l _Toc32646   PAGEREF _Toc32646 \\h   HYPERLINK \\l _Toc10812   PAGEREF _Toc10812 \\h   HYPERLINK \\l _Toc25261   PAGEREF _Toc25261 \\h   HYPERLINK \\l _Toc1740   PAGEREF _Toc1740 \\h   HYPERLINK \\l _Toc3204   PAGEREF _Toc3204 \\h   HYPERLINK \\l _Toc21967   PAGEREF _Toc21967 \\h   HYPERLINK \\l _Toc6280   PAGEREF _Toc6280 \\h   HYPERLINK \\l _Toc10949   PAGEREF _Toc10949 \\h   HYPERLINK \\l _Toc578   PAGEREF _Toc578 \\h   HYPERLINK \\l _Toc14554   PAGEREF _Toc14554 \\h   HYPERLINK \\l _Toc26330   PAGEREF _Toc26330 \\h   HYPERLINK \\l _Toc3251   PAGEREF _Toc3251 \\h   HYPERLINK \\l _Toc23563   PAGEREF _Toc23563 \\h   HYPERLINK \\l _Toc31239   PAGEREF _Toc31239 \\h   HYPERLINK \\l _Toc20472   PAGEREF _Toc20472 \\h   HYPERLINK \\l _Toc681   PAGEREF _Toc681 \\h   HYPERLINK \\l _Toc16501   PAGEREF _Toc16501 \\h   HYPERLINK \\l _Toc27433   PAGEREF _Toc27433 \\h   HYPERLINK \\l _Toc19896   PAGEREF _Toc19896 \\h   HYPERLINK \\l _Toc4408   PAGEREF _Toc4408 \\h   HYPERLINK \\l _Toc2974   PAGEREF _Toc2974 \\h   HYPERLINK \\l _Toc31345   PAGEREF _Toc31345 \\h   HYPERLINK \\l _Toc19924   PAGEREF _Toc19924 \\h   HYPERLINK \\l _Toc1599   PAGEREF _Toc1599 \\h   HYPERLINK \\l _Toc20148   PAGEREF _Toc20148 \\h   HYPERLINK \\l _Toc17382   PAGEREF _Toc17382 \\h   HYPERLINK \\l _Toc19856   PAGEREF _Toc19856 \\h   HYPERLINK \\l _Toc13828   PAGEREF _Toc13828 \\h   HYPERLINK \\l _Toc26811   PAGEREF _Toc26811 \\h   HYPERLINK \\l _Toc22287   PAGEREF _Toc22287 \\h   HYPERLINK \\l _Toc22685   PAGEREF _Toc22685 \\h   HYPERLINK \\l _Toc3716   PAGEREF _Toc3716 \\h   HYPERLINK \\l _Toc7306   PAGEREF _Toc7306 \\h   HYPERLINK \\l _Toc1266   PAGEREF _Toc1266 \\h   HYPERLINK \\l _Toc28476   PAGEREF _Toc28476 \\h   HYPERLINK \\l _Toc29960   PAGEREF _Toc29960 \\h   HYPERLINK \\l _Toc18455   PAGEREF _Toc18455 \\h   HYPERLINK \\l _Toc19011   PAGEREF _Toc19011 \\h   HYPERLINK \\l _Toc6055   PAGEREF _Toc6055 \\h   HYPERLINK \\l _Toc8697   PAGEREF _Toc8697 \\h   HYPERLINK \\l _Toc8437   PAGEREF _Toc8437 \\h   HYPERLINK \\l _Toc10709   PAGEREF _Toc10709 \\h   HYPERLINK \\l _Toc7852   PAGEREF _Toc7852 \\h   HYPERLINK \\l _Toc28405   PAGEREF _Toc28405 \\h   HYPERLINK \\l _Toc6683   PAGEREF _Toc6683 \\h   HYPERLINK \\l _Toc2900   PAGEREF _Toc2900 \\h   HYPERLINK \\l _Toc19355   PAGEREF _Toc19355 \\h   HYPERLINK \\l _Toc19234   PAGEREF _Toc19234 \\h   HYPERLINK \\l _Toc22247   PAGEREF _Toc22247 \\h   HYPERLINK \\l _Toc29238   PAGEREF _Toc29238 \\h   HYPERLINK \\l _Toc2914   PAGEREF _Toc2914 \\h   HYPERLINK \\l _Toc18883   PAGEREF _Toc18883 \\h   HYPERLINK \\l _Toc20323   PAGEREF _Toc20323 \\h   HYPERLINK \\l _Toc8431   PAGEREF _Toc8431 \\h "
+      "detail": "TOC \\h \\o \"1-3\"  HYPERLINK \\l _Toc30513   PAGEREF _Toc30513 \\h   HYPERLINK \\l _Toc20531   PAGEREF _Toc20531 \\h   HYPERLINK \\l _Toc19450   PAGEREF _Toc19450 \\h   HYPERLINK \\l _Toc13040   PAGEREF _Toc13040 \\h   HYPERLINK \\l _Toc25369   PAGEREF _Toc25369 \\h   HYPERLINK \\l _Toc1966   PAGEREF _Toc1966 \\h   HYPERLINK \\l _Toc3636   PAGEREF _Toc3636 \\h   HYPERLINK \\l _Toc9088   PAGEREF _Toc9088 \\h   HYPERLINK \\l _Toc6127   PAGEREF _Toc6127 \\h   HYPERLINK \\l _Toc20697   PAGEREF _Toc20697 \\h   HYPERLINK \\l _Toc2535   PAGEREF _Toc2535 \\h   HYPERLINK \\l _Toc11   PAGEREF _Toc11 \\h   HYPERLINK \\l _Toc5031   PAGEREF _Toc5031 \\h   HYPERLINK \\l _Toc10477   PAGEREF _Toc10477 \\h   HYPERLINK \\l _Toc8762   PAGEREF _Toc8762 \\h   HYPERLINK \\l _Toc20139   PAGEREF _Toc20139 \\h   HYPERLINK \\l _Toc30013   PAGEREF _Toc30013 \\h   HYPERLINK \\l _Toc24326   PAGEREF _Toc24326 \\h   HYPERLINK \\l _Toc9637   PAGEREF _Toc9637 \\h   HYPERLINK \\l _Toc12421   PAGEREF _Toc12421 \\h   HYPERLINK \\l _Toc29592   PAGEREF _Toc29592 \\h   HYPERLINK \\l _Toc16249   PAGEREF _Toc16249 \\h   HYPERLINK \\l _Toc7164   PAGEREF _Toc7164 \\h   HYPERLINK \\l _Toc1972   PAGEREF _Toc1972 \\h   HYPERLINK \\l _Toc15284   PAGEREF _Toc15284 \\h   HYPERLINK \\l _Toc2407   PAGEREF _Toc2407 \\h   HYPERLINK \\l _Toc13737   PAGEREF _Toc13737 \\h   HYPERLINK \\l _Toc14724   PAGEREF _Toc14724 \\h   HYPERLINK \\l _Toc31232   PAGEREF _Toc31232 \\h   HYPERLINK \\l _Toc25234   PAGEREF _Toc25234 \\h   HYPERLINK \\l _Toc16440   PAGEREF _Toc16440 \\h   HYPERLINK \\l _Toc24801   PAGEREF _Toc24801 \\h   HYPERLINK \\l _Toc4869   PAGEREF _Toc4869 \\h   HYPERLINK \\l _Toc15728   PAGEREF _Toc15728 \\h   HYPERLINK \\l _Toc17434   PAGEREF _Toc17434 \\h   HYPERLINK \\l _Toc1295   PAGEREF _Toc1295 \\h   HYPERLINK \\l _Toc20297   PAGEREF _Toc20297 \\h   HYPERLINK \\l _Toc25982   PAGEREF _Toc25982 \\h   HYPERLINK \\l _Toc12194   PAGEREF _Toc12194 \\h   HYPERLINK \\l _Toc10395   PAGEREF _Toc10395 \\h   HYPERLINK \\l _Toc32371   PAGEREF _Toc32371 \\h   HYPERLINK \\l _Toc9687   PAGEREF _Toc9687 \\h   HYPERLINK \\l _Toc13140   PAGEREF _Toc13140 \\h   HYPERLINK \\l _Toc17553   PAGEREF _Toc17553 \\h   HYPERLINK \\l _Toc21935   PAGEREF _Toc21935 \\h   HYPERLINK \\l _Toc15877   PAGEREF _Toc15877 \\h   HYPERLINK \\l _Toc13151   PAGEREF _Toc13151 \\h   HYPERLINK \\l _Toc1007   PAGEREF _Toc1007 \\h   HYPERLINK \\l _Toc3412   PAGEREF _Toc3412 \\h   HYPERLINK \\l _Toc6423   PAGEREF _Toc6423 \\h   HYPERLINK \\l _Toc29288   PAGEREF _Toc29288 \\h   HYPERLINK \\l _Toc21338   PAGEREF _Toc21338 \\h   HYPERLINK \\l _Toc453   PAGEREF _Toc453 \\h   HYPERLINK \\l _Toc31475   PAGEREF _Toc31475 \\h   HYPERLINK \\l _Toc22921   PAGEREF _Toc22921 \\h   HYPERLINK \\l _Toc6416   PAGEREF _Toc6416 \\h   HYPERLINK \\l _Toc23445   PAGEREF _Toc23445 \\h   HYPERLINK \\l _Toc6126   PAGEREF _Toc6126 \\h   HYPERLINK \\l _Toc410   PAGEREF _Toc410 \\h   HYPERLINK \\l _Toc10526   PAGEREF _Toc10526 \\h   HYPERLINK \\l _Toc750   PAGEREF _Toc750 \\h   HYPERLINK \\l _Toc19098   PAGEREF _Toc19098 \\h   HYPERLINK \\l _Toc25007   PAGEREF _Toc25007 \\h   HYPERLINK \\l _Toc18899   PAGEREF _Toc18899 \\h   HYPERLINK \\l _Toc25139   PAGEREF _Toc25139 \\h   HYPERLINK \\l _Toc23519   PAGEREF _Toc23519 \\h   HYPERLINK \\l _Toc18145   PAGEREF _Toc18145 \\h   HYPERLINK \\l _Toc23668   PAGEREF _Toc23668 \\h   HYPERLINK \\l _Toc15332   PAGEREF _Toc15332 \\h   HYPERLINK \\l _Toc4430   PAGEREF _Toc4430 \\h   HYPERLINK \\l _Toc31058   PAGEREF _Toc31058 \\h   HYPERLINK \\l _Toc32305   PAGEREF _Toc32305 \\h   HYPERLINK \\l _Toc6082   PAGEREF _Toc6082 \\h   HYPERLINK \\l _Toc30129   PAGEREF _Toc30129 \\h   HYPERLINK \\l _Toc12907   PAGEREF _Toc12907 \\h "
     },
     "页码字段存在": {
       "pass": true,
@@ -1544,23 +1546,23 @@
       "pass": true,
       "detail": []
     },
-    "封面未知信息使用受控待核实配置": {
+    "封面身份信息使用受控确认配置": {
       "pass": true,
       "detail": {
         "configured": [
-          "【待核实】姓名",
-          "【待核实】单位",
-          "【待核实】导师"
+          "兀文昊",
+          "中国科学院大学",
+          "张晨"
         ],
         "docx_present": [
-          "【待核实】姓名",
-          "【待核实】单位",
-          "【待核实】导师"
+          "兀文昊",
+          "中国科学院大学",
+          "张晨"
         ],
         "pdf_present": [
-          "【待核实】姓名",
-          "【待核实】单位",
-          "【待核实】导师"
+          "兀文昊",
+          "中国科学院大学",
+          "张晨"
         ],
         "legacy_waiting": 0
       }
@@ -1605,13 +1607,13 @@
         "export_status": 122
       }
     },
-    "可核实 registry 占位符已清零且人工字段未被消隐": {
+    "可核实占位符已清零且确认字段完整": {
       "pass": true,
       "detail": {
         "registry_fields": 0,
-        "manual_fields": 3,
-        "docx": 11,
-        "pdf": 11
+        "confirmed_manual_fields": 3,
+        "docx": 0,
+        "pdf": 0
       }
     },
     "等级统计符合审计": {

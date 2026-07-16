@@ -117,14 +117,30 @@ def main() -> int:
                 step_start = time.perf_counter()
                 log.write(f"\n=== {label} ===\ncommand={subprocess.list2cmdline(argv)}\n")
                 log.flush()
-                completed = subprocess.run(
-                    argv,
-                    cwd=PROJECT_ROOT,
-                    capture_output=True,
-                    text=True,
-                    encoding="utf-8",
-                    errors="replace",
-                )
+                max_attempts = 3 if label == "word_build" else 1
+                completed = None
+                for attempt in range(1, max_attempts + 1):
+                    completed = subprocess.run(
+                        argv,
+                        cwd=PROJECT_ROOT,
+                        capture_output=True,
+                        text=True,
+                        encoding="utf-8",
+                        errors="replace",
+                    )
+                    if completed.returncode == 0 or attempt == max_attempts:
+                        break
+                    log.write(
+                        f"attempt={attempt}/{max_attempts} returncode={completed.returncode}; "
+                        "retrying after transient report-file lock\n"
+                    )
+                    if completed.stderr:
+                        log.write(completed.stderr)
+                        if not completed.stderr.endswith("\n"):
+                            log.write("\n")
+                    log.flush()
+                    time.sleep(2.0)
+                assert completed is not None
                 elapsed = time.perf_counter() - step_start
                 log.write(f"returncode={completed.returncode}\nelapsed_seconds={elapsed:.6f}\n")
                 if completed.stdout:
@@ -137,7 +153,12 @@ def main() -> int:
                         log.write("\n")
                 log.flush()
                 config["steps"].append(
-                    {"label": label, "returncode": completed.returncode, "elapsed_seconds": elapsed}
+                    {
+                        "label": label,
+                        "returncode": completed.returncode,
+                        "elapsed_seconds": elapsed,
+                        "attempts": attempt,
+                    }
                 )
                 RUN_CONFIG_PATH.write_text(json.dumps(config, ensure_ascii=False, indent=2), encoding="utf-8")
                 if completed.returncode != 0:

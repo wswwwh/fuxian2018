@@ -1,8 +1,8 @@
 {
-  "author_name": "【待核实】姓名",
-  "affiliation": "【待核实】单位",
-  "adviser": "【待核实】导师",
-  "verification_status": "manual_confirmation_required",
-  "evidence": "仓库、目标文档和现有报告均未提供可核实的作者个人信息；不得猜测。",
-  "update_rule": "获得用户确认后先更新本文件，再重新构建 DOCX/PDF 与导师交付包；不得只在 Word 中手改。"
+  "author_name": "兀文昊",
+  "affiliation": "中国科学院大学",
+  "adviser": "张晨",
+  "verification_status": "confirmed_by_user",
+  "evidence": "用户于 2026-07-16 在目标模式任务中明确确认姓名、单位和导师。",
+  "update_rule": "个人信息变更时先更新本文件，再重新构建 DOCX/PDF 与导师交付包；不得只在 Word 中手改。"
 }

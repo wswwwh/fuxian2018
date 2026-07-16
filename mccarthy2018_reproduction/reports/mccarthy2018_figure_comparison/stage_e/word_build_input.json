@@ -5335,12 +5335,12 @@
   ],
   "pending": [],
   "delivery_fields": {
-    "author_name": "【待核实】姓名",
-    "affiliation": "【待核实】单位",
-    "adviser": "【待核实】导师",
-    "verification_status": "manual_confirmation_required",
-    "evidence": "仓库、目标文档和现有报告均未提供可核实的作者个人信息；不得猜测。",
-    "update_rule": "获得用户确认后先更新本文件，再重新构建 DOCX/PDF 与导师交付包；不得只在 Word 中手改。"
+    "author_name": "兀文昊",
+    "affiliation": "中国科学院大学",
+    "adviser": "张晨",
+    "verification_status": "confirmed_by_user",
+    "evidence": "用户于 2026-07-16 在目标模式任务中明确确认姓名、单位和导师。",
+    "update_rule": "个人信息变更时先更新本文件，再重新构建 DOCX/PDF 与导师交付包；不得只在 Word 中手改。"
   },
   "summary": {
     "status": "PASS_WITH_TRACKED_PENDING",
@@ -5366,16 +5366,16 @@
   },
   "build_meta": {
     "build_date": "2026-07-16",
-    "git_head": "5f55a2255fac8ba51d049bfee669829a3fbb5c80",
+    "git_head": "943b8c74ce3cfb9a3f2d7c42f603f38c20abfb19",
     "git_log": [
+      "943b8c7 Complete Stage G adviser delivery audit",
       "5f55a22 7.16",
       "95a606e Complete stage F acceptance and final report",
       "0cb5531 Build stage E complete Word and PDF report",
       "78af7b1 Build and review stage D comparison panels",
       "e05e698 Bind and audit stage C figure evidence",
       "f840b90 Package and audit stage B figure assets",
-      "efee688 Audit 54-figure report inputs and design stage A",
-      "1358190 Lock Chapter 4 projection boundary and root-cause evidence"
+      "efee688 Audit 54-figure report inputs and design stage A"
     ],
     "project_root": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction",
     "report_root": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison",
@@ -5388,7 +5388,7 @@
       "comparison_panel_manifest.csv": "53919d9f6071938a5e3ca46b0401f517a451024fbedcf0a1c7e73e929ba7ff35",
       "figure_comparison_registry.csv": "622d8ed8023e36d41cb8a5c3446ab7a25b14af496b41b62b57ca0e544c0b10e4",
       "quantitative_metrics_registry.csv": "afb0e98e19f3ff3cbb2eb832ea4fc792d94c3dfdf489b10c3c7db7e3b9346570",
-      "delivery_fields.json": "d70d3addd72a84d22ab2abe3a12481cb6b55bd8582b661fc0b5626dccf2b3be9"
+      "delivery_fields.json": "08e79a7c477c5b44eb20f813619c856c833b5b4a668fd0fedb8bf6a4e767f706"
     }
   }
 }

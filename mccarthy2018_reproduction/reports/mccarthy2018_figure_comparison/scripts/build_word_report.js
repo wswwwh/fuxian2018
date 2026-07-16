@@ -388,7 +388,9 @@ async function main() {
         `当前分级为 A=${gradeCounts.A}、B=${gradeCounts.B}、C=${gradeCounts.C}、D=${gradeCounts.D}；证据状态为 accepted=${evidenceCounts.accepted}、boundary=${evidenceCounts.boundary}、diagnostic=${evidenceCounts.diagnostic}、proxy=${evidenceCounts.proxy}。`,
         "Route H 定映射时间源层含 30 条验证记录，最大 |z| 为 14573.10318409037 km，最大映射残差为 6.469474407020314×10^-10。",
         "与此同时，q=8 单步闭合、Route H 单体冷启动、Chapter 4 冻结投影 holdout 和 Fig. 5.10 论文等价仍保留明确失败或边界。",
-        `六项坐标元数据已依据当前脚本、DE421 场景数据和 BCR4BP 状态定义补全；封面姓名、单位和导师仍无仓库证据，保留${PENDING}并要求人工确认。`,
+        delivery.verification_status === "confirmed_by_user"
+          ? "六项坐标元数据已依据当前脚本、DE421 场景数据和 BCR4BP 状态定义补全；封面姓名、单位和导师已由用户明确确认并写入受控配置。"
+          : `六项坐标元数据已依据当前脚本、DE421 场景数据和 BCR4BP 状态定义补全；封面姓名、单位和导师仍无仓库证据，保留${PENDING}并要求人工确认。`,
         "因此，本文结论限于当前权威 CSV/NPZ、逐图审计和实际生成资产，不作整篇论文全部数值等价的声明。",
       ].join(""),
       { style: "AbstractText" },
@@ -457,7 +459,7 @@ async function main() {
         ["B", "物理一致性复现", "真实数值解、对象和主要趋势一致；严格论文等价仍有边界"],
         ["C", "数值源层或部分复现", "只覆盖局部区间、分支、投影或诊断门槛"],
         ["D", "示意图复现", "用于坐标、几何、算法或概念，不报告数值等价"],
-        ["E", "尚未完成", `证据不足时保留${PENDING}`],
+        ["E", "尚未完成", "证据不足时标记为未核实并进入独立清单"],
       ],
       [900, 3100, 5500],
       { firstColumnBold: true, centerColumns: [0], fontSize: 18 },
@@ -591,7 +593,7 @@ async function main() {
     body("（2）数值方法方面，项目已实现并审计 CR3BP 基础量、周期轨道修正与延拓、不变曲线/环面、DG/STM、流形、转移与部分高保真扩展。"),
     body("（3）定量成果方面，7 张图达到当前项目 A 级门槛；Route H、Fig. 4.2 数字化公共区间、Fig. 5.10 BCR4BP 端点、Fig. 5.13/5.14 目标近地点等均形成可追溯数值记录。"),
     body("（4）物理一致性方面，30 张图达到 B 级，5 张达到 C 级；这些图给出真实数值解或局部源层，但严格论文等价尚未证明。"),
-    body("（5）证明边界方面，当前证据不支持“整篇论文全部成功复现”的表述；失败门槛、代理图、未公开源数据与【待核实】字段均必须保留。"),
+    body("（5）证明边界方面，当前证据不支持“整篇论文全部成功复现”的表述；失败门槛、代理图、未公开源数据与未来出现的未核实字段均必须显式保留。"),
     heading1("参考文献"),
     new Paragraph({
       numbering: { reference: "reference-list", level: 0 },
@@ -655,9 +657,14 @@ async function main() {
     ["封面", "adviser", delivery.adviser],
     ...input.pending.map((item) => [`Fig. ${item.target_id}`, item.field, item.value]),
   ];
-  closing.push(appendixHeading("附录 D  【待核实】事项"));
+  const identityConfirmed = delivery.verification_status === "confirmed_by_user";
+  closing.push(appendixHeading(identityConfirmed ? "附录 D  字段确认记录" : "附录 D  【待核实】事项"));
   tableCounter += 1;
-  closing.push(...tableCaptions(tableCounter, "字段级待核实清单", "Field-level items pending verification"));
+  closing.push(...tableCaptions(
+    tableCounter,
+    identityConfirmed ? "字段级确认清单" : "字段级待核实清单",
+    identityConfirmed ? "Field-level confirmation record" : "Field-level items pending verification",
+  ));
   closing.push(
     threeLineTable(
       ["原图", "字段", "当前值"],
@@ -666,7 +673,9 @@ async function main() {
       { firstColumnBold: true, fontSize: 16 },
     ),
   );
-  closing.push(body("以上占位符是最终报告的显式真实性边界。后续人工补充必须先更新 delivery_fields.json，再重新构建 Word/PDF 与导师交付包，不得只在文档中手工替换。"));
+  closing.push(body(identityConfirmed
+    ? "以上封面字段已由用户明确确认。后续变更必须先更新 delivery_fields.json，再重新构建 Word/PDF 与导师交付包，不得只在文档中手工替换。"
+    : "以上占位符是最终报告的显式真实性边界。后续人工补充必须先更新 delivery_fields.json，再重新构建 Word/PDF 与导师交付包，不得只在文档中手工替换。"));
 
   const styles = {
     default: {

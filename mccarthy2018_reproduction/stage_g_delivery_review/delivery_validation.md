@@ -1,7 +1,7 @@
 # delivery 报告自动审计
 
 - 状态：**PASS**
-- 生成时间：`2026-07-16T04:57:47.833912+00:00`
+- 生成时间：`2026-07-16T06:31:00.817044+00:00`
 - DOCX：`C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction\reports\mccarthy2018_figure_comparison\McCarthy2018_54图逐图复现对照报告.docx`
 - PDF：`C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction\reports\mccarthy2018_figure_comparison\McCarthy2018_54图逐图复现对照报告.pdf`
 - PDF 页数：122
@@ -29,7 +29,7 @@
 | 26 个非核心验证边界表标签准确 | PASS | `{"docx": 26, "pdf": 26}` |
 | 54 个逐图等级与证据状态叙述 | PASS | `{"grade_narratives": 54, "status_mentions": 55}` |
 | 核心数值图 28 张且指标完整 | PASS | `{"core_ids": 28, "failures": []}` |
-| 自动目录字段存在 | PASS | `"TOC \\h \\o \"1-3\"  HYPERLINK \\l _Toc6043   PAGEREF _Toc6043 \\h   HYPERLINK \\l _Toc21692   PAGEREF _Toc21692 \\h   HYPERLINK \\l _Toc18872   PAGEREF _Toc18872 \\h   HYPERLINK \\l _Toc8601   PAGEREF _Toc8601 \\h   HYPERLINK \\l _Toc423   PAGEREF _Toc423...` |
+| 自动目录字段存在 | PASS | `"TOC \\h \\o \"1-3\"  HYPERLINK \\l _Toc30513   PAGEREF _Toc30513 \\h   HYPERLINK \\l _Toc20531   PAGEREF _Toc20531 \\h   HYPERLINK \\l _Toc19450   PAGEREF _Toc19450 \\h   HYPERLINK \\l _Toc13040   PAGEREF _Toc13040 \\h   HYPERLINK \\l _Toc25369   PAGEREF _...` |
 | 页码字段存在 | PASS | `true` |
 | 标题自动编号存在 | PASS | `70` |
 | 公式对象与式号完整 | PASS | `{"math": 6, "math_paragraphs": 6}` |
@@ -37,7 +37,7 @@
 | 无 Word 域错误或 MERGEFORMAT 泄漏 | PASS | `{"docx": [], "pdf": []}` |
 | 核心数值与失败边界进入正文 | PASS | `[]` |
 | 总论结论未夸大论文等价 | PASS | `[]` |
-| 封面未知信息使用受控待核实配置 | PASS | `{"configured": ["【待核实】姓名", "【待核实】单位", "【待核实】导师"], "docx_present": ["【待核实】姓名", "【待核实】单位", "【待核实】导师"], "pdf_present": ["【待核实】姓名", "【待核实】单位", "【待核实】导师"], "legacy_waiting": 0}` |
+| 封面身份信息使用受控确认配置 | PASS | `{"configured": ["兀文昊", "中国科学院大学", "张晨"], "docx_present": ["兀文昊", "中国科学院大学", "张晨"], "pdf_present": ["兀文昊", "中国科学院大学", "张晨"], "legacy_waiting": 0}` |
 | 参考文献与正文引用存在 | PASS | `{"citation_1": 1}` |
 | 关键单位进入报告 | PASS | `{"km": 154, "day": 141, "m/s": 32}` |
 | 可重复构建命令进入附录 | PASS | `true` |
@@ -45,7 +45,7 @@
 | PDF 无真正空白页 | PASS | `[]` |
 | PDF 无近空白孤页 | PASS | `[]` |
 | PDF 页数与 Word 导出状态一致 | PASS | `{"pdf": 122, "export_status": 122}` |
-| 可核实 registry 占位符已清零且人工字段未被消隐 | PASS | `{"registry_fields": 0, "manual_fields": 3, "docx": 11, "pdf": 11}` |
+| 可核实占位符已清零且确认字段完整 | PASS | `{"registry_fields": 0, "confirmed_manual_fields": 3, "docx": 0, "pdf": 0}` |
 | 等级统计符合审计 | PASS | `{"D": 12, "B": 30, "A": 7, "C": 5}` |
 | 证据状态统计符合审计 | PASS | `{"proxy": 12, "boundary": 30, "accepted": 7, "diagnostic": 5}` |
 
@@ -53,6 +53,6 @@
 
 - 空白页：无
 - 低文本且无位图页（需结合矢量内容人工复核）：无
-- `【待核实】`：registry 字段 0 项；封面人工字段 3 项；DOCX 文本 11 处；PDF 文本 11 处。
+- `【待核实】`：registry 字段 0 项；封面人工字段 0 项；DOCX 文本 0 处；PDF 文本 0 处。
 
 说明：自动审计验证结构、覆盖、字段、错误字符串和空白页；分页美观与图片可读性仍须结合渲染总览人工复核。

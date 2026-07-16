@@ -1,14 +1,14 @@
 # 54 图报告最终人工字段检查清单
 
-状态：**PASS_WITH_3_MANUAL_FIELDS**
+状态：**PASS_IDENTITY_CONFIRMED**
 
-## 必须由用户/导师确认的封面字段
+## 已由用户确认的封面字段
 
-- [ ] `author_name`：`【待核实】姓名`。仓库无权威个人信息，未猜测补值。
-- [ ] `affiliation`：`【待核实】单位`。仓库无权威个人信息，未猜测补值。
-- [ ] `adviser`：`【待核实】导师`。仓库无权威个人信息，未猜测补值。
+- [x] `author_name`：`兀文昊`。已写入受控配置并完成重建验证。
+- [x] `affiliation`：`中国科学院大学`。已写入受控配置并完成重建验证。
+- [x] `adviser`：`张晨`。已写入受控配置并完成重建验证。
 
-填写方法：先编辑 `delivery_fields.json`，再完整重跑 Stage-G 构建；不得只在 Word 中手工替换。
+变更方法：先编辑 `delivery_fields.json`，再完整重跑 Stage-G 构建；不得只在 Word 中手工替换。
 
 ## 已由仓库证据补全的坐标元数据
 
@@ -25,7 +25,7 @@
 
 - 54/54 `comparison_asset` 已回写 registry，存在性与 SHA256 均通过。
 - registry 中 `【待核实】`：0 项。
-- DOCX/PDF 中 `【待核实】` 出现次数：11/11；均来自封面人工字段及其说明。
+- DOCX/PDF 中 `【待核实】` 出现次数：0/0。
 
 ## 真实性边界复核
 

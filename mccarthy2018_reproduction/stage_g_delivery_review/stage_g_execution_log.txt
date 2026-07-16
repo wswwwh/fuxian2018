@@ -1,50 +1,50 @@
 Stage-G delivery pipeline
-started_at_utc=2026-07-16T04:56:34.520921+00:00
+started_at_utc=2026-07-16T06:29:58.270934+00:00
 python=D:\miniconda3\envs\cislunar\python.exe
-source_git_head=5f55a2255fac8ba51d049bfee669829a3fbb5c80
+source_git_head=943b8c74ce3cfb9a3f2d7c42f603f38c20abfb19
 
 === stage_c_evidence ===
 command=D:\miniconda3\envs\cislunar\python.exe C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction\reports\mccarthy2018_figure_comparison\scripts\build_stage_c_evidence.py
 returncode=0
-elapsed_seconds=0.395397
+elapsed_seconds=0.441092
 --- stdout ---
 stage_c=PASS_WITH_TRACKED_PENDING figures=54 metrics=238 core=28 core_missing=0 pending=54
 
 === stage_d_panels ===
 command=D:\miniconda3\envs\cislunar\python.exe C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction\reports\mccarthy2018_figure_comparison\scripts\build_comparison_panels.py
 returncode=0
-elapsed_seconds=21.432838
+elapsed_seconds=21.047555
 --- stdout ---
 stage_d=PASS panels=54 unique=54 pending=0 redrawn=0
 
 === asset_validation ===
 command=D:\miniconda3\envs\cislunar\python.exe C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction\reports\mccarthy2018_figure_comparison\scripts\validate_report_assets.py
 returncode=0
-elapsed_seconds=0.567102
+elapsed_seconds=0.508413
 --- stdout ---
 stage_b=PASS figures=54 original_unique=54 reproduction_unique=54 review=0
 
 === word_build ===
 command=D:\miniconda3\envs\cislunar\python.exe C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction\reports\mccarthy2018_figure_comparison\scripts\build_word_report.py
 returncode=0
-elapsed_seconds=3.407570
+elapsed_seconds=3.004404
 --- stdout ---
-docx_js=PASS figures=54 tables=116 images=54 bytes=21638642
-word_build=PASS figures=54 metrics=238 media=55 bytes=21638642
+docx_js=PASS figures=54 tables=116 images=54 bytes=21638609
+word_build=PASS figures=54 metrics=238 media=55 bytes=21638609
 
 === pdf_export ===
 command=D:\miniconda3\envs\cislunar\python.exe C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction\reports\mccarthy2018_figure_comparison\scripts\export_report_pdf.py
 returncode=0
-elapsed_seconds=45.536086
+elapsed_seconds=35.674158
 --- stdout ---
 word_quit_warning=com_error: (-2147023170, 'Զ�̹��̵���ʧ�ܡ�', None, None)
-pdf_export=PASS engine=Microsoft Word COM pages=122 bytes=12966929 fallback=False
+pdf_export=PASS engine=Microsoft Word COM pages=122 bytes=12967018 fallback=False
 libreoffice_crosscheck_pages=127 delta=-5
 
 === delivery_validation ===
 command=D:\miniconda3\envs\cislunar\python.exe C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction\reports\mccarthy2018_figure_comparison\scripts\validate_final_report.py --output-dir C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction\stage_g_delivery_review --label delivery
 returncode=0
-elapsed_seconds=1.861765
+elapsed_seconds=1.788701
 --- stdout ---
 final_report_validation=PASS checks=37 pages=122 docx_figures=54 pdf_figures=54
 C:\Users\wwh20\Desktop\��������\mccarthy2018_reproduction\stage_g_delivery_review\delivery_validation.json
@@ -53,7 +53,7 @@ C:\Users\wwh20\Desktop\��������\mccarthy2018_reproduction\stage_
 === delivery_render ===
 command=D:\miniconda3\envs\cislunar\python.exe C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction\reports\mccarthy2018_figure_comparison\scripts\render_report_review.py --output-dir C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction\stage_g_delivery_review
 returncode=0
-elapsed_seconds=7.596199
+elapsed_seconds=7.377617
 --- stdout ---
 report_render=PASS pages=122 selected=22
 C:\Users\wwh20\Desktop\��������\mccarthy2018_reproduction\stage_g_delivery_review\all_pages_contact_sheet.png
@@ -62,7 +62,7 @@ C:\Users\wwh20\Desktop\��������\mccarthy2018_reproduction\stage_
 === delivery_package ===
 command=D:\miniconda3\envs\cislunar\python.exe C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction\reports\mccarthy2018_figure_comparison\scripts\build_stage_g_delivery_package.py
 returncode=0
-elapsed_seconds=3.674874
+elapsed_seconds=3.138801
 --- stdout ---
 stage_g_package=PASS manual=3 coordinates=6 panels=54
 

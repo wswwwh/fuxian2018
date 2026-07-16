@@ -1,27 +1,27 @@
 {
   "status": "PASS",
-  "started_at_utc": "2026-07-16T05:02:04.463039+00:00",
+  "started_at_utc": "2026-07-16T06:35:04.109104+00:00",
   "python": "D:\\miniconda3\\envs\\cislunar\\python.exe",
   "commands": [
     {
       "label": "unit_tests",
       "returncode": 0,
-      "elapsed_seconds": 14.431055400000332
+      "elapsed_seconds": 11.826434499998868
     },
     {
       "label": "reproduction_smoke",
       "returncode": 0,
-      "elapsed_seconds": 0.27951910000047064
+      "elapsed_seconds": 0.28059599999687634
     },
     {
       "label": "target_registry_check",
       "returncode": 0,
-      "elapsed_seconds": 0.14267889999973704
+      "elapsed_seconds": 0.13705750000372063
     },
     {
       "label": "git_diff_check",
       "returncode": 0,
-      "elapsed_seconds": 0.35619470000165165
+      "elapsed_seconds": 0.9058579999982612
     }
   ],
   "tests": {
@@ -40,6 +40,6 @@
     "src/qp_orbits/chapter4_reproduction_lock.py": "e7a2be24f40507ce20e75155dd75c51acefae4f9ee1de5fe6ca4b2102edc8d82"
   },
   "frozen_truth_unchanged": true,
-  "finished_at_utc": "2026-07-16T05:02:19.671917+00:00",
-  "elapsed_seconds": 15.208878
+  "finished_at_utc": "2026-07-16T06:35:17.264505+00:00",
+  "elapsed_seconds": 13.155401
 }
