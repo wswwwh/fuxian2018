@@ -1,0 +1,7 @@
+label=git_diff_check
+cwd=C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction
+command=["git", "diff", "--check"]
+return_code=0
+elapsed_seconds=0.115438
+
+warning: in the working copy of 'mccarthy2018_reproduction/tests/test_stage_g_delivery_artifacts.py', LF will be replaced by CRLF the next time Git touches it

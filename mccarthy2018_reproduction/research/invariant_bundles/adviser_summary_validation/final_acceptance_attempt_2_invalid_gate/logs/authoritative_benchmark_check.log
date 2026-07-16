@@ -1,0 +1,7 @@
+label=authoritative_benchmark_check
+cwd=C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction
+command=["D:\\miniconda3\\envs\\cislunar\\python.exe", "scripts/run_invariant_bundle_benchmarks.py", "--check"]
+return_code=0
+elapsed_seconds=1.597881
+
+invariant-bundle benchmark CHECK PASS cases=15 rows=45

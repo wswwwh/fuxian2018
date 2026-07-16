@@ -1,0 +1,22 @@
+{
+  "all_command_return_codes_zero": true,
+  "chapter4_holdout": "0/4",
+  "elapsed_seconds": 57.198833,
+  "final_gate_rows": 19,
+  "finished_utc": "2026-07-16T09:09:03.978927+00:00",
+  "isolated_exact_benchmark_scientific_checks": 1440,
+  "isolated_exact_benchmark_scientific_failures": 153,
+  "isolated_exact_benchmark_source_commit": "e1c59e2d2593a01d905df2f8ff9cabc95dec8ba9",
+  "protected_authoritative_changed": 0,
+  "protected_authoritative_files": 11,
+  "required_command_count": 5,
+  "schema_version": "final_goal_acceptance_summary_v1",
+  "started_utc": "2026-07-16T09:08:06.780094+00:00",
+  "status": "pass",
+  "submission_readiness": "not_claimed",
+  "truth_boundary_status": "preserved",
+  "unit_failed": 0,
+  "unit_passed": 163,
+  "unit_tests": 163,
+  "unit_wall_seconds_reported": 8.9
+}

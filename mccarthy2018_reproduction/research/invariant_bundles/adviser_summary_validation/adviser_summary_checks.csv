@@ -1,0 +1,11 @@
+check_id,status,detail
+identity,pass,兀文昊;张晨;中国科学院大学
+required_content,pass,8/8
+pdf_pages,pass,4/4
+review_questions,pass,5
+frozen_reproduction,pass,unchanged
+chapter4_holdout,pass,0/4;paper_projection=fail;paper_3d=false
+route_h,pass,physical=2D/fail;legacy=positive_control
+failure_visibility,pass,all negative/boundary/control evidence retained
+positioning,pass,numerical_framework_and_systematic_comparison
+submission_readiness,pass,not_claimed

@@ -1,0 +1,14 @@
+{
+  "adviser": "张晨",
+  "author": "兀文昊",
+  "chapter4_holdout": "0/4",
+  "institution": "中国科学院大学",
+  "pdf_pages": 4,
+  "positioning": "numerical_framework_and_systematic_comparison",
+  "required_content": "8/8",
+  "review_questions": 5,
+  "schema_version": "invariant_bundle_adviser_summary_v1",
+  "status": "pass",
+  "submission_readiness": "not_claimed",
+  "truth_boundary_status": "preserved"
+}

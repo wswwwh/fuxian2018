@@ -1,0 +1,17 @@
+label=isolated_worktree_status
+cwd=C:\Users\wwh20\AppData\Local\Temp\mccarthy_final_acceptance_8986bcd09c
+command=["git", "status", "--short"]
+return_code=0
+elapsed_seconds=0.457889
+
+ M mccarthy2018_reproduction/research/invariant_bundles/results/csv/manifold_convergence.csv
+ M mccarthy2018_reproduction/research/invariant_bundles/results/csv/method_comparison.csv
+ M mccarthy2018_reproduction/research/invariant_bundles/results/csv/phase_continuity.csv
+ M mccarthy2018_reproduction/research/invariant_bundles/results/csv/resolution_convergence.csv
+ M mccarthy2018_reproduction/research/invariant_bundles/results/csv/runtime_scaling.csv
+ M mccarthy2018_reproduction/research/invariant_bundles/results/logs/benchmark_campaign_checkpoint.json
+ M mccarthy2018_reproduction/research/invariant_bundles/results/logs/benchmark_campaign_summary.json
+ M mccarthy2018_reproduction/research/invariant_bundles/results/npz/manifold_convergence.npz
+ M mccarthy2018_reproduction/research/invariant_bundles/results/npz/method_comparison.npz
+ M mccarthy2018_reproduction/research/invariant_bundles/results/npz/phase_continuity.npz
+ M mccarthy2018_reproduction/research/invariant_bundles/results/npz/runtime_scaling.npz

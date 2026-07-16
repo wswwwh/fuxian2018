@@ -1,0 +1,13 @@
+metric_id,value,evidence,boundary
+registered_cases,15,research/invariant_bundles/benchmarks/benchmark_registry.csv,finite benchmark
+pointwise_status,0 accepted;15 fail,research/invariant_bundles/results/csv/method_comparison.csv,baseline retained
+schur_status,7 accepted;4 boundary;4 fail,research/invariant_bundles/results/csv/method_comparison.csv,research-only status
+qr_status,10 accepted;5 fail,research/invariant_bundles/results/csv/method_comparison.csv,research-only status
+independent_schur,12/12;max_angle=2.561320939e-06 deg,research/invariant_bundles/results/csv/independent_schur_backend_comparison.csv,finite discrete operators
+qr_failure_cases,4 no_accepted_1d_bundle;1 method_initialization_sensitive,research/invariant_bundles/results/csv/qr_svd_failure_classification.csv,bounded search
+ablation,35 rows;15 accepted;20 fail;4 exceptions,research/invariant_bundles/results/csv/ablation_study.csv,5 cases x 7 variants
+manifold,126 rows;36 accepted;90 fail,research/invariant_bundles/results/csv/manifold_convergence.csv,7 cases;1D unstable
+fresh_rerun,5301 scientific pass;0 fail;max_rel=0.0,research/invariant_bundles/independent_rerun/comparison_to_stage_f.csv,reproducibility only
+chapter4_holdout,0/4;paper_projection=fail;paper_3d=false,data/computed/chapter4_fig43_fig46_projection_holdout_audit.csv,frozen
+literature,25 verified;9/9 topics;21 DOI;4 not_assigned,research/invariant_bundles/literature_validation/literature_validation_summary.json,not exhaustive
+paper_status,20-page Chinese draft;not_submission_ready,research/invariant_bundles/paper_release_validation/paper_release_summary.json,adviser review

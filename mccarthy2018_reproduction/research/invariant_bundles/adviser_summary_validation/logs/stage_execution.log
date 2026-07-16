@@ -1,0 +1,12 @@
+adviser summary build
+started_utc=2026-07-16T08:56:41.852150+00:00
+finished_utc=2026-07-16T08:56:54.040754+00:00
+elapsed_seconds=12.188604
+python=C:\Users\wwh20\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe
+identity=兀文昊|张晨|中国科学院大学
+required_content=8/8
+pdf_pages=4/4
+review_questions=5
+chapter4_holdout=0/4
+truth_boundary_status=preserved
+submission_readiness=not_claimed

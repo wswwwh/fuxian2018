@@ -1,0 +1,7 @@
+label=reproduction_target_check
+cwd=C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction
+command=["D:\\miniconda3\\envs\\cislunar\\python.exe", "scripts/build_reproduction_targets.py", "--check"]
+return_code=0
+elapsed_seconds=0.133260
+
+target registry is up to date: 54 rows

@@ -1,0 +1,18 @@
+{
+  "docx_bytes": 44790,
+  "docx_embedded_images": 0,
+  "docx_text_characters": 3647,
+  "libreoffice_output": "Could not find platform independent libraries <prefix>\nconvert C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\adviser_delivery\\invariant_bundle研究摘要_4页.docx as a Writer document -> C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\adviser_delivery\\invariant_bundle研究摘要_4页.pdf using filter : writer_pdf_Export",
+  "libreoffice_return_code": 0,
+  "pdf_bytes": 263040,
+  "pdf_pages": 4,
+  "preview_paths": [
+    "research/invariant_bundles/adviser_summary_validation/rendered/preview_page_1.png",
+    "research/invariant_bundles/adviser_summary_validation/rendered/preview_page_2.png",
+    "research/invariant_bundles/adviser_summary_validation/rendered/preview_page_3.png",
+    "research/invariant_bundles/adviser_summary_validation/rendered/preview_page_4.png",
+    "research/invariant_bundles/adviser_summary_validation/rendered/four_page_contact_sheet.png"
+  ],
+  "required_markers": 15,
+  "schema_version": "adviser_summary_render_validation_v1"
+}

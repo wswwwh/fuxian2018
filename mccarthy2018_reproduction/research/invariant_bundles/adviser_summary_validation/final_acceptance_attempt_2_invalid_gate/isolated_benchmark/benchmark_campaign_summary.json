@@ -1,0 +1,20 @@
+{
+  "cache_hits": 15,
+  "cases": 15,
+  "elapsed_seconds": 33.440994099997624,
+  "max_iterations": 200,
+  "max_wall_seconds": 1800.0,
+  "method_rows": 45,
+  "methods": 3,
+  "registry_sha256": "0BCB7B8DFDFEC18F75FFFC691822A0C0352E782A0C2991D566435EC37E1DC797",
+  "research_status_counts": {
+    "accepted": 17,
+    "boundary": 4,
+    "fail": 24
+  },
+  "run_id": "4195ED2822237633074E",
+  "schema_version": "invariant_bundle_method_comparison_v1",
+  "source_git_commit": "e1c59e2d2593a01d905df2f8ff9cabc95dec8ba9",
+  "stage_f_status": "not_run",
+  "status": "complete_stage_d_e_bundle_only"
+}

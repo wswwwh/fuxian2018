@@ -1,0 +1,20 @@
+gate_id,status,evidence,boundary
+adviser_54_figure_audit,pass,stage_g_delivery_review/delivery_validation.json,54 engineering targets;not thesis-wide strict equivalence
+adviser_placeholders,pass,reports/mccarthy2018_figure_comparison/final_placeholder_audit.csv,3 identity fields confirmed by user
+adviser_package,pass,reports/adviser_delivery,7 final files including original 4-file Stage-G core
+independent_schur,pass,research/invariant_bundles/results/csv/independent_schur_backend_comparison.csv,12 finite discrete operators
+qr_svd_failure_classification,pass,research/invariant_bundles/results/csv/qr_svd_failure_classification.csv,4 no_accepted_1d_bundle;1 initialization-sensitive
+ablation,pass,research/invariant_bundles/results/csv/ablation_study.csv,35 rows;20 failures retained
+fresh_process_rerun,pass,research/invariant_bundles/independent_rerun/independent_rerun_report.md,reproducibility does not promote scientific gates
+fast_ci,pass,.github/workflows/ci.yml,push and pull_request
+full_validation_ci,pass,.github/workflows/full_research_validation.yml,manual workflow_dispatch
+literature_matrix,pass,research/invariant_bundles/paper/literature_matrix.csv,25 formal sources;not exhaustive novelty search
+chinese_manuscript,pass,research/invariant_bundles/paper_release/manuscript_zh.docx,20-page adviser-review draft
+claim_evidence,pass,research/invariant_bundles/paper_release/claim_evidence_matrix.csv,15 claims with limitations
+four_page_summary,pass,reports/adviser_delivery/invariant_bundle研究摘要_4页.pdf,exactly 4 pages
+full_unit_suite,pass,research/invariant_bundles/adviser_summary_validation/final_acceptance/logs/full_unit_suite.log,163 passed;0 failed
+isolated_exact_benchmark,pass,research/invariant_bundles/adviser_summary_validation/final_acceptance/isolated_benchmark_comparison.csv,1440 checks;0 failures
+authoritative_immutability,pass,research/invariant_bundles/adviser_summary_validation/final_acceptance/authoritative_before_after.csv,11/11 hashes unchanged
+chapter4_projection_holdout,supported_negative,data/computed/chapter4_fig43_fig46_projection_holdout_audit.csv,0/4;paper_projection=fail;paper_3d=false
+route_h_physical,supported_negative,research/invariant_bundles/results/csv/independent_schur_backend_comparison.csv,physical corrected-rho=2D/fail;legacy=1D positive control
+submission_readiness,not_claimed,research/invariant_bundles/paper_release/limitations.md,independent validation complete;scientific limitations remain

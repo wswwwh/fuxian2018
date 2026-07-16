@@ -64,14 +64,26 @@ class StageGDeliveryArtifactsTest(unittest.TestCase):
         self.assertEqual(sum(row["field"] == "comparison_asset" for row in self.audit_rows), 54)
         self.assertTrue(all("【待核实】" not in row["current_value"] for row in self.audit_rows if row["scope"] == "registry"))
 
-    def test_adviser_directory_contains_only_four_requested_files(self) -> None:
-        expected = {DOCX_NAME, PDF_NAME, "复现情况一页说明.pdf", "导师审阅重点.md"}
+    def test_adviser_directory_contains_core_and_stage_nine_files(self) -> None:
+        expected = {
+            DOCX_NAME,
+            PDF_NAME,
+            "复现情况一页说明.pdf",
+            "导师审阅重点.md",
+            "invariant_bundle研究摘要_4页.docx",
+            "invariant_bundle研究摘要_4页.pdf",
+            "给导师的审阅问题.md",
+        }
         actual = {path.name for path in ADVISER_ROOT.iterdir() if path.is_file()}
         self.assertEqual(actual, expected)
         self.assertEqual(sha256(REPORT_ROOT / DOCX_NAME), sha256(ADVISER_ROOT / DOCX_NAME))
         self.assertEqual(sha256(REPORT_ROOT / PDF_NAME), sha256(ADVISER_ROOT / PDF_NAME))
         self.assertEqual(len(PdfReader(ADVISER_ROOT / PDF_NAME).pages), 122)
         self.assertEqual(len(PdfReader(ADVISER_ROOT / "复现情况一页说明.pdf").pages), 1)
+        self.assertEqual(
+            len(PdfReader(ADVISER_ROOT / "invariant_bundle研究摘要_4页.pdf").pages),
+            4,
+        )
 
     def test_visual_review_and_frozen_truth_lock_pass(self) -> None:
         self.assertGreater((STAGE_G / "final_pages_contact_sheet.png").stat().st_size, 1_000_000)

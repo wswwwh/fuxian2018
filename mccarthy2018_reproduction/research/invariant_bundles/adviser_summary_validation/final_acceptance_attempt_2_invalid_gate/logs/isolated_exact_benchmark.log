@@ -1,0 +1,67 @@
+label=isolated_exact_benchmark
+cwd=C:\Users\wwh20\AppData\Local\Temp\mccarthy_final_acceptance_0c3a209b08\mccarthy2018_reproduction
+command=["D:\\miniconda3\\envs\\cislunar\\python.exe", "scripts/run_invariant_bundle_benchmarks.py"]
+return_code=0
+elapsed_seconds=35.623316
+
+case 1/15 em_halo_12p40_n21 N=21 source=pass cache=hit
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=1.235e-01 time=0.026s
+  ordered_partial_real_schur_tracking: boundary dim=1 max_res=8.122e-06 time=0.054s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=6.687e-07 time=0.094s
+case 2/15 em_halo_12p40_n33 N=33 source=pass cache=hit
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=1.245e-01 time=0.038s
+  ordered_partial_real_schur_tracking: accepted dim=1 max_res=2.054e-08 time=0.096s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=2.117e-09 time=0.170s
+case 3/15 em_halo_12p40_n45 N=45 source=pass cache=hit
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=1.240e-01 time=0.043s
+  ordered_partial_real_schur_tracking: accepted dim=1 max_res=5.999e-11 time=0.111s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=4.403e-12 time=0.230s
+case 4/15 em_halo_12p09_n15_small N=15 source=pass cache=hit
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=8.248e-02 time=0.013s
+  ordered_partial_real_schur_tracking: accepted dim=1 max_res=3.936e-09 time=0.017s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=7.518e-11 time=0.053s
+case 5/15 em_halo_12p097_n9_lowres_negative N=9 source=pass cache=hit
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=8.258e-02 time=0.007s
+  ordered_partial_real_schur_tracking: boundary dim=1 max_res=4.885e-06 time=0.008s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=1.012e-07 time=0.028s
+case 6/15 em_vertical_12p66_n33 N=33 source=pass cache=hit
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=1.590e-01 time=0.030s
+  ordered_partial_real_schur_tracking: boundary dim=1 max_res=3.804e-05 time=0.064s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=8.507e-07 time=0.155s
+case 7/15 em_vertical_12p66_n45 N=45 source=pass cache=hit
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=1.614e-01 time=0.044s
+  ordered_partial_real_schur_tracking: boundary dim=1 max_res=1.103e-06 time=0.111s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=8.006e-08 time=0.220s
+case 8/15 em_vertical_12p66_n57 N=57 source=pass cache=hit
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=1.598e-01 time=0.064s
+  ordered_partial_real_schur_tracking: accepted dim=1 max_res=6.373e-08 time=0.184s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=3.891e-09 time=0.311s
+case 9/15 route_h_member_68 N=45 source=pass cache=hit
+  traditional_pointwise_eigendecomposition: fail RuntimeError: cocycle operator has no unstable hyperbolic spectrum
+  ordered_partial_real_schur_tracking: fail dim=2 max_res=1.650e-01 time=0.127s
+  qr_svd_shifted_cocycle_iteration: fail dim=2 max_res=8.976e-01 time=6.157s
+case 10/15 route_h_member_17 N=45 source=pass cache=hit
+  traditional_pointwise_eigendecomposition: fail RuntimeError: cocycle operator has no unstable hyperbolic spectrum
+  ordered_partial_real_schur_tracking: fail dim=2 max_res=1.951e-01 time=0.131s
+  qr_svd_shifted_cocycle_iteration: fail dim=2 max_res=9.790e-01 time=6.117s
+case 11/15 route_h_member_32 N=45 source=pass cache=hit
+  traditional_pointwise_eigendecomposition: fail RuntimeError: cocycle operator has no unstable hyperbolic spectrum
+  ordered_partial_real_schur_tracking: fail dim=2 max_res=4.279e-01 time=0.128s
+  qr_svd_shifted_cocycle_iteration: fail dim=2 max_res=9.299e-01 time=6.390s
+case 12/15 route_h_member_54 N=45 source=pass cache=hit
+  traditional_pointwise_eigendecomposition: fail RuntimeError: cocycle operator has no unstable hyperbolic spectrum
+  ordered_partial_real_schur_tracking: fail dim=2 max_res=1.549e-01 time=0.121s
+  qr_svd_shifted_cocycle_iteration: fail dim=2 max_res=7.063e-01 time=6.040s
+case 13/15 route_h_member_68_legacy_dg_positive N=45 source=pass cache=hit
+  traditional_pointwise_eigendecomposition: fail RuntimeError: cocycle operator has no unstable hyperbolic spectrum
+  ordered_partial_real_schur_tracking: accepted dim=1 max_res=1.203e-09 time=0.128s
+  qr_svd_shifted_cocycle_iteration: fail dim=1 max_res=3.646e-03 time=4.489s
+case 14/15 se_active_geometry_member_468 N=21 source=pass cache=hit
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=1.434e-01 time=0.018s
+  ordered_partial_real_schur_tracking: accepted dim=1 max_res=6.543e-07 time=0.044s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=9.472e-09 time=0.082s
+case 15/15 se_quasi_halo_small_n21 N=21 source=pass cache=hit
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=9.908e-03 time=0.017s
+  ordered_partial_real_schur_tracking: accepted dim=1 max_res=3.479e-07 time=0.041s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=1.952e-09 time=0.080s
+invariant-bundle benchmark WRITE PASS cases=15 rows=45 statuses={'fail': 24, 'boundary': 4, 'accepted': 17} elapsed=33.441s stage_f=not_run

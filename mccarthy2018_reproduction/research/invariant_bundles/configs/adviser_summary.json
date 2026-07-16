@@ -1,0 +1,38 @@
+{
+  "schema_version": "invariant_bundle_adviser_summary_config_v1",
+  "title": "拟周期轨道实不变子束研究摘要",
+  "subtitle": "导师快速审阅版（严格 4 页）",
+  "author": "兀文昊",
+  "adviser": "张晨",
+  "institution": "中国科学院大学",
+  "date": "2026年7月16日",
+  "target_pdf_pages": 4,
+  "positioning": "numerical_framework_and_systematic_comparison",
+  "submission_readiness": "not_claimed",
+  "required_content": [
+    "复现工作如何引出问题",
+    "点式特征方向的主要缺陷",
+    "三种方法",
+    "15-case 总体结果表",
+    "三个高分辨率案例",
+    "Route H 关键发现",
+    "当前论文贡献",
+    "仍需补充的内容"
+  ],
+  "review_questions": [
+    "论文以“数值框架与系统比较”为主定位是否合适，是否需要把“失败模式与算子语义诊断”加入副标题？",
+    "目标期刊是否应优先考虑中文核心，还是先按英文期刊标准补齐实验？",
+    "Route H corrected-rho 的二维共轭子空间案例是否应作为正文核心贡献？",
+    "下一轮是否优先增加稳定子束和二维 Route H 流形对象？",
+    "是否需要把 Sun–Earth 应用扩展为独立章节并增加更多独立案例？"
+  ],
+  "truth_boundaries": [
+    "54 图是完整工程覆盖，不是整篇 McCarthy 2018 严格等价复现。",
+    "Chapter 4 projection holdout 保持 0/4，paper_projection=fail，paper_3d=false。",
+    "Route H physical corrected-rho 保持二维实共轭子空间与失败状态。",
+    "legacy seed-rho 仅是正控制，不能替代物理算子。",
+    "二维实子空间不得改写为一维实方向。",
+    "所有失败、边界和负控制必须可见。",
+    "当前不声明已经达到投稿条件。"
+  ]
+}

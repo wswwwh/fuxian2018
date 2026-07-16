@@ -1,0 +1,11 @@
+phase,commit,message,status
+1,943b8c74ce3cfb9a3f2d7c42f603f38c20abfb19,Complete Stage G adviser delivery audit,committed
+1_identity,8e9cc056a9f0cb19c6c2f88e2aca7d6dcf7acc68,Finalize Stage G confirmed identity fields,committed
+2,3aae9580d762bf44a2d6b251b4e40e4e1c16e896,Validate bundles with independent MATLAB Schur backend,committed
+3,5a50a8ad86743761025a61116f5dbb12c1934607,Classify bounded QR SVD failure cases,committed
+4,cf04669322d43dfb61acbeaf9e20b85f0c7bf772,Complete invariant bundle ablation study,committed
+5,5d26fb0bfb06edda70e868c8deb451c1fb14337b,Complete isolated fresh-process research rerun,committed
+6,0adb9d8de89fcdaae9bb58beafd9288ddb8e6cea,Establish isolated research validation CI,committed
+7,b8b355342459307fea4a1ae42cea13a28f746a88,Verify literature and bound paper positioning,committed
+8,e1c59e2d2593a01d905df2f8ff9cabc95dec8ba9,Build complete Chinese invariant bundle paper draft,committed
+9,this_acceptance_commit,Complete adviser summary and final goal acceptance,pending_current_commit

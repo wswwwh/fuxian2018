@@ -1,0 +1,37 @@
+{
+  "cache_hits": 15,
+  "cases": 15,
+  "completed_cases": [
+    "em_halo_12p40_n21",
+    "em_halo_12p40_n33",
+    "em_halo_12p40_n45",
+    "em_halo_12p09_n15_small",
+    "em_halo_12p097_n9_lowres_negative",
+    "em_vertical_12p66_n33",
+    "em_vertical_12p66_n45",
+    "em_vertical_12p66_n57",
+    "route_h_member_68",
+    "route_h_member_17",
+    "route_h_member_32",
+    "route_h_member_54",
+    "route_h_member_68_legacy_dg_positive",
+    "se_active_geometry_member_468",
+    "se_quasi_halo_small_n21"
+  ],
+  "elapsed_seconds": 32.82630249999784,
+  "max_iterations": 200,
+  "max_wall_seconds": 1800.0,
+  "method_rows": 45,
+  "methods": 3,
+  "registry_sha256": "B38099E93BB85AD4B97035D667A4AD5E6A74C1805B612EDEABC7AF6497C23EE5",
+  "research_status_counts": {
+    "accepted": 17,
+    "boundary": 4,
+    "fail": 24
+  },
+  "run_id": "622C929BECB834767763",
+  "schema_version": "invariant_bundle_method_comparison_v1",
+  "source_git_commit": "e1c59e2d2593a01d905df2f8ff9cabc95dec8ba9",
+  "stage_f_status": "not_run",
+  "status": "complete_stage_d_e_bundle_only"
+}
