@@ -26,14 +26,14 @@ import scipy
 
 
 ROOT = Path(__file__).resolve().parents[1]
-GIT_ROOT = Path(
+REPOSITORY_ROOT = Path(
     subprocess.check_output(
         ["git", "rev-parse", "--show-toplevel"],
         cwd=ROOT,
         text=True,
         encoding="utf-8",
     ).strip()
-)
+).resolve()
 OUTPUT = (
     ROOT
     / "research"
@@ -41,7 +41,7 @@ OUTPUT = (
     / "adviser_summary_validation"
     / "final_acceptance"
 )
-PYTHON = Path(r"D:\miniconda3\envs\cislunar\python.exe")
+PYTHON = Path(sys.executable).resolve()
 CI_CONFIG = (
     ROOT / "research" / "invariant_bundles" / "configs" / "ci_validation.json"
 )
@@ -355,13 +355,13 @@ def run_isolated_benchmark(command_records: list[dict[str, Any]]) -> dict[str, A
                 str(worktree),
                 "HEAD",
             ],
-            cwd=GIT_ROOT,
+            cwd=REPOSITORY_ROOT,
             timeout=300,
             env=os.environ.copy(),
         )
         command_records.append(add)
         added = True
-        isolated_project = worktree / ROOT.relative_to(GIT_ROOT)
+        isolated_project = worktree / ROOT.relative_to(REPOSITORY_ROOT)
         env = {**os.environ, "PYTHONPATH": str(isolated_project / "src")}
         benchmark = run_logged(
             "isolated_exact_benchmark",
@@ -405,7 +405,7 @@ def run_isolated_benchmark(command_records: list[dict[str, Any]]) -> dict[str, A
         if added:
             removal = subprocess.run(
                 ["git", "worktree", "remove", "--force", str(worktree)],
-                cwd=GIT_ROOT,
+                cwd=REPOSITORY_ROOT,
                 text=True,
                 encoding="utf-8",
                 errors="replace",
@@ -420,7 +420,7 @@ def run_isolated_benchmark(command_records: list[dict[str, Any]]) -> dict[str, A
             )
             subprocess.run(
                 ["git", "worktree", "prune"],
-                cwd=GIT_ROOT,
+                cwd=REPOSITORY_ROOT,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 timeout=120,
@@ -457,7 +457,7 @@ def environment_record() -> dict[str, Any]:
 def phase_commit_rows() -> list[dict[str, str]]:
     commits = subprocess.check_output(
         ["git", "log", "-20", "--pretty=format:%H%x09%s"],
-        cwd=GIT_ROOT,
+        cwd=REPOSITORY_ROOT,
         text=True,
         encoding="utf-8",
     ).splitlines()
@@ -497,11 +497,24 @@ def phase_commit_rows() -> list[dict[str, str]]:
     return rows
 
 
+def repository_workflow_paths() -> tuple[str, str]:
+    contract = json.loads(CI_CONFIG.read_text(encoding="utf-8"))["workflow_contract"]
+    fast = str(contract["fast_workflow"])
+    full = str(contract["full_workflow"])
+    for relative in (fast, full):
+        if not (REPOSITORY_ROOT / relative).is_file():
+            raise FileNotFoundError(
+                f"repository-root workflow missing during final acceptance: {relative}"
+            )
+    return fast, full
+
+
 def final_gate_rows(
     unit: dict[str, Any],
     isolated: dict[str, Any],
     authoritative_rows: list[dict[str, Any]],
 ) -> list[dict[str, str]]:
+    fast_workflow, full_workflow = repository_workflow_paths()
     return [
         {"gate_id": "adviser_54_figure_audit", "status": "pass", "evidence": "stage_g_delivery_review/delivery_validation.json", "boundary": "54 engineering targets;not thesis-wide strict equivalence"},
         {"gate_id": "adviser_placeholders", "status": "pass", "evidence": "reports/mccarthy2018_figure_comparison/final_placeholder_audit.csv", "boundary": "3 identity fields confirmed by user"},
@@ -510,8 +523,8 @@ def final_gate_rows(
         {"gate_id": "qr_svd_failure_classification", "status": "pass", "evidence": "research/invariant_bundles/results/csv/qr_svd_failure_classification.csv", "boundary": "4 no_accepted_1d_bundle;1 initialization-sensitive"},
         {"gate_id": "ablation", "status": "pass", "evidence": "research/invariant_bundles/results/csv/ablation_study.csv", "boundary": "35 rows;20 failures retained"},
         {"gate_id": "fresh_process_rerun", "status": "pass", "evidence": "research/invariant_bundles/independent_rerun/independent_rerun_report.md", "boundary": "reproducibility does not promote scientific gates"},
-        {"gate_id": "fast_ci", "status": "pass", "evidence": ".github/workflows/ci.yml", "boundary": "push and pull_request"},
-        {"gate_id": "full_validation_ci", "status": "pass", "evidence": ".github/workflows/full_research_validation.yml", "boundary": "manual workflow_dispatch"},
+        {"gate_id": "fast_ci", "status": "pass", "evidence": fast_workflow, "boundary": "repository-root;push and pull_request"},
+        {"gate_id": "full_validation_ci", "status": "pass", "evidence": full_workflow, "boundary": "repository-root;manual workflow_dispatch"},
         {"gate_id": "literature_matrix", "status": "pass", "evidence": "research/invariant_bundles/paper/literature_matrix.csv", "boundary": "25 formal sources;not exhaustive novelty search"},
         {"gate_id": "chinese_manuscript", "status": "pass", "evidence": "research/invariant_bundles/paper_release/manuscript_zh.docx", "boundary": "20-page adviser-review draft"},
         {"gate_id": "claim_evidence", "status": "pass", "evidence": "research/invariant_bundles/paper_release/claim_evidence_matrix.csv", "boundary": "15 claims with limitations"},
@@ -529,10 +542,17 @@ def final_gate_rows(
 
 def write_nested_hash_manifest() -> None:
     target = OUTPUT / "artifact_hashes.csv"
+    fast_workflow, full_workflow = repository_workflow_paths()
     source_inputs = [
+        REPOSITORY_ROOT / fast_workflow,
+        REPOSITORY_ROOT / full_workflow,
         Path(__file__).resolve(),
+        ROOT / "scripts" / "collect_ci_stage_evidence.py",
+        ROOT / "scripts" / "run_ci_full_research_validation.py",
+        ROOT / "scripts" / "validate_github_actions_workflows.py",
         ROOT / "tests" / "test_invariant_bundle_adviser_summary.py",
         ROOT / "tests" / "test_final_goal_acceptance.py",
+        ROOT / "tests" / "test_github_actions_workflows.py",
         CI_CONFIG,
         METHOD_CSV,
         BACKEND_ENV,
@@ -545,8 +565,9 @@ def write_nested_hash_manifest() -> None:
     ]
     rows = [
         {
-            "schema_version": "final_goal_acceptance_artifact_hash_v1",
-            "path": str(path.relative_to(ROOT)).replace("\\", "/"),
+            "schema_version": "final_goal_acceptance_artifact_hash_v2",
+            "path_root": "repository",
+            "path": path.resolve().relative_to(REPOSITORY_ROOT).as_posix(),
             "bytes": path.stat().st_size,
             "sha256": sha256(path),
         }
@@ -694,7 +715,7 @@ def main() -> int:
     )
     finished = datetime.now(timezone.utc)
     summary = {
-        "schema_version": "final_goal_acceptance_summary_v1",
+        "schema_version": "final_goal_acceptance_summary_v2",
         "status": "pass",
         "started_utc": started.isoformat(),
         "finished_utc": finished.isoformat(),
@@ -725,6 +746,9 @@ def main() -> int:
         "protected_authoritative_changed": 0,
         "final_gate_rows": len(gates),
         "required_command_count": 5,
+        "workflow_path_root": "repository",
+        "fast_ci_trigger": "push,pull_request",
+        "full_validation_trigger": "workflow_dispatch",
         "all_command_return_codes_zero": all(
             row["return_code"] == 0 for row in command_records
         ),
@@ -739,6 +763,9 @@ def main() -> int:
     (OUTPUT / "final_acceptance_report.md").write_text(
         "# Final goal acceptance report\n\n"
         f"- Status: **PASS**.\n"
+        "- CI discovery: repository-root `.github/workflows`; run steps execute "
+        "under `mccarthy2018_reproduction`; Fast CI is push/pull-request and "
+        "Full Research Validation is manual dispatch.\n"
         f"- Unit suite: {unit['passed']}/{unit['tests']} passed, 0 failed, reported wall-time {unit['test_wall_seconds_reported']:.3f} s.\n"
         f"- Exact benchmark command: executed in an isolated Git worktree; {isolated['benchmark_owned_checks']} benchmark-owned fields compared, 0 failures.\n"
         f"- Stage-F reset contract: {isolated['downstream_stage_f_reset_checks']} checks, {isolated['downstream_stage_f_reset_equality_differences']} expected equality differences exposed, 0 contract failures.\n"

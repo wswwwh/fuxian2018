@@ -1,5 +1,5 @@
 {
-  "schema_version": "invariant_bundle_ci_validation_config_v1",
+  "schema_version": "invariant_bundle_ci_validation_config_v2",
   "python_version": "3.11",
   "fast_ci": {
     "small_physical_case": "em_halo_12p09_n15_small",
@@ -41,13 +41,50 @@
     "data/computed/chapter4_fig43_fig46_projection_fit_lock.json"
   ],
   "workflow_contract": {
+    "path_root": "repository",
     "checkout_action": "actions/checkout@v6",
     "setup_python_action": "actions/setup-python@v6",
     "upload_artifact_action": "actions/upload-artifact@v7",
+    "working_directory": "mccarthy2018_reproduction",
+    "cache_dependency_path": "mccarthy2018_reproduction/pyproject.toml",
+    "required_job_environment": {
+      "MPLBACKEND": "Agg",
+      "PYTHONHASHSEED": "0",
+      "PYTHONPATH": "src"
+    },
+    "forbidden_direct_writers": [
+      "run_invariant_bundle_benchmarks.py",
+      "run_invariant_bundle_manifold_convergence.py",
+      "run_final_goal_acceptance.py"
+    ],
     "fast_workflow": ".github/workflows/ci.yml",
     "full_workflow": ".github/workflows/full_research_validation.yml"
   },
+  "official_action_version_evidence": {
+    "verified_on": "2026-07-16",
+    "source": "official GitHub release pages",
+    "runner": "github-hosted ubuntu-latest",
+    "minimum_node24_runner_version": "2.327.1",
+    "releases": [
+      {
+        "uses": "actions/checkout@v6",
+        "release": "v6.0.1",
+        "url": "https://github.com/actions/checkout/releases/tag/v6.0.1"
+      },
+      {
+        "uses": "actions/setup-python@v6",
+        "release": "v6.2.0",
+        "url": "https://github.com/actions/setup-python/releases/tag/v6.2.0"
+      },
+      {
+        "uses": "actions/upload-artifact@v7",
+        "release": "v7.0.1",
+        "url": "https://github.com/actions/upload-artifact/releases/tag/v7.0.1"
+      }
+    ]
+  },
   "truth_boundaries": [
+    "GitHub discovers both workflows from the repository-root .github/workflows directory; all run steps execute below mccarthy2018_reproduction.",
     "CI writes generated numerical outputs only below runner.temp or an explicitly non-authoritative evidence directory.",
     "CI may not overwrite committed authoritative results.",
     "The frozen Chapter 4 projection holdout remains 0/4 with paper_projection=fail and paper_3d=false.",

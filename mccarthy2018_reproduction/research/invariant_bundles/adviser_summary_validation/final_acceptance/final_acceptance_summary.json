@@ -3,7 +3,9 @@
   "chapter4_holdout": "0/4",
   "elapsed_seconds": 57.1179,
   "final_gate_rows": 21,
+  "fast_ci_trigger": "push,pull_request",
   "finished_utc": "2026-07-16T09:17:27.990725+00:00",
+  "full_validation_trigger": "workflow_dispatch",
   "isolated_downstream_stage_f_expected_differences": 108,
   "isolated_downstream_stage_f_reset_checks": 180,
   "isolated_downstream_stage_f_reset_failures": 0,
@@ -15,7 +17,7 @@
   "protected_authoritative_changed": 0,
   "protected_authoritative_files": 11,
   "required_command_count": 5,
-  "schema_version": "final_goal_acceptance_summary_v1",
+  "schema_version": "final_goal_acceptance_summary_v2",
   "started_utc": "2026-07-16T09:16:30.872825+00:00",
   "status": "pass",
   "submission_readiness": "not_claimed",
@@ -23,5 +25,6 @@
   "unit_failed": 0,
   "unit_passed": 166,
   "unit_tests": 166,
-  "unit_wall_seconds_reported": 8.781
+  "unit_wall_seconds_reported": 8.781,
+  "workflow_path_root": "repository"
 }

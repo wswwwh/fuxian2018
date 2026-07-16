@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import hashlib
 from pathlib import Path
 import tempfile
 from typing import Callable
@@ -93,6 +94,35 @@ class FinalGoalAcceptanceComparisonTests(unittest.TestCase):
         self.assertEqual(summary["provenance_failures"], 1)
         with self.assertRaisesRegex(RuntimeError, "comparison contract failed"):
             acceptance.require_isolated_comparison_pass(summary)
+
+    def test_workflow_evidence_resolves_from_repository_root(self) -> None:
+        fast, full = acceptance.repository_workflow_paths()
+        self.assertEqual(fast, ".github/workflows/ci.yml")
+        self.assertEqual(full, ".github/workflows/full_research_validation.yml")
+        self.assertTrue((acceptance.REPOSITORY_ROOT / fast).is_file())
+        self.assertTrue((acceptance.REPOSITORY_ROOT / full).is_file())
+
+    def test_final_acceptance_hash_manifest_is_repository_rooted(self) -> None:
+        manifest = (
+            acceptance.ROOT
+            / "research"
+            / "invariant_bundles"
+            / "adviser_summary_validation"
+            / "final_acceptance"
+            / "artifact_hashes.csv"
+        )
+        with manifest.open("r", encoding="utf-8", newline="") as stream:
+            rows = list(csv.DictReader(stream))
+        self.assertTrue(rows)
+        self.assertTrue(all(row["path_root"] == "repository" for row in rows))
+        for row in rows:
+            path = acceptance.REPOSITORY_ROOT / row["path"]
+            self.assertTrue(path.is_file(), row["path"])
+            self.assertEqual(path.stat().st_size, int(row["bytes"]))
+            self.assertEqual(
+                hashlib.sha256(path.read_bytes()).hexdigest().upper(),
+                row["sha256"],
+            )
 
 
 if __name__ == "__main__":

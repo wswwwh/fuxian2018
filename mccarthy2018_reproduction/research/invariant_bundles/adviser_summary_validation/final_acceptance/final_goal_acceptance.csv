@@ -6,8 +6,8 @@ independent_schur,pass,research/invariant_bundles/results/csv/independent_schur_
 qr_svd_failure_classification,pass,research/invariant_bundles/results/csv/qr_svd_failure_classification.csv,4 no_accepted_1d_bundle;1 initialization-sensitive
 ablation,pass,research/invariant_bundles/results/csv/ablation_study.csv,35 rows;20 failures retained
 fresh_process_rerun,pass,research/invariant_bundles/independent_rerun/independent_rerun_report.md,reproducibility does not promote scientific gates
-fast_ci,pass,.github/workflows/ci.yml,push and pull_request
-full_validation_ci,pass,.github/workflows/full_research_validation.yml,manual workflow_dispatch
+fast_ci,pass,.github/workflows/ci.yml,repository-root;push and pull_request
+full_validation_ci,pass,.github/workflows/full_research_validation.yml,repository-root;manual workflow_dispatch
 literature_matrix,pass,research/invariant_bundles/paper/literature_matrix.csv,25 formal sources;not exhaustive novelty search
 chinese_manuscript,pass,research/invariant_bundles/paper_release/manuscript_zh.docx,20-page adviser-review draft
 claim_evidence,pass,research/invariant_bundles/paper_release/claim_evidence_matrix.csv,15 claims with limitations

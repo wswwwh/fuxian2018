@@ -1,6 +1,9 @@
 # Final goal acceptance report
 
 - Status: **PASS**.
+- CI discovery: repository-root `.github/workflows`; run steps execute under
+  `mccarthy2018_reproduction`; Fast CI is push/pull-request and Full Research
+  Validation is manual dispatch.
 - Unit suite: 166/166 passed, 0 failed, reported wall-time 8.781 s.
 - Exact benchmark command: executed in an isolated Git worktree; 1170 benchmark-owned fields compared, 0 failures.
 - Stage-F reset contract: 180 checks, 108 expected equality differences exposed, 0 contract failures.

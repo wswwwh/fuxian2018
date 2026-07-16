@@ -9,6 +9,7 @@ import hashlib
 import json
 from pathlib import Path
 import platform
+import re
 import shutil
 import subprocess
 import sys
@@ -17,6 +18,14 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
+REPOSITORY_ROOT = Path(
+    subprocess.check_output(
+        ["git", "rev-parse", "--show-toplevel"],
+        cwd=ROOT,
+        text=True,
+        encoding="utf-8",
+    ).strip()
+).resolve()
 DEFAULT_OUTPUT = (
     ROOT / "research" / "invariant_bundles" / "ci_validation"
 )
@@ -38,7 +47,7 @@ def run_logged(
     command: list[str],
     *,
     log_records: list[str],
-) -> None:
+) -> str:
     started = time.time()
     completed = subprocess.run(
         command,
@@ -63,6 +72,7 @@ def run_logged(
         raise RuntimeError(
             f"{label} failed with return code {completed.returncode}"
         )
+    return completed.stdout
 
 
 def copy_full_rehearsal(source: Path, destination: Path) -> None:
@@ -89,8 +99,8 @@ def write_manifest(output: Path) -> None:
     target = output / "artifact_hashes.csv"
     rows: list[dict[str, Any]] = []
     inputs = [
-        ROOT / ".github" / "workflows" / "ci.yml",
-        ROOT / ".github" / "workflows" / "full_research_validation.yml",
+        REPOSITORY_ROOT / ".github" / "workflows" / "ci.yml",
+        REPOSITORY_ROOT / ".github" / "workflows" / "full_research_validation.yml",
         ROOT / "research" / "invariant_bundles" / "configs" / "ci_validation.json",
         ROOT / "scripts" / "run_ci_small_physical_benchmark.py",
         ROOT / "scripts" / "run_ci_full_research_validation.py",
@@ -107,8 +117,9 @@ def write_manifest(output: Path) -> None:
     for path in files:
         rows.append(
             {
-                "schema_version": "ci_stage_artifact_hash_v1",
-                "path": str(path.relative_to(ROOT)).replace("\\", "/"),
+                "schema_version": "ci_stage_artifact_hash_v2",
+                "path_root": "repository",
+                "path": path.resolve().relative_to(REPOSITORY_ROOT).as_posix(),
                 "bytes": path.stat().st_size,
                 "sha256": sha256(path),
             }
@@ -123,16 +134,21 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--full-rehearsal-root", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument(
+        "--refresh-existing",
+        action="store_true",
+        help="Refresh the known CI evidence files in an existing output directory.",
+    )
     args = parser.parse_args()
     output = args.output_dir.resolve()
     full = args.full_rehearsal_root.resolve()
-    if output.exists() and any(output.iterdir()):
+    if output.exists() and any(output.iterdir()) and not args.refresh_existing:
         raise RuntimeError(f"refusing to overwrite CI stage evidence: {output}")
-    if full == ROOT or ROOT in full.parents:
+    if full == REPOSITORY_ROOT or REPOSITORY_ROOT in full.parents:
         raise RuntimeError("full rehearsal evidence must originate outside the checkout")
     output.mkdir(parents=True, exist_ok=True)
     logs = output / "logs"
-    logs.mkdir()
+    logs.mkdir(exist_ok=args.refresh_existing)
     execution_log: list[str] = []
     snapshot_path = output / "authoritative_before.json"
     before_after_path = output / "authoritative_before_after.csv"
@@ -179,7 +195,7 @@ def main() -> int:
         ],
         log_records=execution_log,
     )
-    run_logged(
+    unit_output = run_logged(
         "complete unit suite",
         [
             sys.executable,
@@ -192,6 +208,10 @@ def main() -> int:
         ],
         log_records=execution_log,
     )
+    unit_match = re.search(r"Ran (\d+) tests?", unit_output)
+    if unit_match is None or "\nOK\n" not in f"\n{unit_output}\n":
+        raise RuntimeError("complete unit suite output did not contain Ran/OK markers")
+    unit_tests = int(unit_match.group(1))
     run_logged(
         "git diff whitespace check",
         ["git", "diff", "--check"],
@@ -234,13 +254,20 @@ def main() -> int:
         ).read_text(encoding="utf-8")
     )
     environment = {
-        "schema_version": "ci_stage_environment_v1",
+        "schema_version": "ci_stage_environment_v2",
         "python": sys.version,
         "python_executable": sys.executable,
         "platform": platform.platform(),
         "workflow_contract_status": workflow_summary["status"],
         "small_physical_status": physical_summary["status"],
         "full_rehearsal_status": full_summary["status"],
+        "workflow_path_root": workflow_summary["path_root"],
+        "workflow_project_directory": workflow_summary["project_directory"],
+        "official_action_versions": [
+            row["uses"]
+            for row in workflow_summary["official_action_version_evidence"]["releases"]
+        ],
+        "unit_tests": unit_tests,
     }
     (logs / "environment.json").write_text(
         json.dumps(environment, indent=2, sort_keys=True) + "\n",
@@ -249,6 +276,15 @@ def main() -> int:
     (output / "ci_validation_report.md").write_text(
         "# GitHub Actions continuous-integration acceptance\n\n"
         "## Outcome\n\n"
+        "- Repository-root workflow discovery: PASS; `.github/workflows/ci.yml` "
+        "and `.github/workflows/full_research_validation.yml`; no duplicate "
+        "subproject workflows.\n"
+        "- Run-step default: `shell: bash`, "
+        "`working-directory: mccarthy2018_reproduction`; `uses` steps remain "
+        "repository-scoped.\n"
+        "- Official action releases verified on 2026-07-16: "
+        "`actions/checkout@v6`, `actions/setup-python@v6`, and "
+        "`actions/upload-artifact@v7`, suitable for GitHub-hosted Ubuntu.\n"
         "- Fast workflow contract: PASS, "
         f"{workflow_summary['checks']}/{workflow_summary['checks']} checks.\n"
         "- Small physical benchmark: PASS; ordered real Schur and QR/SVD "
@@ -261,7 +297,8 @@ def main() -> int:
         f"- Full result-schema checks: {full_summary['schema_checks']} passed, "
         f"{len(full_summary['schema_failures'])} failed.\n"
         "- Protected authoritative files: 11/11 unchanged by before/after SHA256.\n"
-        "- Complete local unit suite and git diff whitespace check: PASS.\n\n"
+        f"- Complete local unit suite: PASS, {unit_tests}/{unit_tests}; "
+        "git diff whitespace check: PASS.\n\n"
         "## Failure visibility and truth boundary\n\n"
         f"The full rehearsal retains bundle outcomes {full_summary['bundle_status_counts']} "
         f"and manifold outcomes {full_summary['manifold_status_counts']}. "

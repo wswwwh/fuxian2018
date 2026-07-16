@@ -27,6 +27,24 @@ full thesis numerical equivalence. Repository boundaries and the mandatory
 Stage A -> Stage B -> research transition are defined in
 `docs/repository_architecture.md` and `docs/research_transition_plan.md`.
 
+## Continuous integration
+
+GitHub Actions workflows are repository-level files even though the Python
+package is a subproject. GitHub discovers the fast and full workflows at
+`../.github/workflows/ci.yml` and
+`../.github/workflows/full_research_validation.yml`, relative to this project
+directory. Every `run` step uses Bash with
+`working-directory: mccarthy2018_reproduction`; action `uses` steps remain at
+repository scope. Python dependency caching is keyed from
+`mccarthy2018_reproduction/pyproject.toml`.
+
+Fast CI runs on every push and pull request. Full Research Validation is a
+manual `workflow_dispatch` action. Both workflows write generated evidence to
+the GitHub runner temporary directory, compare all 11 protected authoritative
+files before and after execution, retain failed and boundary rows in uploaded
+artifacts, and preserve `MPLBACKEND=Agg`, `PYTHONHASHSEED=0`, and
+`PYTHONPATH=src` for GitHub-hosted Ubuntu.
+
 This repository is the local reproduction workspace for:
 
 Brian P. McCarthy, *Characterization of Quasi-Periodic Orbits for Applications

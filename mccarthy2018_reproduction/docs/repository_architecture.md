@@ -90,6 +90,19 @@ research accepted 不得覆盖 reproduction fail/boundary。
 | Bundle 方法 | **research/invariant_bundles/results/csv/method_comparison.csv** 及对应 NPZ | 15 case × 3 method 的 research-only 门 |
 | 流形收敛 | **research/invariant_bundles/results/csv/manifold_convergence.csv** 及对应 NPZ | 7 case、3 扰动尺度、两分支；低 N 失败保留 |
 
+## GitHub Actions 仓库边界
+
+- workflow 由 Git 仓库根目录的 `.github/workflows/ci.yml` 和
+  `.github/workflows/full_research_validation.yml` 提供；子项目内不得保留重复 workflow。
+- Python 项目仍位于 `mccarthy2018_reproduction/`。两个 workflow 通过
+  `defaults.run` 统一设置 Bash 和该工作目录，`uses` 步骤不设置工作目录。
+- `actions/setup-python` 的缓存依赖路径从 checkout 根目录解析，因此固定为
+  `mccarthy2018_reproduction/pyproject.toml`。
+- CI 生成物只能写入 `runner.temp`；11 个 authoritative 文件在任务前后做
+  SHA256 对比，不在 CI 中原地重算或覆盖。
+- full validation 上传完整结果树，保留 failed/boundary 行。CI 通过只代表
+  工程回归成立，不能升级任何冻结的科学状态。
+
 ## Legacy / deprecated status 索引
 
 以下文件保留以追溯历史，但不得直接推断当前状态：

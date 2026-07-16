@@ -20,6 +20,14 @@ import numpy as np
 
 
 ROOT = Path(__file__).resolve().parents[1]
+REPOSITORY_ROOT = Path(
+    subprocess.check_output(
+        ["git", "rev-parse", "--show-toplevel"],
+        cwd=ROOT,
+        text=True,
+        encoding="utf-8",
+    ).strip()
+).resolve()
 SCRIPTS = ROOT / "scripts"
 sys.path.insert(0, str(SCRIPTS))
 sys.path.insert(0, str(ROOT / "src"))
@@ -50,7 +58,7 @@ def sha256(path: Path) -> str:
 
 def external_output_root(path: Path, *, require_existing: bool) -> Path:
     resolved = path.resolve()
-    if resolved == ROOT or ROOT in resolved.parents:
+    if resolved == REPOSITORY_ROOT or REPOSITORY_ROOT in resolved.parents:
         raise RuntimeError(
             "full CI numerical output must be outside the repository checkout"
         )

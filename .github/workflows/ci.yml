@@ -11,6 +11,11 @@ concurrency:
   group: fast-ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+defaults:
+  run:
+    shell: bash
+    working-directory: mccarthy2018_reproduction
+
 jobs:
   fast-validation:
     runs-on: ubuntu-latest
@@ -28,6 +33,7 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
+          cache-dependency-path: mccarthy2018_reproduction/pyproject.toml
 
       - name: Install package and workflow validator
         run: |
@@ -78,7 +84,6 @@ jobs:
           --report "${RUNNER_TEMP}/authoritative_before_after.csv"
 
       - name: Repository cleanliness and whitespace
-        shell: bash
         run: |
           git diff --check
           test -z "$(git status --porcelain)"

@@ -1,13 +1,39 @@
 {
-  "checks": 28,
+  "checks": 52,
   "failed": 0,
   "failed_check_ids": [],
   "fast_workflow": ".github/workflows/ci.yml",
   "full_workflow": ".github/workflows/full_research_validation.yml",
-  "passed": 28,
-  "schema_version": "github_actions_contract_summary_v1",
+  "official_action_version_evidence": {
+    "minimum_node24_runner_version": "2.327.1",
+    "releases": [
+      {
+        "release": "v6.0.1",
+        "url": "https://github.com/actions/checkout/releases/tag/v6.0.1",
+        "uses": "actions/checkout@v6"
+      },
+      {
+        "release": "v6.2.0",
+        "url": "https://github.com/actions/setup-python/releases/tag/v6.2.0",
+        "uses": "actions/setup-python@v6"
+      },
+      {
+        "release": "v7.0.1",
+        "url": "https://github.com/actions/upload-artifact/releases/tag/v7.0.1",
+        "uses": "actions/upload-artifact@v7"
+      }
+    ],
+    "runner": "github-hosted ubuntu-latest",
+    "source": "official GitHub release pages",
+    "verified_on": "2026-07-16"
+  },
+  "passed": 52,
+  "path_root": "repository",
+  "project_directory": "mccarthy2018_reproduction",
+  "schema_version": "github_actions_contract_summary_v2",
   "status": "PASS",
   "truth_boundary": [
+    "GitHub discovers both workflows from the repository-root .github/workflows directory; all run steps execute below mccarthy2018_reproduction.",
     "CI writes generated numerical outputs only below runner.temp or an explicitly non-authoritative evidence directory.",
     "CI may not overwrite committed authoritative results.",
     "The frozen Chapter 4 projection holdout remains 0/4 with paper_projection=fail and paper_3d=false.",
