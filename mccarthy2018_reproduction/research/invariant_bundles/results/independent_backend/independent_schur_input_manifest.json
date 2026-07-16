@@ -1,0 +1,154 @@
+{
+  "cases": {
+    "em_halo_12p40_n21": {
+      "cocycle_path": "research/invariant_bundles/results/npz/cocycles/em_halo_12p40_n21_f7da35aebbde900aeb0a.npz",
+      "cocycle_sha256": "479519E12EB6900ECED48D02507BD7968AEC56385B770AA0AB866C174B6E9211",
+      "operator_sha256": "5F59626A2D31124CAA2F5850603F9942FEFF43B04579BCDF5EF72BBF41CCEAEF",
+      "operator_shape": [
+        126,
+        126
+      ],
+      "rho": 0.242486537831404,
+      "spectral_samples": 21,
+      "state_dimension": 6
+    },
+    "em_halo_12p40_n33": {
+      "cocycle_path": "research/invariant_bundles/results/npz/cocycles/em_halo_12p40_n33_32b73e57810f34080293.npz",
+      "cocycle_sha256": "42C87DAAE6FEB844B71DC032705321EC181C841A2E3035AFE3011B9381F15D0A",
+      "operator_sha256": "9D14426CE9996E4BB91DD588CBB8D38F232150D2C627F230FBD1A6C618A2ECEB",
+      "operator_shape": [
+        198,
+        198
+      ],
+      "rho": 0.242488328837884,
+      "spectral_samples": 33,
+      "state_dimension": 6
+    },
+    "em_halo_12p40_n45": {
+      "cocycle_path": "research/invariant_bundles/results/npz/cocycles/em_halo_12p40_n45_34809ac346f1d57fc87f.npz",
+      "cocycle_sha256": "0E822BCF9EB3F7EF0837A99B0D153E1A8A6BB9D44F51B048DA747DFEDF07B3F2",
+      "operator_sha256": "A6943875A55FA4AB72CEB2BAF947803C915752AF04E83B4ACD69CB3CD9F8CF24",
+      "operator_shape": [
+        270,
+        270
+      ],
+      "rho": 0.242488320387973,
+      "spectral_samples": 45,
+      "state_dimension": 6
+    },
+    "em_vertical_12p66_n33": {
+      "cocycle_path": "research/invariant_bundles/results/npz/cocycles/em_vertical_12p66_n33_cfb62d5e2c5c02e7ff7b.npz",
+      "cocycle_sha256": "41D4E325A20B5BFACB719B06E86A166AF8224D2DBE688542FBF6B6C4EDC4706D",
+      "operator_sha256": "90156304F1E371B1BF5403E04499238775989C9A72B65C92119D9887E2CF474A",
+      "operator_shape": [
+        198,
+        198
+      ],
+      "rho": 0.158086318862057,
+      "spectral_samples": 33,
+      "state_dimension": 6
+    },
+    "em_vertical_12p66_n45": {
+      "cocycle_path": "research/invariant_bundles/results/npz/cocycles/em_vertical_12p66_n45_ac490a951a1509c7c7d5.npz",
+      "cocycle_sha256": "EF4A041D56977E422AE0CB4DDC21617B30B9D7E60414CD5670DBC80EF5A6B717",
+      "operator_sha256": "D4822121F655E72392BFEEC482EA5EE712F026576F87AAD6DA89EA97B322C319",
+      "operator_shape": [
+        270,
+        270
+      ],
+      "rho": 0.161804627163957,
+      "spectral_samples": 45,
+      "state_dimension": 6
+    },
+    "em_vertical_12p66_n57": {
+      "cocycle_path": "research/invariant_bundles/results/npz/cocycles/em_vertical_12p66_n57_48cdce7478d56c673fdc.npz",
+      "cocycle_sha256": "31798631369FBC2D03524E6571535E425289275962E291BCA305EC1538AF0E49",
+      "operator_sha256": "740349AA138F34EE7635A914060385BB89B52A8AE1BC205B3E3FA4B9C065FDA2",
+      "operator_shape": [
+        342,
+        342
+      ],
+      "rho": 0.163135018603281,
+      "spectral_samples": 57,
+      "state_dimension": 6
+    },
+    "route_h_member_17": {
+      "cocycle_path": "research/invariant_bundles/results/npz/cocycles/route_h_member_17_bca2c099d543fa5fc9f4.npz",
+      "cocycle_sha256": "94C02C8D16B818F8D8C3D3A3013F6E3ED80FB3E003A2B6F6D55BE34544B5540E",
+      "operator_sha256": "1A49F2472983591F74A8A258E91E613DB37E5FE7B5EBDD7A4E5C86A974F922BC",
+      "operator_shape": [
+        270,
+        270
+      ],
+      "rho": 1.445863346020272,
+      "spectral_samples": 45,
+      "state_dimension": 6
+    },
+    "route_h_member_32": {
+      "cocycle_path": "research/invariant_bundles/results/npz/cocycles/route_h_member_32_20d7a8d79ec1312191c3.npz",
+      "cocycle_sha256": "C586EB087CF38D043939BEB9D8E39D4D5ABF25B0917254BB5079FBA9AF0E31BF",
+      "operator_sha256": "AAFF214416D217CEDF12213547AB979EFAEB7D33756AB6280ABE878D637CD3B7",
+      "operator_shape": [
+        270,
+        270
+      ],
+      "rho": 1.450574236769379,
+      "spectral_samples": 45,
+      "state_dimension": 6
+    },
+    "route_h_member_54": {
+      "cocycle_path": "research/invariant_bundles/results/npz/cocycles/route_h_member_54_f1681a983e03a2c5478c.npz",
+      "cocycle_sha256": "BFCF707A4A54C47FB9D5D787ACBE352FE5B146B0811D9AF1337BA19E4B61481A",
+      "operator_sha256": "D515F908D31925F45A6249917E29B96A8D819EF384C5A356CD417D4F096FEB30",
+      "operator_shape": [
+        270,
+        270
+      ],
+      "rho": 1.457169483818128,
+      "spectral_samples": 45,
+      "state_dimension": 6
+    },
+    "route_h_member_68": {
+      "cocycle_path": "research/invariant_bundles/results/npz/cocycles/route_h_member_68_7b05784ce609d59d6dba.npz",
+      "cocycle_sha256": "69558EAAD7FBFC4F0F610B358B4AFA2393FD57063E9B8D95FB286370A9FEE870",
+      "operator_sha256": "256372C952FC5C831FABF71142CD946DEB95709540D65D880A136046DC18485A",
+      "operator_shape": [
+        270,
+        270
+      ],
+      "rho": 1.457898497227294,
+      "spectral_samples": 45,
+      "state_dimension": 6
+    },
+    "route_h_member_68_legacy_dg_positive": {
+      "cocycle_path": "research/invariant_bundles/results/npz/cocycles/route_h_member_68_legacy_dg_positive_432177be0f203cd6964b.npz",
+      "cocycle_sha256": "191DC57C54630A75258793EEBCEA32DC604565C2516D7DA12B7148D5882336BF",
+      "operator_sha256": "65E3A8A302EEBDB738F195836C47F01A7B2FF019CA47D7694142523669EE2A64",
+      "operator_shape": [
+        270,
+        270
+      ],
+      "rho": 1.431213024369133,
+      "spectral_samples": 45,
+      "state_dimension": 6
+    },
+    "se_active_geometry_member_468": {
+      "cocycle_path": "research/invariant_bundles/results/npz/cocycles/se_active_geometry_member_468_4f74cf2d8bdd192b9405.npz",
+      "cocycle_sha256": "C54047F64D17F83E99031EFB52D9C14B8D537B44F54BE14EFF7FB1F9CAD60455",
+      "operator_sha256": "DDFD8745E8FCCAF3E06AACF5207DC2EC71AE048B639BEEC24DD23371C625052A",
+      "operator_shape": [
+        126,
+        126
+      ],
+      "rho": 0.3214514160329597,
+      "spectral_samples": 21,
+      "state_dimension": 6
+    }
+  },
+  "config_sha256": "13249FBF6CDEA885CB0B8144C2103DBDDBE1311B48A7B45C7BEE03AB4511AF26",
+  "created_utc": "2026-07-16T06:55:30Z",
+  "input_mat_sha256": "BDB0A8AFF7EEC0EA9C2BA13B4E85BAC2AA1E1488A6201116219AD5CE8D3FFA27",
+  "registry_sha256": "B38099E93BB85AD4B97035D667A4AD5E6A74C1805B612EDEABC7AF6497C23EE5",
+  "schema_version": "independent_schur_input_manifest_v1",
+  "source_git_commit": "5ee45fc7ce549ad809dfb3947969b8c83cf06d5b"
+}

@@ -1,0 +1,80 @@
+independent_real_schur_backend start=20260716T145034
+input=C:/Users/wwh20/Desktop/复现论文/mccarthy2018_reproduction/research/invariant_bundles/results/independent_backend/independent_schur_input.mat
+output=C:/Users/wwh20/Desktop/复现论文/mccarthy2018_reproduction/research/invariant_bundles/results/independent_backend/independent_schur_output.mat
+case=em_halo_12p40_n21 dimension=1 rel_imag=0 schur_residual=3.5298812823498733e-15 orthogonality=5.3290705182007514e-15 runtime=0.439909300 status=ok
+case=em_halo_12p40_n33 dimension=1 rel_imag=0 schur_residual=3.5077067247862587e-15 orthogonality=1.3322676295501878e-15 runtime=0.027669400 status=ok
+case=em_halo_12p40_n45 dimension=1 rel_imag=0 schur_residual=3.5401504742500477e-15 orthogonality=2.2204460492503131e-16 runtime=0.030285800 status=ok
+case=em_vertical_12p66_n33 dimension=1 rel_imag=0 schur_residual=4.1144934499539815e-15 orthogonality=1.1102230246251565e-15 runtime=0.019600800 status=ok
+case=em_vertical_12p66_n45 dimension=1 rel_imag=0 schur_residual=3.3607661696184957e-15 orthogonality=3.3306690738754696e-15 runtime=0.038556200 status=ok
+case=em_vertical_12p66_n57 dimension=1 rel_imag=0 schur_residual=3.7590644137773886e-15 orthogonality=4.4408920985006262e-16 runtime=0.044409800 status=ok
+case=se_active_geometry_member_468 dimension=1 rel_imag=0 schur_residual=3.1765118127405234e-15 orthogonality=3.3306690738754696e-16 runtime=0.007148900 status=ok
+case=route_h_member_17 dimension=2 rel_imag=0.052080933710623063 schur_residual=2.9834864781008381e-14 orthogonality=4.4661312966254065e-15 runtime=0.048212000 status=ok
+case=route_h_member_32 dimension=2 rel_imag=0.45699926472800784 schur_residual=2.803493225585997e-14 orthogonality=6.0987279696361931e-15 runtime=0.045971000 status=ok
+case=route_h_member_54 dimension=2 rel_imag=0.13318866997388729 schur_residual=3.5787728839659821e-14 orthogonality=1.7288083499466411e-14 runtime=0.074074000 status=ok
+case=route_h_member_68 dimension=2 rel_imag=0.34153924691497661 schur_residual=1.9306251103961538e-14 orthogonality=1.5170018995765199e-14 runtime=0.053301300 status=ok
+case=route_h_member_68_legacy_dg_positive dimension=1 rel_imag=0 schur_residual=2.4974133083338406e-14 orthogonality=5.3290705182007514e-15 runtime=0.052213900 status=ok
+independent_real_schur_backend complete=20260716T145035 cases=12
+independent_real_schur_backend start=20260716T145135
+input=C:/Users/wwh20/Desktop/复现论文/mccarthy2018_reproduction/research/invariant_bundles/results/independent_backend/independent_schur_input.mat
+output=C:/Users/wwh20/Desktop/复现论文/mccarthy2018_reproduction/research/invariant_bundles/results/independent_backend/independent_schur_output.mat
+case=em_halo_12p40_n21 dimension=1 rel_imag=0 schur_residual=3.5298812823498733e-15 orthogonality=5.3290705182007514e-15 runtime=0.096595600 status=ok
+case=em_halo_12p40_n33 dimension=1 rel_imag=0 schur_residual=3.5077067247862587e-15 orthogonality=1.3322676295501878e-15 runtime=0.039757500 status=ok
+case=em_halo_12p40_n45 dimension=1 rel_imag=0 schur_residual=3.5401504742500477e-15 orthogonality=2.2204460492503131e-16 runtime=0.071761000 status=ok
+case=em_vertical_12p66_n33 dimension=1 rel_imag=0 schur_residual=4.1144934499539815e-15 orthogonality=1.1102230246251565e-15 runtime=0.036877500 status=ok
+case=em_vertical_12p66_n45 dimension=1 rel_imag=0 schur_residual=3.3607661696184957e-15 orthogonality=3.3306690738754696e-15 runtime=0.062438500 status=ok
+case=em_vertical_12p66_n57 dimension=1 rel_imag=0 schur_residual=3.7590644137773886e-15 orthogonality=4.4408920985006262e-16 runtime=0.063385000 status=ok
+case=se_active_geometry_member_468 dimension=1 rel_imag=0 schur_residual=3.1765118127405234e-15 orthogonality=3.3306690738754696e-16 runtime=0.009601400 status=ok
+case=route_h_member_17 dimension=2 rel_imag=0.052080933710623063 schur_residual=2.9834864781008381e-14 orthogonality=4.4661312966254065e-15 runtime=0.065322000 status=ok
+case=route_h_member_32 dimension=2 rel_imag=0.45699926472800784 schur_residual=2.803493225585997e-14 orthogonality=6.0987279696361931e-15 runtime=0.052374400 status=ok
+case=route_h_member_54 dimension=2 rel_imag=0.13318866997388729 schur_residual=3.5787728839659821e-14 orthogonality=1.7288083499466411e-14 runtime=0.054388100 status=ok
+case=route_h_member_68 dimension=2 rel_imag=0.34153924691497661 schur_residual=1.9306251103961538e-14 orthogonality=1.5170018995765199e-14 runtime=0.061252000 status=ok
+case=route_h_member_68_legacy_dg_positive dimension=1 rel_imag=0 schur_residual=2.4974133083338406e-14 orthogonality=5.3290705182007514e-15 runtime=0.112534500 status=ok
+independent_real_schur_backend complete=20260716T145135 cases=12
+independent_real_schur_backend start=20260716T145245
+input=C:/Users/wwh20/Desktop/复现论文/mccarthy2018_reproduction/research/invariant_bundles/results/independent_backend/independent_schur_input.mat
+output=C:/Users/wwh20/Desktop/复现论文/mccarthy2018_reproduction/research/invariant_bundles/results/independent_backend/independent_schur_output.mat
+case=em_halo_12p40_n21 dimension=1 rel_imag=0 schur_residual=3.5298812823498733e-15 orthogonality=5.3290705182007514e-15 runtime=0.115839800 status=ok
+case=em_halo_12p40_n33 dimension=1 rel_imag=0 schur_residual=3.5077067247862587e-15 orthogonality=1.3322676295501878e-15 runtime=0.064215100 status=ok
+case=em_halo_12p40_n45 dimension=1 rel_imag=0 schur_residual=3.5401504742500477e-15 orthogonality=2.2204460492503131e-16 runtime=0.070187900 status=ok
+case=em_vertical_12p66_n33 dimension=1 rel_imag=0 schur_residual=4.1144934499539815e-15 orthogonality=1.1102230246251565e-15 runtime=0.019099200 status=ok
+case=em_vertical_12p66_n45 dimension=1 rel_imag=0 schur_residual=3.3607661696184957e-15 orthogonality=3.3306690738754696e-15 runtime=0.042581700 status=ok
+case=em_vertical_12p66_n57 dimension=1 rel_imag=0 schur_residual=3.7590644137773886e-15 orthogonality=4.4408920985006262e-16 runtime=0.050780200 status=ok
+case=se_active_geometry_member_468 dimension=1 rel_imag=0 schur_residual=3.1765118127405234e-15 orthogonality=3.3306690738754696e-16 runtime=0.007515300 status=ok
+case=route_h_member_17 dimension=2 rel_imag=0.052080933710623063 schur_residual=2.9834864781008381e-14 orthogonality=4.4661312966254065e-15 runtime=0.051358100 status=ok
+case=route_h_member_32 dimension=2 rel_imag=0.45699926472800784 schur_residual=2.803493225585997e-14 orthogonality=6.0987279696361931e-15 runtime=0.044918800 status=ok
+case=route_h_member_54 dimension=2 rel_imag=0.13318866997388729 schur_residual=3.5787728839659821e-14 orthogonality=1.7288083499466411e-14 runtime=0.042671700 status=ok
+case=route_h_member_68 dimension=2 rel_imag=0.34153924691497661 schur_residual=1.9306251103961538e-14 orthogonality=1.5170018995765199e-14 runtime=0.050771100 status=ok
+case=route_h_member_68_legacy_dg_positive dimension=1 rel_imag=0 schur_residual=2.4974133083338406e-14 orthogonality=5.3290705182007514e-15 runtime=0.060979600 status=ok
+independent_real_schur_backend complete=20260716T145246 cases=12
+independent_real_schur_backend start=20260716T145437
+input=C:/Users/wwh20/Desktop/复现论文/mccarthy2018_reproduction/research/invariant_bundles/results/independent_backend/independent_schur_input.mat
+output=C:/Users/wwh20/Desktop/复现论文/mccarthy2018_reproduction/research/invariant_bundles/results/independent_backend/independent_schur_output.mat
+case=em_halo_12p40_n21 dimension=1 rel_imag=0 schur_residual=3.5298812823498733e-15 orthogonality=5.3290705182007514e-15 runtime=0.118344500 status=ok
+case=em_halo_12p40_n33 dimension=1 rel_imag=0 schur_residual=3.5077067247862587e-15 orthogonality=1.3322676295501878e-15 runtime=0.061485400 status=ok
+case=em_halo_12p40_n45 dimension=1 rel_imag=0 schur_residual=3.5401504742500477e-15 orthogonality=2.2204460492503131e-16 runtime=0.071754200 status=ok
+case=em_vertical_12p66_n33 dimension=1 rel_imag=0 schur_residual=4.1144934499539815e-15 orthogonality=1.1102230246251565e-15 runtime=0.032553800 status=ok
+case=em_vertical_12p66_n45 dimension=1 rel_imag=0 schur_residual=3.3607661696184957e-15 orthogonality=3.3306690738754696e-15 runtime=0.073006600 status=ok
+case=em_vertical_12p66_n57 dimension=1 rel_imag=0 schur_residual=3.7590644137773886e-15 orthogonality=4.4408920985006262e-16 runtime=0.062566500 status=ok
+case=se_active_geometry_member_468 dimension=1 rel_imag=0 schur_residual=3.1765118127405234e-15 orthogonality=3.3306690738754696e-16 runtime=0.010323500 status=ok
+case=route_h_member_17 dimension=2 rel_imag=0.052080933710623063 schur_residual=2.9834864781008381e-14 orthogonality=4.4661312966254065e-15 runtime=0.063890900 status=ok
+case=route_h_member_32 dimension=2 rel_imag=0.45699926472800784 schur_residual=2.803493225585997e-14 orthogonality=6.0987279696361931e-15 runtime=0.068738800 status=ok
+case=route_h_member_54 dimension=2 rel_imag=0.13318866997388729 schur_residual=3.5787728839659821e-14 orthogonality=1.7288083499466411e-14 runtime=0.046822500 status=ok
+case=route_h_member_68 dimension=2 rel_imag=0.34153924691497661 schur_residual=1.9306251103961538e-14 orthogonality=1.5170018995765199e-14 runtime=0.050599900 status=ok
+case=route_h_member_68_legacy_dg_positive dimension=1 rel_imag=0 schur_residual=2.4974133083338406e-14 orthogonality=5.3290705182007514e-15 runtime=0.052418900 status=ok
+independent_real_schur_backend complete=20260716T145438 cases=12
+independent_real_schur_backend start=20260716T145542
+input=C:/Users/wwh20/Desktop/复现论文/mccarthy2018_reproduction/research/invariant_bundles/results/independent_backend/independent_schur_input.mat
+output=C:/Users/wwh20/Desktop/复现论文/mccarthy2018_reproduction/research/invariant_bundles/results/independent_backend/independent_schur_output.mat
+case=em_halo_12p40_n21 dimension=1 rel_imag=0 schur_residual=3.5298812823498733e-15 orthogonality=5.3290705182007514e-15 runtime=0.104179600 status=ok
+case=em_halo_12p40_n33 dimension=1 rel_imag=0 schur_residual=3.5077067247862587e-15 orthogonality=1.3322676295501878e-15 runtime=0.029195200 status=ok
+case=em_halo_12p40_n45 dimension=1 rel_imag=0 schur_residual=3.5401504742500477e-15 orthogonality=2.2204460492503131e-16 runtime=0.060379900 status=ok
+case=em_vertical_12p66_n33 dimension=1 rel_imag=0 schur_residual=4.1144934499539815e-15 orthogonality=1.1102230246251565e-15 runtime=0.029847000 status=ok
+case=em_vertical_12p66_n45 dimension=1 rel_imag=0 schur_residual=3.3607661696184957e-15 orthogonality=3.3306690738754696e-15 runtime=0.113354100 status=ok
+case=em_vertical_12p66_n57 dimension=1 rel_imag=0 schur_residual=3.7590644137773886e-15 orthogonality=4.4408920985006262e-16 runtime=0.239775800 status=ok
+case=se_active_geometry_member_468 dimension=1 rel_imag=0 schur_residual=3.1765118127405234e-15 orthogonality=3.3306690738754696e-16 runtime=0.064271300 status=ok
+case=route_h_member_17 dimension=2 rel_imag=0.052080933710623063 schur_residual=2.9834864781008381e-14 orthogonality=4.4661312966254065e-15 runtime=0.378102700 status=ok
+case=route_h_member_32 dimension=2 rel_imag=0.45699926472800784 schur_residual=2.803493225585997e-14 orthogonality=6.0987279696361931e-15 runtime=0.198047100 status=ok
+case=route_h_member_54 dimension=2 rel_imag=0.13318866997388729 schur_residual=3.5787728839659821e-14 orthogonality=1.7288083499466411e-14 runtime=0.043770100 status=ok
+case=route_h_member_68 dimension=2 rel_imag=0.34153924691497661 schur_residual=1.9306251103961538e-14 orthogonality=1.5170018995765199e-14 runtime=0.047025400 status=ok
+case=route_h_member_68_legacy_dg_positive dimension=1 rel_imag=0 schur_residual=2.4974133083338406e-14 orthogonality=5.3290705182007514e-15 runtime=0.054821800 status=ok
+independent_real_schur_backend complete=20260716T145543 cases=12

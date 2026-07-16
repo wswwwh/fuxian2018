@@ -1,0 +1,49 @@
+{
+  "schema_version": "independent_schur_backend_validation_config_v1",
+  "backend_priority": [
+    "new_conda_scipy_lapack",
+    "matlab_schur_ordschur",
+    "julia_linearalgebra_schur",
+    "linux_scipy_lapack"
+  ],
+  "selected_backend": "matlab_schur_ordschur",
+  "branch": "unstable",
+  "hyperbolic_tolerance": 0.001,
+  "real_relative_imaginary_tolerance": 1e-10,
+  "near_axis_tie_tolerance": 1e-12,
+  "principal_angle_tolerance_deg": 0.0001,
+  "spectrum_relative_tolerance": 1e-8,
+  "multiplier_relative_tolerance": 1e-6,
+  "residual_order_tolerance": 2.0,
+  "pass_max_invariance_residual": 1e-6,
+  "boundary_max_invariance_residual": 0.001,
+  "pass_partial_schur_residual": 1e-8,
+  "wall_time_cap_seconds": 900,
+  "cases": [
+    "em_halo_12p40_n21",
+    "em_halo_12p40_n33",
+    "em_halo_12p40_n45",
+    "em_vertical_12p66_n33",
+    "em_vertical_12p66_n45",
+    "em_vertical_12p66_n57",
+    "se_active_geometry_member_468",
+    "route_h_member_17",
+    "route_h_member_32",
+    "route_h_member_54",
+    "route_h_member_68",
+    "route_h_member_68_legacy_dg_positive"
+  ],
+  "failed_backend_attempt": {
+    "backend": "new_conda_scipy_lapack",
+    "command": "conda create --name mccarthy-schur-validation --yes --channel conda-forge --strict-channel-priority python=3.12 numpy=2.2 scipy=1.15",
+    "date": "2026-07-16",
+    "status": "metadata_resolution_stalled_then_terminated",
+    "observation": "The command remained at Collecting package metadata (repodata.json) for more than five minutes and was terminated before an environment was created."
+  },
+  "truth_boundaries": [
+    "Research-only validation must not modify the reproduction validation table.",
+    "The frozen Chapter 4 projection holdout remains 0/4, paper_projection=fail, paper_3d=false.",
+    "Route H physical corrected-rho cases must remain two-dimensional/fail when that is what the independent backend returns.",
+    "The legacy seed-rho case is an algorithmic control, not a physical-source promotion."
+  ]
+}

@@ -1,0 +1,26 @@
+2026-07-16 first comparison-parser failure (preserved verbatim in substance)
+
+The MATLAB backend completed all 12 cases with exit code 0. The first Python
+post-processing pass then raised before writing the comparison CSV:
+
+RuntimeError: MATLAB per-case failures: {
+  'em_halo_12p40_n21': '[]',
+  'em_halo_12p40_n33': '[]',
+  'em_halo_12p40_n45': '[]',
+  'em_vertical_12p66_n33': '[]',
+  'em_vertical_12p66_n45': '[]',
+  'em_vertical_12p66_n57': '[]',
+  'se_active_geometry_member_468': '[]',
+  'route_h_member_17': '[]',
+  'route_h_member_32': '[]',
+  'route_h_member_54': '[]',
+  'route_h_member_68': '[]',
+  'route_h_member_68_legacy_dg_positive': '[]'
+}
+
+Root cause: scipy.io.loadmat represented MATLAB empty character-array error
+fields as zero-length arrays. The parser converted them to the nonempty text
+"[]" and conservatively treated every case as failed. Recovery: recognize a
+zero-length array as an empty error field, then rerun input preparation,
+MATLAB Schur/ordschur, and the entire comparison. No numerical tolerance,
+case selection, or source artifact changed.

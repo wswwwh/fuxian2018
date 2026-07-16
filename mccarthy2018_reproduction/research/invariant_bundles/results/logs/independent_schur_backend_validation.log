@@ -1,0 +1,32 @@
+start_utc=2026-07-16T06:55:30Z
+python=D:\miniconda3\envs\cislunar\python.exe
+config_sha256=13249FBF6CDEA885CB0B8144C2103DBDDBE1311B48A7B45C7BEE03AB4511AF26
+registry_sha256=B38099E93BB85AD4B97035D667A4AD5E6A74C1805B612EDEABC7AF6497C23EE5
+prepared case=em_halo_12p40_n21 shape=(126, 126) operator_sha256=5F59626A2D31124CAA2F5850603F9942FEFF43B04579BCDF5EF72BBF41CCEAEF
+prepared case=em_halo_12p40_n33 shape=(198, 198) operator_sha256=9D14426CE9996E4BB91DD588CBB8D38F232150D2C627F230FBD1A6C618A2ECEB
+prepared case=em_halo_12p40_n45 shape=(270, 270) operator_sha256=A6943875A55FA4AB72CEB2BAF947803C915752AF04E83B4ACD69CB3CD9F8CF24
+prepared case=em_vertical_12p66_n33 shape=(198, 198) operator_sha256=90156304F1E371B1BF5403E04499238775989C9A72B65C92119D9887E2CF474A
+prepared case=em_vertical_12p66_n45 shape=(270, 270) operator_sha256=D4822121F655E72392BFEEC482EA5EE712F026576F87AAD6DA89EA97B322C319
+prepared case=em_vertical_12p66_n57 shape=(342, 342) operator_sha256=740349AA138F34EE7635A914060385BB89B52A8AE1BC205B3E3FA4B9C065FDA2
+prepared case=se_active_geometry_member_468 shape=(126, 126) operator_sha256=DDFD8745E8FCCAF3E06AACF5207DC2EC71AE048B639BEEC24DD23371C625052A
+prepared case=route_h_member_17 shape=(270, 270) operator_sha256=1A49F2472983591F74A8A258E91E613DB37E5FE7B5EBDD7A4E5C86A974F922BC
+prepared case=route_h_member_32 shape=(270, 270) operator_sha256=AAFF214416D217CEDF12213547AB979EFAEB7D33756AB6280ABE878D637CD3B7
+prepared case=route_h_member_54 shape=(270, 270) operator_sha256=D515F908D31925F45A6249917E29B96A8D819EF384C5A356CD417D4F096FEB30
+prepared case=route_h_member_68 shape=(270, 270) operator_sha256=256372C952FC5C831FABF71142CD946DEB95709540D65D880A136046DC18485A
+prepared case=route_h_member_68_legacy_dg_positive shape=(270, 270) operator_sha256=65E3A8A302EEBDB738F195836C47F01A7B2FF019CA47D7694142523669EE2A64
+matlab command="C:\Program Files (x86)\MATLAB\bin\matlab.exe" -batch "addpath('C:/Users/wwh20/Desktop/复现论文/mccarthy2018_reproduction/research/invariant_bundles/independent_backend'); independent_real_schur_backend('C:/Users/wwh20/Desktop/复现论文/mccarthy2018_reproduction/research/invariant_bundles/results/independent_backend/independent_schur_input.mat','C:/Users/wwh20/Desktop/复现论文/mccarthy2018_reproduction/research/invariant_bundles/results/independent_backend/independent_schur_output.mat','C:/Users/wwh20/Desktop/复现论文/mccarthy2018_reproduction/research/invariant_bundles/results/logs/independent_schur_backend_matlab.log');"
+matlab returncode=0 elapsed_seconds=17.770747
+compared case=em_halo_12p40_n21 dim=1 internal_status=boundary independent_status=boundary angle_max_deg=1.90909591e-06 verdict=accepted
+compared case=em_halo_12p40_n33 dim=1 internal_status=accepted independent_status=accepted angle_max_deg=1.47877933e-06 verdict=accepted
+compared case=em_halo_12p40_n45 dim=1 internal_status=accepted independent_status=accepted angle_max_deg=1.47877933e-06 verdict=accepted
+compared case=em_vertical_12p66_n33 dim=1 internal_status=boundary independent_status=boundary angle_max_deg=1.20741827e-06 verdict=accepted
+compared case=em_vertical_12p66_n45 dim=1 internal_status=boundary independent_status=boundary angle_max_deg=1.47877933e-06 verdict=accepted
+compared case=em_vertical_12p66_n57 dim=1 internal_status=accepted independent_status=accepted angle_max_deg=1.20741827e-06 verdict=accepted
+compared case=se_active_geometry_member_468 dim=1 internal_status=accepted independent_status=accepted angle_max_deg=1.20741827e-06 verdict=accepted
+compared case=route_h_member_17 dim=2 internal_status=fail independent_status=fail angle_max_deg=2.41483654e-06 verdict=accepted
+compared case=route_h_member_32 dim=2 internal_status=fail independent_status=fail angle_max_deg=2.41483654e-06 verdict=accepted
+compared case=route_h_member_54 dim=2 internal_status=fail independent_status=fail angle_max_deg=2.56132094e-06 verdict=accepted
+compared case=route_h_member_68 dim=2 internal_status=fail independent_status=fail angle_max_deg=2.56132094e-06 verdict=accepted
+compared case=route_h_member_68_legacy_dg_positive dim=1 internal_status=accepted independent_status=accepted angle_max_deg=1.47877933e-06 verdict=accepted
+complete_utc=2026-07-16T06:55:49Z
+verdict_counts={"accepted": 12, "boundary": 0, "fail": 0}
