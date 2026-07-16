@@ -1,0 +1,26 @@
+reference_id,source_type,verification_date,verification_method,official_domain,doi,doi_status,metadata_status
+McCarthy2018,masters_thesis,2026-07-16,Purdue official thesis record and Purdue research-group PDF,docs.lib.purdue.edu,,not_assigned,verified
+OlikaraHowell2010,conference_paper,2026-07-16,Purdue official conference paper PDF,engineering.purdue.edu,,not_assigned,verified
+Olikara2010Thesis,masters_thesis,2026-07-16,Purdue official research-group thesis PDF,engineering.purdue.edu,,not_assigned,verified
+JorbaMasdemont1999,journal_article,2026-07-16,Elsevier publisher page and DOI registry metadata,www.sciencedirect.com,10.1016/S0167-2789(99)00042-1,verified,verified
+Jorba2001,journal_article,2026-07-16,IOP DOI landing page and DOI registry metadata,doi.org,10.1088/0951-7715/14/5/303,verified,verified
+HaroLlave2006Numerical,journal_article,2026-07-16,AIMS publisher page and DOI metadata,www.aimsciences.org,10.3934/dcdsb.2006.6.1261,verified,verified
+HaroLlave2006Rigorous,journal_article,2026-07-16,Elsevier publisher page and DOI registry metadata,www.sciencedirect.com,10.1016/j.jde.2005.10.005,verified,verified
+HaroLlave2007,journal_article,2026-07-16,SIAM publisher page and DOI metadata,epubs.siam.org,10.1137/050637327,verified,verified
+HaroEtAl2016,monograph,2026-07-16,Springer official book page and DOI metadata,link.springer.com,10.1007/978-3-319-29662-3,verified,verified
+WyshamMeiss2006,journal_article,2026-07-16,"AIP DOI landing page, PubMed record, and DOI registry metadata",doi.org,10.1063/1.2200159,verified,verified
+HuguetLlaveSire2013,official_proceedings_article,2026-07-16,AIMS publisher page and DOI metadata,www.aimsciences.org,10.3934/proc.2013.2013.323,verified,verified
+Eliasson2001,book_chapter,2026-07-16,American Mathematical Society DOI and official volume metadata,doi.org,10.1090/pspum/069/1858550,verified,verified
+DieciRussellVanVleck1994,journal_article,2026-07-16,SIAM publisher page and DOI metadata,epubs.siam.org,10.1137/0731014,verified,verified
+DieciVanVleck2002,journal_article,2026-07-16,SIAM publisher page and DOI metadata,epubs.siam.org,10.1137/S0036142901392304,verified,verified
+GinelliEtAl2007,journal_article,2026-07-16,American Physical Society publisher page and DOI metadata,journals.aps.org,10.1103/PhysRevLett.99.130601,verified,verified
+KuptsovParlitz2012,journal_article,2026-07-16,Springer publisher page and DOI metadata,link.springer.com,10.1007/s00332-012-9126-5,verified,verified
+BaiDemmel1993,journal_article,2026-07-16,Elsevier publisher page and DOI metadata,www.sciencedirect.com,10.1016/0024-3795(93)90286-W,verified,verified
+GranatKagstrom2006,journal_article,2026-07-16,SIAM publisher page and DOI metadata,epubs.siam.org,10.1137/05062490X,verified,verified
+KrauskopfEtAl2005,journal_article,2026-07-16,World Scientific DOI landing page and DOI metadata,doi.org,10.1142/S0218127405012533,verified,verified
+KoonEtAl2000,journal_article,2026-07-16,Caltech official repository record and AIP DOI metadata,authors.library.caltech.edu,10.1063/1.166509,verified,verified
+GomezEtAl2004,journal_article,2026-07-16,IOP DOI landing page and DOI registry metadata,doi.org,10.1088/0951-7715/17/5/002,verified,verified
+GuzzettiEtAl2016,journal_article,2026-07-16,"Elsevier publisher page, Purdue official conference precursor, and DOI metadata",www.sciencedirect.com,10.1016/j.actaastro.2016.06.029,verified,verified
+McCarthyHowell2021,conference_paper,2026-07-16,Purdue official conference paper PDF,engineering.purdue.edu,,not_assigned,verified
+McCarthyHowell2023,journal_article,2026-07-16,Springer publisher page and DOI metadata,link.springer.com,10.1007/s40295-023-00389-5,verified,verified
+OwenBaresi2024,journal_article,2026-07-16,Springer publisher page and DOI metadata,link.springer.com,10.1007/s42064-024-0201-0,verified,verified

@@ -1,0 +1,14 @@
+{
+  "covered_topic_count": 9,
+  "doi_not_assigned_count": 4,
+  "doi_verified_count": 21,
+  "metadata_failure_count": 0,
+  "positioning": "numerical_framework_and_systematic_comparison",
+  "reference_count": 25,
+  "required_topic_count": 9,
+  "schema_version": "invariant_bundle_literature_validation_summary_v1",
+  "status": "pass",
+  "submission_readiness": "not_claimed",
+  "truth_boundary_status": "preserved",
+  "verified_reference_count": 25
+}

@@ -1,0 +1,13 @@
+literature stage build
+started_utc=2026-07-16T08:19:15.346796+00:00
+finished_utc=2026-07-16T08:19:15.453866+00:00
+elapsed_seconds=0.107070
+config=C:\Users\wwh20\Desktop\复现论文\mccarthy2018_reproduction\research\invariant_bundles\configs\literature_verification.json
+reference_count=25
+doi_verified_count=21
+doi_not_assigned_count=4
+covered_topics=9/9
+positioning=numerical_framework_and_systematic_comparison
+metadata_failure_count=0
+truth_boundary_status=preserved
+submission_readiness=not_claimed
