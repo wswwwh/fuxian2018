@@ -1,0 +1,50 @@
+start_utc=2026-07-16T07:23:41Z
+run_id=20260716T072341Z
+config_sha256=AA7610729AA85ACCC79B8E600EF4A3C9ABE8774B3FBCFE67D3A7DC22319CE1FA
+registry_sha256=B38099E93BB85AD4B97035D667A4AD5E6A74C1805B612EDEABC7AF6497C23EE5
+source_git_commit=5a50a8ad86743761025a61116f5dbb12c1934607
+case_start case=em_halo_12p40_n45 fine_n=45 coarse=em_halo_12p40_n33 schur_dim=1
+case_start case=em_vertical_12p66_n57 fine_n=57 coarse=em_vertical_12p66_n45 schur_dim=1
+case_start case=se_active_geometry_member_468 fine_n=21 coarse=diagnostic_fourier_n15 schur_dim=1
+case_start case=route_h_member_68 fine_n=45 coarse=diagnostic_fourier_n33 schur_dim=2
+case_start case=route_h_member_32 fine_n=45 coarse=diagnostic_fourier_n33 schur_dim=2
+row case=em_halo_12p40_n45 variant=pointwise_eig_no_phase_alignment status=fail dimension=1 residual=0.16160936728506684 runtime=0.0023871000012150034
+row case=em_halo_12p40_n45 variant=pointwise_eig_sign_alignment_only status=fail dimension=1 residual=0.12403018711264782 runtime=0.0037644000040018
+row case=em_halo_12p40_n45 variant=partial_real_schur_no_phase_tracking status=accepted dimension=1 residual=5.998715603949399e-11 runtime=0.062278100005642045
+row case=em_halo_12p40_n45 variant=partial_real_schur_phase_tracking status=accepted dimension=1 residual=5.998696454080925e-11 runtime=0.07411310000316007
+row case=em_halo_12p40_n45 variant=qr_svd_no_phase_alignment status=accepted dimension=1 residual=4.4027319003519185e-12 runtime=0.019011399999726564
+row case=em_halo_12p40_n45 variant=qr_svd_phase_alignment status=accepted dimension=1 residual=4.402709619572765e-12 runtime=0.09069910000107484
+row case=em_halo_12p40_n45 variant=qr_svd_phase_alignment_schur_dimension_seed status=accepted dimension=1 residual=4.402709619572765e-12 runtime=0.08998489999794401
+row case=em_vertical_12p66_n57 variant=pointwise_eig_no_phase_alignment status=fail dimension=1 residual=0.16048882554909272 runtime=0.002790900005493313
+row case=em_vertical_12p66_n57 variant=pointwise_eig_sign_alignment_only status=fail dimension=1 residual=0.15981439053762933 runtime=0.004784699995070696
+row case=em_vertical_12p66_n57 variant=partial_real_schur_no_phase_tracking status=accepted dimension=1 residual=6.373404336171554e-08 runtime=0.09769890000461601
+row case=em_vertical_12p66_n57 variant=partial_real_schur_phase_tracking status=accepted dimension=1 residual=6.373404342531289e-08 runtime=0.11575040000025183
+row case=em_vertical_12p66_n57 variant=qr_svd_no_phase_alignment status=accepted dimension=1 residual=3.890772673283043e-09 runtime=0.02536349999718368
+row case=em_vertical_12p66_n57 variant=qr_svd_phase_alignment status=accepted dimension=1 residual=3.890772613996416e-09 runtime=0.17049980000592768
+row case=em_vertical_12p66_n57 variant=qr_svd_phase_alignment_schur_dimension_seed status=accepted dimension=1 residual=3.890772613996416e-09 runtime=0.13187570000445703
+row case=se_active_geometry_member_468 variant=pointwise_eig_no_phase_alignment status=fail dimension=1 residual=0.16420905801806215 runtime=0.0011204999973415397
+row case=se_active_geometry_member_468 variant=pointwise_eig_sign_alignment_only status=fail dimension=1 residual=0.14338814917799492 runtime=0.002394600000116043
+row case=se_active_geometry_member_468 variant=partial_real_schur_no_phase_tracking status=accepted dimension=1 residual=6.542693099748203e-07 runtime=0.02842410000448581
+row case=se_active_geometry_member_468 variant=partial_real_schur_phase_tracking status=accepted dimension=1 residual=6.542693099748203e-07 runtime=0.03297839999868302
+row case=se_active_geometry_member_468 variant=qr_svd_no_phase_alignment status=accepted dimension=1 residual=9.471927263847928e-09 runtime=0.008503899996867403
+row case=se_active_geometry_member_468 variant=qr_svd_phase_alignment status=accepted dimension=1 residual=9.471927263010407e-09 runtime=0.0400831000006292
+row case=se_active_geometry_member_468 variant=qr_svd_phase_alignment_schur_dimension_seed status=accepted dimension=1 residual=9.471927263010407e-09 runtime=0.04046599999855971
+row case=route_h_member_68 variant=pointwise_eig_no_phase_alignment status=fail dimension=0 residual=nan runtime=0.0
+row case=route_h_member_68 variant=pointwise_eig_sign_alignment_only status=fail dimension=0 residual=nan runtime=0.0
+row case=route_h_member_68 variant=partial_real_schur_no_phase_tracking status=fail dimension=2 residual=0.8126024262485982 runtime=0.07622730000002775
+row case=route_h_member_68 variant=partial_real_schur_phase_tracking status=fail dimension=2 residual=0.1649902199855227 runtime=0.08848939999734284
+row case=route_h_member_68 variant=qr_svd_no_phase_alignment status=fail dimension=1 residual=0.00195539491876543 runtime=0.7980570000072476
+row case=route_h_member_68 variant=qr_svd_phase_alignment status=fail dimension=1 residual=0.001955394751787983 runtime=1.393889399994805
+row case=route_h_member_68 variant=qr_svd_phase_alignment_schur_dimension_seed status=fail dimension=2 residual=0.8975552238288886 runtime=1.9500190000035218
+row case=route_h_member_32 variant=pointwise_eig_no_phase_alignment status=fail dimension=0 residual=nan runtime=0.0
+row case=route_h_member_32 variant=pointwise_eig_sign_alignment_only status=fail dimension=0 residual=nan runtime=0.0
+row case=route_h_member_32 variant=partial_real_schur_no_phase_tracking status=fail dimension=2 residual=0.6537227101808574 runtime=0.07492980000097305
+row case=route_h_member_32 variant=partial_real_schur_phase_tracking status=fail dimension=2 residual=0.4278835886004915 runtime=0.08736850000423146
+row case=route_h_member_32 variant=qr_svd_no_phase_alignment status=fail dimension=1 residual=0.0016332978783602892 runtime=0.6895088999954169
+row case=route_h_member_32 variant=qr_svd_phase_alignment status=fail dimension=1 residual=0.0016332978783414546 runtime=1.3901930000065477
+row case=route_h_member_32 variant=qr_svd_phase_alignment_schur_dimension_seed status=fail dimension=2 residual=0.9298896769453022 runtime=1.9186123999970732
+rows=35
+status_counts={"accepted": 15, "fail": 20}
+method_exceptions=4
+elapsed_seconds=19.718536
+complete_utc=2026-07-16T07:24:01Z

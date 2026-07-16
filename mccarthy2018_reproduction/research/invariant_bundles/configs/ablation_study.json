@@ -1,0 +1,52 @@
+{
+  "schema_version": "invariant_bundle_ablation_config_v1",
+  "cases": [
+    "em_halo_12p40_n45",
+    "em_vertical_12p66_n57",
+    "se_active_geometry_member_468",
+    "route_h_member_68",
+    "route_h_member_32"
+  ],
+  "complex_pair_negative_control": "route_h_member_32",
+  "variants": [
+    "pointwise_eig_no_phase_alignment",
+    "pointwise_eig_sign_alignment_only",
+    "partial_real_schur_no_phase_tracking",
+    "partial_real_schur_phase_tracking",
+    "qr_svd_no_phase_alignment",
+    "qr_svd_phase_alignment",
+    "qr_svd_phase_alignment_schur_dimension_seed"
+  ],
+  "variant_short_labels": {
+    "pointwise_eig_no_phase_alignment": "V1",
+    "pointwise_eig_sign_alignment_only": "V2",
+    "partial_real_schur_no_phase_tracking": "V3",
+    "partial_real_schur_phase_tracking": "V4",
+    "qr_svd_no_phase_alignment": "V5",
+    "qr_svd_phase_alignment": "V6",
+    "qr_svd_phase_alignment_schur_dimension_seed": "V7"
+  },
+  "cross_resolution_sources": {
+    "em_halo_12p40_n45": "em_halo_12p40_n33",
+    "em_vertical_12p66_n57": "em_vertical_12p66_n45",
+    "se_active_geometry_member_468": "diagnostic_fourier_n15",
+    "route_h_member_68": "diagnostic_fourier_n33",
+    "route_h_member_32": "diagnostic_fourier_n33"
+  },
+  "qr_iteration_cap": 200,
+  "qr_angle_tolerance_deg": 2e-6,
+  "hyperbolic_tolerance": 0.001,
+  "real_relative_imaginary_tolerance": 1e-10,
+  "pass_max_invariance_residual": 1e-6,
+  "boundary_max_invariance_residual": 0.001,
+  "geometry_metric": "symmetric_hd95_of_one_map_linearized_position_displacement_cloud",
+  "geometry_circle_directions_for_rank2": 16,
+  "wall_time_cap_seconds": 600,
+  "figure_dpi": 300,
+  "truth_boundaries": [
+    "The rank-one QR variants on a complex-pair case are invalid ablation controls and can never be accepted as physical bundles.",
+    "The one-map geometry metric is a local linearized ablation diagnostic, not a replacement for Stage-F nonlinear manifold convergence.",
+    "Method exceptions remain explicit NaN rows and visible figure markers.",
+    "No reproduction or Chapter 4 gate is modified."
+  ]
+}
