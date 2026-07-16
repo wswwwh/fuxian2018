@@ -1,0 +1,47 @@
+{
+  "bundle_cases": 15,
+  "bundle_rows": 45,
+  "bundle_status_counts": {
+    "accepted": 17,
+    "boundary": 4,
+    "fail": 24
+  },
+  "fresh_cocycle_files": 15,
+  "manifold_cases": 7,
+  "manifold_rows": 126,
+  "manifold_status_counts": {
+    "accepted": 36,
+    "fail": 90
+  },
+  "output_is_outside_checkout": true,
+  "processes": [
+    {
+      "console_log": "C:\\Users\\wwh20\\AppData\\Local\\Temp\\mccarthy_ci_full_validation_stage6\\logs\\bundle_console.log",
+      "console_log_sha256": "6A4F8E19A3FFB22E8DBBD37962856A01E5ADA4F39DA08BC999E42ABFE74C3431",
+      "elapsed_seconds": 44.4762818813324,
+      "return_code": 0,
+      "stage": "bundle"
+    },
+    {
+      "console_log": "C:\\Users\\wwh20\\AppData\\Local\\Temp\\mccarthy_ci_full_validation_stage6\\logs\\manifold_console.log",
+      "console_log_sha256": "14F2E8C552DBB6B162102E41142E493E9DA39148FF605A82183257AF6CF07DE7",
+      "elapsed_seconds": 28.604424715042114,
+      "return_code": 0,
+      "stage": "manifold"
+    }
+  ],
+  "route_h_legacy_schur": {
+    "bundle_dimension": 1,
+    "status": "accepted"
+  },
+  "route_h_physical_schur": {
+    "bundle_dimension": 2,
+    "status": "fail"
+  },
+  "run_id": "CI-FULL-20260716T074905Z-E18AED40",
+  "schema_checks": 15,
+  "schema_failures": [],
+  "schema_version": "ci_full_research_validation_summary_v1",
+  "status": "PASS",
+  "truth_boundary": "Full CI validates reproducibility and schemas only. It does not change the frozen reproduction level, the Chapter 4 0/4 holdout, or submission-readiness status."
+}

@@ -1,0 +1,62 @@
+case 1/15 em_halo_12p40_n21 N=21 source=pass cache=write
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=1.235e-01 time=0.018s
+  ordered_partial_real_schur_tracking: boundary dim=1 max_res=8.122e-06 time=0.046s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=6.687e-07 time=0.084s
+case 2/15 em_halo_12p40_n33 N=33 source=pass cache=write
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=1.245e-01 time=0.034s
+  ordered_partial_real_schur_tracking: accepted dim=1 max_res=2.054e-08 time=0.068s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=2.117e-09 time=0.154s
+case 3/15 em_halo_12p40_n45 N=45 source=pass cache=write
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=1.240e-01 time=0.043s
+  ordered_partial_real_schur_tracking: accepted dim=1 max_res=5.999e-11 time=0.105s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=4.403e-12 time=0.193s
+case 4/15 em_halo_12p09_n15_small N=15 source=pass cache=write
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=8.248e-02 time=0.012s
+  ordered_partial_real_schur_tracking: accepted dim=1 max_res=3.936e-09 time=0.015s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=7.518e-11 time=0.046s
+case 5/15 em_halo_12p097_n9_lowres_negative N=9 source=pass cache=write
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=8.258e-02 time=0.007s
+  ordered_partial_real_schur_tracking: boundary dim=1 max_res=4.885e-06 time=0.008s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=1.012e-07 time=0.026s
+case 6/15 em_vertical_12p66_n33 N=33 source=pass cache=write
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=1.590e-01 time=0.030s
+  ordered_partial_real_schur_tracking: boundary dim=1 max_res=3.804e-05 time=0.064s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=8.507e-07 time=0.153s
+case 7/15 em_vertical_12p66_n45 N=45 source=pass cache=write
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=1.614e-01 time=0.042s
+  ordered_partial_real_schur_tracking: boundary dim=1 max_res=1.103e-06 time=0.106s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=8.006e-08 time=0.196s
+case 8/15 em_vertical_12p66_n57 N=57 source=pass cache=write
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=1.598e-01 time=0.061s
+  ordered_partial_real_schur_tracking: accepted dim=1 max_res=6.373e-08 time=0.158s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=3.891e-09 time=0.280s
+case 9/15 route_h_member_68 N=45 source=pass cache=write
+  traditional_pointwise_eigendecomposition: fail RuntimeError: cocycle operator has no unstable hyperbolic spectrum
+  ordered_partial_real_schur_tracking: fail dim=2 max_res=1.650e-01 time=0.129s
+  qr_svd_shifted_cocycle_iteration: fail dim=2 max_res=8.976e-01 time=6.235s
+case 10/15 route_h_member_17 N=45 source=pass cache=write
+  traditional_pointwise_eigendecomposition: fail RuntimeError: cocycle operator has no unstable hyperbolic spectrum
+  ordered_partial_real_schur_tracking: fail dim=2 max_res=1.951e-01 time=0.128s
+  qr_svd_shifted_cocycle_iteration: fail dim=2 max_res=9.790e-01 time=6.024s
+case 11/15 route_h_member_32 N=45 source=pass cache=write
+  traditional_pointwise_eigendecomposition: fail RuntimeError: cocycle operator has no unstable hyperbolic spectrum
+  ordered_partial_real_schur_tracking: fail dim=2 max_res=4.279e-01 time=0.122s
+  qr_svd_shifted_cocycle_iteration: fail dim=2 max_res=9.299e-01 time=6.012s
+case 12/15 route_h_member_54 N=45 source=pass cache=write
+  traditional_pointwise_eigendecomposition: fail RuntimeError: cocycle operator has no unstable hyperbolic spectrum
+  ordered_partial_real_schur_tracking: fail dim=2 max_res=1.549e-01 time=0.121s
+  qr_svd_shifted_cocycle_iteration: fail dim=2 max_res=7.063e-01 time=5.916s
+case 13/15 route_h_member_68_legacy_dg_positive N=45 source=pass cache=write
+  traditional_pointwise_eigendecomposition: fail RuntimeError: cocycle operator has no unstable hyperbolic spectrum
+  ordered_partial_real_schur_tracking: accepted dim=1 max_res=1.203e-09 time=0.125s
+  qr_svd_shifted_cocycle_iteration: fail dim=1 max_res=3.646e-03 time=4.843s
+case 14/15 se_active_geometry_member_468 N=21 source=pass cache=write
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=1.434e-01 time=0.018s
+  ordered_partial_real_schur_tracking: accepted dim=1 max_res=6.543e-07 time=0.046s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=9.472e-09 time=0.090s
+case 15/15 se_quasi_halo_small_n21 N=21 source=pass cache=write
+  traditional_pointwise_eigendecomposition: fail dim=1 max_res=9.908e-03 time=0.018s
+  ordered_partial_real_schur_tracking: accepted dim=1 max_res=3.479e-07 time=0.043s
+  qr_svd_shifted_cocycle_iteration: accepted dim=1 max_res=1.952e-09 time=0.079s
+invariant-bundle benchmark WRITE PASS cases=15 rows=45 statuses={'fail': 24, 'boundary': 4, 'accepted': 17} elapsed=42.711s stage_f=not_run
+CI research worker PASS stage=bundle pid=11216

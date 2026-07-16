@@ -1,0 +1,61 @@
+{
+  "config_sha256": "D212F2997817D1ADEC1C9316C3F95A3DA64F81BE744CB2BCA9883AAE51896FB7",
+  "files": [
+    {
+      "bytes": 31621,
+      "path": "research/invariant_bundles/results/csv/method_comparison.csv",
+      "sha256": "0B66A89B13926BAF90114741796EA1128AC39A6C62BB092B4A1018B97CDEB88B"
+    },
+    {
+      "bytes": 214491,
+      "path": "research/invariant_bundles/results/npz/method_comparison.npz",
+      "sha256": "5BEE3AF6EC59F598B04D9B60BC2147A608AF9EDF45F9FC0DC3FADA2B31343571"
+    },
+    {
+      "bytes": 94007,
+      "path": "research/invariant_bundles/results/csv/manifold_convergence.csv",
+      "sha256": "248A1F8CB8F958640D526CFFC2859AC3AEDF697BEE5BDAF78EBED95AD898FB8E"
+    },
+    {
+      "bytes": 10665588,
+      "path": "research/invariant_bundles/results/npz/manifold_convergence.npz",
+      "sha256": "27AB963691BEE9DAD03A2C1D9D72A092D4AFD2313368764E7E43C9801A4D088E"
+    },
+    {
+      "bytes": 679,
+      "path": "research/invariant_bundles/results/logs/benchmark_campaign_summary.json",
+      "sha256": "B59E82CEAD7AC26738FBC4069AD683C5567F118F93C51020A81BC5497773CBC6"
+    },
+    {
+      "bytes": 755,
+      "path": "research/invariant_bundles/results/logs/manifold_campaign_summary.json",
+      "sha256": "E2680FBFE502DBA703BD595DD27B1D51D5E8F68696F4CC4EEFD9946AED82C571"
+    },
+    {
+      "bytes": 48003,
+      "path": "data/computed/figure_validation_table.csv",
+      "sha256": "7320C85E85B874135C8CE3CE81C7E890A01E3D0FA1F5234D5A87999DF04AFBBB"
+    },
+    {
+      "bytes": 16863,
+      "path": "data/computed/mccarthy2018_staged_goal_gate_status.csv",
+      "sha256": "85074D02EC944CBA74693DAF84A93C77B21A330424ACD03FED3DB755C4B651D6"
+    },
+    {
+      "bytes": 10952,
+      "path": "docs/mccarthy2018_staged_goal_gate_status.md",
+      "sha256": "D051B4AB8A07BE5CB7112D167569F50E4DC9F98A055967FF84B986BCA8B9DF1B"
+    },
+    {
+      "bytes": 5593,
+      "path": "data/computed/chapter4_fig43_fig46_projection_holdout_audit.csv",
+      "sha256": "6C5390F938E6E0D882152E59BBDD05BAA4EA04EAC2FA092052DF9AB624688FB1"
+    },
+    {
+      "bytes": 2332,
+      "path": "data/computed/chapter4_fig43_fig46_projection_fit_lock.json",
+      "sha256": "D2767E61A3EBF428ED8242CA00EDE441FF2C0666189E062397AA928277E43374"
+    }
+  ],
+  "schema_version": "ci_authoritative_snapshot_v1"
+}

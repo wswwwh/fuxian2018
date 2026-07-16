@@ -1,0 +1,17 @@
+{
+  "checks": 28,
+  "failed": 0,
+  "failed_check_ids": [],
+  "fast_workflow": ".github/workflows/ci.yml",
+  "full_workflow": ".github/workflows/full_research_validation.yml",
+  "passed": 28,
+  "schema_version": "github_actions_contract_summary_v1",
+  "status": "PASS",
+  "truth_boundary": [
+    "CI writes generated numerical outputs only below runner.temp or an explicitly non-authoritative evidence directory.",
+    "CI may not overwrite committed authoritative results.",
+    "The frozen Chapter 4 projection holdout remains 0/4 with paper_projection=fail and paper_3d=false.",
+    "Route H physical corrected-rho cases remain distinct from the legacy seed-rho positive control.",
+    "A passing CI run does not promote the frozen McCarthy reproduction level or establish submission readiness."
+  ]
+}

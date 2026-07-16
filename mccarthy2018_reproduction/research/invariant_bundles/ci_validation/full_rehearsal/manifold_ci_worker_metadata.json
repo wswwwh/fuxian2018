@@ -1,0 +1,10 @@
+{
+  "completed_utc": "2026-07-16T07:50:18Z",
+  "pid": 16844,
+  "python_executable": "D:\\miniconda3\\envs\\cislunar\\python.exe",
+  "run_id": "CI-FULL-20260716T074905Z-E18AED40",
+  "schema_version": "ci_full_research_worker_v1",
+  "stage": "manifold",
+  "started_utc": "2026-07-16T07:49:51Z",
+  "status": "complete"
+}

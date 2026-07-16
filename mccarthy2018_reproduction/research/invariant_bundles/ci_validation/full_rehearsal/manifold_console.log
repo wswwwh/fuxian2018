@@ -1,0 +1,9 @@
+manifold case 1/7 em_halo_12p40_n21 N=21 duration=12.397982010d
+manifold case 2/7 em_halo_12p40_n33 N=33 duration=12.397982010d
+manifold case 3/7 em_halo_12p40_n45 N=45 duration=12.397982010d
+manifold case 4/7 em_vertical_12p66_n33 N=33 duration=12.668178544d
+manifold case 5/7 em_vertical_12p66_n45 N=45 duration=12.668178544d
+manifold case 6/7 em_vertical_12p66_n57 N=57 duration=12.668178544d
+manifold case 7/7 se_active_geometry_member_468 N=21 duration=177.450764067d
+invariant-bundle manifold WRITE PASS cases=7 rows=126 statuses={'fail': 90, 'accepted': 36} elapsed=26.934s
+CI research worker PASS stage=manifold pid=16844

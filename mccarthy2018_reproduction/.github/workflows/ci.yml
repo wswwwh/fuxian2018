@@ -1,0 +1,97 @@
+name: Fast CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fast-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fast-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      MPLBACKEND: Agg
+      PYTHONHASHSEED: "0"
+      PYTHONPATH: src
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install package and workflow validator
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e . PyYAML
+
+      - name: Snapshot authoritative research results
+        run: >-
+          python scripts/verify_ci_authoritative_immutability.py snapshot
+          --manifest "${RUNNER_TEMP}/authoritative_before.json"
+
+      - name: Import checks
+        run: |
+          python -c "import qp_orbits; import qp_orbits.invariant_bundles; import qp_orbits.quasi_torus; import qp_orbits.cr3bp"
+
+      - name: Benchmark registry integrity
+        run: python -m unittest tests.test_invariant_bundle_benchmark_registry -v
+
+      - name: Small synthetic bundle tests
+        run: >-
+          python -m unittest
+          tests.test_bundle_phase_alignment
+          tests.test_invariant_bundle_residual
+          tests.test_real_schur_selection
+          tests.test_complex_pair_subspace_handling
+          -v
+
+      - name: One small physical benchmark
+        run: >-
+          python scripts/run_ci_small_physical_benchmark.py
+          --output-dir "${RUNNER_TEMP}/fast_ci_physical"
+
+      - name: Document registry consistency
+        run: python -m unittest tests.test_stage_g_delivery_artifacts -v
+
+      - name: Validate workflow contracts
+        run: >-
+          python scripts/validate_github_actions_workflows.py
+          --output-dir "${RUNNER_TEMP}/workflow_contracts"
+
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Verify authoritative results are unchanged
+        run: >-
+          python scripts/verify_ci_authoritative_immutability.py compare
+          --manifest "${RUNNER_TEMP}/authoritative_before.json"
+          --report "${RUNNER_TEMP}/authoritative_before_after.csv"
+
+      - name: Repository cleanliness and whitespace
+        shell: bash
+        run: |
+          git diff --check
+          test -z "$(git status --porcelain)"
+
+      - name: Upload fast-CI evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: fast-ci-evidence-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/fast_ci_physical
+            ${{ runner.temp }}/workflow_contracts
+            ${{ runner.temp }}/authoritative_before.json
+            ${{ runner.temp }}/authoritative_before_after.csv
+          if-no-files-found: warn
+          retention-days: 14

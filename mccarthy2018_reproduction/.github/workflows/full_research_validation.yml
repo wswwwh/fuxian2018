@@ -1,0 +1,75 @@
+name: Full Research Validation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: full-research-validation-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  isolated-research-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      MPLBACKEND: Agg
+      PYTHONHASHSEED: "0"
+      PYTHONPATH: src
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install package and workflow validator
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e . PyYAML
+
+      - name: Snapshot authoritative research results
+        run: >-
+          python scripts/verify_ci_authoritative_immutability.py snapshot
+          --manifest "${RUNNER_TEMP}/authoritative_before.json"
+
+      - name: Run isolated 15-case bundle and selected manifold validation
+        run: >-
+          python scripts/run_ci_full_research_validation.py
+          --output-root "${RUNNER_TEMP}/full_research_validation"
+          --max-bundle-wall-seconds 1800
+          --max-manifold-wall-seconds 1800
+
+      - name: Result schema checks
+        run: >-
+          python scripts/run_ci_full_research_validation.py
+          --check-only
+          --output-root "${RUNNER_TEMP}/full_research_validation"
+
+      - name: Verify authoritative results are unchanged
+        run: >-
+          python scripts/verify_ci_authoritative_immutability.py compare
+          --manifest "${RUNNER_TEMP}/authoritative_before.json"
+          --report "${RUNNER_TEMP}/full_research_validation/authoritative_before_after.csv"
+
+      - name: Repository cleanliness and whitespace
+        shell: bash
+        run: |
+          git diff --check
+          test -z "$(git status --porcelain)"
+
+      - name: Upload full validation artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: full-research-validation-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/full_research_validation
+            ${{ runner.temp }}/authoritative_before.json
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,57 @@
+{
+  "schema_version": "invariant_bundle_ci_validation_config_v1",
+  "python_version": "3.11",
+  "fast_ci": {
+    "small_physical_case": "em_halo_12p09_n15_small",
+    "expected_bundle_dimension": 1,
+    "max_schur_invariance_residual": 1e-6,
+    "max_qr_invariance_residual": 1e-6,
+    "required_checks": [
+      "import_checks",
+      "unit_tests",
+      "benchmark_registry_integrity",
+      "small_synthetic_bundle_tests",
+      "one_small_physical_benchmark",
+      "document_registry_consistency",
+      "git_diff_check"
+    ]
+  },
+  "full_validation": {
+    "bundle_cases": 15,
+    "bundle_methods": 3,
+    "bundle_rows": 45,
+    "selected_manifold_cases": 7,
+    "manifold_methods": 3,
+    "perturbations": 3,
+    "signs": 2,
+    "manifold_rows": 126,
+    "fresh_cocycle_files": 15
+  },
+  "authoritative_files_protected": [
+    "research/invariant_bundles/results/csv/method_comparison.csv",
+    "research/invariant_bundles/results/npz/method_comparison.npz",
+    "research/invariant_bundles/results/csv/manifold_convergence.csv",
+    "research/invariant_bundles/results/npz/manifold_convergence.npz",
+    "research/invariant_bundles/results/logs/benchmark_campaign_summary.json",
+    "research/invariant_bundles/results/logs/manifold_campaign_summary.json",
+    "data/computed/figure_validation_table.csv",
+    "data/computed/mccarthy2018_staged_goal_gate_status.csv",
+    "docs/mccarthy2018_staged_goal_gate_status.md",
+    "data/computed/chapter4_fig43_fig46_projection_holdout_audit.csv",
+    "data/computed/chapter4_fig43_fig46_projection_fit_lock.json"
+  ],
+  "workflow_contract": {
+    "checkout_action": "actions/checkout@v6",
+    "setup_python_action": "actions/setup-python@v6",
+    "upload_artifact_action": "actions/upload-artifact@v7",
+    "fast_workflow": ".github/workflows/ci.yml",
+    "full_workflow": ".github/workflows/full_research_validation.yml"
+  },
+  "truth_boundaries": [
+    "CI writes generated numerical outputs only below runner.temp or an explicitly non-authoritative evidence directory.",
+    "CI may not overwrite committed authoritative results.",
+    "The frozen Chapter 4 projection holdout remains 0/4 with paper_projection=fail and paper_3d=false.",
+    "Route H physical corrected-rho cases remain distinct from the legacy seed-rho positive control.",
+    "A passing CI run does not promote the frozen McCarthy reproduction level or establish submission readiness."
+  ]
+}

@@ -1,0 +1,3 @@
+schema_version,case_id,method,bundle_dimension,classification,max_invariance_residual,mean_invariance_residual,selection_residual,iterations,converged,acceptance_limit,status
+ci_small_physical_benchmark_v1,em_halo_12p09_n15_small,ordered_real_schur_tracking,1,real_1d_hyperbolic_bundle,3.9364016450657124e-09,3.3010342251087943e-09,2.041841628071512e-15,0,true,1e-06,pass
+ci_small_physical_benchmark_v1,em_halo_12p09_n15_small,qr_svd_shifted_cocycle_iteration,1,real_1d_hyperbolic_bundle,7.517655815932932e-11,6.101821839958799e-11,1.2074182697257333e-06,4,true,1e-06,pass

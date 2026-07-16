@@ -1,0 +1,9 @@
+{
+  "full_rehearsal_status": "PASS",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "python": "3.11.15 | packaged by conda-forge | (main, Jun 11 2026, 03:27:10) [MSC v.1944 64 bit (AMD64)]",
+  "python_executable": "D:\\miniconda3\\envs\\cislunar\\python.exe",
+  "schema_version": "ci_stage_environment_v1",
+  "small_physical_status": "PASS",
+  "workflow_contract_status": "PASS"
+}

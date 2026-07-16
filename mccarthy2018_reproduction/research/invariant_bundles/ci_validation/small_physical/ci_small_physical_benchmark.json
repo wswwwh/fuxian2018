@@ -1,0 +1,42 @@
+{
+  "case_id": "em_halo_12p09_n15_small",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "python": "3.11.15 | packaged by conda-forge | (main, Jun 11 2026, 03:27:10) [MSC v.1944 64 bit (AMD64)]",
+  "registry_sha256": "B38099E93BB85AD4B97035D667A4AD5E6A74C1805B612EDEABC7AF6497C23EE5",
+  "results": [
+    {
+      "acceptance_limit": 1e-06,
+      "bundle_dimension": 1,
+      "case_id": "em_halo_12p09_n15_small",
+      "classification": "real_1d_hyperbolic_bundle",
+      "converged": "true",
+      "iterations": 0,
+      "max_invariance_residual": 3.9364016450657124e-09,
+      "mean_invariance_residual": 3.3010342251087943e-09,
+      "method": "ordered_real_schur_tracking",
+      "schema_version": "ci_small_physical_benchmark_v1",
+      "selection_residual": 2.041841628071512e-15,
+      "status": "pass"
+    },
+    {
+      "acceptance_limit": 1e-06,
+      "bundle_dimension": 1,
+      "case_id": "em_halo_12p09_n15_small",
+      "classification": "real_1d_hyperbolic_bundle",
+      "converged": "true",
+      "iterations": 4,
+      "max_invariance_residual": 7.517655815932932e-11,
+      "mean_invariance_residual": 6.101821839958799e-11,
+      "method": "qr_svd_shifted_cocycle_iteration",
+      "schema_version": "ci_small_physical_benchmark_v1",
+      "selection_residual": 1.2074182697257333e-06,
+      "status": "pass"
+    }
+  ],
+  "schema_version": "ci_small_physical_benchmark_summary_v1",
+  "source_cocycle": "research/invariant_bundles/results/npz/cocycles/em_halo_12p09_n15_small_2db891b74320e5405c88.npz",
+  "source_cocycle_sha256": "4CB742CD94C196438B9859E477AA315BBC9160365E0BAECEDA814D82ADBB894B",
+  "source_kind": "committed_cocycle_read_only",
+  "status": "PASS",
+  "truth_boundary": "This smoke benchmark does not change the frozen reproduction level, Chapter 4 holdout, or Route H classifications."
+}

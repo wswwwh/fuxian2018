@@ -1,0 +1,11 @@
+{
+  "completed_utc": "2026-07-16T07:49:49Z",
+  "fresh_cocycle_files": 15,
+  "pid": 11216,
+  "python_executable": "D:\\miniconda3\\envs\\cislunar\\python.exe",
+  "run_id": "CI-FULL-20260716T074905Z-E18AED40",
+  "schema_version": "ci_full_research_worker_v1",
+  "stage": "bundle",
+  "started_utc": "2026-07-16T07:49:06Z",
+  "status": "complete"
+}
