@@ -1,0 +1,50 @@
+start_utc=2026-07-16T07:07:21Z
+run_id=20260716T070721Z
+config_sha256=4885BAFDC4D9F8CC327D3EEA8E74105F31480706248FF5DC4E0233CF9E176388
+registry_sha256=B38099E93BB85AD4B97035D667A4AD5E6A74C1805B612EDEABC7AF6497C23EE5
+source_git_commit=3aae9580d762bf44a2d6b251b4e40e4e1c16e896
+case_start index=1/5 case=route_h_member_17 dimension=2
+trajectory case=route_h_member_17 resolution=native_n45 init=local_svd iterations=1000 final_angle_deg=88.5570361 elapsed_seconds=9.420890
+trajectory case=route_h_member_17 resolution=native_n45 init=schur_seed iterations=1000 final_angle_deg=89.9320026 elapsed_seconds=9.397631
+trajectory case=route_h_member_17 resolution=native_n45 init=deterministic_random iterations=1000 final_angle_deg=89.896248 elapsed_seconds=9.595086
+trajectory case=route_h_member_17 resolution=fourier_lift_n67 init=local_svd iterations=1000 final_angle_deg=88.3537212 elapsed_seconds=13.853075
+trajectory case=route_h_member_17 resolution=fourier_lift_n67 init=schur_seed iterations=1000 final_angle_deg=89.8332719 elapsed_seconds=14.253722
+trajectory case=route_h_member_17 resolution=fourier_lift_n67 init=deterministic_random iterations=1000 final_angle_deg=89.692356 elapsed_seconds=13.835506
+case_start index=2/5 case=route_h_member_32 dimension=2
+trajectory case=route_h_member_32 resolution=native_n45 init=local_svd iterations=1000 final_angle_deg=88.7953636 elapsed_seconds=9.303731
+trajectory case=route_h_member_32 resolution=native_n45 init=schur_seed iterations=1000 final_angle_deg=89.3817274 elapsed_seconds=9.826010
+trajectory case=route_h_member_32 resolution=native_n45 init=deterministic_random iterations=1000 final_angle_deg=89.4532834 elapsed_seconds=9.387258
+trajectory case=route_h_member_32 resolution=fourier_lift_n67 init=local_svd iterations=1000 final_angle_deg=89.350458 elapsed_seconds=13.981769
+trajectory case=route_h_member_32 resolution=fourier_lift_n67 init=schur_seed iterations=1000 final_angle_deg=89.4196725 elapsed_seconds=14.242461
+trajectory case=route_h_member_32 resolution=fourier_lift_n67 init=deterministic_random iterations=1000 final_angle_deg=89.4989286 elapsed_seconds=13.872767
+case_start index=3/5 case=route_h_member_54 dimension=2
+trajectory case=route_h_member_54 resolution=native_n45 init=local_svd iterations=1000 final_angle_deg=89.9152341 elapsed_seconds=9.572694
+trajectory case=route_h_member_54 resolution=native_n45 init=schur_seed iterations=1000 final_angle_deg=89.2007704 elapsed_seconds=9.341153
+trajectory case=route_h_member_54 resolution=native_n45 init=deterministic_random iterations=1000 final_angle_deg=89.5372754 elapsed_seconds=9.593331
+trajectory case=route_h_member_54 resolution=fourier_lift_n67 init=local_svd iterations=1000 final_angle_deg=88.2216273 elapsed_seconds=14.064895
+trajectory case=route_h_member_54 resolution=fourier_lift_n67 init=schur_seed iterations=1000 final_angle_deg=89.6910268 elapsed_seconds=13.943019
+trajectory case=route_h_member_54 resolution=fourier_lift_n67 init=deterministic_random iterations=1000 final_angle_deg=89.6903533 elapsed_seconds=14.248868
+case_start index=4/5 case=route_h_member_68 dimension=2
+trajectory case=route_h_member_68 resolution=native_n45 init=local_svd iterations=1000 final_angle_deg=87.9890191 elapsed_seconds=9.473124
+trajectory case=route_h_member_68 resolution=native_n45 init=schur_seed iterations=1000 final_angle_deg=89.9283399 elapsed_seconds=9.439470
+trajectory case=route_h_member_68 resolution=native_n45 init=deterministic_random iterations=1000 final_angle_deg=86.6189973 elapsed_seconds=9.625659
+trajectory case=route_h_member_68 resolution=fourier_lift_n67 init=local_svd iterations=1000 final_angle_deg=89.5581538 elapsed_seconds=13.862198
+trajectory case=route_h_member_68 resolution=fourier_lift_n67 init=schur_seed iterations=1000 final_angle_deg=89.8271645 elapsed_seconds=14.069495
+trajectory case=route_h_member_68 resolution=fourier_lift_n67 init=deterministic_random iterations=1000 final_angle_deg=89.5263143 elapsed_seconds=14.103499
+case_start index=5/5 case=route_h_member_68_legacy_dg_positive dimension=1
+trajectory case=route_h_member_68_legacy_dg_positive resolution=native_n45 init=local_svd iterations=1000 final_angle_deg=0.166732602 elapsed_seconds=6.722424
+trajectory case=route_h_member_68_legacy_dg_positive resolution=native_n45 init=schur_seed iterations=1 final_angle_deg=1.20741827e-06 elapsed_seconds=0.021390
+trajectory case=route_h_member_68_legacy_dg_positive resolution=native_n45 init=deterministic_random iterations=1000 final_angle_deg=89.9963882 elapsed_seconds=7.038929
+trajectory case=route_h_member_68_legacy_dg_positive resolution=fourier_lift_n67 init=local_svd iterations=1000 final_angle_deg=0.000574990405 elapsed_seconds=9.891396
+trajectory case=route_h_member_68_legacy_dg_positive resolution=fourier_lift_n67 init=schur_seed iterations=1 final_angle_deg=8.53773646e-07 elapsed_seconds=0.032665
+trajectory case=route_h_member_68_legacy_dg_positive resolution=fourier_lift_n67 init=deterministic_random iterations=1000 final_angle_deg=85.5667793 elapsed_seconds=9.874931
+classification case=route_h_member_17 label=no_accepted_1d_bundle best_native=fail best_residual=0.6471125810275846 hp_residual=0.64711258102758462
+classification case=route_h_member_32 label=no_accepted_1d_bundle best_native=fail best_residual=0.6642796190258199 hp_residual=0.66427961902581911
+classification case=route_h_member_54 label=no_accepted_1d_bundle best_native=fail best_residual=0.6988622496280984 hp_residual=0.6988622496280974
+classification case=route_h_member_68 label=no_accepted_1d_bundle best_native=fail best_residual=0.7440595114401031 hp_residual=0.74405951144010174
+classification case=route_h_member_68_legacy_dg_positive label=method_initialization_sensitive best_native=accepted best_residual=2.222629541790655e-09 hp_residual=2.2226282139997974e-09
+experiment_rows=90
+summary_rows=5
+label_counts={"method_initialization_sensitive": 1, "no_accepted_1d_bundle": 4}
+elapsed_seconds=321.873277
+complete_utc=2026-07-16T07:12:43Z

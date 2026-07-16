@@ -1,0 +1,55 @@
+{
+  "schema_version": "qr_svd_failure_classification_config_v1",
+  "failure_cases": [
+    "route_h_member_17",
+    "route_h_member_32",
+    "route_h_member_54",
+    "route_h_member_68",
+    "route_h_member_68_legacy_dg_positive"
+  ],
+  "initializations": [
+    "local_svd",
+    "schur_seed",
+    "deterministic_random"
+  ],
+  "iteration_caps": [200, 500, 1000],
+  "spectral_resolutions": [
+    {
+      "id": "native_n45",
+      "samples": 45,
+      "kind": "frozen_native_cocycle"
+    },
+    {
+      "id": "fourier_lift_n67",
+      "samples": 67,
+      "kind": "diagnostic_fourier_lift_of_frozen_cocycle"
+    }
+  ],
+  "angle_tolerance_deg": 2e-6,
+  "pass_max_invariance_residual": 1e-6,
+  "boundary_max_invariance_residual": 0.001,
+  "hyperbolic_tolerance": 0.001,
+  "plateau_window": 20,
+  "plateau_relative_change_tolerance": 0.01,
+  "high_precision_decimal_digits": 80,
+  "high_precision_scope": "residual_recomputation_of_best_native_double_trajectory",
+  "wall_time_cap_seconds": 900,
+  "random_seed_namespace": "qr_svd_failure_classification_v1",
+  "allowed_final_labels": [
+    "no_accepted_1d_bundle",
+    "accepted_2d_real_subspace",
+    "insufficient_spectral_gap",
+    "iteration_stagnation",
+    "interpolation_resolution_boundary",
+    "source_state_boundary",
+    "method_initialization_sensitive",
+    "implementation_issue",
+    "unresolved"
+  ],
+  "truth_boundaries": [
+    "No iteration cap above 1000 is permitted.",
+    "No research threshold or frozen reproduction gate may be relaxed.",
+    "Route H physical corrected-rho complex pairs may not be collapsed to one real dimension.",
+    "The Fourier-lift resolution is diagnostic and is not a newly integrated physical cocycle."
+  ]
+}
