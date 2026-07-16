@@ -1,7 +1,1 @@
 ﻿target_id,field,value
-5.2,coordinate_system,任务几何示意坐标；具体原点、轴向和历元【待核实】
-5.3,coordinate_system,任务几何示意坐标；具体原点、轴向和历元【待核实】
-5.4,coordinate_system,任务几何示意坐标；具体原点、轴向和历元【待核实】
-5.6,coordinate_system,星历历元与绘图坐标由对应脚本定义；统一坐标元数据【待核实】
-5.7,coordinate_system,星历历元与绘图坐标由对应脚本定义；统一坐标元数据【待核实】
-5.10,coordinate_system,星历历元与绘图坐标由对应脚本定义；统一坐标元数据【待核实】

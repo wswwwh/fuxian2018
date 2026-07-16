@@ -1,0 +1,43 @@
+{
+  "pdf": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\McCarthy2018_54图逐图复现对照报告.pdf",
+  "page_count": 122,
+  "selected_pages": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    34,
+    35,
+    54,
+    55,
+    66,
+    67,
+    74,
+    75,
+    104,
+    105,
+    114,
+    116,
+    118,
+    121,
+    122
+  ],
+  "marker_pages": {
+    "McCarthy Fig. 2.1": 6,
+    "McCarthy Fig. 2.15": 34,
+    "McCarthy Fig. 3.10": 54,
+    "McCarthy Fig. 3.16": 66,
+    "McCarthy Fig. 4.3": 74,
+    "McCarthy Fig. 5.10": 104,
+    "Representative quantitative results and boundaries": 114,
+    "Index of grades and boundaries for all 54 figures": 116,
+    "Representative quantitative records for 28 core figures": 118,
+    "SHA-256 hashes of key report manifests": 121,
+    "Field-level items pending verification": 122
+  },
+  "all_pages_contact_sheet": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\stage_g_delivery_review\\all_pages_contact_sheet.png",
+  "selected_pages_contact_sheet": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\stage_g_delivery_review\\selected_pages_contact_sheet.png"
+}

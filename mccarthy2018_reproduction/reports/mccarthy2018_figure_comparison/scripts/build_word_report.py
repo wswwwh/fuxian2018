@@ -56,6 +56,7 @@ def main() -> int:
 
     registry_path = REPORT_ROOT / "figure_comparison_registry.csv"
     metrics_path = REPORT_ROOT / "quantitative_metrics_registry.csv"
+    delivery_fields_path = REPORT_ROOT / "delivery_fields.json"
     pending_path = REPORT_ROOT / "stage_d" / "pending_after_panels.csv"
     summary_path = REPORT_ROOT / "stage_c" / "stage_c_summary.json"
     manifest_paths = [
@@ -64,10 +65,16 @@ def main() -> int:
         REPORT_ROOT / "comparison_panel_manifest.csv",
         registry_path,
         metrics_path,
+        delivery_fields_path,
     ]
     registry = read_csv(registry_path)
     metrics = read_csv(metrics_path)
     pending = read_csv(pending_path)
+    delivery_fields = json.loads(delivery_fields_path.read_text(encoding="utf-8"))
+    required_delivery_fields = {"author_name", "affiliation", "adviser", "verification_status"}
+    missing_delivery_fields = sorted(required_delivery_fields - set(delivery_fields))
+    if missing_delivery_fields:
+        raise RuntimeError(f"Missing delivery fields: {missing_delivery_fields}")
     if len(registry) != 54:
         raise RuntimeError(f"Expected 54 registry rows, found {len(registry)}")
     if not metrics:
@@ -82,6 +89,7 @@ def main() -> int:
         "registry": registry,
         "metrics": metrics,
         "pending": pending,
+        "delivery_fields": delivery_fields,
         "summary": json.loads(summary_path.read_text(encoding="utf-8")),
         "build_meta": {
             "build_date": date.today().isoformat(),

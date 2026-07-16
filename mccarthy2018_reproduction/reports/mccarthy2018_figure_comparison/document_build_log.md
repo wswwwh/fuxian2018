@@ -208,3 +208,34 @@ D:\miniconda3\envs\cislunar\python.exe `
 - `stage_f_round_2_validation.json/md`：`PASS`，37/37。
 - `review_checklist.md`：内容完整性、文档质量、科学可信度和可重复性全部勾选通过。
 - `stage_f/final_acceptance.json/md`：最终验收 `PASS`。
+
+## 2026-07-16 — Stage G：导师交付前审计与交付包
+
+- 状态：`PASS_WITH_3_MANUAL_FIELDS`。
+- 重新运行 Stage C/D、资产验证、DOCX 构建、Word/LibreOffice PDF 导出、37 项自动审计和全页渲染。
+- Stage C 仅剩 54 个尚待 Stage D 回写的 comparison asset；Stage D 后 registry 可核实占位符为 0，54/54 comparison asset 均存在并记录 SHA256。
+- Fig. 5.2、5.3、5.4、5.6、5.7、5.10 的坐标元数据由对应绘图脚本、`ephemeris.py`、DE421 场景 CSV、`bcr4bp.py` 和 Fig. 5.10 审计 CSV 补全；该补全未改变任何复现等级。
+- 封面姓名、单位、导师无仓库权威来源，继续使用 `【待核实】`，并集中到 `delivery_fields.json`；猜测补值为 0。
+- 主 PDF 由 Microsoft Word COM 12.0 导出 122 页；LibreOffice 交叉导出 127 页，分页差 5 页，54 图覆盖一致。
+- 自动审计 37/37 PASS；122/122 页 contact sheet 与 22 张重点页人工审阅 PASS；一页说明视觉审阅 PASS。
+- 最终 DOCX：12,261,536 bytes；SHA256 `b5513008bdc9d2617e690b8e9eaa15a759e5a86a066d4c688544c0f935edaa1c`。
+- 最终 PDF：12,966,929 bytes；SHA256 `c6f65a28e6bb429db675709355a44035fa956413c0dd99405684fea7aa7e81d6`。
+- LibreOffice 交叉 PDF SHA256：`e24f191e96984fd96d502ea8c1ea0b5e996f3215abe661c573bf9b256728910b`。
+- Stage-G 前后五个冻结真值文件哈希完全一致，Chapter 4 frozen projection holdout 继续为 `0/4`、`paper_projection=fail`、`paper_3d=false`。
+
+### 一键构建命令
+
+```powershell
+D:\miniconda3\envs\cislunar\python.exe `
+  reports\mccarthy2018_figure_comparison\scripts\run_stage_g_delivery_pipeline.py
+```
+
+### 交付证据
+
+- `stage_g_delivery_review/delivery_validation.json` 与 `.md`：37 项自动审计。
+- `stage_g_delivery_review/final_pages_contact_sheet.png`：122 页总览。
+- `stage_g_delivery_review/selected_pages_review.md`：人工视觉审阅结论。
+- `reports/mccarthy2018_figure_comparison/final_placeholder_audit.csv`：3 个人工字段、6 个已解决坐标字段、54 个 comparison asset。
+- `reports/adviser_delivery/`：最终 DOCX/PDF、一页说明 PDF 和导师审阅重点。
+- `stage_g_delivery_review/stage_g_execution_log.txt`、`stage_g_run_config.json`、`artifact_hashes.csv`：命令、环境、耗时、冻结真值哈希和交付物哈希。
+- `artifact_hashes.csv` 对 PDF/DOCX/PNG 使用原始字节 SHA256，对 CSV/JSON/Markdown/日志使用 UTF-8 + LF 规范化 SHA256，避免 Windows 换行转换破坏跨检出校验。

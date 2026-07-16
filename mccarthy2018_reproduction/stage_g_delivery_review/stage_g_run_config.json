@@ -1,0 +1,136 @@
+{
+  "status": "PASS",
+  "started_at_utc": "2026-07-16T04:56:34.520921+00:00",
+  "goal_path": "C:\\Users\\wwh20\\Desktop\\复现论文\\计划与目标\\codex_goal_paper_validation_and_adviser_delivery.md",
+  "goal_sha256": "7c96c6b23ae6e7622fcad870635e086539dacfcbb1d13f65b1b4996d13db2e69",
+  "source_git_head": "5f55a2255fac8ba51d049bfee669829a3fbb5c80",
+  "python": "D:\\miniconda3\\envs\\cislunar\\python.exe",
+  "python_version": "3.11.15 | packaged by conda-forge | (main, Jun 11 2026, 03:27:10) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "numpy": "2.3.5",
+  "scipy": "1.17.1",
+  "environment_lock_sha256": "17a278f106726a9beadd0f00e2991ada6fee0d798819c695ffceaee37b1904d1",
+  "frozen_truth_hashes_before": {
+    "docs/mccarthy2018_staged_goal_gate_status.md": "d051b4ab8a07be5cb7112d167569f50e4dc9f98a055967ff84b986bca8b9df1b",
+    "data/computed/mccarthy2018_staged_goal_gate_status.csv": "85074d02ec944cba74693daf84a93c77b21a330424acd03fed3db755c4b651d6",
+    "data/computed/figure_validation_table.csv": "7320c85e85b874135c8ce3ce81c7e890a01e3d0fa1f5234d5a87999df04afbbb",
+    "data/computed/chapter4_fig43_fig46_projection_holdout_audit.csv": "6c5390f938e6e0d882152e59bbdd05baa4ea04eac2fa092052df9ab624688fb1",
+    "src/qp_orbits/chapter4_reproduction_lock.py": "e7a2be24f40507ce20e75155dd75c51acefae4f9ee1de5fe6ca4b2102edc8d82"
+  },
+  "commands": [
+    {
+      "label": "stage_c_evidence",
+      "argv": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\scripts\\build_stage_c_evidence.py"
+      ]
+    },
+    {
+      "label": "stage_d_panels",
+      "argv": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\scripts\\build_comparison_panels.py"
+      ]
+    },
+    {
+      "label": "asset_validation",
+      "argv": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\scripts\\validate_report_assets.py"
+      ]
+    },
+    {
+      "label": "word_build",
+      "argv": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\scripts\\build_word_report.py"
+      ]
+    },
+    {
+      "label": "pdf_export",
+      "argv": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\scripts\\export_report_pdf.py"
+      ]
+    },
+    {
+      "label": "delivery_validation",
+      "argv": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\scripts\\validate_final_report.py",
+        "--output-dir",
+        "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\stage_g_delivery_review",
+        "--label",
+        "delivery"
+      ]
+    },
+    {
+      "label": "delivery_render",
+      "argv": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\scripts\\render_report_review.py",
+        "--output-dir",
+        "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\stage_g_delivery_review"
+      ]
+    },
+    {
+      "label": "delivery_package",
+      "argv": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison\\scripts\\build_stage_g_delivery_package.py"
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "label": "stage_c_evidence",
+      "returncode": 0,
+      "elapsed_seconds": 0.39539739999963786
+    },
+    {
+      "label": "stage_d_panels",
+      "returncode": 0,
+      "elapsed_seconds": 21.432838299999275
+    },
+    {
+      "label": "asset_validation",
+      "returncode": 0,
+      "elapsed_seconds": 0.5671021999987715
+    },
+    {
+      "label": "word_build",
+      "returncode": 0,
+      "elapsed_seconds": 3.4075699000022723
+    },
+    {
+      "label": "pdf_export",
+      "returncode": 0,
+      "elapsed_seconds": 45.536086299998715
+    },
+    {
+      "label": "delivery_validation",
+      "returncode": 0,
+      "elapsed_seconds": 1.8617653000001155
+    },
+    {
+      "label": "delivery_render",
+      "returncode": 0,
+      "elapsed_seconds": 7.596198999999615
+    },
+    {
+      "label": "delivery_package",
+      "returncode": 0,
+      "elapsed_seconds": 3.674874100001034
+    }
+  ],
+  "frozen_truth_hashes_after": {
+    "docs/mccarthy2018_staged_goal_gate_status.md": "d051b4ab8a07be5cb7112d167569f50e4dc9f98a055967ff84b986bca8b9df1b",
+    "data/computed/mccarthy2018_staged_goal_gate_status.csv": "85074d02ec944cba74693daf84a93c77b21a330424acd03fed3db755c4b651d6",
+    "data/computed/figure_validation_table.csv": "7320c85e85b874135c8ce3ce81c7e890a01e3d0fa1f5234d5a87999df04afbbb",
+    "data/computed/chapter4_fig43_fig46_projection_holdout_audit.csv": "6c5390f938e6e0d882152e59bbdd05baa4ea04eac2fa092052df9ab624688fb1",
+    "src/qp_orbits/chapter4_reproduction_lock.py": "e7a2be24f40507ce20e75155dd75c51acefae4f9ee1de5fe6ca4b2102edc8d82"
+  },
+  "frozen_truth_unchanged": true,
+  "finished_at_utc": "2026-07-16T04:57:59.235918+00:00",
+  "elapsed_seconds": 84.714997
+}

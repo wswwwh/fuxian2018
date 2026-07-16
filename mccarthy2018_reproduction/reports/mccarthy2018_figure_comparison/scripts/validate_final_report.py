@@ -191,7 +191,7 @@ def build_markdown(result: dict[str, object]) -> str:
             "",
             f"- 空白页：{result['pdf']['blank_pages'] or '无'}",
             f"- 低文本且无位图页（需结合矢量内容人工复核）：{result['pdf']['sparse_text_pages'] or '无'}",
-            f"- `【待核实】`：registry 字段 {result['pending']['registry_field_count']} 项；DOCX 文本 {result['pending']['docx_occurrences']} 处；PDF 文本 {result['pending']['pdf_occurrences']} 处。",
+            f"- `【待核实】`：registry 字段 {result['pending']['registry_field_count']} 项；封面人工字段 {result['pending']['manual_field_count']} 项；DOCX 文本 {result['pending']['docx_occurrences']} 处；PDF 文本 {result['pending']['pdf_occurrences']} 处。",
             "",
             "说明：自动审计验证结构、覆盖、字段、错误字符串和空白页；分页美观与图片可读性仍须结合渲染总览人工复核。",
             "",
@@ -217,6 +217,7 @@ def main() -> int:
     source_manifest_path = root / "source_figure_manifest.csv"
     reproduction_manifest_path = root / "reproduction_figure_manifest.csv"
     comparison_manifest_path = root / "comparison_panel_manifest.csv"
+    delivery_fields_path = root / "delivery_fields.json"
 
     required = [
         docx_path,
@@ -226,6 +227,7 @@ def main() -> int:
         source_manifest_path,
         reproduction_manifest_path,
         comparison_manifest_path,
+        delivery_fields_path,
     ]
     missing = [str(path) for path in required if not path.is_file()]
     if missing:
@@ -236,6 +238,12 @@ def main() -> int:
     source_manifest = read_csv(source_manifest_path)
     reproduction_manifest = read_csv(reproduction_manifest_path)
     comparison_manifest = read_csv(comparison_manifest_path)
+    delivery_fields = json.loads(delivery_fields_path.read_text(encoding="utf-8"))
+    manual_values = [
+        delivery_fields.get("author_name", ""),
+        delivery_fields.get("affiliation", ""),
+        delivery_fields.get("adviser", ""),
+    ]
     figure_ids = [row["target_id"] for row in registry]
     docx = inspect_docx(docx_path)
     pdf = inspect_pdf(pdf_path)
@@ -388,8 +396,24 @@ def main() -> int:
         "不支持“整篇论文全部成功复现”的表述",
     ]
     add_check(checks, "总论结论未夸大论文等价", all(sentence in docx_text for sentence in boundary_sentences), [sentence for sentence in boundary_sentences if sentence not in docx_text])
-    cover_pending = ["【待核实】姓名", "【待核实】单位", "【待核实】导师"]
-    add_check(checks, "封面未知信息使用待核实标记", all(item in docx_text for item in cover_pending) and "待填写" not in docx_text, {"present": [item for item in cover_pending if item in docx_text], "legacy_waiting": docx_text.count("待填写")})
+    manual_config_ok = (
+        delivery_fields.get("verification_status") == "manual_confirmation_required"
+        and all(PENDING in value for value in manual_values)
+    )
+    add_check(
+        checks,
+        "封面未知信息使用受控待核实配置",
+        manual_config_ok
+        and all(item in docx_text for item in manual_values)
+        and all(item in pdf_text for item in manual_values)
+        and "待填写" not in docx_text,
+        {
+            "configured": manual_values,
+            "docx_present": [item for item in manual_values if item in docx_text],
+            "pdf_present": [item for item in manual_values if item in pdf_text],
+            "legacy_waiting": docx_text.count("待填写"),
+        },
+    )
     add_check(checks, "参考文献与正文引用存在", "McCarthy, B. P." in docx_text and "[1]" in docx_text and "参考文献" in docx_text, {"citation_1": docx_text.count("[1]")})
     add_check(checks, "关键单位进入报告", all(unit in docx_text for unit in ("km", "day", "m/s")), {"km": docx_text.count("km"), "day": docx_text.count("day"), "m/s": docx_text.count("m/s")})
     add_check(checks, "可重复构建命令进入附录", all(name in docx_text for name in ("build_word_report.py", "export_report_pdf.py", "validate_report_assets.py")), True)
@@ -405,7 +429,20 @@ def main() -> int:
         export_page_count is None or pdf["page_count"] == export_page_count
     )
     add_check(checks, "PDF 页数与 Word 导出状态一致", page_count_ok, {"pdf": pdf["page_count"], "export_status": export_page_count})
-    add_check(checks, "待核实字段集中且未被消隐", len(pending_fields) == 6 and docx_text.count(PENDING) >= 6 and pdf_text.count(PENDING) >= 6, {"registry_fields": len(pending_fields), "docx": docx_text.count(PENDING), "pdf": pdf_text.count(PENDING)})
+    add_check(
+        checks,
+        "可核实 registry 占位符已清零且人工字段未被消隐",
+        len(pending_fields) == 0
+        and manual_config_ok
+        and docx_text.count(PENDING) >= len(manual_values)
+        and pdf_text.count(PENDING) >= len(manual_values),
+        {
+            "registry_fields": len(pending_fields),
+            "manual_fields": len(manual_values),
+            "docx": docx_text.count(PENDING),
+            "pdf": pdf_text.count(PENDING),
+        },
+    )
     add_check(checks, "等级统计符合审计", grade_counts == Counter({"A": 7, "B": 30, "C": 5, "D": 12}), dict(grade_counts))
     add_check(checks, "证据状态统计符合审计", status_counts == Counter({"accepted": 7, "boundary": 30, "diagnostic": 5, "proxy": 12}), dict(status_counts))
 
@@ -420,7 +457,14 @@ def main() -> int:
         "coverage": {"registry": len(registry), "docx_figure_ids": len(docx_ids), "pdf_figure_ids": len(pdf_ids)},
         "grades": dict(grade_counts),
         "statuses": dict(status_counts),
-        "pending": {"registry_field_count": len(pending_fields), "items": pending_fields, "docx_occurrences": docx_text.count(PENDING), "pdf_occurrences": pdf_text.count(PENDING)},
+        "pending": {
+            "registry_field_count": len(pending_fields),
+            "items": pending_fields,
+            "manual_field_count": len(manual_values),
+            "manual_items": manual_values,
+            "docx_occurrences": docx_text.count(PENDING),
+            "pdf_occurrences": pdf_text.count(PENDING),
+        },
         "checks": checks,
     }
     slug = re.sub(r"[^0-9A-Za-z_-]+", "_", args.label).strip("_") or "validation"

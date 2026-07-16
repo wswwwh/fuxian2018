@@ -1,0 +1,45 @@
+{
+  "status": "PASS",
+  "started_at_utc": "2026-07-16T05:02:04.463039+00:00",
+  "python": "D:\\miniconda3\\envs\\cislunar\\python.exe",
+  "commands": [
+    {
+      "label": "unit_tests",
+      "returncode": 0,
+      "elapsed_seconds": 14.431055400000332
+    },
+    {
+      "label": "reproduction_smoke",
+      "returncode": 0,
+      "elapsed_seconds": 0.27951910000047064
+    },
+    {
+      "label": "target_registry_check",
+      "returncode": 0,
+      "elapsed_seconds": 0.14267889999973704
+    },
+    {
+      "label": "git_diff_check",
+      "returncode": 0,
+      "elapsed_seconds": 0.35619470000165165
+    }
+  ],
+  "tests": {
+    "count": 101,
+    "passed": 101,
+    "failed": 0
+  },
+  "deferred_by_required_stage_order": [
+    "scripts/run_invariant_bundle_benchmarks.py (belongs to independent scientific validation and rerun stages)"
+  ],
+  "frozen_truth_hashes_current": {
+    "docs/mccarthy2018_staged_goal_gate_status.md": "d051b4ab8a07be5cb7112d167569f50e4dc9f98a055967ff84b986bca8b9df1b",
+    "data/computed/mccarthy2018_staged_goal_gate_status.csv": "85074d02ec944cba74693daf84a93c77b21a330424acd03fed3db755c4b651d6",
+    "data/computed/figure_validation_table.csv": "7320c85e85b874135c8ce3ce81c7e890a01e3d0fa1f5234d5a87999df04afbbb",
+    "data/computed/chapter4_fig43_fig46_projection_holdout_audit.csv": "6c5390f938e6e0d882152e59bbdd05baa4ea04eac2fa092052df9ab624688fb1",
+    "src/qp_orbits/chapter4_reproduction_lock.py": "e7a2be24f40507ce20e75155dd75c51acefae4f9ee1de5fe6ca4b2102edc8d82"
+  },
+  "frozen_truth_unchanged": true,
+  "finished_at_utc": "2026-07-16T05:02:19.671917+00:00",
+  "elapsed_seconds": 15.208878
+}

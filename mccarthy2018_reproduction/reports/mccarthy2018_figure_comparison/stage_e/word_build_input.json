@@ -1531,7 +1531,7 @@
       "research_object": "日—月食几何示意",
       "research_object_en": "Sun-Moon eclipsing geometry",
       "model": "几何/算法示意（数值动力学模型不作为该图验收对象）",
-      "coordinate_system": "任务几何示意坐标；具体原点、轴向和历元【待核实】",
+      "coordinate_system": "无物理状态坐标系；局部二维示意绘图坐标（Sun=(0,0)、Moon=(5.6,0)），原点、轴向和历元不作为数值元数据",
       "main_parameters": "Sun-Moon eclipsing geometry",
       "numerical_method": "几何关系示意与确定性绘图",
       "script": "figures/fig_5_02.py",
@@ -1568,7 +1568,7 @@
       "research_object": "地—月—航天器视线几何",
       "research_object_en": "Earth-Moon-spacecraft line-of-sight geometry",
       "model": "几何/算法示意（数值动力学模型不作为该图验收对象）",
-      "coordinate_system": "任务几何示意坐标；具体原点、轴向和历元【待核实】",
+      "coordinate_system": "无物理状态坐标系；局部二维示意绘图坐标（Earth=(0,0)、Moon=(4.0,0)），原点、轴向和历元不作为数值元数据",
       "main_parameters": "Earth-Moon-spacecraft line-of-sight geometry",
       "numerical_method": "几何关系示意与确定性绘图",
       "script": "figures/fig_5_03.py",
@@ -1605,7 +1605,7 @@
       "research_object": "日—地—月会合坐标几何",
       "research_object_en": "Sun-Earth-Moon synodic geometry",
       "model": "几何/算法示意（数值动力学模型不作为该图验收对象）",
-      "coordinate_system": "任务几何示意坐标；具体原点、轴向和历元【待核实】",
+      "coordinate_system": "无物理状态坐标系；局部二维日—地—月会合示意坐标（Sun=(0,0)），历元不适用",
       "main_parameters": "Sun-Earth-Moon synodic geometry",
       "numerical_method": "几何关系示意与确定性绘图",
       "script": "figures/fig_5_04.py",
@@ -1679,7 +1679,7 @@
       "research_object": "不同相位的拟 DRO 星历轨迹",
       "research_object_en": "Quasi-DRO ephemeris trajectories by phase",
       "model": "DE421 星历初始化的 Earth-Moon 几何/传播基线",
-      "coordinate_system": "星历历元与绘图坐标由对应脚本定义；统一坐标元数据【待核实】",
+      "coordinate_system": "月心瞬时 Sun–Moon 正交旋转坐标，X 指向 Sun、Z 为 Sun–Moon 轨道角动量方向，单位 km；共同历元 2020-06-15T00:00:00Z",
       "main_parameters": "DE421 Sun-Earth-Moon ephemeris-corrected quasi-DRO; epoch=2020-06-15; insertion phase=0,24,80,120 deg",
       "numerical_method": "Route H 初始几何与 DE421 历元/相位场景传播",
       "script": "figures/fig_5_06.py",
@@ -1716,7 +1716,7 @@
       "research_object": "不同插入历元的拟 DRO 星历轨迹",
       "research_object_en": "Quasi-DRO ephemeris trajectories by insertion epoch",
       "model": "DE421 星历初始化的 Earth-Moon 几何/传播基线",
-      "coordinate_system": "星历历元与绘图坐标由对应脚本定义；统一坐标元数据【待核实】",
+      "coordinate_system": "月心瞬时 Sun–Moon 正交旋转坐标，X 指向 Sun、Z 为 Sun–Moon 轨道角动量方向，单位 km；历元为 2020-06-01/04/10/15T00:00:00Z",
       "main_parameters": "DE421 Sun-Earth-Moon ephemeris-corrected quasi-DRO; insertion epochs=2020-06-01,04,10,15",
       "numerical_method": "Route H 初始几何与 DE421 历元/相位场景传播",
       "script": "figures/fig_5_07.py",
@@ -1827,7 +1827,7 @@
       "research_object": "两处离去位置的收敛转移轨迹",
       "research_object_en": "Converged transfer trajectories for two departure locations",
       "model": "DE421 初始化的平面 Earth-Moon BCR4BP；CR3BP 结果仅作对照",
-      "coordinate_system": "星历历元与绘图坐标由对应脚本定义；统一坐标元数据【待核实】",
+      "coordinate_system": "Earth–Moon 质心旋转坐标，状态顺序 [x,y,z,xdot,ydot,zdot]，Earth–Moon LU/TU 归一化；项目 BCR4BP 扩展由 DE421 于 2020-06-15T00:00:00Z 初始化，论文自主 CR3BP 工况历元不适用",
       "main_parameters": "autonomous Earth-Moon CR3BP feasible solutions (not the later SQP optima): transfer 1=48.3+32.2=80.5 m/s, TOF=23 day; transfer 2=51.3+35.3=86.6 m/s, TOF=12.4 day; epoch not applicable",
       "numerical_method": "DE421 初始化 BCR4BP 分段修正、端点/缺陷负对照与脉冲统计",
       "script": "figures/fig_5_10.py",
@@ -5333,38 +5333,15 @@
       "boundary": "The analytic transfer and torus scene is removed. The accepted active-geometry CR3BP trajectory reaches the 7033-km periapsis target and records the 185-km LEO endpoint; BCR4BP/ephemeris correction remains pending."
     }
   ],
-  "pending": [
-    {
-      "target_id": "5.2",
-      "field": "coordinate_system",
-      "value": "任务几何示意坐标；具体原点、轴向和历元【待核实】"
-    },
-    {
-      "target_id": "5.3",
-      "field": "coordinate_system",
-      "value": "任务几何示意坐标；具体原点、轴向和历元【待核实】"
-    },
-    {
-      "target_id": "5.4",
-      "field": "coordinate_system",
-      "value": "任务几何示意坐标；具体原点、轴向和历元【待核实】"
-    },
-    {
-      "target_id": "5.6",
-      "field": "coordinate_system",
-      "value": "星历历元与绘图坐标由对应脚本定义；统一坐标元数据【待核实】"
-    },
-    {
-      "target_id": "5.7",
-      "field": "coordinate_system",
-      "value": "星历历元与绘图坐标由对应脚本定义；统一坐标元数据【待核实】"
-    },
-    {
-      "target_id": "5.10",
-      "field": "coordinate_system",
-      "value": "星历历元与绘图坐标由对应脚本定义；统一坐标元数据【待核实】"
-    }
-  ],
+  "pending": [],
+  "delivery_fields": {
+    "author_name": "【待核实】姓名",
+    "affiliation": "【待核实】单位",
+    "adviser": "【待核实】导师",
+    "verification_status": "manual_confirmation_required",
+    "evidence": "仓库、目标文档和现有报告均未提供可核实的作者个人信息；不得猜测。",
+    "update_rule": "获得用户确认后先更新本文件，再重新构建 DOCX/PDF 与导师交付包；不得只在 Word 中手改。"
+  },
   "summary": {
     "status": "PASS_WITH_TRACKED_PENDING",
     "figures": 54,
@@ -5373,7 +5350,7 @@
     "core_numeric_missing": [],
     "essential_failures": [],
     "evidence_missing": [],
-    "pending_items": 60,
+    "pending_items": 54,
     "grade_counts": {
       "A": 7,
       "B": 30,
@@ -5388,17 +5365,17 @@
     }
   },
   "build_meta": {
-    "build_date": "2026-07-15",
-    "git_head": "0cb5531a57fa92e60f95e9403e798929f2322e75",
+    "build_date": "2026-07-16",
+    "git_head": "5f55a2255fac8ba51d049bfee669829a3fbb5c80",
     "git_log": [
+      "5f55a22 7.16",
+      "95a606e Complete stage F acceptance and final report",
       "0cb5531 Build stage E complete Word and PDF report",
       "78af7b1 Build and review stage D comparison panels",
       "e05e698 Bind and audit stage C figure evidence",
       "f840b90 Package and audit stage B figure assets",
       "efee688 Audit 54-figure report inputs and design stage A",
-      "1358190 Lock Chapter 4 projection boundary and root-cause evidence",
-      "8d20e8d Refresh stale comparison contact sheets",
-      "4b38a73 Record failed Chapter 4 frozen projection holdout"
+      "1358190 Lock Chapter 4 projection boundary and root-cause evidence"
     ],
     "project_root": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction",
     "report_root": "C:\\Users\\wwh20\\Desktop\\复现论文\\mccarthy2018_reproduction\\reports\\mccarthy2018_figure_comparison",
@@ -5409,8 +5386,9 @@
       "source_figure_manifest.csv": "7c35bad288be7356cb83ed46812ca526efd4e2d535751e272fd9c53e79107c8f",
       "reproduction_figure_manifest.csv": "a1117100091954a9f82e3cdc203bb943dc2937006bfa00e49d55523cba4cc296",
       "comparison_panel_manifest.csv": "53919d9f6071938a5e3ca46b0401f517a451024fbedcf0a1c7e73e929ba7ff35",
-      "figure_comparison_registry.csv": "126f003ae8db38ecb8386e5c35d90691bb62589392f8cbc63de1355bd4b0c37f",
-      "quantitative_metrics_registry.csv": "afb0e98e19f3ff3cbb2eb832ea4fc792d94c3dfdf489b10c3c7db7e3b9346570"
+      "figure_comparison_registry.csv": "622d8ed8023e36d41cb8a5c3446ab7a25b14af496b41b62b57ca0e544c0b10e4",
+      "quantitative_metrics_registry.csv": "afb0e98e19f3ff3cbb2eb832ea4fc792d94c3dfdf489b10c3c7db7e3b9346570",
+      "delivery_fields.json": "d70d3addd72a84d22ab2abe3a12481cb6b55bd8582b661fc0b5626dccf2b3be9"
     }
   }
 }

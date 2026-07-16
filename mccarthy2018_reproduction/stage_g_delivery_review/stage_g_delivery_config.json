@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "generated_at_utc": "2026-07-16T04:57:58.568032+00:00",
+  "validation": "stage_g_delivery_review/delivery_validation.json",
+  "placeholder_summary": {
+    "registry_rows": 54,
+    "manual_fields": 3,
+    "resolved_coordinate_fields": 6,
+    "resolved_comparison_assets": 54,
+    "remaining_registry_placeholders": 0,
+    "docx_pending_occurrences": 11,
+    "pdf_pending_occurrences": 11
+  },
+  "delivery_files": [
+    "reports/adviser_delivery/McCarthy2018_54图逐图复现对照报告.docx",
+    "reports/adviser_delivery/McCarthy2018_54图逐图复现对照报告.pdf",
+    "reports/adviser_delivery/复现情况一页说明.pdf",
+    "reports/adviser_delivery/导师审阅重点.md"
+  ],
+  "truth_boundaries": {
+    "engineering_coverage_not_strict_equivalence": true,
+    "chapter4_frozen_projection_holdout": "0/4",
+    "chapter4_paper_projection": "fail",
+    "chapter4_paper_3d": false
+  }
+}

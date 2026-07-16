@@ -135,10 +135,36 @@ def model_for(figure_id: str, grade: str, title: str, source_layer: str) -> str:
 def coordinate_for(figure_id: str, grade: str, model: str) -> str:
     if figure_id == "2.1":
         return "惯性坐标系与旋转坐标系的概念定义"
-    if figure_id in {"5.2", "5.3", "5.4"}:
-        return "任务几何示意坐标；具体原点、轴向和历元【待核实】"
+    if figure_id == "5.2":
+        return (
+            "无物理状态坐标系；局部二维示意绘图坐标（Sun=(0,0)、Moon=(5.6,0)），"
+            "原点、轴向和历元不作为数值元数据"
+        )
+    if figure_id == "5.3":
+        return (
+            "无物理状态坐标系；局部二维示意绘图坐标（Earth=(0,0)、Moon=(4.0,0)），"
+            "原点、轴向和历元不作为数值元数据"
+        )
+    if figure_id == "5.4":
+        return "无物理状态坐标系；局部二维日—地—月会合示意坐标（Sun=(0,0)），历元不适用"
+    if figure_id == "5.6":
+        return (
+            "月心瞬时 Sun–Moon 正交旋转坐标，X 指向 Sun、Z 为 Sun–Moon 轨道角动量方向，"
+            "单位 km；共同历元 2020-06-15T00:00:00Z"
+        )
+    if figure_id == "5.7":
+        return (
+            "月心瞬时 Sun–Moon 正交旋转坐标，X 指向 Sun、Z 为 Sun–Moon 轨道角动量方向，"
+            "单位 km；历元为 2020-06-01/04/10/15T00:00:00Z"
+        )
+    if figure_id == "5.10":
+        return (
+            "Earth–Moon 质心旋转坐标，状态顺序 [x,y,z,xdot,ydot,zdot]，Earth–Moon LU/TU "
+            "归一化；项目 BCR4BP 扩展由 DE421 于 2020-06-15T00:00:00Z 初始化，"
+            "论文自主 CR3BP 工况历元不适用"
+        )
     if "DE421" in model:
-        return "星历历元与绘图坐标由对应脚本定义；统一坐标元数据【待核实】"
+        return "由对应脚本定义的 DE421 初始化旋转坐标；具体历元和轴向见该图证据文件"
     if grade == "D" and figure_id in {"2.9", "2.10", "2.12", "3.1", "3.2", "3.3", "3.4"}:
         return "算法/拓扑示意坐标，不用于状态空间逐点比较"
     return "主星-次星质心旋转（synodic）无量纲坐标；图中物理量按脚本输出为无量纲量、km 或 day"

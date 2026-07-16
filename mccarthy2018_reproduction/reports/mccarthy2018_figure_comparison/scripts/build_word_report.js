@@ -364,6 +364,7 @@ async function main() {
   const metrics = input.metrics;
   const summary = input.summary;
   const meta = input.build_meta;
+  const delivery = input.delivery_fields;
   const projectRoot = meta.project_root;
   const gradeCounts = summary.grade_counts;
   const evidenceCounts = summary.evidence_counts;
@@ -374,9 +375,9 @@ async function main() {
   const front = [
     new Paragraph({ style: "Title", children: [textRun("McCarthy（2018）拟周期轨道计算与应用的数值复现及逐图对照", { bold: true, font: FONT_SANS })] }),
     new Paragraph({ style: "Subtitle", children: [textRun("Numerical Reproduction and Figure-by-Figure Assessment of the Quasi-Periodic Orbit Computations and Applications in McCarthy (2018)", { font: FONT })] }),
-    centered("【待核实】姓名", "AuthorLine", { bold: true }),
-    centered("【待核实】单位", "AuthorLine"),
-    centered("【待核实】导师", "AuthorLine"),
+    centered(delivery.author_name, "AuthorLine", { bold: true }),
+    centered(delivery.affiliation, "AuthorLine"),
+    centered(delivery.adviser, "AuthorLine"),
     centered(`构建日期：${meta.build_date}`, "MetadataLine"),
     centered("内部复现审查稿；原论文图仅用于研究复现对照", "MetadataLine"),
     centered("摘  要", "AbstractTitle", { bold: true }),
@@ -387,7 +388,7 @@ async function main() {
         `当前分级为 A=${gradeCounts.A}、B=${gradeCounts.B}、C=${gradeCounts.C}、D=${gradeCounts.D}；证据状态为 accepted=${evidenceCounts.accepted}、boundary=${evidenceCounts.boundary}、diagnostic=${evidenceCounts.diagnostic}、proxy=${evidenceCounts.proxy}。`,
         "Route H 定映射时间源层含 30 条验证记录，最大 |z| 为 14573.10318409037 km，最大映射残差为 6.469474407020314×10^-10。",
         "与此同时，q=8 单步闭合、Route H 单体冷启动、Chapter 4 冻结投影 holdout 和 Fig. 5.10 论文等价仍保留明确失败或边界。",
-        `现有 6 条统一坐标元数据无法从当前材料唯一核实，均以${PENDING}标记。`,
+        `六项坐标元数据已依据当前脚本、DE421 场景数据和 BCR4BP 状态定义补全；封面姓名、单位和导师仍无仓库证据，保留${PENDING}并要求人工确认。`,
         "因此，本文结论限于当前权威 CSV/NPZ、逐图审计和实际生成资产，不作整篇论文全部数值等价的声明。",
       ].join(""),
       { style: "AbstractText" },
@@ -584,7 +585,7 @@ async function main() {
     body("第二，相位、扰动幅值、稳定/不稳定分支选择、三维相机、投影、轴范围与绘图参数并非全部公开；单视图相似不能升级为三维等价。"),
     body("第三，Chapter 4 的冻结投影 holdout 为失败结果；任何后验相机、epsilon 或源成员调整均不得重新命名为独立 holdout。"),
     body("第四，部分 Chapter 5 任务的边界状态、交点相位、优化约束与高保真环境不完整；项目 BCR4BP/DE421 扩展与论文自主 CR3BP 工况必须分层。"),
-    body("第五，Fig. 5.2、5.3、5.4、5.6、5.7 和 5.10 的统一坐标元数据尚不能从现有材料唯一核实，报告中继续标注【待核实】。"),
+    body("第五，Fig. 5.2、5.3、5.4 的坐标只承担示意绘图语义；Fig. 5.6、5.7 和 5.10 的坐标元数据已按脚本与数据补全，但不因此提升其复现等级或论文等价结论。"),
     heading1("结论"),
     body("（1）工程覆盖方面，54/54 原论文图、54/54 复现图和 54/54 对照 panel 均已映射，逐图字段、等级、定量表和限制完整进入正文或附录。"),
     body("（2）数值方法方面，项目已实现并审计 CR3BP 基础量、周期轨道修正与延拓、不变曲线/环面、DG/STM、流形、转移与部分高保真扩展。"),
@@ -648,18 +649,24 @@ async function main() {
   closing.push(body("导出命令：D:\\miniconda3\\envs\\cislunar\\python.exe reports\\mccarthy2018_figure_comparison\\scripts\\export_report_pdf.py", { style: "CodeText" }));
   closing.push(body("资产验证：D:\\miniconda3\\envs\\cislunar\\python.exe reports\\mccarthy2018_figure_comparison\\scripts\\validate_report_assets.py", { style: "CodeText" }));
 
+  const manualRows = [
+    ["封面", "author_name", delivery.author_name],
+    ["封面", "affiliation", delivery.affiliation],
+    ["封面", "adviser", delivery.adviser],
+    ...input.pending.map((item) => [`Fig. ${item.target_id}`, item.field, item.value]),
+  ];
   closing.push(appendixHeading("附录 D  【待核实】事项"));
   tableCounter += 1;
   closing.push(...tableCaptions(tableCounter, "字段级待核实清单", "Field-level items pending verification"));
   closing.push(
     threeLineTable(
       ["原图", "字段", "当前值"],
-      input.pending.map((item) => [`Fig. ${item.target_id}`, item.field, item.value]),
+      manualRows,
       [1000, 2200, 6300],
       { firstColumnBold: true, fontSize: 16 },
     ),
   );
-  closing.push(body("以上占位符是最终报告的显式真实性边界。后续人工补充必须同时更新权威 registry、构建日志和 Word/PDF，不得只在文档中手工替换。"));
+  closing.push(body("以上占位符是最终报告的显式真实性边界。后续人工补充必须先更新 delivery_fields.json，再重新构建 Word/PDF 与导师交付包，不得只在文档中手工替换。"));
 
   const styles = {
     default: {
