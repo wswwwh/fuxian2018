@@ -24,6 +24,7 @@ CONFIG = (
     / "ci_validation.json"
 )
 FULL_CONTROLLER = PROJECT_ROOT / "scripts" / "run_ci_full_research_validation.py"
+ENVIRONMENT_LOCK = PROJECT_ROOT / "environment-lock.yml"
 CAMERA_PARAMETERS = (
     PROJECT_ROOT
     / "data"
@@ -87,6 +88,49 @@ def frozen_renderer_dependency_valid(
         return False, "camera evidence does not declare one Matplotlib version"
     requirement = f"matplotlib=={next(iter(versions))}"
     return requirement in dependencies, requirement
+
+
+def frozen_direct_dependency_lock_valid(
+    pyproject_path: Path, environment_lock_path: Path = ENVIRONMENT_LOCK
+) -> tuple[bool, str]:
+    """Require pip installs to reproduce the tested direct-dependency lock."""
+
+    with pyproject_path.open("rb") as stream:
+        pyproject = tomllib.load(stream)
+    dependencies = pyproject.get("project", {}).get("dependencies", [])
+    if not isinstance(dependencies, list) or not all(
+        isinstance(dependency, str) for dependency in dependencies
+    ):
+        return False, "pyproject project.dependencies is invalid"
+
+    lock = yaml.safe_load(environment_lock_path.read_text(encoding="utf-8"))
+    lock_dependencies = lock.get("dependencies", []) if isinstance(lock, dict) else []
+    if not isinstance(lock_dependencies, list):
+        return False, "environment-lock dependencies is invalid"
+
+    expected: list[str] = []
+    for entry in lock_dependencies:
+        if isinstance(entry, str):
+            match = re.fullmatch(r"([A-Za-z0-9_.-]+)=([^=].*)", entry)
+            if match is None:
+                return False, f"invalid conda lock entry: {entry}"
+            name, version = match.groups()
+            if name.lower() not in {"python", "pip"}:
+                expected.append(f"{name}=={version}")
+            continue
+        if not isinstance(entry, dict) or set(entry) != {"pip"}:
+            return False, "environment-lock contains an unsupported dependency entry"
+        pip_dependencies = entry["pip"]
+        if not isinstance(pip_dependencies, list) or not all(
+            isinstance(dependency, str)
+            and re.fullmatch(r"[A-Za-z0-9_.-]+==[^=].*", dependency)
+            for dependency in pip_dependencies
+        ):
+            return False, "environment-lock pip dependencies are not exact pins"
+        expected.extend(pip_dependencies)
+
+    detail = ", ".join(expected)
+    return dependencies == expected, detail
 
 
 def load_workflow(path: Path) -> dict[str, Any]:
@@ -393,6 +437,15 @@ def validate(output: Path) -> list[dict[str, str]]:
         "frozen_camera_renderer_dependency_pin",
         renderer_dependency_valid,
         renderer_requirement,
+    )
+    dependency_lock_valid, dependency_lock_detail = (
+        frozen_direct_dependency_lock_valid(REPOSITORY_ROOT / dependency_path)
+    )
+    record(
+        rows,
+        "frozen_direct_dependency_lock",
+        dependency_lock_valid,
+        dependency_lock_detail,
     )
     record(
         rows,

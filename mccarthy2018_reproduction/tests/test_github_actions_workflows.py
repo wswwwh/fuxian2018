@@ -152,6 +152,15 @@ class GithubActionsWorkflowTests(unittest.TestCase):
                 )
             )
 
+    def test_project_dependencies_match_frozen_environment_lock(self) -> None:
+        valid, detail = workflow_contracts.frozen_direct_dependency_lock_valid(
+            PROJECT_ROOT / "pyproject.toml"
+        )
+        self.assertTrue(valid, detail)
+        self.assertIn("numpy==2.3.5", detail)
+        self.assertIn("scipy==1.17.1", detail)
+        self.assertIn("matplotlib==3.10.7", detail)
+
     def test_actions_and_authoritative_hash_guard_are_pinned(self) -> None:
         combined = FAST.read_text(encoding="utf-8") + FULL.read_text(encoding="utf-8")
         expected_actions = (

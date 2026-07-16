@@ -19,6 +19,7 @@ github_actions_contract_check_v2,fast_artifact_action,pass,actions/upload-artifa
 github_actions_contract_check_v2,full_artifact_action,pass,actions/upload-artifact@v7
 github_actions_contract_check_v2,cache_dependency_path_exists,pass,mccarthy2018_reproduction/pyproject.toml
 github_actions_contract_check_v2,frozen_camera_renderer_dependency_pin,pass,matplotlib==3.10.7
+github_actions_contract_check_v2,frozen_direct_dependency_lock,pass,"numpy==2.3.5, scipy==1.17.1, pandas==2.3.3, matplotlib==3.10.7, pillow==12.0.0, pypdf==6.13.3, pymupdf==1.27.2.3, skyfield==1.54"
 github_actions_contract_check_v2,fast_setup_python_pip_cache,pass,cache=pip cache-dependency-path=mccarthy2018_reproduction/pyproject.toml
 github_actions_contract_check_v2,full_setup_python_pip_cache,pass,cache=pip cache-dependency-path=mccarthy2018_reproduction/pyproject.toml
 github_actions_contract_check_v2,fast_ubuntu_environment,pass,"{""MPLBACKEND"": ""Agg"", ""PYTHONHASHSEED"": ""0"", ""PYTHONPATH"": ""src""}"

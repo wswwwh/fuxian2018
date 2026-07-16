@@ -119,6 +119,10 @@ research accepted 不得覆盖 reproduction fail/boundary。
   `pyproject.toml` pins that exact release (`matplotlib==3.10.7`) so a fresh CI
   install cannot silently change projection matrices; changing the renderer
   requires an explicit camera-evidence and promotion audit.
+- Every direct runtime dependency in `pyproject.toml` mirrors
+  `environment-lock.yml`. This keeps GitHub-hosted Ubuntu on the tested NumPy,
+  SciPy, pandas, renderer, and document stack instead of silently upgrading a
+  numerical dependency behind frozen recomputation evidence.
 
 ## Legacy / deprecated status 索引
 

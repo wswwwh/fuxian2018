@@ -4,9 +4,14 @@
 
 - `environment.yml`：跨平台环境意图，允许 conda-forge 解析兼容版本。
 - `environment-lock.yml`：阶段 A 冻结时在 Windows/cislunar 环境中实测通过的核心版本快照。
-- `pyproject.toml`：可安装 Python 项目的运行依赖；其中包含 DE421 路径实际使用的 `skyfield`。
+- `pyproject.toml`：可安装 Python 项目的运行依赖；其直接依赖精确镜像
+  `environment-lock.yml`，供 GitHub-hosted Ubuntu 的 pip 安装复现同一数值栈。
 
 锁文件记录的是核心直接依赖，不替代 conda 求解器产生的完整传递依赖清单。若精确版本在未来 channel 中不可用，应先保留失败日志，再在独立环境中验证兼容升级；不得直接修改审计阈值来迁就环境漂移。
+
+`pyproject.toml` 与 `environment-lock.yml` 的直接依赖版本由 workflow contract
+共同校验。任何兼容升级都必须先在隔离环境中验证冻结证据重计算，不能通过放宽
+科学阈值或重写 authoritative 结果消除版本漂移。
 
 ## 本机权威解释器
 
