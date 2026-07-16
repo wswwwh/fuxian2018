@@ -1,0 +1,12 @@
+{
+  "completed_utc": "2026-07-16T07:30:54Z",
+  "fresh_cocycle_files": 15,
+  "pid": 7896,
+  "python_executable": "D:\\miniconda3\\envs\\cislunar\\python.exe",
+  "python_version": "3.11.15 | packaged by conda-forge | (main, Jun 11 2026, 03:27:10) [MSC v.1944 64 bit (AMD64)]",
+  "run_id": "FRESH-20260716T073007Z-2D9EC0DB",
+  "schema_version": "independent_rerun_worker_metadata_v1",
+  "stage": "bundle",
+  "started_utc": "2026-07-16T07:30:09Z",
+  "status": "complete"
+}

@@ -1,0 +1,23 @@
+{
+  "bundle_run_id": "FRESH-20260716T073007Z-2D9EC0DB-bundle",
+  "cases": 7,
+  "cross_resolution_distance_limit": 0.01,
+  "elapsed_seconds": 29.737617600003432,
+  "families": 3,
+  "initial_linear_ratio_tolerance": 0.05,
+  "jacobi_drift_limit": 1e-10,
+  "method_npz_sha256": "99A80546C17DBBE6DDE6C594B5F5D23784D62E3EB6B387602BC6CFBEF9FB4920",
+  "methods": 3,
+  "perturbations": 3,
+  "registry_sha256": "B38099E93BB85AD4B97035D667A4AD5E6A74C1805B612EDEABC7AF6497C23EE5",
+  "rows": 126,
+  "run_id": "FRESH-20260716T073007Z-2D9EC0DB-manifold",
+  "schema_version": "invariant_bundle_manifold_convergence_v2",
+  "signs": 2,
+  "source_git_commit": "cf04669322d43dfb61acbeaf9e20b85f0c7bf772",
+  "status": "complete",
+  "status_counts": {
+    "accepted": 36,
+    "fail": 90
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "controller_pid": 26660,
+  "independent_run_id": "FRESH-20260716T073007Z-2D9EC0DB",
+  "processes": [
+    {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "C:\\Users\\wwh20\\Desktop\\\u590d\u73b0\u8bba\u6587\\mccarthy2018_reproduction\\scripts\\run_independent_rerun_worker.py",
+        "--stage",
+        "bundle",
+        "--output-root",
+        "C:\\Users\\wwh20\\Desktop\\\u590d\u73b0\u8bba\u6587\\mccarthy2018_reproduction\\research\\invariant_bundles\\independent_rerun",
+        "--run-id",
+        "FRESH-20260716T073007Z-2D9EC0DB",
+        "--max-wall-seconds",
+        "1800.0"
+      ],
+      "completed_utc": "2026-07-16T07:30:55Z",
+      "console_log": "research/invariant_bundles/independent_rerun/logs/bundle_worker_console.log",
+      "console_log_sha256": "F09497462A196197880AE5B1D8903A13D53C39B2CBA4D0E599F64CFBE16A9A16",
+      "elapsed_seconds": 47.48128128051758,
+      "parent_pid": 26660,
+      "pid": 7896,
+      "python_executable": "D:\\miniconda3\\envs\\cislunar\\python.exe",
+      "return_code": 0,
+      "stage": "bundle",
+      "started_utc": "2026-07-16T07:30:07Z"
+    },
+    {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "C:\\Users\\wwh20\\Desktop\\\u590d\u73b0\u8bba\u6587\\mccarthy2018_reproduction\\scripts\\run_independent_rerun_worker.py",
+        "--stage",
+        "manifold",
+        "--output-root",
+        "C:\\Users\\wwh20\\Desktop\\\u590d\u73b0\u8bba\u6587\\mccarthy2018_reproduction\\research\\invariant_bundles\\independent_rerun",
+        "--run-id",
+        "FRESH-20260716T073007Z-2D9EC0DB",
+        "--max-wall-seconds",
+        "1800.0"
+      ],
+      "completed_utc": "2026-07-16T07:31:26Z",
+      "console_log": "research/invariant_bundles/independent_rerun/logs/manifold_worker_console.log",
+      "console_log_sha256": "21E93C3A9E710AD1C339276C688D9D2E8B066B6E0656E474A7A8BD20B5781F95",
+      "elapsed_seconds": 31.689224004745483,
+      "parent_pid": 26660,
+      "pid": 29012,
+      "python_executable": "D:\\miniconda3\\envs\\cislunar\\python.exe",
+      "return_code": 0,
+      "stage": "manifold",
+      "started_utc": "2026-07-16T07:30:55Z"
+    }
+  ],
+  "schema_version": "independent_rerun_process_manifest_v1"
+}

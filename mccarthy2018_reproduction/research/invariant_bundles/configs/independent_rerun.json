@@ -1,0 +1,42 @@
+{
+  "schema_version": "invariant_bundle_independent_rerun_config_v1",
+  "process_model": "controller_spawns_fresh_bundle_and_manifold_python_processes",
+  "isolated_output": "research/invariant_bundles/independent_rerun",
+  "refresh_cocycle": true,
+  "expected_bundle_cases": 15,
+  "expected_bundle_rows": 45,
+  "expected_manifold_cases": 7,
+  "expected_manifold_rows": 126,
+  "max_bundle_wall_time_seconds": 1800,
+  "max_manifold_wall_time_seconds": 1800,
+  "numeric_relative_tolerance": 1e-8,
+  "numeric_absolute_tolerance": 1e-12,
+  "informational_fields": [
+    "run_id",
+    "bundle_run_id",
+    "runtime_seconds",
+    "peak_memory_mb_estimate",
+    "cocycle_cache_sha256",
+    "method_npz_sha256",
+    "source_git_commit"
+  ],
+  "frozen_inputs": [
+    "research/invariant_bundles/benchmarks/benchmark_registry.csv",
+    "research/invariant_bundles/configs/benchmark_cases.yaml",
+    "research/invariant_bundles/configs/method_options.yaml"
+  ],
+  "authoritative_files_protected": [
+    "research/invariant_bundles/results/csv/method_comparison.csv",
+    "research/invariant_bundles/results/npz/method_comparison.npz",
+    "research/invariant_bundles/results/csv/manifold_convergence.csv",
+    "research/invariant_bundles/results/npz/manifold_convergence.npz",
+    "research/invariant_bundles/results/logs/benchmark_campaign_summary.json",
+    "research/invariant_bundles/results/logs/manifold_campaign_summary.json"
+  ],
+  "truth_boundaries": [
+    "The isolated rerun may not write to committed authoritative result paths.",
+    "Run IDs, runtimes, memory estimates, cache hashes, and source commit are provenance fields and are compared informationally.",
+    "Classification, research status, manifold acceptance, dimensions, and scientific metrics are acceptance fields.",
+    "The rerun cannot modify the frozen McCarthy reproduction level or Chapter 4 projection holdout."
+  ]
+}
