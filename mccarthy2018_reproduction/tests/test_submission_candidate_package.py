@@ -187,6 +187,24 @@ class SubmissionCandidatePackageTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("SUBMISSION-CANDIDATE PACKAGE CHECK PASS", result.stdout)
 
+    def test_frozen_base_registry_check_survives_later_commits(self) -> None:
+        environment = dict(**__import__("os").environ)
+        environment["PYTHONPATH"] = "src"
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "scripts" / "build_invariant_bundle_registry.py"),
+                "--check",
+            ],
+            cwd=ROOT,
+            env=environment,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("invariant-bundle registry CHECK PASS", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

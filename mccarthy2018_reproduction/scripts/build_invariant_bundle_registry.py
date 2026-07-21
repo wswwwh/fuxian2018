@@ -219,8 +219,8 @@ def _row(
     }
 
 
-def build() -> BuildResult:
-    commit = _git_commit()
+def build(*, source_commit: str | None = None) -> BuildResult:
+    commit = source_commit or _git_commit()
     earth_moon = SYSTEMS["earth_moon"]
     sun_earth = SYSTEMS["sun_earth"]
     rows: list[dict[str, Any]] = []
@@ -602,8 +602,8 @@ def _provenance_text(rows: tuple[dict[str, Any], ...], state_hash: str) -> str:
     return "\n".join(lines) + "\n"
 
 
-def render() -> tuple[bytes, bytes, bytes]:
-    result = build()
+def render(*, source_commit: str | None = None) -> tuple[bytes, bytes, bytes]:
+    result = build(source_commit=source_commit)
     state_payload = _deterministic_npz_bytes(result.state_arrays)
     state_hash = _bytes_sha256(state_payload)
     rows = tuple(
@@ -629,7 +629,16 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
-    registry, states, provenance = render()
+    source_commit: str | None = None
+    if args.check:
+        existing = _read_csv(REGISTRY)
+        frozen_commits = {row["git_commit"] for row in existing}
+        if len(frozen_commits) != 1:
+            raise RuntimeError(
+                "benchmark registry must contain one frozen source Git commit"
+            )
+        source_commit = frozen_commits.pop()
+    registry, states, provenance = render(source_commit=source_commit)
     if args.check:
         _check_file(REGISTRY, registry)
         _check_file(STATE_EXTRACTS, states)
