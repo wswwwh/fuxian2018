@@ -6,7 +6,7 @@ import argparse
 import csv
 from dataclasses import dataclass
 import hashlib
-from io import BytesIO
+from io import BytesIO, StringIO
 import os
 from pathlib import Path
 import pickle
@@ -23,6 +23,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from qp_orbits.constants import SYSTEMS  # noqa: E402
 from qp_orbits.cr3bp import jacobi_constant  # noqa: E402
+from qp_orbits.artifact_fingerprints import recorded_sha256_matches  # noqa: E402
 from qp_orbits.quasi_torus import (  # noqa: E402
     _trigonometric_interpolation_matrix,
     stroboscopic_invariant_curve_seed,
@@ -625,6 +626,28 @@ def _check_file(path: Path, expected: bytes) -> None:
         raise RuntimeError(f"generated artifact drifted: {_rel(path)}")
 
 
+def _check_registry(expected: bytes) -> None:
+    actual_rows = _read_csv(REGISTRY)
+    expected_rows = list(csv.DictReader(StringIO(expected.decode("utf-8"))))
+    if len(actual_rows) != len(expected_rows):
+        raise RuntimeError(f"generated artifact drifted: {_rel(REGISTRY)}")
+    for actual, candidate in zip(actual_rows, expected_rows, strict=True):
+        for field in FIELDS:
+            if field == "source_metadata_sha256":
+                metadata = ROOT / actual["source_metadata_artifact"]
+                if not recorded_sha256_matches(metadata, actual[field]):
+                    raise RuntimeError(
+                        "frozen source metadata hash no longer matches: "
+                        f"{actual['source_metadata_artifact']}"
+                    )
+                continue
+            if actual[field] != candidate[field]:
+                raise RuntimeError(
+                    f"generated artifact drifted: {_rel(REGISTRY)} "
+                    f"case={actual.get('case_id')} field={field}"
+                )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
@@ -640,7 +663,7 @@ def main() -> int:
         source_commit = frozen_commits.pop()
     registry, states, provenance = render(source_commit=source_commit)
     if args.check:
-        _check_file(REGISTRY, registry)
+        _check_registry(registry)
         _check_file(STATE_EXTRACTS, states)
         _check_file(PROVENANCE, provenance)
         print("invariant-bundle registry CHECK PASS cases=15 families=4")
