@@ -1,0 +1,444 @@
+{
+  "branch": "codex/submission-candidate-invariant-bundles",
+  "commands": {
+    "base_paper_release": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/build_invariant_bundle_paper_release.py",
+        "--check"
+      ],
+      "elapsed_seconds": 2.297913,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "{",
+        "  \"status\": \"pass\",",
+        "  \"sections\": 13,",
+        "  \"figures\": 9",
+        "}"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/base_paper_release.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 57,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/base_paper_release.stdout.txt",
+      "stdout_sha256": "133000299502670942EABF41FA0D4F9D297A8A1A05107D3364B97FFCC5ED7418"
+    },
+    "base_research_benchmarks": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/run_invariant_bundle_benchmarks.py",
+        "--check"
+      ],
+      "elapsed_seconds": 2.915114,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "invariant-bundle benchmark CHECK PASS cases=15 rows=45"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/base_research_benchmarks.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 55,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/base_research_benchmarks.stdout.txt",
+      "stdout_sha256": "17065BA857D6C9FC47103E4BBEDAAC43E22B3F078678DC1C08451C58538185C2"
+    },
+    "base_research_figures": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "research/invariant_bundles/figures/generate_research_figures.py",
+        "--check"
+      ],
+      "elapsed_seconds": 2.694058,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "research figures CHECK PASS figures=6 artifacts=12"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/base_research_figures.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 51,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/base_research_figures.stdout.txt",
+      "stdout_sha256": "BE9AF633F20CE53252147A352EA18D3B2B1A1B288D029A312EE98675BAFD4BF3"
+    },
+    "base_research_manifolds": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/run_invariant_bundle_manifold_convergence.py",
+        "--check"
+      ],
+      "elapsed_seconds": 2.72528,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "invariant-bundle manifold CHECK PASS cases=7 rows=126"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/base_research_manifolds.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 54,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/base_research_manifolds.stdout.txt",
+      "stdout_sha256": "8D74C06B5204B6ED8B88C3823C90F9268DDCEA853A8507F4843CC8BC16361BD7"
+    },
+    "base_research_paper": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/build_invariant_bundle_paper.py",
+        "--check"
+      ],
+      "elapsed_seconds": 1.899152,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "invariant-bundle paper CHECK PASS files=8 claims=10"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/base_research_paper.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 52,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/base_research_paper.stdout.txt",
+      "stdout_sha256": "AB426F4D3B077BCAEB08C7FDFDDB180FE9A4507D1096C789B69E670C45E2EC98"
+    },
+    "base_research_registry": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/build_invariant_bundle_registry.py",
+        "--check"
+      ],
+      "elapsed_seconds": 4.592067,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "invariant-bundle registry CHECK PASS cases=15 families=4"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/base_research_registry.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 57,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/base_research_registry.stdout.txt",
+      "stdout_sha256": "9E39E43F42573BBB1D7624746A9D782C1BF87CF080998DCCC56D936E6CA70C1F"
+    },
+    "baseline_check": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/run_reproduction_baseline_freeze.py",
+        "--check"
+      ],
+      "elapsed_seconds": 2.157501,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "BASELINE FREEZE CHECK PASS targets=54 v0=13 v2=41 accepted=7 boundary=30 diagnostic=5 proxy=12 holdout=0/4"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/baseline_check.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 107,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/baseline_check.stdout.txt",
+      "stdout_sha256": "58F3B009FE900BE74D0CEA472C2099256AF27CF2390F20E3B982729AFE39AA78"
+    },
+    "figure_54_smoke": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/validate_reproduction_smoke.py"
+      ],
+      "elapsed_seconds": 2.517339,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "fig42_digitized_status=pointwise_overlap_pass_full_curve_coverage_boundary coverage=0.890267 rmse=0.371003 tail_days=0.049450",
+        "chapter4_fixed_time=16/16 projection_diagnostic_rows=16 projection_alerts=15 static_camera=16/16 projection_holdout=0/4 paper_projection=fail",
+        "chapter4_halo_12p40_source_gate=2/2 posthoc_projection=0/2 frozen_holdout=fail",
+        "fig510_bcr4bp_numerical=2/2 paper_equivalence=0/2 endpoint_km=4.819078e-05",
+        "png=54 pdf=54"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/figure_54_smoke.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 704,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/figure_54_smoke.stdout.txt",
+      "stdout_sha256": "72F332E42A1B7735376A9DC02E360189C47C4A992289A371EE664156D1127961"
+    },
+    "git_cached_diff_check": {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "elapsed_seconds": 0.107022,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/git_cached_diff_check.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 0,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/git_cached_diff_check.stdout.txt",
+      "stdout_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    "git_diff_check": {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "elapsed_seconds": 0.553338,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/git_diff_check.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 0,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/git_diff_check.stdout.txt",
+      "stdout_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    "stage_h1_registry": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/build_submission_candidate_stage_h_registry.py",
+        "--check"
+      ],
+      "elapsed_seconds": 2.792433,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "STAGE-H PREREGISTRATION CHECK PASS cases=11 sources=8"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/stage_h1_registry.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 54,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/stage_h1_registry.stdout.txt",
+      "stdout_sha256": "0EB3A783F82996A1EBE783DB6F1A59961AD5B4324C8FC46E51784DF492D00DB7"
+    },
+    "stage_h2_stable_bundles": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/run_submission_candidate_stable_bundles.py",
+        "--check"
+      ],
+      "elapsed_seconds": 2.635421,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "STAGE-H PREREGISTRATION CHECK PASS cases=11 sources=8",
+        "STAGE-H2 STABLE BUNDLE CHECK PASS cases=3 rows=9 gate=pass"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/stage_h2_stable_bundles.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 113,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/stage_h2_stable_bundles.stdout.txt",
+      "stdout_sha256": "272806335E9616D1E825E444D9503EA64A1F6394C8E6A0B866A0347C472AAFD8"
+    },
+    "stage_h2_stable_manifolds": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/run_submission_candidate_stable_manifolds.py",
+        "--check"
+      ],
+      "elapsed_seconds": 2.656396,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "STAGE-H PREREGISTRATION CHECK PASS cases=11 sources=8",
+        "STAGE-H2 STABLE BUNDLE CHECK PASS cases=3 rows=9 gate=pass",
+        "STAGE-H2 STABLE MANIFOLD CHECK PASS cases=3 rows=54 gate=pass"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/stage_h2_stable_manifolds.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 175,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/stage_h2_stable_manifolds.stdout.txt",
+      "stdout_sha256": "C4042E6C1AC26EF0DAD0748ADC75783E9CEDA19E86BB928281EABC6CE6A6556D"
+    },
+    "stage_h3_route_h_2d": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/run_submission_candidate_route_h_2d_manifolds.py",
+        "--check"
+      ],
+      "elapsed_seconds": 2.596344,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "STAGE-H PREREGISTRATION CHECK PASS cases=11 sources=8",
+        "STAGE-H3 ROUTE-H 2D MANIFOLD CHECK PASS cases=2 rows=8 gate=pass"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/stage_h3_route_h_2d.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 119,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/stage_h3_route_h_2d.stdout.txt",
+      "stdout_sha256": "C84B2B4FB4B1FC991F5112D28B3B162D6E45D289DA79AA9036F860B7A866307E"
+    },
+    "stage_h4_long_propagation": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/run_submission_candidate_long_propagation.py",
+        "--check"
+      ],
+      "elapsed_seconds": 2.823798,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "STAGE-H PREREGISTRATION CHECK PASS cases=11 sources=8",
+        "STAGE-H PREREGISTRATION CHECK PASS cases=11 sources=8",
+        "STAGE-H2 STABLE BUNDLE CHECK PASS cases=3 rows=9 gate=pass",
+        "STAGE-H4 LONG PROPAGATION CHECK PASS cases=3 rows=12 gate=pass"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/stage_h4_long_propagation.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 230,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/stage_h4_long_propagation.stdout.txt",
+      "stdout_sha256": "F2C137E3670AB28F7BC947A7DC0E4EB56BE197965812958687F09285EE039E97"
+    },
+    "stage_h5_sun_earth": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/run_submission_candidate_sun_earth_expansion.py",
+        "--check"
+      ],
+      "elapsed_seconds": 2.708553,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "STAGE-H PREREGISTRATION CHECK PASS cases=11 sources=8",
+        "STAGE-H5 SUN-EARTH EXPANSION CHECK PASS cases=3 benchmarks=9 manifolds=18 gate=pass"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/stage_h5_sun_earth.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 138,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/stage_h5_sun_earth.stdout.txt",
+      "stdout_sha256": "6C1D9D2AC66B77AA67EDB9A988AFB1CF526173A654ECEE4810532B6B2750BE73"
+    },
+    "submission_candidate_package": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/build_submission_candidate_package.py",
+        "--check"
+      ],
+      "elapsed_seconds": 2.885992,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "SUBMISSION-CANDIDATE PACKAGE CHECK PASS claims=20 documents=3"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/submission_candidate_package.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 62,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/submission_candidate_package.stdout.txt",
+      "stdout_sha256": "E99855CC0DCF16CC66CFEC81111B2707403F53DF2E6266923946019DD05E8CBE"
+    },
+    "target_check": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "scripts/build_reproduction_targets.py",
+        "--check"
+      ],
+      "elapsed_seconds": 0.195231,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "target registry is up to date: 54 rows"
+      ],
+      "stderr_bytes": 0,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/target_check.stderr.txt",
+      "stderr_sha256": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "stdout_bytes": 39,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/target_check.stdout.txt",
+      "stdout_sha256": "3184D2A2EE6522E39F05002DEE0A721F4CA1F5D1E6A7B381CDCB84B02A902E4B"
+    },
+    "unit_tests": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "elapsed_seconds": 53.666613,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 0,
+      "last_lines": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 241 tests in 48.788s",
+        "",
+        "OK"
+      ],
+      "stderr_bytes": 43638,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/unit_tests.stderr.txt",
+      "stderr_sha256": "95470111E2AA51F040423DE425EF722812FD95AADF057B3237BCD376FFD83A21",
+      "stdout_bytes": 33,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/unit_tests.stdout.txt",
+      "stdout_sha256": "F346CF2896CC23393DEBF4E7A5F540E4481F034BAF07ED515C973CAD7DF22ACB"
+    }
+  },
+  "execution_root": "clean_detached_worktree",
+  "input_hashes": {
+    "data/computed/chapter4_fig43_fig46_projection_holdout_audit.csv": "12B3A14AF0ECFE4C3E9E45D6D7B8A3340108046BE50DB132A162EFF0B2FB7636",
+    "data/computed/reproduction_baseline_v1_summary.csv": "BD440A782B6F1E3D5608F49E3D6514656B20B39EB142F0FC7092A7BB62AFED52",
+    "reports/adviser_figure_correctness_audit/adviser_figure_correctness_audit.csv": "369826032C5A5B7EEC5CCDA915977FFF21617AE784ED9B7A744AB122DC2B6D96",
+    "research/invariant_bundles/submission_candidate/configs/submission_candidate_package.json": "7FB905A8143EC3AC76E0F27874B5D3A8FB8CC64829B996CFEDAA99C61FFBF19F",
+    "research/invariant_bundles/submission_candidate/package/artifact_hashes.csv": "EF39E50D1524A6F1915D2AE5EBA91D199A46BFA40332EE32221BED332B0406A9",
+    "research/invariant_bundles/submission_candidate/package/claim_evidence_matrix.csv": "7E2262E76CED62867D87C0E7A2AD3B4508D720C0E7F7936071D0B1A96C98A62D",
+    "research/invariant_bundles/submission_candidate/package/submission_candidate_summary.json": "7F0144845986135219872D60DE1C75051C54AE38BF45245D3FB5E22948825E08",
+    "research/invariant_bundles/submission_candidate/results/long_propagation/long_propagation_summary.json": "A1E1FF47394E42B8A97A522A1A2FCBE931B6099D7DAACB35DD7F3BCE2E5DD88D",
+    "research/invariant_bundles/submission_candidate/results/route_h_2d_manifolds/route_h_2d_summary.json": "C4B8E0EEC248FE3F1BE2F03983DE086FB6ED18C3D9B9B7D085AD7449CEBB8B3C",
+    "research/invariant_bundles/submission_candidate/results/stable_bundles/stable_bundle_summary.json": "8B71EF23EE0A915A99CD34AB2924A5A41C321873C4AB0771FDBD352CC5E9FEEA",
+    "research/invariant_bundles/submission_candidate/results/stable_manifolds/stable_manifold_summary.json": "A1DF6703A2D712C270AFC31572F6413BA0975EE82DB8D202B57115D87489C59A",
+    "research/invariant_bundles/submission_candidate/results/sun_earth_expansion/sun_earth_expansion_summary.json": "E12FE9F8E8E084EFB31C1263A0A569FFCAC43C74A4100733049CE2B8C6F4D873",
+    "scripts/run_submission_candidate_acceptance_audit.py": "1E938FD582C62C4F0F8427D2932A6EDD96B23610D90B4FCDD6FD2CAB9768EA49"
+  },
+  "schema_version": "invariant_bundle_submission_candidate_full_validation_v1",
+  "unit_test_count": 241,
+  "validation_source_commit": "fcb8afc8aa5694bc2cb47b7033a4f1c943d2bb3f",
+  "validation_started_utc": "2026-07-21T13:01:44+00:00"
+}

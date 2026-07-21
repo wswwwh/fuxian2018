@@ -1,0 +1,1 @@
+workflow contract PASS checks=54

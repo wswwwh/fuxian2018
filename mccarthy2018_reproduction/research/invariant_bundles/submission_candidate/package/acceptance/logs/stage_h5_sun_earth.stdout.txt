@@ -1,0 +1,2 @@
+STAGE-H PREREGISTRATION CHECK PASS cases=11 sources=8
+STAGE-H5 SUN-EARTH EXPANSION CHECK PASS cases=3 benchmarks=9 manifolds=18 gate=pass

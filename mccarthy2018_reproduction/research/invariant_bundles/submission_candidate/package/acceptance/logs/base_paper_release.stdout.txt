@@ -1,0 +1,5 @@
+{
+  "status": "pass",
+  "sections": 13,
+  "figures": 9
+}

@@ -1,0 +1,1 @@
+invariant-bundle benchmark CHECK PASS cases=15 rows=45

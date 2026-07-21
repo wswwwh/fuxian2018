@@ -1,0 +1,21 @@
+{
+  "chapter4_frozen_holdout": "0/4; paper_projection=fail; paper_3d=false",
+  "external_submission_authorized": false,
+  "external_submission_performed": false,
+  "figure_correction_queue": {
+    "P0": 18,
+    "P1": 7
+  },
+  "overall_status": "pass_with_explicit_boundaries",
+  "package_status": "adviser_submission_decision_candidate",
+  "passed_gates": 19,
+  "reproduction_baseline": "54 engineering targets; no thesis-wide equivalence claim",
+  "schema_version": "invariant_bundle_submission_candidate_acceptance_v1",
+  "target_journal_selected": false,
+  "total_gates": 19,
+  "unit_test_count": 241,
+  "validation_commands_passed": 19,
+  "validation_commands_total": 19,
+  "validation_log_sha256": "E664669C7F0E53D58635FAC2FA7624D0B44A07B9AEC4CA8052FE3FD7F739D668",
+  "validation_source_commit": "fcb8afc8aa5694bc2cb47b7033a4f1c943d2bb3f"
+}

@@ -1,0 +1,1 @@
+invariant-bundle registry CHECK PASS cases=15 families=4

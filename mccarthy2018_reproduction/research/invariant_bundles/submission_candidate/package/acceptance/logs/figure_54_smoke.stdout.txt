@@ -1,0 +1,12 @@
+SMOKE PASS
+figures=54 targets_v0=13 targets_v2=41
+current_numerical=16 current_open=25
+route_h_rows=30 max_z_km=14573.1031841 max_residual=6.469e-10
+route_h_cold_start_status=fail
+route_h_hybrid_cold_start_status=pass
+staged_goal_status=chapter3_passed_chapter4_ready
+fig42_digitized_status=pointwise_overlap_pass_full_curve_coverage_boundary coverage=0.890267 rmse=0.371003 tail_days=0.049450
+chapter4_fixed_time=16/16 projection_diagnostic_rows=16 projection_alerts=15 static_camera=16/16 projection_holdout=0/4 paper_projection=fail
+chapter4_halo_12p40_source_gate=2/2 posthoc_projection=0/2 frozen_holdout=fail
+fig510_bcr4bp_numerical=2/2 paper_equivalence=0/2 endpoint_km=4.819078e-05
+png=54 pdf=54

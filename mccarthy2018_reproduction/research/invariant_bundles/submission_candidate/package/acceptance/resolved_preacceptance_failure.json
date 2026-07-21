@@ -1,0 +1,65 @@
+{
+  "completed_commands": {
+    "unit_tests": {
+      "command": [
+        "D:\\miniconda3\\envs\\cislunar\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "elapsed_seconds": 53.430933,
+      "execution_root": "clean_detached_worktree",
+      "exit_code": 1,
+      "last_lines": [
+        "",
+        "----------------------------------------------------------------------",
+        "Ran 241 tests in 48.729s",
+        "",
+        "FAILED (failures=1)"
+      ],
+      "stderr_bytes": 45151,
+      "stderr_hash_mode": "utf8_lf_normalized",
+      "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/unit_tests.stderr.txt",
+      "stderr_sha256": "BEE4B5D84D59D27C2760C42F35445E2EFD9519DE032487655666273D909DDEAE",
+      "stdout_bytes": 33,
+      "stdout_hash_mode": "utf8_lf_normalized",
+      "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/unit_tests.stdout.txt",
+      "stdout_sha256": "F346CF2896CC23393DEBF4E7A5F540E4481F034BAF07ED515C973CAD7DF22ACB"
+    }
+  },
+  "failed_command": "unit_tests",
+  "resolution": "superseded by the successful clean-detached-worktree validation",
+  "result": {
+    "command": [
+      "D:\\miniconda3\\envs\\cislunar\\python.exe",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-v"
+    ],
+    "elapsed_seconds": 53.430933,
+    "execution_root": "clean_detached_worktree",
+    "exit_code": 1,
+    "last_lines": [
+      "",
+      "----------------------------------------------------------------------",
+      "Ran 241 tests in 48.729s",
+      "",
+      "FAILED (failures=1)"
+    ],
+    "stderr_bytes": 45151,
+    "stderr_hash_mode": "utf8_lf_normalized",
+    "stderr_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/unit_tests.stderr.txt",
+    "stderr_sha256": "BEE4B5D84D59D27C2760C42F35445E2EFD9519DE032487655666273D909DDEAE",
+    "stdout_bytes": 33,
+    "stdout_hash_mode": "utf8_lf_normalized",
+    "stdout_path": "research/invariant_bundles/submission_candidate/package/acceptance/logs/unit_tests.stdout.txt",
+    "stdout_sha256": "F346CF2896CC23393DEBF4E7A5F540E4481F034BAF07ED515C973CAD7DF22ACB"
+  },
+  "schema_version": "submission_candidate_validation_failure_v1"
+}
