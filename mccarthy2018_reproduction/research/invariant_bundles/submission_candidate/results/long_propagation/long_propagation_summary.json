@@ -1,0 +1,26 @@
+{
+  "attempt_rows": 16,
+  "cases": 3,
+  "cases_with_collision_free_accepted_row": 3,
+  "elapsed_seconds": 47.12785140000051,
+  "event_rows": 12,
+  "h1_registry_sha256": "E0671C3982DF569762444B127BA975498906D7A3DBA55C99C31474129FE45D86",
+  "h4_gate_status": "pass",
+  "max_wall_seconds": 3600.0,
+  "maximum_selected_jacobi_drift": 7.918421474073511e-11,
+  "methods": 2,
+  "retry_rows": 4,
+  "run_id": "FADC844A73E7210CA55B",
+  "schema_version": "submission_candidate_long_propagation_summary_v1",
+  "secondary_radius_boundary_rows": 4,
+  "signs": 2,
+  "source_git_commit": "f7b966f56334eac5b522813fd19d7da8b1ab91bc",
+  "stable_bundle_npz_sha256": "6CBCEAF436362CCAF65EA96FC65C5603C16DF083996D22B589F217AD0535510E",
+  "stable_bundle_run_id": "0188EB754574DA66CEC3",
+  "status": "complete",
+  "status_counts": {
+    "accepted": 8,
+    "boundary": 4
+  },
+  "trajectory_rows": 492
+}
