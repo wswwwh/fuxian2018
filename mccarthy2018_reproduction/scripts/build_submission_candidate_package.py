@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 from collections import Counter
 import csv
-import hashlib
 from io import StringIO
 import json
 import os
@@ -16,6 +15,8 @@ import sys
 from typing import Any, Iterable
 import zipfile
 from xml.etree import ElementTree
+
+from qp_orbits.artifact_fingerprints import fingerprint_fields, fingerprint_matches
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -61,19 +62,18 @@ CLAIM_FIELDS = (
     "authority_boundary",
     "adviser_decision_use",
 )
-HASH_FIELDS = ("artifact_role", "path", "bytes", "sha256")
+HASH_FIELDS = (
+    "artifact_role",
+    "path_root",
+    "path",
+    "hash_mode",
+    "bytes",
+    "sha256",
+)
 
 
 def rel(path: Path) -> str:
     return os.path.relpath(path, ROOT).replace("\\", "/")
-
-
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for block in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest().upper()
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -886,9 +886,9 @@ def manifest_rows() -> list[dict[str, Any]]:
             rows.append(
                 {
                     "artifact_role": role,
+                    "path_root": "repository",
                     "path": rel(path),
-                    "bytes": path.stat().st_size,
-                    "sha256": sha256(path),
+                    **fingerprint_fields(path),
                 }
             )
     return rows
@@ -900,13 +900,18 @@ def validate_manifest() -> None:
     if not rows:
         raise RuntimeError("package artifact hash manifest is empty")
     for row in rows:
+        if row["path_root"] != "repository":
+            raise RuntimeError(f"manifest path root drift: {row['path']}")
         artifact = ROOT / row["path"]
         if not artifact.is_file():
             raise RuntimeError(f"manifest artifact missing: {row['path']}")
-        if artifact.stat().st_size != int(row["bytes"]):
-            raise RuntimeError(f"manifest byte drift: {row['path']}")
-        if sha256(artifact) != row["sha256"]:
-            raise RuntimeError(f"manifest hash drift: {row['path']}")
+        if not fingerprint_matches(
+            artifact,
+            expected_bytes=int(row["bytes"]),
+            expected_sha256=row["sha256"],
+            hash_mode=row["hash_mode"],
+        ):
+            raise RuntimeError(f"manifest fingerprint drift: {row['path']}")
 
 
 def build(*, check: bool) -> None:

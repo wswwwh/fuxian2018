@@ -6,12 +6,12 @@
   "claim_evidence_rows": 20,
   "documents": {
     "adviser_decision_summary.docx": {
-      "bytes": 13737,
+      "bytes": 13736,
       "embedded_media": 0,
       "text_characters": 2472
     },
     "manuscript_en.docx": {
-      "bytes": 748684,
+      "bytes": 748685,
       "embedded_media": 4,
       "text_characters": 17162
     },

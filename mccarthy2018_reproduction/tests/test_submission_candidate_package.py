@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import csv
-import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -11,6 +10,8 @@ import sys
 import unittest
 import zipfile
 from xml.etree import ElementTree
+
+from qp_orbits.artifact_fingerprints import fingerprint_matches
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,10 +42,6 @@ HOLDOUT = (
 def read_csv(path: Path) -> list[dict[str, str]]:
     with path.open("r", encoding="utf-8", newline="") as stream:
         return list(csv.DictReader(stream))
-
-
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest().upper()
 
 
 def docx_text_and_media(path: Path) -> tuple[str, int]:
@@ -162,11 +159,19 @@ class SubmissionCandidatePackageTests(unittest.TestCase):
         rows = read_csv(PACKAGE / "artifact_hashes.csv")
         self.assertGreaterEqual(len(rows), 20)
         for row in rows:
+            self.assertEqual(row["path_root"], "repository")
             self.assertNotIn("\\", row["path"])
             artifact = ROOT / row["path"]
             self.assertTrue(artifact.is_file(), row["path"])
-            self.assertEqual(artifact.stat().st_size, int(row["bytes"]))
-            self.assertEqual(sha256(artifact), row["sha256"])
+            self.assertTrue(
+                fingerprint_matches(
+                    artifact,
+                    expected_bytes=int(row["bytes"]),
+                    expected_sha256=row["sha256"],
+                    hash_mode=row["hash_mode"],
+                ),
+                row["path"],
+            )
 
     def test_builder_check_mode_passes(self) -> None:
         environment = dict(**__import__("os").environ)

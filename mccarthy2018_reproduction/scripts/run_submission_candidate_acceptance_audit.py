@@ -7,7 +7,6 @@ from collections import Counter
 from contextlib import contextmanager
 import csv
 from datetime import datetime, timezone
-import hashlib
 from io import StringIO
 import json
 import os
@@ -19,6 +18,12 @@ import sys
 import tempfile
 import time
 from typing import Any, Iterable, Iterator
+
+from qp_orbits.artifact_fingerprints import (
+    artifact_fingerprint,
+    fingerprint_fields,
+    fingerprint_matches,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -93,19 +98,22 @@ AUDIT_FIELDS = (
     "validation_command_keys",
     "validation_source_commit",
 )
-HASH_FIELDS = ("artifact_role", "path", "bytes", "sha256")
+HASH_FIELDS = (
+    "artifact_role",
+    "path_root",
+    "path",
+    "hash_mode",
+    "bytes",
+    "sha256",
+)
 
 
 def rel(path: Path) -> str:
     return os.path.relpath(path, ROOT).replace("\\", "/")
 
 
-def sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for block in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(block)
-    return digest.hexdigest().upper()
+def portable_sha256(path: Path) -> str:
+    return artifact_fingerprint(path).sha256
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -259,6 +267,8 @@ def run_commands() -> dict[str, dict[str, Any]]:
             stderr_path = LOG_DIR / f"{name}.stderr.txt"
             stdout_path.write_text(completed.stdout, encoding="utf-8")
             stderr_path.write_text(completed.stderr, encoding="utf-8")
+            stdout_fingerprint = artifact_fingerprint(stdout_path)
+            stderr_fingerprint = artifact_fingerprint(stderr_path)
             combined = (completed.stdout + completed.stderr).strip().splitlines()
             results[name] = {
                 "command": command,
@@ -266,9 +276,13 @@ def run_commands() -> dict[str, dict[str, Any]]:
                 "exit_code": completed.returncode,
                 "elapsed_seconds": round(elapsed, 6),
                 "stdout_path": rel(stdout_path),
-                "stdout_sha256": sha256(stdout_path),
+                "stdout_hash_mode": stdout_fingerprint.hash_mode,
+                "stdout_bytes": stdout_fingerprint.bytes,
+                "stdout_sha256": stdout_fingerprint.sha256,
                 "stderr_path": rel(stderr_path),
-                "stderr_sha256": sha256(stderr_path),
+                "stderr_hash_mode": stderr_fingerprint.hash_mode,
+                "stderr_bytes": stderr_fingerprint.bytes,
+                "stderr_sha256": stderr_fingerprint.sha256,
                 "last_lines": combined[-5:],
             }
             if completed.returncode != 0:
@@ -309,7 +323,7 @@ def input_hashes() -> dict[str, str]:
     for path in input_paths():
         if not path.is_file():
             raise RuntimeError(f"acceptance input missing: {rel(path)}")
-        result[rel(path)] = sha256(path)
+        result[rel(path)] = portable_sha256(path)
     return dict(sorted(result.items()))
 
 
@@ -566,7 +580,7 @@ def report_text(rows: list[dict[str, str]], validation: dict[str, Any]) -> str:
         f"- Validation commands: `{len(validation['commands'])}/{len(validation['commands'])}` exit 0",
         f"- Full unittest count: `{validation['unit_test_count']}`",
         f"- Validation source commit: `{validation['validation_source_commit']}`",
-        f"- Validation log SHA256: `{sha256(VALIDATION_LOG)}`",
+        f"- Validation log SHA256: `{portable_sha256(VALIDATION_LOG)}`",
         "- Decision status: `adviser_submission_decision_candidate`; no target journal selected; no external submission authorized.",
         "",
         "| gate | category | requirement | observed | status | boundary |",
@@ -611,7 +625,7 @@ def summary_payload(
         "validation_commands_total": len(validation["commands"]),
         "unit_test_count": validation["unit_test_count"],
         "validation_source_commit": validation["validation_source_commit"],
-        "validation_log_sha256": sha256(VALIDATION_LOG),
+        "validation_log_sha256": portable_sha256(VALIDATION_LOG),
         "reproduction_baseline": "54 engineering targets; no thesis-wide equivalence claim",
         "chapter4_frozen_holdout": "0/4; paper_projection=fail; paper_3d=false",
         "figure_correction_queue": {"P0": 18, "P1": 7},
@@ -643,9 +657,9 @@ def output_hash_rows() -> list[dict[str, Any]]:
                 "artifact_role": (
                     "command_log" if path.parent == LOG_DIR else "acceptance_evidence"
                 ),
+                "path_root": "repository",
                 "path": rel(path),
-                "bytes": path.stat().st_size,
-                "sha256": sha256(path),
+                **fingerprint_fields(path),
             }
         )
     return rows
@@ -656,13 +670,18 @@ def validate_hash_manifest() -> None:
     if not rows:
         raise RuntimeError("acceptance artifact hash manifest is empty")
     for row in rows:
+        if row["path_root"] != "repository":
+            raise RuntimeError(f"acceptance path root drift: {row['path']}")
         path = ROOT / row["path"]
         if not path.is_file():
             raise RuntimeError(f"acceptance artifact missing: {row['path']}")
-        if path.stat().st_size != int(row["bytes"]):
-            raise RuntimeError(f"acceptance artifact byte drift: {row['path']}")
-        if sha256(path) != row["sha256"]:
-            raise RuntimeError(f"acceptance artifact hash drift: {row['path']}")
+        if not fingerprint_matches(
+            path,
+            expected_bytes=int(row["bytes"]),
+            expected_sha256=row["sha256"],
+            hash_mode=row["hash_mode"],
+        ):
+            raise RuntimeError(f"acceptance artifact fingerprint drift: {row['path']}")
 
 
 def extract_unit_test_count(commands: dict[str, dict[str, Any]]) -> int:
@@ -686,9 +705,19 @@ def build(*, check: bool) -> None:
         for item in validation["commands"].values():
             if item["exit_code"] != 0:
                 raise RuntimeError("final validation log contains failure")
-            if sha256(ROOT / item["stdout_path"]) != item["stdout_sha256"]:
+            if not fingerprint_matches(
+                ROOT / item["stdout_path"],
+                expected_bytes=int(item["stdout_bytes"]),
+                expected_sha256=item["stdout_sha256"],
+                hash_mode=item["stdout_hash_mode"],
+            ):
                 raise RuntimeError(f"stdout log drifted: {item['stdout_path']}")
-            if sha256(ROOT / item["stderr_path"]) != item["stderr_sha256"]:
+            if not fingerprint_matches(
+                ROOT / item["stderr_path"],
+                expected_bytes=int(item["stderr_bytes"]),
+                expected_sha256=item["stderr_sha256"],
+                hash_mode=item["stderr_hash_mode"],
+            ):
                 raise RuntimeError(f"stderr log drifted: {item['stderr_path']}")
     else:
         ACCEPTANCE.mkdir(parents=True, exist_ok=True)
