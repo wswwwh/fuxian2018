@@ -175,7 +175,18 @@ def clean_validation_worktree() -> Iterator[Path]:
     parent = Path(tempfile.mkdtemp(prefix="mccarthy_sc_validation_"))
     checkout = parent / "checkout"
     added = subprocess.run(
-        ["git", "worktree", "add", "--detach", str(checkout), "HEAD"],
+        [
+            "git",
+            "-c",
+            "core.autocrlf=false",
+            "-c",
+            "core.eol=lf",
+            "worktree",
+            "add",
+            "--detach",
+            str(checkout),
+            "HEAD",
+        ],
         cwd=ROOT,
         text=True,
         encoding="utf-8",
