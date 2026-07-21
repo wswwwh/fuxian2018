@@ -22,6 +22,15 @@ from typing import Any, Iterable, Iterator
 
 
 ROOT = Path(__file__).resolve().parents[1]
+REPOSITORY_ROOT = Path(
+    subprocess.check_output(
+        ["git", "rev-parse", "--show-toplevel"],
+        cwd=ROOT,
+        text=True,
+        encoding="utf-8",
+    ).strip()
+).resolve()
+PROJECT_RELATIVE = ROOT.relative_to(REPOSITORY_ROOT)
 SC = ROOT / "research" / "invariant_bundles" / "submission_candidate"
 PACKAGE = SC / "package"
 ACCEPTANCE = PACKAGE / "acceptance"
@@ -181,7 +190,12 @@ def clean_validation_worktree() -> Iterator[Path]:
             + (added.stderr or added.stdout).strip()
         )
     try:
-        yield checkout
+        project_checkout = checkout / PROJECT_RELATIVE
+        if not project_checkout.is_dir():
+            raise RuntimeError(
+                f"clean validation project root missing: {project_checkout}"
+            )
+        yield project_checkout
     finally:
         removed = subprocess.run(
             ["git", "worktree", "remove", "--force", str(checkout)],
