@@ -1,0 +1,30 @@
+{
+  "accepted_improved_rows": 36,
+  "cases": 3,
+  "cases_with_both_improved_methods_accepted": 3,
+  "completed_cases": [
+    "h2_stable_em_halo_12p40_n45",
+    "h2_stable_em_vertical_12p66_n57",
+    "h2_stable_se_active_geometry_member_468"
+  ],
+  "elapsed_seconds": 17.034765200000038,
+  "h1_registry_sha256": "E0671C3982DF569762444B127BA975498906D7A3DBA55C99C31474129FE45D86",
+  "h2_stable_manifold_gate_status": "pass",
+  "initial_linear_ratio_tolerance": 0.05,
+  "jacobi_drift_limit": 1e-10,
+  "max_wall_seconds": 1800.0,
+  "methods": 3,
+  "perturbations": 3,
+  "rows": 54,
+  "run_id": "6E1CCDA3C6E6C56A0C55",
+  "schema_version": "submission_candidate_stable_manifold_summary_v1",
+  "signs": 2,
+  "source_git_commit": "1d65e4139eaf4f8ef6936c0e0df2b626cf642f3f",
+  "stable_bundle_npz_sha256": "6CBCEAF436362CCAF65EA96FC65C5603C16DF083996D22B589F217AD0535510E",
+  "stable_bundle_run_id": "0188EB754574DA66CEC3",
+  "status": "complete",
+  "status_counts": {
+    "accepted": 36,
+    "fail": 18
+  }
+}

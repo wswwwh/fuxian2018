@@ -1,0 +1,26 @@
+{
+  "accepted_schur_manifold_rows": 4,
+  "cases": 2,
+  "cases_with_accepted_2d_schur_object": 2,
+  "diagnostic_rows": 90,
+  "elapsed_seconds": 37.379765300000145,
+  "h1_registry_sha256": "E0671C3982DF569762444B127BA975498906D7A3DBA55C99C31474129FE45D86",
+  "h3_gate_status": "pass",
+  "independent_csv_sha256": "1B12B0CB8AF2F6317CB0BAED21071CF819D0F278532C6C98CB2D8B18522EBB2C",
+  "manifold_rows": 8,
+  "manifold_status_counts": {
+    "accepted": 4,
+    "bounded_fail": 4
+  },
+  "max_wall_seconds": 3600.0,
+  "method_attempt_rows": 8,
+  "never_one_dimensional": true,
+  "qr_bounded_failure_cases": 2,
+  "run_id": "B621AFA8713BB9F0DFC3",
+  "schema_version": "submission_candidate_route_h_2d_summary_v1",
+  "source_git_commit": "1d65e4139eaf4f8ef6936c0e0df2b626cf642f3f",
+  "stage_c_registry_sha256": "B38099E93BB85AD4B97035D667A4AD5E6A74C1805B612EDEABC7AF6497C23EE5",
+  "stage_e_npz_sha256": "5BEE3AF6EC59F598B04D9B60BC2147A608AF9EDF45F9FC0DC3FADA2B31343571",
+  "stage_e_schur_failures_preserved": true,
+  "status": "complete"
+}

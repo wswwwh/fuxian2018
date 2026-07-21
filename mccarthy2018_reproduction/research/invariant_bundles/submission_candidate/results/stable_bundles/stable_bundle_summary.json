@@ -1,0 +1,21 @@
+{
+  "accepted_improved_rows": 6,
+  "cases": 3,
+  "cases_with_both_improved_methods_accepted": 3,
+  "elapsed_seconds": 1.7527021999999306,
+  "h1_registry_sha256": "E0671C3982DF569762444B127BA975498906D7A3DBA55C99C31474129FE45D86",
+  "h2_gate_status": "pass",
+  "h2_minimum_accepted_cases": 2,
+  "max_wall_seconds": 1800.0,
+  "method_rows": 9,
+  "methods": 3,
+  "run_id": "0188EB754574DA66CEC3",
+  "schema_version": "submission_candidate_stable_bundle_summary_v1",
+  "source_git_commit": "1d65e4139eaf4f8ef6936c0e0df2b626cf642f3f",
+  "stage_c_registry_sha256": "B38099E93BB85AD4B97035D667A4AD5E6A74C1805B612EDEABC7AF6497C23EE5",
+  "status": "complete",
+  "status_counts": {
+    "accepted": 6,
+    "fail": 3
+  }
+}
