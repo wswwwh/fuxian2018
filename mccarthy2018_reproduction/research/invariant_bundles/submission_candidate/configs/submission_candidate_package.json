@@ -1,0 +1,31 @@
+{
+  "schema_version": "invariant_bundle_submission_candidate_package_config_v1",
+  "package_date": "2026-07-21",
+  "author": "兀文昊",
+  "adviser": "张晨",
+  "institution": "中国科学院大学",
+  "title_zh": "拟周期轨道实不变子束计算方法的数值比较、流形扩展与可靠性分析",
+  "title_en": "Auditable Real Invariant-Bundle Computation and Manifold Extensions for Quasi-Periodic CR3BP Tori",
+  "package_status": "adviser_submission_decision_candidate",
+  "external_submission_authorized": false,
+  "target_journal_selected": false,
+  "positioning": "numerical_framework_systematic_comparison_and_bounded_extension",
+  "frozen_authority_boundaries": {
+    "reproduction_baseline": "McCarthy 54-figure baseline v1 remains engineering coverage, not thesis-wide equivalence",
+    "chapter4_holdout": "0/4; paper_projection=fail; paper_3d=false",
+    "research_authority": "Stage H research evidence cannot promote reproduction gates",
+    "sun_earth_independence": "three distinct local source artifacts; not an external independent solver or external dataset"
+  },
+  "required_outputs": [
+    "manuscript_zh.md",
+    "manuscript_zh.docx",
+    "manuscript_en.md",
+    "manuscript_en.docx",
+    "claim_evidence_matrix.csv",
+    "adviser_decision_summary.md",
+    "adviser_decision_summary.docx",
+    "package_readme.md",
+    "submission_candidate_summary.json",
+    "artifact_hashes.csv"
+  ]
+}

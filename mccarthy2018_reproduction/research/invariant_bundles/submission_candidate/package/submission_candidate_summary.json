@@ -1,0 +1,77 @@
+{
+  "adviser": "张晨",
+  "author": "兀文昊",
+  "authority_boundaries_preserved": true,
+  "chapter4_frozen_holdout": "0/4",
+  "claim_evidence_rows": 20,
+  "documents": {
+    "adviser_decision_summary.docx": {
+      "bytes": 13737,
+      "embedded_media": 0,
+      "text_characters": 2472
+    },
+    "manuscript_en.docx": {
+      "bytes": 748684,
+      "embedded_media": 4,
+      "text_characters": 17162
+    },
+    "manuscript_zh.docx": {
+      "bytes": 1887209,
+      "embedded_media": 10,
+      "text_characters": 21226
+    }
+  },
+  "external_submission_authorized": false,
+  "figure_audit_priority_counts": {
+    "P0_OBVIOUS_MISMATCH": 18,
+    "P1_MATERIAL_PARTIAL": 7,
+    "P2_ACCEPTABLE_BOUNDARY": 17,
+    "P3_SCHEMATIC_PROXY": 12
+  },
+  "h2_stable_bundle": {
+    "accepted_improved_rows": 6,
+    "cases": 3,
+    "gate": "pass",
+    "method_rows": 9
+  },
+  "h2_stable_manifold": {
+    "accepted_improved_rows": 36,
+    "gate": "pass",
+    "rows": 54
+  },
+  "h3_route_h_2d": {
+    "accepted_schur_manifold_rows": 4,
+    "cases": 2,
+    "diagnostic_rows": 90,
+    "gate": "pass",
+    "never_one_dimensional": true,
+    "qr_bounded_failure_cases": 2
+  },
+  "h4_long_propagation": {
+    "accepted_rows": 8,
+    "cases": 3,
+    "event_rows": 12,
+    "gate": "pass",
+    "physical_boundary_rows": 4,
+    "trajectory_rows": 492
+  },
+  "h5_sun_earth": {
+    "benchmark_status_counts": {
+      "boundary": 6,
+      "fail": 3
+    },
+    "distinct_local_sources": 3,
+    "gate": "pass",
+    "manifold_status_counts": {
+      "boundary": 12,
+      "fail": 6
+    },
+    "source_authority_boundary_cases": 3
+  },
+  "package_date": "2026-07-21",
+  "package_status": "adviser_submission_decision_candidate",
+  "reproduction_target_rows": 54,
+  "schema_version": "invariant_bundle_submission_candidate_summary_v1",
+  "status": "pass_with_explicit_boundaries",
+  "target_journal_selected": false
+}
