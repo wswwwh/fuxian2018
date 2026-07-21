@@ -1,0 +1,31 @@
+{
+  "benchmark_rows": 9,
+  "benchmark_status_counts": {
+    "boundary": 6,
+    "fail": 3
+  },
+  "cases_with_two_improved_boundary_or_better_methods": 3,
+  "completed_cases": [
+    "h5_se_active_event_step_1_n21",
+    "h5_se_sharpness_stage_4_n21",
+    "h5_se_energy_frontier_n21"
+  ],
+  "elapsed_seconds": 17.06150279999929,
+  "h1_registry_sha256": "E0671C3982DF569762444B127BA975498906D7A3DBA55C99C31474129FE45D86",
+  "h5_gate_status": "pass",
+  "independent_new_source_benchmarks": 3,
+  "manifold_rows": 18,
+  "manifold_status_counts": {
+    "boundary": 12,
+    "fail": 6
+  },
+  "max_wall_seconds": 1800.0,
+  "method_attempt_rows": 21,
+  "pairwise_independence_rows": 3,
+  "run_id": "33CD7C3536198E3E8E2E",
+  "schema_version": "submission_candidate_sun_earth_expansion_summary_v1",
+  "source_authority_boundary_cases": 3,
+  "source_git_commit": "9f3182157c950aaf1980f760c478bfdd18718b2a",
+  "stage_c_registry_sha256": "B38099E93BB85AD4B97035D667A4AD5E6A74C1805B612EDEABC7AF6497C23EE5",
+  "status": "complete"
+}

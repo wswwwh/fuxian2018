@@ -1,0 +1,10 @@
+{
+  "numpy": "2.3.5",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "python": "3.11.15 | packaged by conda-forge | (main, Jun 11 2026, 03:27:10) [MSC v.1944 64 bit (AMD64)]",
+  "python_executable": "D:\\miniconda3\\envs\\cislunar\\python.exe",
+  "run_id": "33CD7C3536198E3E8E2E",
+  "schema_version": "submission_candidate_sun_earth_expansion_environment_v1",
+  "scipy": "1.17.1",
+  "source_git_commit": "9f3182157c950aaf1980f760c478bfdd18718b2a"
+}
