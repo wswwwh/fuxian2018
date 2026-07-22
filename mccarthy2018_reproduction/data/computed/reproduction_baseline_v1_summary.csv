@@ -7,9 +7,9 @@ v0_targets,13,data/reproduction_targets.csv,schematic tier
 v2_targets,41,data/reproduction_targets.csv,numeric/application tier
 schematic_targets,13,data/reproduction_targets.csv,schematic targets
 numeric_application_targets,41,data/reproduction_targets.csv,numeric plus application targets
-numerical_reproduction_rows,16,data/reproduction_targets.csv,rows carrying exact numerical reproduction label
-evidence_accepted,7,data/computed/figure_evidence_gap_audit.csv,conservative evidence-gap classification
-evidence_boundary,30,data/computed/figure_evidence_gap_audit.csv,conservative evidence-gap classification
+numerical_reproduction_rows,11,data/reproduction_targets.csv,rows carrying exact numerical reproduction label
+evidence_accepted,3,data/computed/figure_evidence_gap_audit.csv,conservative evidence-gap classification
+evidence_boundary,34,data/computed/figure_evidence_gap_audit.csv,conservative evidence-gap classification
 evidence_diagnostic,5,data/computed/figure_evidence_gap_audit.csv,conservative evidence-gap classification
 evidence_proxy,12,data/computed/figure_evidence_gap_audit.csv,conservative evidence-gap classification
 missing_artifact_rows,0,data/computed/figure_evidence_gap_audit.csv,missing script/data/render rows
@@ -19,8 +19,8 @@ chapter2_accepted,1,data/computed/figure_evidence_gap_audit.csv,Chapter 2 accept
 chapter2_boundary,8,data/computed/figure_evidence_gap_audit.csv,Chapter 2 boundary count
 chapter2_diagnostic,0,data/computed/figure_evidence_gap_audit.csv,Chapter 2 diagnostic count
 chapter2_proxy,6,data/computed/figure_evidence_gap_audit.csv,Chapter 2 proxy count
-chapter3_accepted,6,data/computed/figure_evidence_gap_audit.csv,Chapter 3 accepted count
-chapter3_boundary,3,data/computed/figure_evidence_gap_audit.csv,Chapter 3 boundary count
+chapter3_accepted,2,data/computed/figure_evidence_gap_audit.csv,Chapter 3 accepted count
+chapter3_boundary,7,data/computed/figure_evidence_gap_audit.csv,Chapter 3 boundary count
 chapter3_diagnostic,5,data/computed/figure_evidence_gap_audit.csv,Chapter 3 diagnostic count
 chapter3_proxy,3,data/computed/figure_evidence_gap_audit.csv,Chapter 3 proxy count
 chapter4_accepted,0,data/computed/figure_evidence_gap_audit.csv,Chapter 4 accepted count
@@ -54,7 +54,7 @@ chapter5_active_member,468,data/computed/chapter5_sun_earth_l1_active_geometry_f
 chapter5_active_max_y_km,659439.4314289853,data/computed/chapter5_sun_earth_l1_active_geometry_family_audit.csv,full-torus extent
 chapter5_active_max_z_km,939944.3046133927,data/computed/chapter5_sun_earth_l1_active_geometry_family_audit.csv,full-torus extent
 chapter5_stable_periapsis_km,7034.029835374918,data/computed/chapter5_active_geometry_stable_manifold_tight_target_audit.csv,accepted stable-manifold application
-chapter5_leo_periapsis_km,7034.028970727035,data/computed/chapter5_active_geometry_leo_transfer_audit.csv,accepted LEO transfer application
+chapter5_leo_periapsis_km,6564.533182015416,data/computed/chapter5_active_geometry_leo_transfer_audit.csv,accepted LEO transfer application
 chapter5_bcr4bp_numerical_pass,2,data/computed/chapter5_fig510_bcr4bp_transfer_audit.csv,numerical extension rows
 chapter5_bcr4bp_paper_equivalence_pass,0,data/computed/chapter5_fig510_bcr4bp_transfer_audit.csv,paper-equivalent rows
 staged_goal_status,chapter3_passed_chapter4_ready,data/computed/mccarthy2018_staged_goal_gate_status.csv,current reproduction staged gate

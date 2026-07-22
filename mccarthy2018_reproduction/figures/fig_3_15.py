@@ -27,7 +27,9 @@ def main() -> None:
     corrections = corrected_l2_constant_frequency_vertical_pseudo_arclength_corrections(
         system.mu
     )
-    orbit_index = np.linspace(0.0, 800.0, len(corrections))
+    # Use the actual continuation-member index.  Rescaling 25 computed members
+    # to the paper's 0--800 axis would assign an unsupported meaning to x.
+    orbit_index = np.arange(len(corrections), dtype=int)
     jacobi = np.asarray(
         [
             float(np.mean(jacobi_constant(correction.corrected_states, system.mu)))
@@ -43,7 +45,7 @@ def main() -> None:
     axes[0].scatter([orbit_index[-1]], [jacobi[-1]], color="#16856b", s=28, zorder=4)
     axes[0].set_xlabel("Orbit Index")
     axes[0].set_ylabel("Jacobi Constant")
-    axes[0].set_xlim(0, 800)
+    axes[0].set_xlim(0, len(corrections) - 1)
     axes[0].set_ylim(3.0275, 3.0450)
     axes[0].grid(True, alpha=0.24)
 
@@ -53,7 +55,7 @@ def main() -> None:
     )
     axes[1].set_xlabel("Orbit Index")
     axes[1].set_ylabel("Mapping Time [days]")
-    axes[1].set_xlim(0, 800)
+    axes[1].set_xlim(0, len(corrections) - 1)
     axes[1].set_ylim(16.85, 17.28)
     axes[1].grid(True, alpha=0.24)
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)

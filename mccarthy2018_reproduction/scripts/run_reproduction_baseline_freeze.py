@@ -27,8 +27,8 @@ MANIFEST_PATH = (
 DOCUMENT_PATH = PROJECT_ROOT / "docs" / "reproduction_baseline_v1.md"
 
 EXPECTED_EVIDENCE_COUNTS = {
-    "accepted": 7,
-    "boundary": 30,
+    "accepted": 3,
+    "boundary": 34,
     "diagnostic": 5,
     "proxy": 12,
 }
@@ -363,8 +363,8 @@ def build_outputs() -> tuple[str, str, str]:
         "numeric/application target count must remain 41",
     )
     require(
-        level_counts["numerical reproduction"] == 16,
-        "current exact numerical-reproduction count must remain 16 in baseline v1",
+        level_counts["numerical reproduction"] == 11,
+        "current exact numerical-reproduction count must remain 11 in baseline v1",
     )
     require(
         evidence_counts == Counter(EXPECTED_EVIDENCE_COUNTS),
@@ -825,7 +825,7 @@ def main() -> int:
             return 1
         print(
             "BASELINE FREEZE CHECK PASS "
-            "targets=54 v0=13 v2=41 accepted=7 boundary=30 "
+            "targets=54 v0=13 v2=41 accepted=3 boundary=34 "
             "diagnostic=5 proxy=12 holdout=0/4"
         )
         return 0

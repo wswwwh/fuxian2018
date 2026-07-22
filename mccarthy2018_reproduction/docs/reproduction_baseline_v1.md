@@ -20,13 +20,13 @@
 - 目标注册表：54/54 [S:target_rows]。
 - V0：13 [S:v0_targets]；V2：41 [S:v2_targets]。
 - 示意目标：13 [S:schematic_targets]；数值/应用目标：41 [S:numeric_application_targets]。
-- 当前 exact label 为 numerical reproduction 的行：16 [S:numerical_reproduction_rows]。
+- 当前 exact label 为 numerical reproduction 的行：11 [S:numerical_reproduction_rows]。
 - 非空 PNG/PDF：54/54 [S:png_count; S:pdf_count]；缺失证据路径行：0 [S:missing_artifact_rows]。
 
 accepted/boundary/diagnostic/proxy 是 evidence-gap 保守分类，不等同于 V0/V2，也不等同于论文整体等价。
 
-- **accepted (7)**: Fig. 2.15, Fig. 3.5, Fig. 3.6, Fig. 3.12, Fig. 3.13, Fig. 3.14, Fig. 3.15
-- **boundary (30)**: Fig. 2.3, Fig. 2.4, Fig. 2.6, Fig. 2.7, Fig. 2.8, Fig. 2.11, Fig. 2.13, Fig. 2.14, Fig. 3.7, Fig. 3.8, Fig. 3.16, Fig. 4.1, Fig. 4.2, Fig. 4.3, Fig. 4.4, Fig. 4.5, Fig. 4.6, Fig. 4.7, Fig. 4.8, Fig. 5.1, Fig. 5.5, Fig. 5.6, Fig. 5.7, Fig. 5.8, Fig. 5.9, Fig. 5.10, Fig. 5.11, Fig. 5.12, Fig. 5.13, Fig. 5.14
+- **accepted (3)**: Fig. 2.15, Fig. 3.14, Fig. 3.15
+- **boundary (34)**: Fig. 2.3, Fig. 2.4, Fig. 2.6, Fig. 2.7, Fig. 2.8, Fig. 2.11, Fig. 2.13, Fig. 2.14, Fig. 3.5, Fig. 3.6, Fig. 3.7, Fig. 3.8, Fig. 3.12, Fig. 3.13, Fig. 3.16, Fig. 4.1, Fig. 4.2, Fig. 4.3, Fig. 4.4, Fig. 4.5, Fig. 4.6, Fig. 4.7, Fig. 4.8, Fig. 5.1, Fig. 5.5, Fig. 5.6, Fig. 5.7, Fig. 5.8, Fig. 5.9, Fig. 5.10, Fig. 5.11, Fig. 5.12, Fig. 5.13, Fig. 5.14
 - **diagnostic (5)**: Fig. 3.3, Fig. 3.9, Fig. 3.10, Fig. 3.11, Fig. 3.17
 - **proxy (12)**: Fig. 2.1, Fig. 2.2, Fig. 2.5, Fig. 2.9, Fig. 2.10, Fig. 2.12, Fig. 3.1, Fig. 3.2, Fig. 3.4, Fig. 5.2, Fig. 5.3, Fig. 5.4
 
@@ -35,7 +35,7 @@ accepted/boundary/diagnostic/proxy 是 evidence-gap 保守分类，不等同于 
 | Chapter | accepted | boundary | diagnostic | proxy |
 |---|---:|---:|---:|---:|
 | 2 | 1 [S:chapter2_accepted] | 8 [S:chapter2_boundary] | 0 [S:chapter2_diagnostic] | 6 [S:chapter2_proxy] |
-| 3 | 6 [S:chapter3_accepted] | 3 [S:chapter3_boundary] | 5 [S:chapter3_diagnostic] | 3 [S:chapter3_proxy] |
+| 3 | 2 [S:chapter3_accepted] | 7 [S:chapter3_boundary] | 5 [S:chapter3_diagnostic] | 3 [S:chapter3_proxy] |
 | 4 | 0 [S:chapter4_accepted] | 8 [S:chapter4_boundary] | 0 [S:chapter4_diagnostic] | 0 [S:chapter4_proxy] |
 | 5 | 0 [S:chapter5_accepted] | 11 [S:chapter5_boundary] | 0 [S:chapter5_diagnostic] | 3 [S:chapter5_proxy] |
 
@@ -63,7 +63,7 @@ Chapter 2 已保存 CR3BP 基础、周期轨道、流形以及 L2 halo/NRHO 分�
 ### Chapter 5
 
 - Sun–Earth active-geometry checkpoint 为 member 468 [S:chapter5_active_member]，全环面 max|y|=659439.431 km、max|z|=939944.305 km [S:chapter5_active_max_y_km; S:chapter5_active_max_z_km]。
-- 稳定流形近地点为 7034.029835 km [S:chapter5_stable_periapsis_km]；LEO 转移近地点为 7034.028971 km [S:chapter5_leo_periapsis_km]。这些是 CR3BP 应用门结果，不是完整 ephemeris/论文面板等价。
+- 稳定流形近地点为 7034.029835 km [S:chapter5_stable_periapsis_km]；LEO 转移近地点为 6564.533182 km [S:chapter5_leo_periapsis_km]。这些是 CR3BP 应用门结果，不是完整 ephemeris/论文面板等价。
 - Fig. 5.10 BCR4BP 数值扩展为 2/2 [S:chapter5_bcr4bp_numerical_pass]，论文等价为 0/2 [S:chapter5_bcr4bp_paper_equivalence_pass]。
 
 ## 明确失败、不可证明和冻结边界

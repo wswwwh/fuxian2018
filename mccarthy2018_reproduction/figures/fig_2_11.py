@@ -30,9 +30,10 @@ def main() -> None:
     guess = planar_lyapunov_linear_guess(mu, point="L2", x_amplitude=-1.15e-3)
     orbit = correct_planar_lyapunov(mu, guess)
 
-    plot_guess_state = guess.initial_state.copy()
-    plot_guess_state[4] *= 1.075
-    guess_states = propagate_to_y_crossing(plot_guess_state, mu, samples=500)
+    # Plot the exact linear seed supplied to the differential corrector.  A
+    # previous display-only velocity scaling made the red curve easier to see,
+    # but it no longer represented the algorithm's actual initial guess.
+    guess_states = propagate_to_y_crossing(guess.initial_state, mu, samples=500)
     corrected_states = propagate_half_orbit(orbit.initial_state, orbit.half_period, mu, samples=500)
 
     fig, ax = plt.subplots(figsize=(6.4, 5.0))
