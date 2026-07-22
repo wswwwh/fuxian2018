@@ -23,9 +23,9 @@ from qp_orbits.torus_stability import (
 
 FIGURE_ID = "4.3"
 SOURCE_PAGE = 89
-REPRO_LEVEL = "numerical manifold reproduction"
+REPRO_LEVEL = "numerical state-space manifold; paper-projection holdout failed"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Fixed-time full-torus JC=3.1389 DG unstable snapshots at the four paper times; no proxy layers."
+NOTES = "Fixed-time full-torus numerical snapshots; frozen paper-projection holdout is 0/4."
 
 
 def main() -> None:
@@ -67,6 +67,11 @@ def main() -> None:
             figure_id=FIGURE_ID,
         )
         ax.text2D(0.47, -0.10, f"({chr(96 + idx)})", transform=ax.transAxes, fontsize=12)
+    fig.suptitle(
+        "Numerical state-space snapshots; paper_projection=FAIL (frozen holdout 0/4)",
+        fontsize=9,
+        color="#8a4b08",
+    )
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)
 

@@ -32,28 +32,28 @@ triage aids only; they are not acceptance criteria.
 
 | Figure | Panel | Symmetric Chamfer [px] | Precision @5px | Recall @5px | Area ratio | Failure items |
 |---|---:|---:|---:|---:|---:|---|
-| 4.3 | (a) | 20.598 | 0.435 | 0.272 | 0.680 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
-| 4.3 | (b) | 28.604 | 0.176 | 0.180 | 0.990 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
-| 4.3 | (c) | 36.203 | 0.141 | 0.106 | 0.841 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
-| 4.3 | (d) | 17.894 | 0.571 | 0.289 | 0.461 | `symmetric_chamfer_gt_10px;recall_at_5px_lt_0.50;area_ratio_lt_0.50` |
-| 4.4 | (a) | 31.187 | 0.051 | 0.034 | 0.364 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50;area_ratio_lt_0.50` |
-| 4.4 | (b) | 10.545 | 0.624 | 0.210 | 0.307 | `symmetric_chamfer_gt_10px;recall_at_5px_lt_0.50;area_ratio_lt_0.50` |
-| 4.4 | (c) | 14.256 | 0.770 | 0.271 | 0.252 | `symmetric_chamfer_gt_10px;recall_at_5px_lt_0.50;area_ratio_lt_0.50` |
-| 4.4 | (d) | 20.651 | 0.692 | 0.212 | 0.236 | `symmetric_chamfer_gt_10px;recall_at_5px_lt_0.50;area_ratio_lt_0.50` |
-| 4.5 | (a) | 31.987 | 0.067 | 0.095 | 1.617 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
-| 4.5 | (b) | 28.747 | 0.199 | 0.435 | 2.011 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50;area_ratio_gt_2.00` |
-| 4.5 | (c) | 35.522 | 0.249 | 0.282 | 0.981 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
-| 4.5 | (d) | 12.877 | 0.502 | 0.471 | 1.055 | `symmetric_chamfer_gt_10px;recall_at_5px_lt_0.50` |
-| 4.6 | (a) | 36.764 | 0.000 | 0.000 | 1.012 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
-| 4.6 | (b) | 1.929 | 0.914 | 0.787 | 0.823 | `none` |
-| 4.6 | (c) | 44.943 | 0.073 | 0.047 | 0.691 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
-| 4.6 | (d) | 37.623 | 0.197 | 0.157 | 0.790 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
+| 4.3 | (a) | 30.530 | 0.353 | 0.262 | 0.771 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
+| 4.3 | (b) | 30.722 | 0.272 | 0.322 | 1.097 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
+| 4.3 | (c) | 37.207 | 0.145 | 0.095 | 0.807 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
+| 4.3 | (d) | 17.966 | 0.573 | 0.270 | 0.441 | `symmetric_chamfer_gt_10px;recall_at_5px_lt_0.50;area_ratio_lt_0.50` |
+| 4.4 | (a) | 85.384 | 0.028 | 0.028 | 0.720 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
+| 4.4 | (b) | 76.407 | 0.393 | 0.242 | 0.560 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
+| 4.4 | (c) | 16.053 | 0.714 | 0.250 | 0.244 | `symmetric_chamfer_gt_10px;recall_at_5px_lt_0.50;area_ratio_lt_0.50` |
+| 4.4 | (d) | 23.407 | 0.595 | 0.172 | 0.224 | `symmetric_chamfer_gt_10px;recall_at_5px_lt_0.50;area_ratio_lt_0.50` |
+| 4.5 | (a) | 38.083 | 0.062 | 0.096 | 1.722 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
+| 4.5 | (b) | 28.077 | 0.210 | 0.507 | 2.078 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;area_ratio_gt_2.00` |
+| 4.5 | (c) | 36.123 | 0.242 | 0.256 | 0.938 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
+| 4.5 | (d) | 11.597 | 0.548 | 0.482 | 1.009 | `symmetric_chamfer_gt_10px;recall_at_5px_lt_0.50` |
+| 4.6 | (a) | 67.994 | 0.000 | 0.000 | 1.580 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
+| 4.6 | (b) | 26.032 | 0.486 | 0.558 | 1.137 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50` |
+| 4.6 | (c) | 42.616 | 0.078 | 0.050 | 0.657 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
+| 4.6 | (d) | 32.062 | 0.259 | 0.196 | 0.748 | `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50` |
 
 ## Diagnostic summary
 
 - Panels evaluated: `16`.
-- Panels with one or more diagnostic alerts: `15`.
-- Panels without alerts at the stated triage thresholds: `1`.
+- Panels with one or more diagnostic alerts: `16`.
+- Panels without alerts at the stated triage thresholds: `0`.
 - Paper projection acceptance remains `not_run` for all panels.
 
 ## Failure inventory
@@ -62,28 +62,29 @@ triage aids only; they are not acceptance criteria.
 - Fig. 4.3 panel (b): `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50`.
 - Fig. 4.3 panel (c): `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50`.
 - Fig. 4.3 panel (d): `symmetric_chamfer_gt_10px;recall_at_5px_lt_0.50;area_ratio_lt_0.50`.
-- Fig. 4.4 panel (a): `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50;area_ratio_lt_0.50`.
-- Fig. 4.4 panel (b): `symmetric_chamfer_gt_10px;recall_at_5px_lt_0.50;area_ratio_lt_0.50`.
+- Fig. 4.4 panel (a): `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50`.
+- Fig. 4.4 panel (b): `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50`.
 - Fig. 4.4 panel (c): `symmetric_chamfer_gt_10px;recall_at_5px_lt_0.50;area_ratio_lt_0.50`.
 - Fig. 4.4 panel (d): `symmetric_chamfer_gt_10px;recall_at_5px_lt_0.50;area_ratio_lt_0.50`.
 - Fig. 4.5 panel (a): `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50`.
-- Fig. 4.5 panel (b): `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50;area_ratio_gt_2.00`.
+- Fig. 4.5 panel (b): `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;area_ratio_gt_2.00`.
 - Fig. 4.5 panel (c): `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50`.
 - Fig. 4.5 panel (d): `symmetric_chamfer_gt_10px;recall_at_5px_lt_0.50`.
 - Fig. 4.6 panel (a): `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50`.
+- Fig. 4.6 panel (b): `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50`.
 - Fig. 4.6 panel (c): `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50`.
 - Fig. 4.6 panel (d): `symmetric_chamfer_gt_10px;precision_at_5px_lt_0.50;recall_at_5px_lt_0.50`.
 
 ## Provenance
 
 - Fig. 4.3 paper: `outputs/reference_pages/fig_4_3_reference.png` (SHA256 `DDD9E4B1EF0B3B8D456BBF1AEBA66AB1E8A672D8907FFF22B3329269536158EE`).
-- Fig. 4.3 reproduction: `outputs/figures_png/fig_4_3.png` (SHA256 `1C6949147AC990585EACD7BBF0E3D291FE50151A4B23251318F241B0A875C180`).
+- Fig. 4.3 reproduction: `outputs/figures_png/fig_4_3.png` (SHA256 `49BD9826A973C0FCB7E1A2888622379691B130BF69E50897EE5F172032B24626`).
 - Fig. 4.4 paper: `outputs/reference_pages/fig_4_4_reference.png` (SHA256 `72F9F9A41FAF5DB2E00F021866086EE5A982AB35EC2EC05EC2C0C7D1D2782256`).
-- Fig. 4.4 reproduction: `outputs/figures_png/fig_4_4.png` (SHA256 `B61DD30A56FE0CD7AC03279CEF8E6693FBB39830521519334E7FF50699CA9F46`).
+- Fig. 4.4 reproduction: `outputs/figures_png/fig_4_4.png` (SHA256 `4C0533BD7DD3D386D460B8E1AD13688EDC50EE872DC173B40D817F1741104A4B`).
 - Fig. 4.5 paper: `outputs/reference_pages/fig_4_5_reference.png` (SHA256 `ED1D3B2F5C9977ABFEA717FAB4F24832B09668B8B0972DABE8338133B19A1746`).
-- Fig. 4.5 reproduction: `outputs/figures_png/fig_4_5.png` (SHA256 `A29E7CBE6502A4D2E297AADF7356A3041E44FF7905E6C20ACBA7244CD40ED510`).
+- Fig. 4.5 reproduction: `outputs/figures_png/fig_4_5.png` (SHA256 `446C80C106EE6FC2505BF694A98AE5E56BAFFC5E9B9BC87FF298654426AA62B7`).
 - Fig. 4.6 paper: `outputs/reference_pages/fig_4_6_reference.png` (SHA256 `7E18E60DE4C373BE50A908128565B36FBFBFB93A1FBF6EC81EE1D25F901B2CD3`).
-- Fig. 4.6 reproduction: `outputs/figures_png/fig_4_6.png` (SHA256 `66B57EB3278F23B2B43AC483647671DBA46AEDA21C274DE1AC30E3934CBB7534`).
+- Fig. 4.6 reproduction: `outputs/figures_png/fig_4_6.png` (SHA256 `4B1DD4C0EB6AE3EBBC1143D53A45F4F8B7F6F5103EBB8C5C7FFFCE62F55E7752`).
 - Machine-readable rows: `data/computed/chapter4_fig43_fig46_projection_diagnostic.csv`.
 - Mask QA image: `outputs/figure_qa/chapter4_fig43_fig46_projection_diagnostic_masks.png`.
 

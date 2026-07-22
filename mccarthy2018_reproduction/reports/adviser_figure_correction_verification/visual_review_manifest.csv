@@ -1,0 +1,26 @@
+figure_id,png_sha256,reviewed_on,verdict,scope
+3.5,917E5B3C9A29430FED8EF98261A6EF889B81EA975EA47D1758338B1193A5F5BA,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+3.6,074955D451C53400128F03A67FDFBB12FDE2D465714A9E0A83CCD93902A92BBB,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+3.7,AD66E57AF3BA7AE026EE203EC9C18ECCA053ECC7DD676891F66CC2B32B5D808C,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+3.9,23EFA3A4666F56EDE5D0B00C17124509B9D1A1955A068EA620933E711FC7A9E2,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+3.10,AAA114886629EC6586B90D42BFAEBDBBAC6129D0A8B6AABE9FB7EF0B9C32D8FC,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+3.11,9E26F2742D5A37AED767C972D4741A6FA16BAD51857F1220E161A87E17A6E930,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+3.12,54A0D3F2AD9330D04F352A8198217B14687F85F43DBD4FA31DA842FA316FFFF6,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+3.13,9C3C3EB16AC50220F1598F8F8A658B27681D9C94E21C1B8674D96AAC5FD2FAB1,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+3.16,20C90EDE957D8CEA83D8696DCA65D7D62BD9486721EB525525B08785B43553D4,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+3.17,BE2B05F899EAD281AEEA5A9A9280917D15AA608C16398187F68B66356B1C11EC,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+4.1,E57CFA8F4A29EA9B1EE9A3C6EBE1814FFEA26DC7D71EF891481A32ABD3F9DD4C,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+4.2,761BDE590CA0AE27CA646A66CCD6A66669C7F6B74FD07EC276F99F0A47192E21,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+4.3,49BD9826A973C0FCB7E1A2888622379691B130BF69E50897EE5F172032B24626,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+4.4,4C0533BD7DD3D386D460B8E1AD13688EDC50EE872DC173B40D817F1741104A4B,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+4.5,446C80C106EE6FC2505BF694A98AE5E56BAFFC5E9B9BC87FF298654426AA62B7,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+4.6,4B1DD4C0EB6AE3EBBC1143D53A45F4F8B7F6F5103EBB8C5C7FFFCE62F55E7752,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+4.7,E0BCDFEBF3F6EDC157B858310C04DA70D4D91AA0BBDF60CA09D7871EE7F9C84D,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+4.8,D36CEF72807C3B13F7813FBA8537F9DEFB7325E86E4343C73FAE240A00EDF2E3,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+5.1,00ABFDE248036FE1D9D0F73D910E612EB6200C8F71E8D8F37C3B942FED0ECD70,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+5.5,01958880A4CEF5E09D5B849B182FD125F84784DB333A6A457C3BB0BB51EA35BD,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+5.8,7425C83D6DB0DF6153E73FE8244A54FF0C16BAC513C50982C544072337BB6EFD,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+5.10,521434A7FA65BA6417D4D7850016144B76D46FD4BA58D52CF95B17D8B3AB9F75,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+5.12,2FD7CFA72B1E678F263D2DE66DDBC9E8BB11C2D74EA0D338DB5ABEE5AF360B54,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+5.13,02EA37A4E0B7240CEAD049CC67ECF27F6713786F7A7F6CA9915CB339D6D0E19C,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence
+5.14,5241114B430808935DD35297B1A4375E270FD8EAE57FE3861F847CC33C406E45,2026-07-21,pass,layout legibility and visible disclosure; not paper equivalence

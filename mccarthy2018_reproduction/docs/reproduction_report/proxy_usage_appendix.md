@@ -33,9 +33,9 @@ comparison, and several Chapter 4/5 figures retain proxy or source-layer status.
 - Fig. 3.2: `proxy/schematic only`; proxy flag `true`; schematic only
 - Fig. 3.3: `proxy/schematic only`; proxy flag `partial`; schematic with numerical diagnostic
 - Fig. 3.4: `proxy/schematic only`; proxy flag `true`; schematic only
-- Fig. 3.9: `shape-match with local numerical overlay`; proxy flag `partial`; corrected curves with proxy tail
+- Fig. 3.9: `partial numerical continuation with explicit proxy tail`; proxy flag `partial`; the solid halo branch is corrected numerical data; only the uncovered tail is drawn as a dashed, explicitly unvalidated analytic proxy
 - Fig. 3.10: `period-q multiple-shooting audit with q8 boundary`; proxy flag `partial`; q=2 and q=3 are strict period-q audit rows; q=8 is retained as a local multiple-shooting overlay with an explicit single-shoot closure boundary
-- Fig. 3.11: `shape-match with local numerical overlay`; proxy flag `partial`; local numerical scene
+- Fig. 3.11: `numerical central orbits with illustrative section proxy`; proxy flag `partial`; the 3D panel contains only CR3BP-integrated central periodic orbits; the left-panel ellipse contours are visibly labeled illustrative and are not presented as computed Poincare crossings
 - Fig. 3.17: `audited Route H fixed-time source-layer`; proxy flag `partial`; audited Route H branch is plotted as the main numerical layer; faint reference trend proxy is retained only for visual context
 
 ### Chapter 5

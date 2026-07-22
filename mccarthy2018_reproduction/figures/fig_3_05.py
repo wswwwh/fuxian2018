@@ -20,9 +20,12 @@ from qp_orbits.quasi_torus import (
 
 FIGURE_ID = "3.5"
 SOURCE_PAGE = 68
-REPRO_LEVEL = "physical-consistency"
+REPRO_LEVEL = "numerical source layer with paper-geometry boundary"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "All panels use corrected fixed-JC tori from the staged N=9, N=15, and N=21 branches."
+NOTES = (
+    "All panels use corrected fixed-JC tori from the staged N=9, N=15, and N=21 "
+    "branches. The 12.03-day paper amplitude anchor is not yet matched."
+)
 
 
 def style_torus_axis(ax, equilibrium_x: float, label: str) -> None:
@@ -115,9 +118,9 @@ def main() -> None:
             color="#b8b8b8",
             edgecolor="none",
             linewidth=0,
-            antialiased=False,
-            shade=True,
-            alpha=1.0,
+            antialiased=True,
+            shade=False,
+            alpha=0.88,
             rcount=surface.shape[0],
             ccount=surface.shape[1],
         )
@@ -129,6 +132,12 @@ def main() -> None:
             linewidth=1.0,
         )
         style_torus_axis(ax, modes.equilibrium_state[0], label)
+
+    fig.suptitle(
+        "Corrected CR3BP surfaces; paper-geometry boundary at the 12.03-day anchor",
+        fontsize=9,
+        color="#8a4b08",
+    )
 
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)

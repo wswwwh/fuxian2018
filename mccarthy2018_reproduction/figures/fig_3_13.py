@@ -17,9 +17,12 @@ from qp_orbits.quasi_torus import (
 
 FIGURE_ID = "3.13"
 SOURCE_PAGE = 77
-REPRO_LEVEL = "physical-consistency"
+REPRO_LEVEL = "numerical branch with endpoint-coverage boundary"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Corrected fixed-ratio quasi-halo amplitudes and Jacobi trend."
+NOTES = (
+    "Corrected fixed-ratio quasi-halo amplitudes and Jacobi trend. The numerical branch "
+    "ends near 86,197 km in z, below the approximately 93,000-km paper endpoint."
+)
 
 
 def main() -> None:
@@ -55,6 +58,18 @@ def main() -> None:
     axes[0].set_xlim(14.4, 17.8)
     axes[0].set_ylim(2.0e4, 1.22e5)
     axes[0].legend(loc="upper left", fontsize=8)
+    axes[0].text(
+        0.98,
+        0.06,
+        "coverage boundary:\ncurrent $z_{max}$ = "
+        f"{float(np.max(z_amplitude)):.0f} km\npaper endpoint $\\approx$ 93000 km",
+        transform=axes[0].transAxes,
+        ha="right",
+        va="bottom",
+        fontsize=7,
+        color="#8a4b08",
+        bbox={"facecolor": "white", "alpha": 0.82, "edgecolor": "none", "pad": 2},
+    )
     fmt = ScalarFormatter(useMathText=True)
     fmt.set_powerlimits((4, 4))
     axes[0].yaxis.set_major_formatter(fmt)
@@ -65,6 +80,11 @@ def main() -> None:
     axes[1].set_xlim(14.4, 17.8)
     axes[1].set_ylim(3.00, 3.14)
     axes[1].grid(True, alpha=0.24)
+    fig.suptitle(
+        "Corrected numerical branch; high-amplitude paper endpoint remains uncovered",
+        fontsize=9,
+        color="#8a4b08",
+    )
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)
 

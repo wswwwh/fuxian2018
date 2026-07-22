@@ -12,7 +12,7 @@ from qp_orbits.plot_style import apply_style, save_figure
 
 FIGURE_ID = "5.10"
 SOURCE_PAGE = 108
-REPRO_LEVEL = "shape-match + local numerical"
+REPRO_LEVEL = "CR3BP numerical baseline; paper-equivalence gate failed"
 SYSTEM = "Earth-Moon CR3BP corrected NRHO direct shooting"
 NOTES = "Position-matched single-arc baselines at thesis flight times; not the thesis optimized quasi-NRHO arcs."
 
@@ -35,6 +35,11 @@ def main() -> None:
         style_nrho_axis(ax, label=label)
         ax.text2D(0.08, 0.76, "Arrival\nLocation", transform=ax.transAxes, fontsize=8)
         ax.text2D(0.58, 0.76, "Departure\nLocation", transform=ax.transAxes, fontsize=8)
+    fig.suptitle(
+        "Displayed: CR3BP project baseline | paper-equivalent transfer cases: 0/2",
+        fontsize=9,
+        color="#8a4b08",
+    )
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)
 

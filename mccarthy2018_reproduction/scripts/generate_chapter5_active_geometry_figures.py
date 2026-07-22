@@ -89,7 +89,7 @@ def main() -> None:
     )
     fig, ax = plt.subplots(figsize=(6.4, 4.2), constrained_layout=True)
     ax.plot(days, radii, color="#0072B2", linewidth=1.4, label="CR3BP transfer")
-    ax.axhline(7033.0, color="#D55E00", linestyle="--", linewidth=1.2, label="7033 km target")
+    ax.axhline(6563.0, color="#D55E00", linestyle="--", linewidth=1.2, label="185-km LEO target (6563 km radius)")
     ax.set_xlabel("Elapsed time from periapsis (days)")
     ax.set_ylabel("Earth-relative radius (km)")
     ax.set_title("Accepted active-geometry Lissajous-to-LEO transfer")

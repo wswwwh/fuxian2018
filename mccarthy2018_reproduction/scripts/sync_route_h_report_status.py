@@ -230,6 +230,80 @@ def _update_figure_validation_table(summary: dict[str, float | int | str]) -> li
 
 
 def _update_chapter3_figure_validation_rows(rows: list[dict[str, str]]) -> None:
+    correctness_boundaries = {
+        "3.5": {
+            "current_repro_level": "corrected numerical family with paper-anchor boundary",
+            "uses_proxy": "false",
+            "visual_status": (
+                "surface shading artifacts removed; the 12.03-day source member remains "
+                "below the paper y/z amplitudes (33411.7/25062.1 km versus 34466/28547 km)"
+            ),
+            "next_action": (
+                "Continue or re-anchor the early branch before claiming paper-equivalent "
+                "Fig. 3.5 geometry."
+            ),
+        },
+        "3.6": {
+            "current_repro_level": "corrected numerical curve with paper-anchor boundary",
+            "uses_proxy": "false",
+            "visual_status": (
+                "the paper's 12.03-day y/z amplitude anchors are displayed explicitly; "
+                "the current branch does not pass the z-amplitude anchor"
+            ),
+            "next_action": "Digitize the full paper curves and re-anchor the early continuation branch.",
+        },
+        "3.7": {
+            "current_repro_level": "corrected numerical family with topology boundary",
+            "uses_proxy": "false",
+            "visual_status": (
+                "transparent source surfaces expose the computed geometry; the late-family "
+                "paper folds/projection are not yet matched"
+            ),
+            "next_action": "Pass rank, closure, topology, and locked-projection gates before promotion.",
+        },
+        "3.9": {
+            "current_repro_level": "partial numerical continuation with explicit proxy tail",
+            "uses_proxy": "partial",
+            "visual_status": (
+                "the solid halo branch is corrected numerical data; only the uncovered tail "
+                "is drawn as a dashed, explicitly unvalidated analytic proxy"
+            ),
+            "next_action": "Replace the dashed halo tail with accepted continuation data.",
+        },
+        "3.11": {
+            "current_repro_level": "numerical central orbits with illustrative section proxy",
+            "uses_proxy": "partial",
+            "visual_status": (
+                "the 3D panel contains only CR3BP-integrated central periodic orbits; the "
+                "left-panel ellipse contours are visibly labeled illustrative and are not "
+                "presented as computed Poincare crossings"
+            ),
+            "next_action": "Replace the illustrative contours with event-detected section crossings.",
+        },
+        "3.12": {
+            "current_repro_level": "corrected numerical source layer with torus-topology boundary",
+            "uses_proxy": "false",
+            "visual_status": (
+                "transparent source surfaces no longer hide the parameterization; panels "
+                "(b)-(d) still fail the paper central-hole/topology check"
+            ),
+            "next_action": "Repair the two-angle parameterization and pass torus-hole/topology gates.",
+        },
+        "3.13": {
+            "current_repro_level": "corrected numerical branch with endpoint-coverage boundary",
+            "uses_proxy": "false",
+            "visual_status": (
+                "the current z-amplitude endpoint is shown as a coverage boundary near "
+                "86197 km versus the approximately 93000-km paper endpoint"
+            ),
+            "next_action": "Continue the fixed-ratio family to the paper endpoint and rerun pointwise checks.",
+        },
+    }
+    for row in rows:
+        update = correctness_boundaries.get(row["figure_id"])
+        if update:
+            row.update(update)
+
     if not CHAPTER3_PERIOD_Q_PER_FIGURE_AUDIT.exists():
         return
     period_q_rows = _read_csv(CHAPTER3_PERIOD_Q_PER_FIGURE_AUDIT)

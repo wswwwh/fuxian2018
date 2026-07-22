@@ -20,9 +20,12 @@ from qp_orbits.variational import integrate_state_and_stm, unpack_augmented
 
 FIGURE_ID = "3.10"
 SOURCE_PAGE = 72
-REPRO_LEVEL = "shape-match + local numerical"
+REPRO_LEVEL = "period-q audit with q=8 closure boundary"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Floquet-seeded period-q branches corrected by STM multiple shooting."
+NOTES = (
+    "Floquet-seeded period-q branches corrected by STM multiple shooting. q=2 and q=3 "
+    "pass strict single-shoot closure; q=8 passes only the local multiple-shooting gate."
+)
 
 
 def _complex_values(values: np.ndarray) -> str:
@@ -310,8 +313,34 @@ def main() -> None:
     ]
     for ax, resonance, label in zip(axes, [2, 3, 8], ["(a)", "(b)", "(c)"]):
         path = examples[resonance].trajectory
-        ax.plot(path[:, 0], path[:, 1], path[:, 2], color="#168bd2", linewidth=1.05)
+        strict = resonance in {2, 3}
+        ax.plot(
+            path[:, 0],
+            path[:, 1],
+            path[:, 2],
+            color="#168bd2" if strict else "#d97706",
+            linewidth=1.05,
+            linestyle="-" if strict else "--",
+        )
         style_axis(ax, label)
+        ax.text2D(
+            0.03,
+            0.95,
+            f"q={resonance}: strict closure PASS"
+            if strict
+            else "q=8: local multiple shooting only\nsingle-shoot closure FAIL",
+            transform=ax.transAxes,
+            fontsize=7,
+            va="top",
+            color="#075b4d" if strict else "#8a4b08",
+            bbox={"facecolor": "white", "alpha": 0.78, "edgecolor": "none", "pad": 1.5},
+        )
+    fig.suptitle(
+        "q=2 and q=3 are strict periodic solutions; q=8 remains a closure boundary",
+        fontsize=9,
+        color="#8a4b08",
+        y=0.985,
+    )
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)
 

@@ -375,25 +375,26 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
     return [
         {
             "figure_id": "5.1",
-            "current_source_layer": "corrected Sun-Earth L1 two-frequency Lissajous torus trajectories",
-            "current_repro_level": "numerical corrected Lissajous propagation reproduction",
-            "original_replacement_status": "corrected_lissajous_torus_replaces_proxy_long_propagation_scene",
+            "current_source_layer": "accepted active-geometry Sun-Earth L1 invariant-torus shadowing trajectory",
+            "current_repro_level": "numerical invariant-torus long-time shadowing reproduction",
+            "original_replacement_status": "same_initial_phase_325_1068_2182_day_torus_shadowing_replaces_multi_curve_scene",
             "uses_proxy": "false",
-            "primary_evidence": "data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv",
-            "supporting_evidence": f"{_rel(LISSAJOUS_TORUS_AUDIT)};{_rel(LISSAJOUS_AMPLITUDE_AUDIT)};{_rel(SUN_EARTH_L1_LONG_PROP_AUDIT)}",
+            "primary_evidence": "data/computed/chapter5_sun_earth_l1_active_geometry_long_trajectory.npz",
+            "supporting_evidence": f"{_rel(ACTIVE_GEOMETRY_FAMILY_AUDIT)};{_rel(SUN_EARTH_L1_LONG_PROP_AUDIT)}",
             "route_h_dependency": "none",
             "bcr4bp_dependency": "none",
             "optimization_dependency": "none",
-            "accepted_rows": metrics["lissajous_source_rows"],
+            "accepted_rows": metrics["l1_long_rows"],
             "best_metric": (
-                f"accepted corrected Lissajous source rows {metrics['lissajous_source_rows']}; "
-                f"torus points {metrics['lissajous_points']}; "
-                f"curve residual {metrics['lissajous_residual']}; "
-                f"Jacobi span {metrics['lissajous_jacobi_span']}; "
-                f"max |y|/|z| {metrics['lissajous_y_km']}/{metrics['lissajous_z_km']} km"
+                f"accepted duration rows {metrics['l1_long_rows']}; longest duration "
+                f"{metrics['l1_long_duration']} days; max trajectory Jacobi span "
+                f"{metrics['l1_long_max_jacobi']}; minimum transverse span "
+                f"{metrics['l1_long_min_transverse_span']}; maximum L1 distance "
+                f"{metrics['l1_long_max_l1_distance']} km; active geometry target pair "
+                f"{metrics['active_geometry_target_pair']}"
             ),
-            "boundary": "The analytic torus and center-mode overlays are removed. Remaining boundaries are the source-torus y-amplitude excess and pointwise thesis comparison.",
-            "next_action": "Reduce the corrected torus y-amplitude discrepancy and digitize the thesis panels for pointwise comparison.",
+            "boundary": "The panels now use one common-initial-phase invariant-torus shadowing trajectory at exactly 325/1068/2182 days. This is not an unconstrained 2182-day floating-point IVP claim; BCR4BP/ephemeris and pointwise thesis comparison remain open.",
+            "next_action": "Add a high-fidelity long-time shadowing audit and digitize the thesis panels before claiming pointwise paper equivalence.",
         },
         {
             "figure_id": "5.2",
@@ -494,7 +495,7 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
         {
             "figure_id": "5.8",
             "current_source_layer": "Earth-Moon equal-Jacobi halo-to-Lyapunov multiple-shooting transfer",
-            "current_repro_level": "numerical equal-Jacobi multiple-shooting transfer reproduction",
+            "current_repro_level": "CR3BP numerical transfer baseline with thesis-geometry boundary",
             "original_replacement_status": "computed_multiple_shooting_transfer_replaces_corridor_proxy_high_fidelity_pending",
             "uses_proxy": "false",
             "primary_evidence": "data/computed/chapter5_earth_moon_halo_lyapunov_transfer_baseline.csv",
@@ -601,7 +602,7 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
         {
             "figure_id": "5.12",
             "current_source_layer": "Earth-Moon NRHO fixed-departure rendezvous arrival-offset branch",
-            "current_repro_level": "numerical CR3BP rendezvous-branch reproduction",
+            "current_repro_level": "truncated numerical CR3BP branch with explicit coverage boundary",
             "original_replacement_status": "computed_branch_replaces_proxy_with_explicit_fold_boundary",
             "uses_proxy": "false",
             "primary_evidence": "data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv",
@@ -668,9 +669,9 @@ def _specs(metrics: dict[str, str]) -> list[dict[str, str]]:
                 f"target error {metrics['active_leo_periapsis_error']} km; "
                 f"transfer time {metrics['active_leo_time']} days; "
                 f"Jacobi span {metrics['active_leo_jacobi_span']}; "
-                f"Lissajous endpoint distance {metrics['active_leo_endpoint']} km"
+                f"active-torus endpoint position distance {metrics['active_leo_endpoint']} km"
             ),
-            "boundary": "The analytic transfer and torus scene is removed. The accepted active-geometry CR3BP trajectory reaches the 7033-km periapsis target and records the 185-km LEO endpoint; BCR4BP/ephemeris correction remains pending.",
+            "boundary": "The analytic transfer and legacy torus are removed. The Fig. 5.14 active-geometry CR3BP trajectory is selected against the stated 185-km LEO boundary (6563-km reference radius), distinct from Fig. 5.13's 7033-km marker; BCR4BP/ephemeris correction remains pending.",
             "next_action": "Correct this specific active-geometry stable-manifold transfer in BCR4BP/ephemeris and compare against thesis timing and geometry.",
         },
         {

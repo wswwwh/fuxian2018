@@ -18,7 +18,7 @@ from qp_orbits.quasi_torus import (
 
 FIGURE_ID = "3.9"
 SOURCE_PAGE = 71
-REPRO_LEVEL = "shape-match + local numerical"
+REPRO_LEVEL = "partial numerical continuation with explicit proxy tail"
 SYSTEM = "Earth-Moon CR3BP"
 NOTES = "Corrected vertical frequency curve and corrected halo continuation through 12.408 days with a proxy tail."
 
@@ -59,18 +59,22 @@ def main() -> None:
     }
 
     fig, axes = plt.subplots(1, 2, figsize=(8.0, 3.25), constrained_layout=True)
+    numerical_cutoff = corrected_halo[-1].mapping_time * system.time_unit_days
+    proxy_tail = [row for row in halo if row["mapping_time_days"] > numerical_cutoff]
     axes[0].plot(
-        [row["mapping_time_days"] for row in halo],
-        [row["frequency_ratio"] for row in halo],
+        [row["mapping_time_days"] for row in proxy_tail],
+        [row["frequency_ratio"] for row in proxy_tail],
         color="#9a9a9a",
         linestyle="--",
         linewidth=1.0,
+        label="unvalidated analytic proxy tail",
     )
     axes[0].plot(
         [correction.mapping_time * system.time_unit_days for correction in corrected_halo],
         [2.0 * 3.141592653589793 / correction.rotation_angle_rad for correction in corrected_halo],
         color="#1f77b4",
         linewidth=1.8,
+        label="corrected numerical branch",
     )
     halo_boundary = boundaries["quasi_halo"]
     axes[0].scatter(
@@ -88,6 +92,7 @@ def main() -> None:
     axes[0].set_ylim(5.0, 45.0)
     axes[0].grid(True, alpha=0.24)
     axes[0].legend(loc="upper left", fontsize=7, frameon=False)
+    axes[0].axvline(numerical_cutoff, color="#8a4b08", linewidth=0.8, linestyle=":")
 
     axes[1].plot(
         [correction.mapping_time * system.time_unit_days for correction in reversed(corrected_vertical)],
@@ -114,6 +119,12 @@ def main() -> None:
     axes[1].set_ylim(15.0, 50.0)
     axes[1].grid(True, alpha=0.24)
     axes[1].legend(loc="upper right", fontsize=7, frameon=False)
+
+    fig.suptitle(
+        "Solid: corrected numerical branch; dashed: proxy tail (not accepted evidence)",
+        fontsize=9,
+        color="#8a4b08",
+    )
 
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)

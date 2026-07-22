@@ -16,21 +16,20 @@ FIGURE_ID = "5.14"
 SOURCE_PAGE = 112
 REPRO_LEVEL = "numerical Lissajous stable-manifold transfer reproduction"
 SYSTEM = "Sun-Earth CR3BP stable-manifold baseline"
-NOTES = "Corrected L1 Lissajous torus and accepted 7033-km stable-manifold transfer; no proxy geometry."
+NOTES = "Accepted active-geometry torus and stable-manifold transfer to a 185-km LEO boundary; no legacy torus or transfer."
 
 
 def _load_numerical_scene(system):
-    surface_path = PROJECT_ROOT / "data" / "computed" / "chapter5_sun_earth_l1_lissajous_torus_surface.csv"
-    with surface_path.open(newline="", encoding="utf-8") as stream:
-        surface_rows = list(csv.DictReader(stream))
-    surface = np.array([[float(row[key]) for key in ("x_nd", "y_nd", "z_nd")] for row in surface_rows])
-    surface = surface.reshape(60, 60, 3) * system.length_unit_km
-    trajectory_path = PROJECT_ROOT / "data" / "computed" / "chapter5_sun_earth_l1_lissajous_leo_transfer.csv"
+    surface_path = PROJECT_ROOT / "data" / "computed" / "chapter5_sun_earth_l1_active_geometry_long_trajectory.npz"
+    with np.load(surface_path) as data:
+        surface = data["torus_surface_nd"].copy() * system.length_unit_km
+        invariant_curve = data["invariant_curve_nd"].copy() * system.length_unit_km
+    trajectory_path = PROJECT_ROOT / "data" / "computed" / "chapter5_active_geometry_leo_transfer.csv"
     with trajectory_path.open(newline="", encoding="utf-8") as stream:
         trajectory_rows = list(csv.DictReader(stream))
     transfer = np.array([[float(row[key]) for key in ("x_nd", "y_nd", "z_nd")] for row in trajectory_rows])
     transfer *= system.length_unit_km
-    return surface, transfer
+    return surface, invariant_curve, transfer
 
 
 def _add_planar_arrow(ax, curve: np.ndarray, index: int) -> None:
@@ -47,29 +46,18 @@ def _add_planar_arrow(ax, curve: np.ndarray, index: int) -> None:
 def main() -> None:
     apply_style()
     system = SYSTEMS["sun_earth"]
-    surface, transfer = _load_numerical_scene(system)
-    lissajous = surface[0]
+    surface, lissajous, transfer = _load_numerical_scene(system)
     earth = ((1.0 - system.mu) * system.length_unit_km, 0.0, 0.0)
     arrival = transfer[-1]
-    theta = np.linspace(0.0, 2.0 * np.pi, 160)
-    parking_orbit = np.column_stack(
-        [
-            earth[0] + 7_033.0 * np.cos(theta),
-            7_033.0 * np.sin(theta),
-            np.zeros_like(theta),
-        ]
-    )
-
     fig = plt.figure(figsize=(6.5, 8.2), constrained_layout=True)
     ax = fig.add_subplot(211, projection="3d")
     plot_surface(ax, surface, alpha=0.46)
     ax.plot(transfer[:, 0], transfer[:, 1], transfer[:, 2], color="#1f8fd4", linewidth=1.2)
     ax.plot(lissajous[:, 0], lissajous[:, 1], lissajous[:, 2], color="#91ad58", linewidth=0.7, alpha=0.70)
-    ax.plot(parking_orbit[:, 0], parking_orbit[:, 1], parking_orbit[:, 2], color="#c9253d", linewidth=0.75)
     ax.scatter([earth[0]], [earth[1]], [earth[2]], color="black", s=16)
     ax.scatter(*arrival, color="#c9253d", s=18)
-    ax.text(earth[0] - 2.0e5, earth[1] + 1.0e5, earth[2], "Earth", fontsize=10)
-    ax.text(arrival[0] - 2.5e5, arrival[1] - 0.8e5, arrival[2] + 1.2e5, "Arrival\nLocation", fontsize=10)
+    ax.text2D(0.63, 0.52, "Earth", transform=ax.transAxes, fontsize=10)
+    ax.text2D(0.27, 0.56, "Arrival\nLocation", transform=ax.transAxes, fontsize=10)
     ax.set_xlabel("X [km]", labelpad=-7)
     ax.set_ylabel("Y [km]", labelpad=-6)
     ax.set_zlabel("Z [km]", labelpad=-6)
@@ -88,7 +76,6 @@ def main() -> None:
         ax2.plot(surface[:, col, 0], surface[:, col, 1], color="0.45", linewidth=0.35, alpha=0.22)
     ax2.plot(transfer[:, 0], transfer[:, 1], color="#1f8fd4", linewidth=1.1)
     ax2.plot(lissajous[:, 0], lissajous[:, 1], color="#91ad58", linewidth=0.7, alpha=0.70)
-    ax2.plot(parking_orbit[:, 0], parking_orbit[:, 1], color="#c9253d", linewidth=0.8)
     ax2.scatter([earth[0]], [earth[1]], color="black", s=18)
     ax2.scatter([arrival[0]], [arrival[1]], color="#c9253d", s=18)
     ax2.text(earth[0] - 3.0e5, earth[1] - 1.3e5, "Earth", fontsize=11)

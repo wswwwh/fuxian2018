@@ -25,13 +25,19 @@ SCAN = ROOT / "data" / "computed" / "chapter5_active_geometry_stable_manifold_ti
 TRAJECTORY = ROOT / "data" / "computed" / "chapter5_active_geometry_leo_transfer.csv"
 AUDIT = ROOT / "data" / "computed" / "chapter5_active_geometry_leo_transfer_audit.csv"
 REPORT = ROOT / "docs" / "chapter5_active_geometry_leo_transfer_audit.md"
+EARTH_REFERENCE_RADIUS_KM = 6_378.0
+LEO_ALTITUDE_KM = 185.0
+TARGET_PERIAPSIS_RADIUS_KM = EARTH_REFERENCE_RADIUS_KM + LEO_ALTITUDE_KM
 
 
 def main() -> None:
     system = SYSTEMS["sun_earth"]
     with SCAN.open(newline="", encoding="utf-8") as stream:
         rows = list(csv.DictReader(stream))
-    selected = min(rows, key=lambda row: abs(float(row["periapsis_radius_km"]) - 7_033.0))
+    selected = min(
+        rows,
+        key=lambda row: abs(float(row["periapsis_radius_km"]) - TARGET_PERIAPSIS_RADIUS_KM),
+    )
     theta0_deg = float(selected["theta0_deg"])
     theta1_deg = float(selected["theta1_deg"])
     sign = float(selected["selected_half_manifold_sign"])
@@ -81,7 +87,9 @@ def main() -> None:
     earth = np.array([1.0 - system.mu, 0.0, 0.0])
     radii = np.linalg.norm(chronological_states[:, :3] - earth, axis=1) * system.length_unit_km
     jacobi_span = float(np.ptp(jacobi_constant(chronological_states, system.mu)))
-    endpoint_distance_km = float(np.linalg.norm(chronological_states[-1] - base_state) * system.length_unit_km)
+    endpoint_distance_km = float(
+        np.linalg.norm(chronological_states[-1, :3] - base_state[:3]) * system.length_unit_km
+    )
 
     with TRAJECTORY.open("w", newline="", encoding="utf-8") as stream:
         fields = ("sample", "elapsed_days", "x_nd", "y_nd", "z_nd", "xdot_nd", "ydot_nd", "zdot_nd", "earth_radius_km", "jacobi")
@@ -102,7 +110,7 @@ def main() -> None:
                 "jacobi": f"{jc:.16g}",
             })
 
-    target_error = abs(float(radii[0]) - 7_033.0)
+    target_error = abs(float(radii[0]) - TARGET_PERIAPSIS_RADIUS_KM)
     accepted = target_error <= 5.0 and jacobi_span <= 1.0e-8 and endpoint_distance_km <= 100.0
     audit = {
         "figure_id": "5.14",
@@ -114,6 +122,9 @@ def main() -> None:
         "trajectory_samples": len(chronological_states),
         "transfer_time_days": abs(periapsis_time_days),
         "periapsis_radius_km": float(radii[0]),
+        "earth_reference_radius_km": EARTH_REFERENCE_RADIUS_KM,
+        "leo_altitude_km": float(radii[0]) - EARTH_REFERENCE_RADIUS_KM,
+        "target_periapsis_radius_km": TARGET_PERIAPSIS_RADIUS_KM,
         "periapsis_target_error_km": target_error,
         "jacobi_span": jacobi_span,
         "lissajous_endpoint_distance_km": endpoint_distance_km,
@@ -126,18 +137,23 @@ def main() -> None:
     REPORT.write_text(
         f"""# Chapter 5 active-geometry Lissajous-to-LEO transfer audit
 
-- Source checkpoint members: `468`
+- Source checkpoint members: `{audit['active_checkpoint_members']}`
 - Selected torus phases: `({theta0_deg}, {theta1_deg})` deg
 - Stable half-manifold sign: `{sign}`
 - Transfer time: `{abs(periapsis_time_days):.6f}` days
 - Periapsis radius: `{radii[0]:.6f}` km
-- 7033-km target error: `{target_error:.6f}` km
+- Earth reference radius: `{EARTH_REFERENCE_RADIUS_KM:.1f}` km
+- LEO altitude: `{radii[0] - EARTH_REFERENCE_RADIUS_KM:.6f}` km
+- 185-km LEO target radius: `{TARGET_PERIAPSIS_RADIUS_KM:.1f}` km
+- Target-radius error: `{target_error:.6f}` km
 - Jacobi span: `{jacobi_span:.6e}`
 - Lissajous endpoint distance: `{endpoint_distance_km:.6f}` km
 - Acceptance: `{'pass' if accepted else 'fail'}`
 
 The trajectory is a high-resolution CR3BP repropagation of the accepted
-active-geometry stable-manifold candidate from the tight Fig. 5.13 scan.
+active-geometry stable-manifold candidate from the tight two-angle scan.  This
+Fig. 5.14 candidate is selected against the stated 185-km LEO boundary; it is
+not the distinct 7033-km marker highlighted in Fig. 5.13.
 Ephemeris/BCR4BP correction remains a separate high-fidelity boundary.
 """,
         encoding="utf-8",

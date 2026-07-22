@@ -19,9 +19,12 @@ from qp_orbits.quasi_torus import (
 
 FIGURE_ID = "3.6"
 SOURCE_PAGE = 69
-REPRO_LEVEL = "physical-consistency"
+REPRO_LEVEL = "numerical branch with paper-anchor boundary"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Corrected fixed-JC N=9, N=15, and N=21 branches through the 12.40-day member."
+NOTES = (
+    "Corrected fixed-JC N=9, N=15, and N=21 branches through the 12.40-day "
+    "member; the paper's 12.03-day amplitude anchor is shown explicitly and is not passed."
+)
 
 
 def scientific_axis(ax) -> None:
@@ -77,6 +80,19 @@ def main() -> None:
 
     axes[0].plot(mapping_time, y_amp, color="#1f77b4", label="Y-Amplitude")
     axes[0].plot(mapping_time, z_amp, color="#d95319", label="Z-Amplitude")
+    paper_time = 12.03
+    paper_y_amp = 34466.0
+    paper_z_amp = 28547.0
+    axes[0].scatter(
+        [paper_time, paper_time],
+        [paper_y_amp, paper_z_amp],
+        marker="x",
+        color="#111111",
+        s=32,
+        linewidth=1.2,
+        zorder=5,
+        label="paper 12.03-day anchors",
+    )
     axes[0].set_xlabel("Mapping Time [days]")
     axes[0].set_ylabel("Amplitude [km]")
     axes[0].set_xlim(12.0, 12.5)
@@ -88,12 +104,29 @@ def main() -> None:
     axes[0].yaxis.set_major_formatter(y_formatter)
 
     axes[1].plot(y_amp, z_amp, color="#1f77b4")
+    axes[1].scatter(
+        [paper_y_amp],
+        [paper_z_amp],
+        marker="x",
+        color="#111111",
+        s=34,
+        linewidth=1.2,
+        zorder=5,
+        label="paper 12.03-day anchor",
+    )
     axes[1].set_xlabel("Y-Amplitude [km]")
     axes[1].set_ylabel("Z-Amplitude [km]")
     axes[1].set_xlim(3.0e4, 4.4e4)
     axes[1].set_ylim(2.2e4, 3.72e4)
     axes[1].grid(True, alpha=0.24)
+    axes[1].legend(loc="lower right", fontsize=7, frameon=False)
     scientific_axis(axes[1])
+
+    fig.suptitle(
+        "Solid curves: corrected branch; x markers: unmatched paper anchor",
+        fontsize=9,
+        color="#8a4b08",
+    )
 
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)

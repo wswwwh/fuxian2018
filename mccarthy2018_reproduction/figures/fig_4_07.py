@@ -18,9 +18,9 @@ from qp_orbits.torus_stability import (
 
 FIGURE_ID = "4.7"
 SOURCE_PAGE = 93
-REPRO_LEVEL = "numerical manifold comparison"
+REPRO_LEVEL = "local numerical manifold comparison with global-topology boundary"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Corrected JC=3.1389 quasi-halo DG sheet and numerical periodic-halo comparison; no proxy layers."
+NOTES = "Corrected local DG sheet and numerical periodic-halo comparison; thesis global reach/topology is not matched."
 
 
 def main() -> None:
@@ -91,6 +91,11 @@ def main() -> None:
         )
     add_earth_moon_labels(ax, include_l1=False)
     style_long_axis(ax, vertical=False)
+    fig.suptitle(
+        "Local numerical manifold only; thesis global reach/topology not reproduced",
+        fontsize=9,
+        color="#8a4b08",
+    )
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)
 

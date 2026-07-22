@@ -19,7 +19,7 @@ from qp_orbits.quasi_torus import dro_parameter_curve
 
 FIGURE_ID = "3.17"
 SOURCE_PAGE = 83
-REPRO_LEVEL = "audited numerical reproduction"
+REPRO_LEVEL = "audited Route H branch with explicit proxy context"
 SYSTEM = "Earth-Moon CR3BP"
 NOTES = "Thesis-scale proxy trends and the historical Route H branch are retained as context; the four hybrid cold-start fixed-time anchors are the audited target evidence."
 FAMILY_PATH = PROJECT_ROOT / "data" / "computed" / "chapter3_corrected_dro_fixed_mapping_family.csv"
@@ -203,6 +203,11 @@ def main() -> None:
         transform=axes[1].transAxes,
         fontsize=7,
         va="bottom",
+    )
+    fig.suptitle(
+        "Markers/solid green: audited Route H evidence; faint curves: proxy context only",
+        fontsize=9,
+        color="#8a4b08",
     )
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)

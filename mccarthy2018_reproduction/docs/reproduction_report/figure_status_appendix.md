@@ -11,23 +11,29 @@ Total figures: 54.
 |---|---:|
 | CR3BP corrected periodic-family reproduction | 1 |
 | CR3BP endpoint-corrected NRHO transfer audit | 1 |
+| CR3BP numerical transfer baseline with thesis-geometry boundary | 1 |
 | CR3BP transfer reproduction with numerical BCR4BP extension and paper-equivalence boundary | 1 |
 | Route H / DE421 geometry baseline | 2 |
 | audited Route H fixed-time source-layer | 2 |
-| numerical CR3BP rendezvous-branch reproduction | 1 |
+| corrected numerical branch with endpoint-coverage boundary | 1 |
+| corrected numerical curve with paper-anchor boundary | 1 |
+| corrected numerical family with paper-anchor boundary | 1 |
+| corrected numerical family with topology boundary | 1 |
+| corrected numerical source layer with torus-topology boundary | 1 |
 | numerical DG family reproduction with digitized overlap pass and fold-tail boundary | 1 |
 | numerical DG manifold comparison dynamics with projection-geometry boundary | 2 |
-| numerical corrected Lissajous propagation reproduction | 1 |
-| numerical equal-Jacobi multiple-shooting transfer reproduction | 1 |
+| numerical central orbits with illustrative section proxy | 1 |
 | numerical fixed-time manifold with configuration-reach pass and frozen projection-holdout failure | 4 |
+| numerical invariant-torus long-time shadowing reproduction | 1 |
 | numerical quasi-periodic stable-manifold transfer reproduction | 1 |
-| numerical reproduction | 16 |
+| numerical reproduction | 11 |
 | numerical two-angle stable-manifold reproduction | 1 |
+| partial numerical continuation with explicit proxy tail | 1 |
 | period-q multiple-shooting audit with q8 boundary | 1 |
 | physical-consistency baseline | 2 |
 | proxy/schematic only | 13 |
 | quantitative DG reproduction with torus-geometry boundary | 1 |
-| shape-match with local numerical overlay | 2 |
+| truncated numerical CR3BP branch with explicit coverage boundary | 1 |
 
 ## Figure-Level Entries
 
@@ -380,7 +386,7 @@ Total figures: 54.
 | figure_id | 3.5 |
 | source_page | 68 |
 | script | figures/fig_3_05.py |
-| current_repro_level | numerical reproduction |
+| current_repro_level | corrected numerical family with paper-anchor boundary |
 | uses_proxy | false |
 | main_data_source | data/computed/chapter3_corrected_constant_energy_halo_high_order_family.csv |
 | key_physical_quantities | JC 3.1389 quasi-halo tori |
@@ -388,8 +394,8 @@ Total figures: 54.
 | Jacobi evidence | 1.4e-15 temporal drift |
 | periodicity evidence | N/A |
 | stability evidence | N/A |
-| visual_status | corrected numerical family |
-| next_action | Continue only if exact thesis continuation states become available |
+| visual_status | surface shading artifacts removed; the 12.03-day source member remains below the paper y/z amplitudes (33411.7/25062.1 km versus 34466/28547 km) |
+| next_action | Continue or re-anchor the early branch before claiming paper-equivalent Fig. 3.5 geometry. |
 
 ### Figure 3.6
 
@@ -398,7 +404,7 @@ Total figures: 54.
 | figure_id | 3.6 |
 | source_page | 69 |
 | script | figures/fig_3_06.py |
-| current_repro_level | numerical reproduction |
+| current_repro_level | corrected numerical curve with paper-anchor boundary |
 | uses_proxy | false |
 | main_data_source | data/computed/chapter3_corrected_constant_energy_halo_high_order_family.csv |
 | key_physical_quantities | quasi-halo amplitudes versus mapping time |
@@ -406,8 +412,8 @@ Total figures: 54.
 | Jacobi evidence | 1.4e-15 temporal drift |
 | periodicity evidence | N/A |
 | stability evidence | N/A |
-| visual_status | corrected numerical family |
-| next_action | Continue high-amplitude tail validation if needed |
+| visual_status | the paper's 12.03-day y/z amplitude anchors are displayed explicitly; the current branch does not pass the z-amplitude anchor |
+| next_action | Digitize the full paper curves and re-anchor the early continuation branch. |
 
 ### Figure 3.7
 
@@ -416,7 +422,7 @@ Total figures: 54.
 | figure_id | 3.7 |
 | source_page | 70 |
 | script | figures/fig_3_07.py |
-| current_repro_level | numerical reproduction |
+| current_repro_level | corrected numerical family with topology boundary |
 | uses_proxy | false |
 | main_data_source | data/computed/chapter3_corrected_constant_energy_vertical_staged_family.csv |
 | key_physical_quantities | JC 3.1389 quasi-vertical tori |
@@ -424,8 +430,8 @@ Total figures: 54.
 | Jacobi evidence | 1.4e-15 temporal drift |
 | periodicity evidence | N/A |
 | stability evidence | N/A |
-| visual_status | corrected numerical family |
-| next_action | Continue thesis endpoint comparison if source values appear |
+| visual_status | transparent source surfaces expose the computed geometry; the late-family paper folds/projection are not yet matched |
+| next_action | Pass rank, closure, topology, and locked-projection gates before promotion. |
 
 ### Figure 3.8
 
@@ -452,7 +458,7 @@ Total figures: 54.
 | figure_id | 3.9 |
 | source_page | 71 |
 | script | figures/fig_3_09.py |
-| current_repro_level | shape-match with local numerical overlay |
+| current_repro_level | partial numerical continuation with explicit proxy tail |
 | uses_proxy | partial |
 | main_data_source | data/computed/chapter3_corrected_*_family.csv |
 | key_physical_quantities | frequency ratio versus mapping time |
@@ -460,8 +466,8 @@ Total figures: 54.
 | Jacobi evidence | jacobi span in family CSV |
 | periodicity evidence | N/A |
 | stability evidence | N/A |
-| visual_status | corrected curves with proxy tail |
-| next_action | Replace remaining quasi-halo tail proxy with continued numerical branch |
+| visual_status | the solid halo branch is corrected numerical data; only the uncovered tail is drawn as a dashed, explicitly unvalidated analytic proxy |
+| next_action | Replace the dashed halo tail with accepted continuation data. |
 
 ### Figure 3.10
 
@@ -488,7 +494,7 @@ Total figures: 54.
 | figure_id | 3.11 |
 | source_page | 73 |
 | script | figures/fig_3_11.py |
-| current_repro_level | shape-match with local numerical overlay |
+| current_repro_level | numerical central orbits with illustrative section proxy |
 | uses_proxy | partial |
 | main_data_source | data/computed/earth_moon_l1_central_periodic_scene.csv |
 | key_physical_quantities | Poincare map and central periodic orbits |
@@ -496,8 +502,8 @@ Total figures: 54.
 | Jacobi evidence | N/A |
 | periodicity evidence | periodicity in scene CSV |
 | stability evidence | N/A |
-| visual_status | local numerical scene |
-| next_action | Replace remaining section-island shape assumptions with thesis map data |
+| visual_status | the 3D panel contains only CR3BP-integrated central periodic orbits; the left-panel ellipse contours are visibly labeled illustrative and are not presented as computed Poincare crossings |
+| next_action | Replace the illustrative contours with event-detected section crossings. |
 
 ### Figure 3.12
 
@@ -506,7 +512,7 @@ Total figures: 54.
 | figure_id | 3.12 |
 | source_page | 76 |
 | script | figures/fig_3_12.py |
-| current_repro_level | numerical reproduction |
+| current_repro_level | corrected numerical source layer with torus-topology boundary |
 | uses_proxy | false |
 | main_data_source | data/computed/chapter3_corrected_constant_frequency_families.csv |
 | key_physical_quantities | L2 constant-frequency quasi-halo tori |
@@ -514,8 +520,8 @@ Total figures: 54.
 | Jacobi evidence | 4.62e-08 Jacobi span |
 | periodicity evidence | N/A |
 | stability evidence | N/A |
-| visual_status | corrected numerical family |
-| next_action | Refine spectral tolerance if exact thesis values are required |
+| visual_status | transparent source surfaces no longer hide the parameterization; panels (b)-(d) still fail the paper central-hole/topology check |
+| next_action | Repair the two-angle parameterization and pass torus-hole/topology gates. |
 
 ### Figure 3.13
 
@@ -524,7 +530,7 @@ Total figures: 54.
 | figure_id | 3.13 |
 | source_page | 77 |
 | script | figures/fig_3_13.py |
-| current_repro_level | numerical reproduction |
+| current_repro_level | corrected numerical branch with endpoint-coverage boundary |
 | uses_proxy | false |
 | main_data_source | data/computed/chapter3_corrected_constant_frequency_families.csv |
 | key_physical_quantities | L2 quasi-halo amplitudes and Jacobi trend |
@@ -532,8 +538,8 @@ Total figures: 54.
 | Jacobi evidence | 4.62e-08 Jacobi span |
 | periodicity evidence | N/A |
 | stability evidence | N/A |
-| visual_status | corrected numerical family |
-| next_action | Refine spectral tolerance if exact thesis values are required |
+| visual_status | the current z-amplitude endpoint is shown as a coverage boundary near 86197 km versus the approximately 93000-km paper endpoint |
+| next_action | Continue the fixed-ratio family to the paper endpoint and rerun pointwise checks. |
 
 ### Figure 3.14
 
@@ -622,7 +628,7 @@ Total figures: 54.
 | Jacobi evidence | 3.641531520770513e-14 |
 | periodicity evidence | manifold growth ratio: N/A; manifold dependency: none |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 230222; PDF bytes 62157; boundary: The raw N=25 DG spectrum and nu=1.3837 target are reproduced at an internal Jacobi value that rounds to the paper's 3.044, but the accepted member is a near-periodic small-amplitude torus and does not yet prove the finite-amplitude geometry in panel (a). |
+| visual_status | PNG bytes 246387; PDF bytes 35767; boundary: The raw N=25 DG spectrum and nu=1.3837 target are reproduced at an internal Jacobi value that rounds to the paper's 3.044, but the accepted member is a near-periodic small-amplitude torus and does not yet prove the finite-amplitude geometry in panel (a). |
 | next_action | Continue a finite-amplitude L2 quasi-halo branch while retaining the reported-precision Jacobi and DG stability gates before claiming full panel replacement. |
 
 ### Figure 4.2
@@ -640,7 +646,7 @@ Total figures: 54.
 | Jacobi evidence | N/A |
 | periodicity evidence | manifold growth ratio: N/A; manifold dependency: none |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 86249; PDF bytes 16527; boundary: The native-PDF curve has been digitized and the common interval passes the pointwise uncertainty gate. Full curve coverage remains false: the accepted DG branch stops 0.04945011318863024 days before the digitized thesis endpoint; no tail values are extrapolated. |
+| visual_status | PNG bytes 122315; PDF bytes 24841; boundary: The native-PDF curve has been digitized and the common interval passes the pointwise uncertainty gate. Full curve coverage remains false: the accepted DG branch stops 0.04945011318863024 days before the digitized thesis endpoint; no tail values are extrapolated. |
 | next_action | Continue the corrected N>=21 branch through or around the fold to cover the remaining digitized thesis tail, then rerun the pointwise audit. |
 
 ### Figure 4.3
@@ -658,7 +664,7 @@ Total figures: 54.
 | Jacobi evidence | 3.446132268436486e-12 |
 | periodicity evidence | manifold growth ratio: 1.00533818825662..1.173203240381821; manifold dependency: data/computed/chapter4_fig43_fig44_global_manifold_audit.csv;data/computed/chapter4_fig43_fig44_global_manifold_audit.npz;data/computed/chapter4_fig43_fig46_camera_static_metrics.csv;data/computed/chapter4_fig43_fig46_projection_fit_metrics.csv;data/computed/chapter4_fig43_fig46_projection_holdout_audit.csv;data/computed/chapter4_fig43_fig46_projection_diagnostic.csv;data/computed/chapter4_fig43_fig44_halo_12p40_posthoc_diagnostic.csv;data/computed/chapter4_fig43_fig44_halo_12p40_posthoc_diagnostic.npz |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 817366; PDF bytes 327122; boundary: The legacy history-prefix root cause (surface[:stop]) is fixed: each panel now evaluates a fixed-time full-torus window over tau+[0,T0]. All four state-space numerical and local STM rows pass; the epsilon-dependent configuration-reach check also passes. The paper camera and development epsilon are hash-locked. Static anchors pass 16/16, but the separately committed panel-(d) red-surface projection holdout passes 0/4, so paper_projection_acceptance=fail and paper_3d_equivalence=false. No paper-view, physical-flight, or 3D-equivalence claim is made. |
+| visual_status | PNG bytes 810409; PDF bytes 332159; boundary: The legacy history-prefix root cause (surface[:stop]) is fixed: each panel now evaluates a fixed-time full-torus window over tau+[0,T0]. All four state-space numerical and local STM rows pass; the epsilon-dependent configuration-reach check also passes. The paper camera and development epsilon are hash-locked. Static anchors pass 16/16, but the separately committed panel-(d) red-surface projection holdout passes 0/4, so paper_projection_acceptance=fail and paper_3d_equivalence=false. No paper-view, physical-flight, or 3D-equivalence claim is made. |
 | next_action | Run the predeclared 12.40-day halo source-member/N-convergence falsification and frozen renderer/time-mapping negative controls; panel (d) is post-hoc diagnostic only and cannot be retuned. |
 
 ### Figure 4.4
@@ -676,7 +682,7 @@ Total figures: 54.
 | Jacobi evidence | 1.77635683940025e-15 |
 | periodicity evidence | manifold growth ratio: 0.8754445164178961..0.9952591221920488; manifold dependency: data/computed/chapter4_fig43_fig44_global_manifold_audit.csv;data/computed/chapter4_fig43_fig44_global_manifold_audit.npz;data/computed/chapter4_fig43_fig46_camera_static_metrics.csv;data/computed/chapter4_fig43_fig46_projection_fit_metrics.csv;data/computed/chapter4_fig43_fig46_projection_holdout_audit.csv;data/computed/chapter4_fig43_fig46_projection_diagnostic.csv;data/computed/chapter4_fig43_fig44_halo_12p40_posthoc_diagnostic.csv;data/computed/chapter4_fig43_fig44_halo_12p40_posthoc_diagnostic.npz |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 523777; PDF bytes 318155; boundary: The legacy history-prefix root cause (surface[:stop]) is fixed: each panel now evaluates a fixed-time full-torus window over tau+[0,T0]. All four state-space numerical and local STM rows pass; the epsilon-dependent configuration-reach check also passes. The paper camera and development epsilon are hash-locked. Static anchors pass 16/16, but the separately committed panel-(d) red-surface projection holdout passes 0/4, so paper_projection_acceptance=fail and paper_3d_equivalence=false. No paper-view, physical-flight, or 3D-equivalence claim is made. |
+| visual_status | PNG bytes 535807; PDF bytes 323585; boundary: The legacy history-prefix root cause (surface[:stop]) is fixed: each panel now evaluates a fixed-time full-torus window over tau+[0,T0]. All four state-space numerical and local STM rows pass; the epsilon-dependent configuration-reach check also passes. The paper camera and development epsilon are hash-locked. Static anchors pass 16/16, but the separately committed panel-(d) red-surface projection holdout passes 0/4, so paper_projection_acceptance=fail and paper_3d_equivalence=false. No paper-view, physical-flight, or 3D-equivalence claim is made. |
 | next_action | Run the predeclared 12.40-day halo source-member/N-convergence falsification and frozen renderer/time-mapping negative controls; panel (d) is post-hoc diagnostic only and cannot be retuned. |
 
 ### Figure 4.5
@@ -694,7 +700,7 @@ Total figures: 54.
 | Jacobi evidence | 6.440092903403638e-11 |
 | periodicity evidence | manifold growth ratio: 0.9717804282196859..1.094344709597075; manifold dependency: data/computed/chapter4_fig45_fig48_vertical_manifold_audit.csv;data/computed/chapter4_fig45_fig48_vertical_manifold_audit.npz;data/computed/chapter4_fig43_fig46_camera_static_metrics.csv;data/computed/chapter4_fig43_fig46_projection_fit_metrics.csv;data/computed/chapter4_fig43_fig46_projection_holdout_audit.csv;data/computed/chapter4_fig43_fig46_projection_diagnostic.csv |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 1009863; PDF bytes 1234039; boundary: The legacy history-prefix root cause (surface[:stop]) is fixed: each panel now evaluates a fixed-time full-torus window over tau+[0,T0]. All four state-space numerical and local STM rows pass; the epsilon-dependent configuration-reach check also passes. The paper camera and development epsilon are hash-locked. Static anchors pass 16/16, but the separately committed panel-(d) red-surface projection holdout passes 0/4, so paper_projection_acceptance=fail and paper_3d_equivalence=false. No paper-view, physical-flight, or 3D-equivalence claim is made. |
+| visual_status | PNG bytes 994400; PDF bytes 1238348; boundary: The legacy history-prefix root cause (surface[:stop]) is fixed: each panel now evaluates a fixed-time full-torus window over tau+[0,T0]. All four state-space numerical and local STM rows pass; the epsilon-dependent configuration-reach check also passes. The paper camera and development epsilon are hash-locked. Static anchors pass 16/16, but the separately committed panel-(d) red-surface projection holdout passes 0/4, so paper_projection_acceptance=fail and paper_3d_equivalence=false. No paper-view, physical-flight, or 3D-equivalence claim is made. |
 | next_action | Keep the 12.66-day vertical member fixed and test N33-to-N45/N57 DG-direction and 3D-sheet convergence plus frozen renderer/time-mapping negative controls; do not retune panel (d). |
 
 ### Figure 4.6
@@ -712,7 +718,7 @@ Total figures: 54.
 | Jacobi evidence | 4.884981308350689e-15 |
 | periodicity evidence | manifold growth ratio: 0.8614776653747258..0.9885300536877248; manifold dependency: data/computed/chapter4_fig45_fig48_vertical_manifold_audit.csv;data/computed/chapter4_fig45_fig48_vertical_manifold_audit.npz;data/computed/chapter4_fig43_fig46_camera_static_metrics.csv;data/computed/chapter4_fig43_fig46_projection_fit_metrics.csv;data/computed/chapter4_fig43_fig46_projection_holdout_audit.csv;data/computed/chapter4_fig43_fig46_projection_diagnostic.csv |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 507871; PDF bytes 1172489; boundary: The legacy history-prefix root cause (surface[:stop]) is fixed: each panel now evaluates a fixed-time full-torus window over tau+[0,T0]. All four state-space numerical and local STM rows pass; the epsilon-dependent configuration-reach check also passes. The paper camera and development epsilon are hash-locked. Static anchors pass 16/16, but the separately committed panel-(d) red-surface projection holdout passes 0/4, so paper_projection_acceptance=fail and paper_3d_equivalence=false. No paper-view, physical-flight, or 3D-equivalence claim is made. |
+| visual_status | PNG bytes 511532; PDF bytes 1177554; boundary: The legacy history-prefix root cause (surface[:stop]) is fixed: each panel now evaluates a fixed-time full-torus window over tau+[0,T0]. All four state-space numerical and local STM rows pass; the epsilon-dependent configuration-reach check also passes. The paper camera and development epsilon are hash-locked. Static anchors pass 16/16, but the separately committed panel-(d) red-surface projection holdout passes 0/4, so paper_projection_acceptance=fail and paper_3d_equivalence=false. No paper-view, physical-flight, or 3D-equivalence claim is made. |
 | next_action | Keep the 12.66-day vertical member fixed and test N33-to-N45/N57 DG-direction and 3D-sheet convergence plus frozen renderer/time-mapping negative controls; do not retune panel (d). |
 
 ### Figure 4.7
@@ -730,7 +736,7 @@ Total figures: 54.
 | Jacobi evidence | 1.332267629550188e-15 |
 | periodicity evidence | manifold growth ratio: 0.8667050797832782; manifold dependency: data/computed/chapter4_corrected_l1_constant_energy_halo_unstable_manifolds.csv |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 187321; PDF bytes 66859; boundary: The internal dynamics gate passes for snapshot time, residual, Jacobi drift, and local growth, and no analytic proxy layer is used. Thesis projection geometry is not validated and the current contact sheet shows a material global-reach/topology mismatch: the quasi-halo source remains the local terminal x=0.841718..0.849797 branch and lacks the thesis topology/density. Because this is a single-view 3D panel, image digitization can only support a locked-camera projection-space audit, not a 3D pointwise claim. |
+| visual_status | PNG bytes 202266; PDF bytes 71490; boundary: The internal dynamics gate passes for snapshot time, residual, Jacobi drift, and local growth, and no analytic proxy layer is used. Thesis projection geometry is not validated and the current contact sheet shows a material global-reach/topology mismatch: the quasi-halo source remains the local terminal x=0.841718..0.849797 branch and lacks the thesis topology/density. Because this is a single-view 3D panel, image digitization can only support a locked-camera projection-space audit, not a 3D pointwise claim. |
 | next_action | Reproduce the dense global quasi-halo/periodic-halo topology under a locked paper camera before projection-space comparison. |
 
 ### Figure 4.8
@@ -748,7 +754,7 @@ Total figures: 54.
 | Jacobi evidence | 1.77635683940025e-15 |
 | periodicity evidence | manifold growth ratio: 0.8655154043045946; manifold dependency: data/computed/chapter4_corrected_vertical_global_unstable_manifold.csv |
 | stability evidence | See Chapter 4 DG source-layer audit |
-| visual_status | PNG bytes 214589; PDF bytes 184164; boundary: The internal dynamics gate passes for snapshot time, residual, Jacobi drift, and local growth, and no analytic proxy layer is used. Thesis projection geometry is not validated and the current contact sheet shows a material global-reach/topology mismatch: the quasi-vertical source remains the local terminal x=0.784378..0.837716 branch and lacks the thesis Earthward reach. Because this is a single-view 3D panel, image digitization can only support a locked-camera projection-space audit, not a 3D pointwise claim. |
+| visual_status | PNG bytes 232089; PDF bytes 188099; boundary: The internal dynamics gate passes for snapshot time, residual, Jacobi drift, and local growth, and no analytic proxy layer is used. Thesis projection geometry is not validated and the current contact sheet shows a material global-reach/topology mismatch: the quasi-vertical source remains the local terminal x=0.784378..0.837716 branch and lacks the thesis Earthward reach. Because this is a single-view 3D panel, image digitization can only support a locked-camera projection-space audit, not a 3D pointwise claim. |
 | next_action | Reproduce the dense Earthward quasi-vertical/periodic topology under a locked paper camera before projection-space comparison. |
 
 ### Figure 5.1
@@ -758,16 +764,16 @@ Total figures: 54.
 | figure_id | 5.1 |
 | source_page | 96 |
 | script | figures/fig_5_01.py |
-| current_repro_level | numerical corrected Lissajous propagation reproduction |
+| current_repro_level | numerical invariant-torus long-time shadowing reproduction |
 | uses_proxy | false |
-| main_data_source | data/computed/chapter5_sun_earth_l1_lissajous_torus_surface.csv;data/computed/chapter5_sun_earth_l1_lissajous_torus_audit.csv;data/computed/chapter5_sun_earth_l1_lissajous_amplitude_boundary_audit.csv;data/computed/chapter5_sun_earth_l1_long_propagation_per_figure_audit.csv;outputs/figures_png/fig_5_1.png;outputs/figures_pdf/fig_5_1.pdf |
-| key_physical_quantities | corrected Sun-Earth L1 two-frequency Lissajous torus trajectories; accepted corrected Lissajous source rows 1; torus points 3600; curve residual 2.646101981500197e-11; Jacobi span 2.220446049250313e-15; max |y|/|z| 1016592.923818082/939484.302401125 km; original replacement status: corrected_lissajous_torus_replaces_proxy_long_propagation_scene |
-| residual evidence | accepted source rows: 1; Route H dependency: none; BCR4BP dependency: none |
+| main_data_source | data/computed/chapter5_sun_earth_l1_active_geometry_long_trajectory.npz;data/computed/chapter5_sun_earth_l1_active_geometry_family_audit.csv;data/computed/chapter5_sun_earth_l1_long_propagation_per_figure_audit.csv;outputs/figures_png/fig_5_1.png;outputs/figures_pdf/fig_5_1.pdf |
+| key_physical_quantities | accepted active-geometry Sun-Earth L1 invariant-torus shadowing trajectory; accepted duration rows 3; longest duration 2182 days; max trajectory Jacobi span 4.208125061744283e-07; minimum transverse span 0.01323960864719531; maximum L1 distance 1009544.212446012 km; active geometry target pair True; original replacement status: same_initial_phase_325_1068_2182_day_torus_shadowing_replaces_multi_curve_scene |
+| residual evidence | accepted source rows: 3; Route H dependency: none; BCR4BP dependency: none |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 416295; PDF bytes 178866; boundary: The analytic torus and center-mode overlays are removed. Remaining boundaries are the source-torus y-amplitude excess and pointwise thesis comparison. |
-| next_action | Reduce the corrected torus y-amplitude discrepancy and digitize the thesis panels for pointwise comparison. |
+| visual_status | PNG bytes 962376; PDF bytes 416625; boundary: The panels now use one common-initial-phase invariant-torus shadowing trajectory at exactly 325/1068/2182 days. This is not an unconstrained 2182-day floating-point IVP claim; BCR4BP/ephemeris and pointwise thesis comparison remain open. |
+| next_action | Add a high-fidelity long-time shadowing audit and digitize the thesis panels before claiming pointwise paper equivalence. |
 
 ### Figure 5.2
 
@@ -838,7 +844,7 @@ Total figures: 54.
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 556878; PDF bytes 142885; boundary: CR3BP return evidence does not yet provide a corrected ephemeris/BCR4BP trajectory replacement. |
+| visual_status | PNG bytes 313004; PDF bytes 47302; boundary: CR3BP return evidence does not yet provide a corrected ephemeris/BCR4BP trajectory replacement. |
 | next_action | Promote only after a corrected ephemeris or BCR4BP return arc is accepted for this specific figure. |
 
 ### Figure 5.6
@@ -884,7 +890,7 @@ Total figures: 54.
 | figure_id | 5.8 |
 | source_page | 106 |
 | script | figures/fig_5_08.py |
-| current_repro_level | numerical equal-Jacobi multiple-shooting transfer reproduction |
+| current_repro_level | CR3BP numerical transfer baseline with thesis-geometry boundary |
 | uses_proxy | false |
 | main_data_source | data/computed/chapter5_earth_moon_halo_lyapunov_transfer_baseline.csv;data/computed/chapter5_halo_lyapunov_transfer_per_figure_audit.csv;data/computed/chapter5_bcr4bp_dynamics_audit.csv;data/computed/chapter5_bcr4bp_segment_correction_audit.csv;data/computed/chapter5_optimized_transfer_audit.csv;outputs/figures_png/fig_5_8.png;outputs/figures_pdf/fig_5_8.pdf |
 | key_physical_quantities | Earth-Moon equal-Jacobi halo-to-Lyapunov multiple-shooting transfer; accepted CR3BP halo-Lyapunov transfer rows 1; total delta-v 294.6245071767839 m/s; endpoint error 2.083434735432931e-06 km; continuity 9.280132972015876e-12; Jacobi span 2.472244631235299e-12; boundary Jacobi difference 0; original replacement status: computed_multiple_shooting_transfer_replaces_corridor_proxy_high_fidelity_pending |
@@ -892,7 +898,7 @@ Total figures: 54.
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 469662; PDF bytes 39015; boundary: The linear corridor proxy is removed and replaced by the accepted transfer trajectory and patch nodes. BCR4BP/ephemeris correction and original-thesis pointwise comparison remain pending. |
+| visual_status | PNG bytes 473222; PDF bytes 42868; boundary: The linear corridor proxy is removed and replaced by the accepted transfer trajectory and patch nodes. BCR4BP/ephemeris correction and original-thesis pointwise comparison remain pending. |
 | next_action | Correct this specific 186.9-day transfer in BCR4BP/ephemeris and compare it with the thesis delta-v and geometry. |
 
 ### Figure 5.9
@@ -928,7 +934,7 @@ Total figures: 54.
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 319371; PDF bytes 23033; boundary: The dedicated planar BCR4BP extension is numerically accepted, but Figure 5.10 is an autonomous CR3BP case, so epoch is not applicable to the paper result and the project date belongs only to the extension. The paper-specific quasi-NRHO member, intersection phases, raw boundary states, impulse agreement, and pointwise geometry remain open, so paper_equivalence=false. |
+| visual_status | PNG bytes 327857; PDF bytes 27511; boundary: The dedicated planar BCR4BP extension is numerically accepted, but Figure 5.10 is an autonomous CR3BP case, so epoch is not applicable to the paper result and the project date belongs only to the extension. The paper-specific quasi-NRHO member, intersection phases, raw boundary states, impulse agreement, and pointwise geometry remain open, so paper_equivalence=false. |
 | next_action | Continue the rp=8065 km, frequency-ratio=5.0305 constant-frequency quasi-NRHO family, recover the two intersection phases and boundary states, then optimize the impulse split and run a locked-projection audit. |
 
 ### Figure 5.11
@@ -956,7 +962,7 @@ Total figures: 54.
 | figure_id | 5.12 |
 | source_page | 109 |
 | script | figures/fig_5_12.py |
-| current_repro_level | numerical CR3BP rendezvous-branch reproduction |
+| current_repro_level | truncated numerical CR3BP branch with explicit coverage boundary |
 | uses_proxy | false |
 | main_data_source | data/computed/chapter5_earth_moon_nrho_transfer_baseline.csv;data/computed/chapter5_nrho_rendezvous_per_figure_audit.csv;outputs/figures_png/fig_5_12.png;outputs/figures_pdf/fig_5_12.pdf |
 | key_physical_quantities | Earth-Moon NRHO fixed-departure rendezvous arrival-offset branch; accepted CR3BP rendezvous scan rows 36; coverage -24 to 11 h; minimum delta-v difference -6.029648133534657 m/s; maximum endpoint error 3.714687617288433e-05 km; original replacement status: computed_branch_replaces_proxy_with_explicit_fold_boundary |
@@ -964,7 +970,7 @@ Total figures: 54.
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 78471; PDF bytes 25306; boundary: The grey extrapolation is removed. The computed branch covers -24 to +11 h; +12 to +24 h remains an explicit fold/coverage boundary rather than plotted proxy data. |
+| visual_status | PNG bytes 95168; PDF bytes 27811; boundary: The grey extrapolation is removed. The computed branch covers -24 to +11 h; +12 to +24 h remains an explicit fold/coverage boundary rather than plotted proxy data. |
 | next_action | Develop a robust global quasi-NRHO continuation or high-fidelity ephemeris branch to cover the missing +12 to +24 h interval. |
 
 ### Figure 5.13
@@ -982,7 +988,7 @@ Total figures: 54.
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 82719; PDF bytes 36653; boundary: The display-function proxy is removed and the accepted 129x256 full-torus geometry plus 9x9 tight scan reaches the 7033-km target. Remaining boundaries are high-fidelity BCR4BP/ephemeris correction and pointwise comparison with the thesis heat map. |
+| visual_status | PNG bytes 88348; PDF bytes 42820; boundary: The display-function proxy is removed and the accepted 129x256 full-torus geometry plus 9x9 tight scan reaches the 7033-km target. Remaining boundaries are high-fidelity BCR4BP/ephemeris correction and pointwise comparison with the thesis heat map. |
 | next_action | Use the active-geometry CR3BP source layer as the current target-mode result; add BCR4BP/ephemeris correction and digitize the thesis heat map before claiming full thesis equivalence. |
 
 ### Figure 5.14
@@ -995,10 +1001,10 @@ Total figures: 54.
 | current_repro_level | numerical quasi-periodic stable-manifold transfer reproduction |
 | uses_proxy | false |
 | main_data_source | data/computed/chapter5_active_geometry_leo_transfer_audit.csv;data/computed/chapter5_sun_earth_l1_active_geometry_family_audit.csv;data/computed/chapter5_active_geometry_stable_manifold_tight_target_audit.csv;docs/chapter5_active_geometry_application_independent_rerun_audit.md;outputs/figures_png/fig_5_14.png;outputs/figures_pdf/fig_5_14.pdf |
-| key_physical_quantities | accepted active-geometry Sun-Earth L1 stable-manifold LEO transfer; accepted active-geometry transfer rows 1; trajectory samples 900; periapsis 7034.028970727035 km; target error 1.028970727034903 km; transfer time 433.0873004386989 days; Jacobi span 5.497824417943775e-13; Lissajous endpoint distance 38.49009323646132 km; original replacement status: computed_lissajous_transfer_replaces_analytic_scene_high_fidelity_pending |
+| key_physical_quantities | accepted active-geometry Sun-Earth L1 stable-manifold LEO transfer; accepted active-geometry transfer rows 1; trajectory samples 900; periapsis 6564.533182015416 km; target error 1.53318201541606 km; transfer time 433.1800920578155 days; Jacobi span 1.172395514004165e-12; active-torus endpoint position distance 14.95978707605961 km; original replacement status: computed_lissajous_transfer_replaces_analytic_scene_high_fidelity_pending |
 | residual evidence | accepted source rows: 1; Route H dependency: none; BCR4BP dependency: none |
 | Jacobi evidence | See Chapter 5 source-layer audit; not a single CR3BP Jacobi metric for all application figures |
 | periodicity evidence | See Chapter 5 source-layer audit for endpoint/defect boundary |
 | stability evidence | N/A |
-| visual_status | PNG bytes 289385; PDF bytes 80747; boundary: The analytic transfer and torus scene is removed. The accepted active-geometry CR3BP trajectory reaches the 7033-km periapsis target and records the 185-km LEO endpoint; BCR4BP/ephemeris correction remains pending. |
+| visual_status | PNG bytes 444751; PDF bytes 171972; boundary: The analytic transfer and legacy torus are removed. The Fig. 5.14 active-geometry CR3BP trajectory is selected against the stated 185-km LEO boundary (6563-km reference radius), distinct from Fig. 5.13's 7033-km marker; BCR4BP/ephemeris correction remains pending. |
 | next_action | Correct this specific active-geometry stable-manifold transfer in BCR4BP/ephemeris and compare against thesis timing and geometry. |

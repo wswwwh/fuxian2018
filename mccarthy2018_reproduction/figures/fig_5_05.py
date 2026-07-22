@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import matplotlib.pyplot as plt
+import csv
+import numpy as np
 
 from _chapter5_plotting import plot_surface, style_earth_moon_dro_axis
 from _figure_paths import PROJECT_ROOT
-from qp_orbits.application_scenarios import quasi_dro_return_scene
-from qp_orbits.application_scenarios import quasi_dro_cr3bp_return_scene
 from qp_orbits.plot_style import apply_style, save_figure
 
 
@@ -15,87 +15,64 @@ FIGURE_ID = "5.5"
 SOURCE_PAGE = 102
 REPRO_LEVEL = "shape-match + local numerical"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Proxy thesis-scale torus with corrected 2:1 resonant DRO and local quasi-DRO inset."
+NOTES = "Audited corrected CR3BP 2:1 resonant DRO, ten-return quasi-DRO, and corrected torus; no proxy surface."
 
 
-def add_corrected_dro_inset(ax, scene) -> None:
-    inset = ax.inset_axes([0.69, 0.66, 0.25, 0.24], projection="3d")
-    surface = scene.torus_surface
-    inset.plot_surface(
-        surface[:, :, 0],
-        surface[:, :, 1],
-        surface[:, :, 2],
-        color="#9ccf9a",
-        edgecolor="none",
-        alpha=0.52,
-        shade=True,
-    )
-    inset.plot(
-        scene.periodic_states[:, 0],
-        scene.periodic_states[:, 1],
-        scene.periodic_states[:, 2],
-        color="#4f8a36",
-        linewidth=0.8,
-    )
-    inset.plot(
-        scene.quasi_states[:, 0],
-        scene.quasi_states[:, 1],
-        scene.quasi_states[:, 2],
-        color="#1f77b4",
-        linewidth=0.7,
-        alpha=0.82,
-    )
-    inset.plot(
-        scene.invariant_curve[:, 0],
-        scene.invariant_curve[:, 1],
-        scene.invariant_curve[:, 2],
-        color="black",
-        linewidth=0.7,
-    )
-    inset.scatter(*scene.marker, color="#c9253d", s=7)
-    points = surface.reshape(-1, 3)
-    spans = points.max(axis=0) - points.min(axis=0)
-    center = 0.5 * (points.max(axis=0) + points.min(axis=0))
-    inset.set_xlim(center[0] - 0.55 * spans[0], center[0] + 0.55 * spans[0])
-    inset.set_ylim(center[1] - 0.55 * spans[1], center[1] + 0.55 * spans[1])
-    inset.set_zlim(center[2] - 0.60 * spans[2], center[2] + 0.60 * spans[2])
-    inset.set_box_aspect((1.2, 1.6, 0.75))
-    inset.view_init(elev=24, azim=-132)
-    inset.patch.set_alpha(0.0)
-    inset.xaxis.pane.set_alpha(0.0)
-    inset.yaxis.pane.set_alpha(0.0)
-    inset.zaxis.pane.set_alpha(0.0)
-    inset.set_axis_off()
+def _load_corrected_scene() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    path = PROJECT_ROOT / "data" / "computed" / "chapter5_corrected_dro_quasi_dro_return.csv"
+    with path.open(newline="", encoding="utf-8") as stream:
+        rows = list(csv.DictReader(stream))
+
+    def curve(kind: str) -> np.ndarray:
+        selected = sorted(
+            (row for row in rows if row["kind"] == kind),
+            key=lambda row: int(row["time_index"]),
+        )
+        return np.array([[float(row[key]) for key in ("x", "y", "z")] for row in selected])
+
+    torus_rows = [row for row in rows if row["kind"] == "corrected_local_torus"]
+    time_count = len({int(row["time_index"]) for row in torus_rows})
+    phase_count = len({int(row["curve_index"]) for row in torus_rows})
+    torus_rows.sort(key=lambda row: (int(row["time_index"]), int(row["curve_index"])))
+    surface = np.array([[float(row[key]) for key in ("x", "y", "z")] for row in torus_rows])
+    surface = surface.reshape(time_count, phase_count, 3)
+    periodic = curve("periodic_dro")
+    quasi = curve("quasi_dro_10_return")
+    invariant_curve = surface[0]
+    return surface, periodic, quasi, invariant_curve
 
 
 def main() -> None:
     apply_style()
-    scene = quasi_dro_return_scene()
-    corrected = quasi_dro_cr3bp_return_scene()
+    surface, periodic, quasi, invariant_curve = _load_corrected_scene()
     fig = plt.figure(figsize=(6.3, 4.8), constrained_layout=True)
     ax = fig.add_subplot(111, projection="3d")
-    plot_surface(ax, scene.surface, alpha=0.46)
-    ax.plot(scene.curves[0][:, 0], scene.curves[0][:, 1], scene.curves[0][:, 2], color="#1f8fd4", linewidth=1.0)
+    plot_surface(ax, surface, alpha=0.34)
     ax.plot(
-        corrected.periodic_states[:, 0],
-        corrected.periodic_states[:, 1],
-        corrected.periodic_states[:, 2],
+        periodic[:, 0],
+        periodic[:, 1],
+        periodic[:, 2],
         color="#78a641",
         linewidth=1.2,
     )
     ax.plot(
-        corrected.quasi_states[:, 0],
-        corrected.quasi_states[:, 1],
-        corrected.quasi_states[:, 2],
-        color="#176f8f",
-        linewidth=0.55,
-        alpha=0.58,
+        quasi[:, 0],
+        quasi[:, 1],
+        quasi[:, 2],
+        color="#0877bd",
+        linewidth=0.82,
+        alpha=0.94,
     )
-    if scene.marker is not None:
-        ax.plot([scene.marker[0], scene.marker[0]], [scene.marker[1], scene.marker[1]], [-0.070, scene.marker[2]],
-                color="black", linewidth=0.9)
-        ax.scatter(*scene.marker, color="#c9253d", s=18)
-    add_corrected_dro_inset(ax, corrected)
+    ax.plot(
+        invariant_curve[:, 0],
+        invariant_curve[:, 1],
+        invariant_curve[:, 2],
+        color="black",
+        linewidth=0.65,
+    )
+    marker = quasi[0]
+    ax.plot([marker[0], marker[0]], [marker[1], marker[1]], [-0.070, marker[2]], color="black", linewidth=0.9)
+    ax.scatter(*marker, color="#c9253d", s=18)
     style_earth_moon_dro_axis(ax)
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)

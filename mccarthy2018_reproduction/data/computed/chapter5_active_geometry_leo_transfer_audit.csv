@@ -1,2 +1,2 @@
-figure_id,source_model,active_checkpoint_members,theta0_deg,theta1_deg,stable_half_manifold_sign,trajectory_samples,transfer_time_days,periapsis_radius_km,periapsis_target_error_km,jacobi_span,lissajous_endpoint_distance_km,acceptance
-5.14,accepted active-geometry Sun-Earth L1 stable-manifold transfer,468,48.0,62.0,1.0,900,433.0873004386989,7034.028970727035,1.0289707270349027,5.497824417943775e-13,38.49009323646132,true
+figure_id,source_model,active_checkpoint_members,theta0_deg,theta1_deg,stable_half_manifold_sign,trajectory_samples,transfer_time_days,periapsis_radius_km,earth_reference_radius_km,leo_altitude_km,target_periapsis_radius_km,periapsis_target_error_km,jacobi_span,lissajous_endpoint_distance_km,acceptance
+5.14,accepted active-geometry Sun-Earth L1 stable-manifold transfer,468,48.0,62.25,1.0,900,433.1800920578155,6564.533182015416,6378.0,186.53318201541606,6563.0,1.5331820154160596,1.1723955140041653e-12,14.959787076059612,true

@@ -15,7 +15,7 @@ from qp_orbits.plot_style import apply_style, save_figure
 
 FIGURE_ID = "5.8"
 SOURCE_PAGE = 106
-REPRO_LEVEL = "numerical equal-Jacobi multiple-shooting transfer reproduction"
+REPRO_LEVEL = "CR3BP project baseline with thesis-geometry boundary"
 SYSTEM = "Earth-Moon CR3BP equal-Jacobi halo-to-Lyapunov transfer"
 NOTES = "Corrected equal-energy boundaries and 186.9-day multiple-shooting transfer with patch nodes; no proxy corridor."
 
@@ -70,6 +70,11 @@ def main() -> None:
     _style_axis(ax)
     ax.text2D(0.57, 0.78, "Departure\nLocation", transform=ax.transAxes, fontsize=8)
     ax.text2D(0.76, 0.55, "Arrival\nLocation", transform=ax.transAxes, fontsize=8)
+    fig.suptitle(
+        "CR3BP project baseline; thesis pointwise geometry and high-fidelity correction pending",
+        fontsize=9,
+        color="#8a4b08",
+    )
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)
 

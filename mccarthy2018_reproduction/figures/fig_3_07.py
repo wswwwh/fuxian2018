@@ -19,9 +19,12 @@ from qp_orbits.quasi_torus import (
 
 FIGURE_ID = "3.7"
 SOURCE_PAGE = 70
-REPRO_LEVEL = "physical-consistency"
+REPRO_LEVEL = "numerical source layer with topology boundary"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Corrected fixed-JC tori from the staged N=9, 15, 21, 27, and 33 quasi-vertical branch."
+NOTES = (
+    "Corrected fixed-JC surfaces from the staged N=9, 15, 21, 27, and 33 "
+    "quasi-vertical branch; the late-family paper projection/topology is not yet matched."
+)
 
 
 def style_axis(ax, equilibrium_x: float, label: str) -> None:
@@ -98,7 +101,7 @@ def main() -> None:
             linewidth=0,
             antialiased=True,
             shade=False,
-            alpha=1.0,
+            alpha=0.64,
             rcount=surface.shape[0],
             ccount=surface.shape[1],
             zorder=1,
@@ -111,7 +114,24 @@ def main() -> None:
             linewidth=1.2,
             zorder=10,
         )
+        ax.plot_wireframe(
+            surface[:, :, 0],
+            surface[:, :, 1],
+            surface[:, :, 2],
+            rstride=4,
+            cstride=10,
+            color="#777777",
+            linewidth=0.22,
+            alpha=0.32,
+            zorder=2,
+        )
         style_axis(ax, modes.equilibrium_state[0], label)
+
+    fig.suptitle(
+        "Corrected CR3BP source layer; late-family paper topology remains a boundary",
+        fontsize=9,
+        color="#8a4b08",
+    )
 
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)

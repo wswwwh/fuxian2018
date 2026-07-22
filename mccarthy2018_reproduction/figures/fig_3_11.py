@@ -15,9 +15,12 @@ from qp_orbits.quasi_torus import central_periodic_orbit_scene
 
 FIGURE_ID = "3.11"
 SOURCE_PAGE = 73
-REPRO_LEVEL = "shape-match"
+REPRO_LEVEL = "numerical central orbits with illustrative section proxy"
 SYSTEM = "Earth-Moon CR3BP"
-NOTES = "Corrected CR3BP central periodic orbits with section-anchored Poincare island contours."
+NOTES = (
+    "The 3D central periodic orbits are CR3BP integrations. The left-panel island contours "
+    "are explicitly illustrative ellipses, not computed Poincare crossings."
+)
 
 
 def _ellipse_2d(
@@ -34,7 +37,7 @@ def _ellipse_2d(
     return np.asarray(center) + local @ rot.T
 
 
-def paper_like_map_contours() -> tuple[list[np.ndarray], list[np.ndarray], list[np.ndarray]]:
+def illustrative_section_contours() -> tuple[list[np.ndarray], list[np.ndarray], list[np.ndarray]]:
     lyapunov: list[np.ndarray] = []
     upper: list[np.ndarray] = []
     lower: list[np.ndarray] = []
@@ -111,7 +114,7 @@ def style_3d_axis(ax) -> None:
 def main() -> None:
     apply_style()
     scene = central_periodic_orbit_scene(SYSTEMS["earth_moon"].mu)
-    map_lyapunov, map_halo_upper, map_halo_lower = paper_like_map_contours()
+    map_lyapunov, map_halo_upper, map_halo_lower = illustrative_section_contours()
 
     fig = plt.figure(figsize=(8.7, 4.5), constrained_layout=True)
     gs = GridSpec(1, 2, width_ratios=[0.82, 1.18], figure=fig)
@@ -119,11 +122,11 @@ def main() -> None:
     ax_3d = fig.add_subplot(gs[0, 1], projection="3d")
 
     for curve in map_halo_upper:
-        ax_map.plot(curve[:, 0], curve[:, 1], color="#b2182b", linewidth=0.8)
+        ax_map.plot(curve[:, 0], curve[:, 1], color="#b2182b", linewidth=0.8, linestyle="--", alpha=0.72)
     for curve in map_halo_lower:
-        ax_map.plot(curve[:, 0], curve[:, 1], color="#b2182b", linewidth=0.8)
+        ax_map.plot(curve[:, 0], curve[:, 1], color="#b2182b", linewidth=0.8, linestyle="--", alpha=0.72)
     for curve in map_lyapunov:
-        ax_map.plot(curve[:, 0], curve[:, 1], color="#168bd2", linewidth=0.75)
+        ax_map.plot(curve[:, 0], curve[:, 1], color="#168bd2", linewidth=0.75, linestyle="--", alpha=0.72)
     ax_map.scatter(
         [0.837],
         [0.0],
@@ -132,15 +135,15 @@ def main() -> None:
         zorder=3,
     )
     style_map_axis(ax_map)
+    ax_map.set_title(
+        "Illustrative contours only\n(not computed section crossings)",
+        fontsize=8,
+        color="#8a4b08",
+        pad=5,
+    )
 
     for orbit in scene.lyapunov_orbits:
         ax_3d.plot(orbit[:, 0], orbit[:, 1], orbit[:, 2], color="#168bd2", linewidth=0.42, alpha=0.42)
-    for curve in map_lyapunov:
-        ax_3d.plot(curve[:, 0], curve[:, 1], curve[:, 0] * 0.0, color="#168bd2", linewidth=0.55, alpha=0.75)
-    for curve in map_halo_upper:
-        ax_3d.plot(curve[:, 0], curve[:, 1], curve[:, 0] * 0.0, color="#b2182b", linewidth=0.55, alpha=0.82)
-    for curve in map_halo_lower:
-        ax_3d.plot(curve[:, 0], curve[:, 1], curve[:, 0] * 0.0, color="#b2182b", linewidth=0.55, alpha=0.82)
     ax_3d.plot(
         scene.halo_orbit[:, 0],
         scene.halo_orbit[:, 1],
@@ -156,6 +159,15 @@ def main() -> None:
         linewidth=1.2,
     )
     style_3d_axis(ax_3d)
+    ax_3d.text2D(
+        0.03,
+        0.96,
+        "CR3BP-integrated central periodic orbits",
+        transform=ax_3d.transAxes,
+        fontsize=7,
+        va="top",
+        color="#075b4d",
+    )
 
     save_figure(fig, FIGURE_ID, PROJECT_ROOT)
     plt.close(fig)

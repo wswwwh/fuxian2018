@@ -21,7 +21,7 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - Chapter 4 per-figure source-layer audit: `pass`
 - Chapter 5 Route H / DE421 baseline passed: `True`
 - Chapter 5 high-fidelity/optimization status: `pass`
-- Chapter 5 Sun-Earth L1 long-propagation audit: `pass`
+- Chapter 5 Sun-Earth L1 long-propagation audit: `not_run_or_incomplete`
 - Chapter 5 halo-Lyapunov per-figure transfer audit: `pass`
 - Chapter 5 NRHO corridor per-figure audit: `pass`
 - Chapter 5 NRHO per-figure transfer audit: `pass`
@@ -51,7 +51,7 @@ torus-scale DG/manifolds and Chapter 5 high-fidelity/optimization applications.
 - `C5-ROUTE-H-DE421-BASELINE` (chapter5): status `pass`, metric `fig_5_6_png_bytes` = `588057`, decision `route_h_de421_baseline_available`
 - `C5-HIGH-FIDELITY-OPTIMIZATION` (chapter5): status `pass`, metric `missing_high_fidelity_capabilities` = `0`, decision `chapter5_high_fidelity_optimization_source_layer_ready`
 - `C5-HALO-LYAPUNOV-PER-FIGURE-TRANSFER-AUDIT` (chapter5): status `pass`, metric `accepted_halo_lyapunov_transfer_rows` = `1`, decision `use_halo_lyapunov_per_figure_transfer_row`
-- `C5-SUN-EARTH-L1-LONG-PROPAGATION-AUDIT` (chapter5): status `pass`, metric `accepted_l1_long_propagation_rows` = `5`, decision `use_l1_long_propagation_per_figure_rows`
+- `C5-SUN-EARTH-L1-LONG-PROPAGATION-AUDIT` (chapter5): status `not_run_or_incomplete`, metric `accepted_l1_long_propagation_rows` = `3`, decision `run_chapter5_sun_earth_l1_long_propagation_per_figure_audit`
 - `C5-NRHO-CORRIDOR-PER-FIGURE-AUDIT` (chapter5): status `pass`, metric `accepted_nrho_corridor_marker_rows` = `2`, decision `use_nrho_corridor_per_figure_marker_rows`
 - `C5-STABLE-MANIFOLD-PER-FIGURE-AUDIT` (chapter5): status `pass`, metric `accepted_stable_manifold_rows` = `2`, decision `use_stable_manifold_per_figure_rows`
 - `C5-NRHO-PER-FIGURE-TRANSFER-AUDIT` (chapter5): status `pass`, metric `accepted_nrho_transfer_rows` = `4`, decision `use_nrho_per_figure_transfer_rows`
@@ -81,7 +81,7 @@ but the frozen panel-(d) projection holdout passes only
 `0/4`, so
 `paper_projection=fail` and
 `paper_3d=false`. The older `16`-
-panel diagnostic has `15` alerts. Fig. 4.7-4.8 retain the legacy
+panel diagnostic has `16` alerts. Fig. 4.7-4.8 retain the legacy
 comparison boundary. These facts do not promote paper-level 3D equivalence or
 alter the staged-goal decision.
 
